@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <title>Exemples de configuration mviewer</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">  
+  <link rel="stylesheet" href="https://openlayers.org/en/v4.2.0/css/ol.css" type="text/css">
+  <link href="../mviewer/lib/font-awesome-4.6.3/css/font-awesome.min.css" rel="stylesheet">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+  <script src="Sortable.min.js"></script>
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+  <script src="https://openlayers.org/en/v4.2.0/build/ol.js"></script>
+  <script src="ogc.js"></script>
+  <script src="mv.js"></script>
+  
+  
+</head>
+<style>
+body {
+      	width:100%%;
+        height:100%;
+      
+      }
+      
+
+.glyphicon-move {
+  cursor: move;
+  cursor: -webkit-grabbing;
+}
+
+.ghost {
+  opacity: 1;
+  background: #337ab7;
+}
+
+.layer-remove, .theme-remove {
+  float: right;
+  padding-right: 10px;
+  color: red;
+  font-size: 1.2em;
+  cursor: pointer;
+}
+
+.layer-edit, .theme-edit{
+  float: right;
+  padding-right: 10px;
+  color: grey;
+  cursor: pointer;
+  font-size: 1.2em;
+}
+
+.btn-layer-new {
+  float: right;
+  margin-right: 20px;
+}
+
+
+#opt-style option {
+    color: #FFFFFF;    
+    padding: 5px 0;   
+    font-size: 20px;
+    font-weight: bold;
+}
+option.alizarin {
+    background-color: #E64B3B;   
+}
+option.blue {
+    background-color: #F6F7F8;
+}
+option.default {
+    background-color: #34495D;
+}
+option.nephritis {
+    background-color: #26AE60;
+}
+option.ripe_lemon {
+    background-color: #F6CA17;
+}
+option.amethyst {
+    background-color: #9A59B6;
+}
+option.carrot {
+    background-color: #E67E21;
+}
+option.green {
+    background-color: #70BA50;
+}
+option.peter_river {
+    background-color: #3497DB;
+}
+option.black {
+    background-color: #000000;
+}
+option.chambray {
+    background-color: #3A529A;
+}
+option.green_sea {
+    background-color: #1ABC9C;
+}
+option.pink {    
+    background-color: #F62359;
+}
+option.wet_asphalt {    
+    background-color: #34495D;
+}
+
+.row.fld.selected {
+    background-color: #9E9E9E;
+}
+
+
+
+#theme-edit-icon {
+  font-family: 'FontAwesome', 'sans-serif';
+  font-size: 20px;
+  height: 45px;
+}
+
+
+</style>
+<body>   
+    <nav class="navbar navbar-inverse">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="#">mviewer generator</a>
+    </div>
+    <ul class="nav navbar-nav">
+      <li class="active"><a href="#">Configuration</a></li>     
+    </ul>
+    <ul class="nav navbar-nav navbar-right">
+      <li><a role="button" data-toggle="modal" data-target="#mod-importfile" href="#"><span role="button" class="glyphicon glyphicon-import"></span>Import</a></li>
+      <li><a role="button" onclick="console.log(saveApplicationParameters());" href="#"><span class="glyphicon glyphicon-export"></span>Export</a></li>
+   </ul>
+  </div>
+</nav>
+    <div class="container">
+        <div id="content">
+            <ul id="tabs" class="nav nav-tabs" data-tabs="tabs">
+                <li class="active"><a href="#application-config" data-toggle="tab">Application</a></li>
+                <li><a href="#themes-config" data-toggle="tab">Thématiques</a></li>
+                <li><a href="#backgroundlayers-config" data-toggle="tab">Couches de fond</a></li>                            
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane active" id="application-config">
+                   
+                    <form class="form-horizontal">
+                        <fieldset>
+
+                        <!-- MAp -->
+                        <legend>Paramétrage de l'application</legend>                      
+                        <div class="form-group">
+                          <label class="col-md-4 control-label" for="map">Etendue géographique</label>  
+                          <div class="col-md-4">
+                              <div id="map" class="map"></div>
+                          </div>
+                        </div> 
+                       
+                         <!-- Title-->
+                        <div class="form-group">
+                          <label class="col-md-4 control-label" for="opt-title">Titre de l'application</label>  
+                          <div class="col-md-4">
+                            <input id="opt-title" name="textinput" type="text" placeholder="Kartenn" class="form-control input-md">  
+                          </div>
+                        </div>
+
+                                                
+                        <!-- logo-->
+                        <div class="form-group">
+                          <label class="col-md-4 control-label" for="opt-logo">Logo</label>  
+                          <div class="col-md-4">
+                            <input id="opt-logo" name="textinput" type="text" class="form-control input-md">  
+                          </div>
+                        </div>
+
+                       <!-- help-->
+                        <div class="form-group">
+                          <label class="col-md-4 control-label" for="opt-help">Fichier d'aide</label>  
+                          <div class="col-md-4">
+                            <input id="opt-help" name="textinput" type="text" class="form-control input-md" placeholder="mviewer_help.html">  
+                          </div>
+                        </div>
+                        
+                        <!--style-->
+                        <div class="form-group">
+                            <label class="control-label" for="frm-stylet">Style</label> 
+                            
+                                <select id="opt-style" name="style" class="form-control">                                    
+                                    <option class="alizarin" value="css/themes/alizarin.css">alizarin</option>
+                                    <option class="blue" value="css/themes/blue.css">blue</option>
+                                    <option class="default" value="css/themes/default.css">default</option>
+                                    <option class="nephritis" value="css/themes/nephritis.css">nephritis</option>
+                                    <option class="ripe_lemon" value="css/themes/ripe_lemon.css">ripe_lemon</option>
+                                    <option class="amethyst" value="css/themes/amethyst.css">amethyst</option>
+                                    <option class="carrot" value="css/themes/carrot.css">carrot</option>
+                                    <option class="green" value="css/themes/green.css">green</option>
+                                    <option class="peter_river" value="css/themes/peter_river.css">peter_river</option>
+                                    <option class="black" value="css/themes/black.css">black</option>
+                                    <option class="chambray" value="css/themes/chambray.css">chambray</option>
+                                    <option class="green_sea" value="css/themes/green_sea.css">green_sea</option>
+                                    <option class="pink" value="css/themes/pink.css">pink</option>
+                                    <option class="wet_asphalt" value="css/themes/wet_asphalt.css">wet_asphalt</option>
+                                </select>
+                            
+                      </div>
+                         
+                          <!-- Options -->
+                        <div class="form-group">
+                          <label class="col-md-4 control-label" for="checkboxes">options</label>
+                          <div class="col-md-4">
+                          <div class="checkbox">
+                            <label for="opt-measuretools">
+                              <input type="checkbox" name="checkboxes" id="opt-measuretools">
+                              Outils de mesures
+                            </label>
+                            </div>
+                          
+                          <div class="checkbox">
+                            <label for="opt-exportpng">
+                              <input type="checkbox" name="checkboxes" id="opt-exportpng">
+                              Export de la carte au format png
+                            </label>
+                          </div>
+                          
+                          </div>
+                        </div>                        
+                    
+
+                        </fieldset>
+                    </form>
+                </div>
+                <div class="tab-pane" id="themes-config">
+                    <h1>Thématiques</h1>
+                    <div class="row">                              
+                        <div class="col-md-4">
+                              <!-- List with handle -->
+                              <div id="themes-list" class="list-group">                              
+                              </div>
+                              <button id="btn-addTheme" class="btn btn-sm btn-primary glyphicon glyphicon-plus sign" onclick="addTheme('Nouvelle thématique', false, createId('theme'));"></button>
+                     </div>                   
+                     <div class="col-md-4">                   
+                        <div id="panel-theme" class="panel panel-default panel-primary" style="display: none;">
+                              <div class="panel-heading">
+                                <h3 class="panel-title">Thématique</h3>
+                              </div>
+                              <div class="panel-body" id="theme-edit" data-themeid="">
+                                <div class="input-group">
+                                  <span class="input-group-addon">Nom</span>
+                                  <input type="text" id="theme-edit-title" class="form-control" placeholder="Titre" aria-describedby="basic-addon1">
+                                </div>
+                                <div class="checkbox">
+                                    <label for="theme-edit-collapsed">
+                                      <input type="checkbox" name="checkboxes" id="theme-edit-collapsed" value="0">
+                                      Déroulée par défaut
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label" for="theme-edit-icon">Icone</label> 
+                                    
+                                        <select id="theme-edit-icon" name="icon" class="form-control">
+                                        </select>
+                                    
+                              </div>
+                                </br>
+                                <!-- List with handle -->
+                              <div id="themeLayers" class="list-group">                                
+                              </div>
+                              <button id="btn-addLayer" class="btn btn-sm btn-info glyphicon glyphicon-plus sign" onclick="addLayer('Nouvelle couche');"></button>
+                              <button id="btn-saveTheme" class="btn btn-sm btn-success glyphicon glyphicon-ok" onclick="saveTheme();"></button>
+                              </div>
+                        </div>
+                   </div>
+                   </div>
+
+
+
+
+
+
+                    
+                </div>
+                <div class="tab-pane" id="backgroundlayers-config">
+                    <h1>Couches de fond</h1>
+                    <div id="frm-bl"></div>
+                    <div id="frm-icon"></div>
+                </div>
+                
+            </div> <!-- tab-content-->
+        </div>
+        
+          <!-- Modal file import-->
+          <div class="modal fade" id="mod-importfile" role="dialog">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal">&times;</button>
+                  <h4 class="modal-title">Importer un fichier de configuration</h4>
+                </div>
+                <div class="modal-body">
+                                <div class="alert alert-info">
+                                    <input type="file" name="filebutton" style="visibility:hidden;" id="filebutton" />
+                                    <label>Choisissez un fichier</label>
+                                    <div class="input-append">
+                                        <!-- This input is here purely for cosmetic reasons. The actual file is uploaded from the hidden input box !-->
+                                        <input type="text" id="subfile" class="input-xlarge">
+                                        <a class="btn btn-primary btn-sm" onclick="$('#filebutton').click();">Parcourir</a>
+                                    </div>
+                               </div>
+                               <div class="panel panel-default">
+                                  <div class="panel-heading">
+                                    <h3 class="panel-title">Contenu du fichier</h3>
+                                  </div>
+                                  <div class="panel-body">
+                                    <code id="opt-file"></code>
+                                  </div>
+                               </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          
+           <!-- Modal layer options-->
+          <div class="modal fade" id="mod-layerOptions" role="dialog">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal">&times;</button>
+                  <button type="button" class="btn btn-sm btn-success btn-layer-new glyphicon glyphicon-plus sign" data-toggle="modal" data-target="#mod-layerNew"></button>
+                  <h4 class="modal-title">Edition de couche</h4>
+                </div>
+                <div class="modal-body">
+                    <ul class="nav nav-tabs" role="tablist">    
+                        <li role="presentation" class="active"><a href="#layer_conf1"  role="tab" data-toggle="tab">Base</a></li>
+                        <li role="presentation" ><a href="#layer_conf2"  role="tab" data-toggle="tab">Fiche d'inforamtion</a></li>
+                        <li role="presentation" ><a href="#layer_conf3"  role="tab" data-toggle="tab">Affichage</a></li>
+                    </ul>
+                    <div class="tab-content">
+                    <div role="tabpanel" class="tab-pane active" id="layer_conf1">
+                   <form>
+                      <div class="form-group">
+                        <label for="frm-layer-title">Nom</label>
+                        <input type="text" class="form-control" id="frm-name" placeholder="nom de la couche">
+                      </div>
+                      <div class="form-group">
+                        <label for="frm-type">Type</label>
+                        <input type="text" class="form-control" id="frm-type" placeholder="type">
+                      </div>
+                      <div class="form-group">
+                        <label for="frm-layerid">id</label>
+                        <input type="text" class="form-control" id="frm-layerid" placeholder="id">
+                      </div>
+                       <div class="form-group">
+                        <label for="frm-url">url</label>
+                        <input type="text" class="form-control" id="frm-url" placeholder="url">
+                      </div>
+                       <div class="form-group">
+                        <label for="frm-attribution">Attributions</label>
+                        <input type="text" class="form-control" id="frm-attribution" placeholder="Attribution">
+                      </div>
+                      <div class="form-group">
+                        <label for="frm-metadata">metadata</label>
+                        <input type="text" class="form-control" id="frm-metadata" placeholder="metadata">
+                      </div>
+                       <div class="form-group">
+                        <label for="frm-metadata-csw">metadata</label>
+                        <input type="text" class="form-control" id="frm-metadata-csw" placeholder="metadata-csw">
+                      </div>                 
+
+                    <div class="form-group">
+                      <div class="checkbox">
+                        <label>
+                          <input id="frm-visible" type="checkbox"> Visible
+                        </label>
+                      </div>
+                    </div>
+                 </form>
+               </div>
+               <div role="tabpanel" class="tab-pane" id="layer_conf2">
+                  <form>
+                    <div class="form-group">
+                          <div class="checkbox">
+                            <label>
+                              <input id="frm-queryable" type="checkbox"> queryable
+                            </label>
+                          </div>
+                      </div>
+                      <div class="form-group">
+                            <label class="control-label" for="frm-infoformat">infoformat</label> 
+                            
+                                <select id="frm-infoformat" name="infoformat" class="form-control">                                    
+                                    <option value="text/html">text/html</option>
+                                    <option value="application/vnd.ogc.gml">application/vnd.ogc.gml</option>                               
+                                </select>
+                            
+                      </div>
+                      <div class="form-group">
+                          <div class="checkbox">
+                            <label>
+                              <input id="frm-template" type="checkbox">Utliser un template
+                            </label>
+                          </div>
+                      </div>
+                      <div class="form-group">
+                            <label class="control-label" for="frm-fields">Champs</label> 
+                            <div id="frm-lis-fields">                               
+                            </div >  
+                            
+                      </div>
+
+                  </form>
+                 </div>
+                 
+                 
+                 <div role="tabpanel" class="tab-pane" id="layer_conf3">
+                  <form>
+                    
+                      <div class="form-group">
+                            <label class="control-label" for="frm-styles">Styles</label> 
+                            <div id="frm-lis-styles">                               
+                            </div >  
+                            
+                      </div>
+
+                  </form>
+                 </div>
+                 
+                 
+                 
+                 </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" onclick="mv.saveLayerOptions()" class="btn btn-default">Enregistrer</button>
+                  <button type="button" onclick="mv.form2xml()" class="btn btn-default">Voir</button>
+                  <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+           <!-- Modal codeView-->
+          <div class="modal fade" id="mod-codeview" role="dialog">
+            <div class="modal-dialog modal-lg">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal">&times;</button>
+                  <h4 class="modal-title">Configuration XML</h4>
+                </div>
+                <div class="modal-body">
+                        <div class="row">
+                            <pre></pre>
+                          </div><!-- /.row -->
+                        
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+           <!-- Modal new Layer-->
+          <div class="modal fade" id="mod-layerNew" role="dialog">
+            <div class="modal-dialog modal-lg">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal">&times;</button>
+                  <h4 class="modal-title">Nouvelle couche</h4>
+                </div>
+                <div class="modal-body">
+                        <div class="row">
+                             <div class="col-lg-6">
+                                <div class="input-group">
+                                  <input type="text" id="input-ogc-filter" class="form-control" aria-label="..." placeholder="Rechercher...">
+                                  <div class="input-group-btn">
+                                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Providers<span class="caret"></span></button>
+                                    <ul class="dropdown-menu dropdown-menu-right">
+                                      <li class="active" ><a data-providertype="csw" data-provider="https://geobretagne.fr/geonetwork/srv/fre/csw" data-metadata-app="https://geobretagne.fr/geonetwork/apps/georchestra/" href="#">Catalogue géoBretagne</a></li>
+                                      <li><a data-providertype="csw" data-provider="http://applications.region-bretagne.fr/geonetwork/srv/fre/csw" data-metadata-app="http://applications.region-bretagne.fr/geonetwork/" href="#">Catalogue de la Région</a></li>          
+                                      <li role="separator" class="divider"></li>
+                                      <li><a data-providertype="wms" data-provider="http://ows.region-bretagne.fr/geoserver/rb/wms" href="#">Serveur WMS de la Région</a></li>
+                                      <li><a href="#">Serveur WFS</a></li>
+                                    </ul>
+                                    <button type="button" class="btn btn-critical" onclick="mv.search()" >Rechercher</button>
+                                  </div><!-- /btn-group -->
+                                </div><!-- /input-group -->
+                              </div><!-- /.col-lg-6 -->
+                          </div><!-- /.row -->
+                         <div class="row" id="csw-results" style="display: none;"></div>
+                         <div class="row" id="wms-results" style="display: none;"></div>
+                         <div class="row" id="wfs-results" style="display: none;"></div>
+                         </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        
+        
+        
+    </div>
+    <script>
+        $(document).ready(function(){
+             $('#tabs').tab();
+             $.get("icons-fontawesome.html",function( data ) {
+                $("#theme-edit-icon").append(data);
+                $("#theme-edit-icon option").each(function(i, el) {
+                    $(el).attr("value", $.trim($(el).text().split("[")[0]));
+                });
+             });
+             //loadConfig();
+	  });
+
+        //Map      
+      var map = new ol.Map({
+        layers: [
+          new ol.layer.Tile({
+            source: new ol.source.OSM()
+          })
+        ],
+        target: 'map',
+        view: new ol.View({
+          center: [-307903.74898791354, 6141345.088741366],
+          zoom: 7
+        })
+      });
+      
+      var config = {
+            application: { title: "", logo: "" },
+            themes: {}
+      };      
+      var loadLayers = function (themeid) {
+            var theme = config.themes[themeid];
+            if (theme) {
+                $.each(theme.layers, function (index, layer) {
+                        addLayer(layer.title, layer.id);
+                 });
+            }
+      };
+      
+      var _staticBaseLayers = ['<baselayers style="default">',
+         '<baselayer  type="WMTS" id="ortho1" label="Photo aérienne actuelle" title="GéoBretagne" thumbgallery="img/basemap/ortho.jpg" url="http://tile.geobretagne.fr/gwc02/service/wmts" layers="satellite" format="image/png" visible="true" attribution="&lt;a href=\'http://applications.region-bretagne.fr/geonetwork/?uuid=3a0ac2e3-7af1-4dec-9f36-dae6b5a8c731\' target=\'_blank\' >partenaires GéoBretagne - IGN RGE BD ORTHO - PlanetObserver&lt;/a>" style="_null" matrixset="EPSG:3857" fromcapacity="false"/>',
+         '<baselayer  type="WMS" id="osm" label="OpenStreetMap" title="Plan OSM Géobretagne" thumbgallery="img/basemap/osm.png" url="http://osm.geobretagne.fr/gwc01/service/wms" layers="osm:google" format="image/png" visible="false" attribution="GéoBretagne. Données : les contributeurs d\'&lt;a href=\'http://www.openstreetmap.org/\' target=\'_blank\'>OpenStreetMap &lt;/a>,  &lt;a href=\'http://www.openstreetmap.org/copyright\' target=\'_blank\'>ODbL &lt;/a>" />',
+         '</baselayers>'].join("\n");
+         
+         
+      var bl = {};
+      bl["ortho1"] = {id:"ortho1", thumbgallery: "../mviewer/img/basemap/ortho.jpg", title:"GéoBretagne", label:"Photo aérienne actuelle"};
+      bl["osm"] = {id:"ortho1", thumbgallery: "../mviewer/img/basemap/osm.png", title:"GéoBretagne", label: "OpenStreetMap"};
+      
+      mv.showBaseLayers(bl);      
+      
+      var sortableLayerList = Sortable.create(document.getElementById('themeLayers'), {
+          handle: '.glyphicon-move',
+          animation: 150,
+          ghostClass: 'ghost',
+          filter: '.layer-remove',
+          onFilter: function (evt) {
+            var el = sortableLayerList.closest(evt.item); // get dragged item
+            deleteLayer(el.getAttribute('data-layerid'));
+            el && el.parentNode.removeChild(el);
+          }
+        });
+        
+       var sortableThemeList = Sortable.create(document.getElementById('themes-list'), {
+          handle: '.glyphicon-move',
+          animation: 150,
+          ghostClass: 'ghost',
+          filter: '.theme-remove',
+          onFilter: function (evt) {
+            var el = sortableThemeList.closest(evt.item); // get dragged item
+            var themeid = $(el).attr("data-themeid");
+            deleteTheme(themeid);
+            el && el.parentNode.removeChild(el);
+          }
+        });
+      
+      $('input[type=file]').change(function () {
+            loadApplicationParameters();
+        });
+        
+      $(".dropdown-menu li a").click(function(){
+         $(this).parent().parent().find(".active").removeClass("active");
+         var url = $(this).data("provider");
+         var type = $(this).data("providertype");
+         $(this).parent().addClass("active");
+         //ogc.setLayerFinderMode({type: type, url: url });
+     });
+     
+         
+     var addLayer = function (title, layerid) {
+        // test if theme is saved
+        if (!config.themes[$("#theme-edit").attr("data-themeid")]) {
+            saveTheme();
+        }
+        $("#themeLayers").append(['<div class="list-group-item layers-list-item" data-layerid="'+layerid+'">',
+            '<span class="glyphicon glyphicon-move" aria-hidden="true"></span>',
+            '<span class="layer-remove glyphicon glyphicon-remove" title="Supprimer" ></span>',
+            '<span class="layer-edit glyphicon glyphicon-pencil" title="Editer cette couche" onclick="editLayer(this);"></span>',
+            '<span class="layer-name">'+title+'</span>',
+            '</div>'].join(""));
+     };
+     
+     var editLayer = function (item) {        
+        $("#themeLayers .list-group-item").removeClass("active");
+        $(item).parent().addClass("active");        
+        var title = $(item).parent().find(".layer-name").text();
+        var layerid = $(item).parent().attr("data-layerid");        
+        if (layerid != "undefined") {            
+            $("#mod-layerOptions").modal();
+            mv.showLayerOptions($(item).parent());            
+        } else {
+            $("#mod-layerNew").modal();
+        }
+     };
+     
+     var addTheme = function (title, collapsed, themeid) {
+        $("#themes-list").append(['<div class="list-group-item themes-list-item" data-theme="'+title+'" data-themeid="'+themeid+'" data-theme-collapsed="'+collapsed+'">',
+            '<span class="glyphicon glyphicon-move" aria-hidden="true"></span>',
+            '<span class="badge">0</span>',
+            '<span class="theme-remove glyphicon glyphicon-remove" title="Supprimer"></span>',
+            '<span class="theme-edit glyphicon glyphicon-pencil" title="Editer ce thème" onclick="editTheme(this);"></span>',
+            '<span class="theme-name">'+title+'</span></div>'].join(""));
+            config.themes[themeid] = {
+                title:title,
+                id: themeid,
+                collapsed: collapsed,
+                layers: []
+            };
+     };
+     
+     var editTheme = function (item) {
+        $("#themes-list .list-group-item").removeClass("active");
+        $(item).parent().addClass("active");
+        var title = $(item).parent().attr("data-theme");
+        var themeid = $(item).parent().attr("data-themeid");
+        var collapsed = ($(item).parent().attr("data-theme-collapsed")==="true")?true:false;
+        var icon = $(item).parent().attr("data-theme-icon");
+        $("#panel-theme").show();
+        $("#theme-edit-title").val(title);
+        $("#theme-edit-collapsed").prop('checked', collapsed);
+        $("#theme-edit").attr("data-themeid", themeid);
+        $("#theme-edit-icon").val(icon);
+        $("#theme-edit-icon option[value='"+icon+"']").prop("selected", true);
+        //Remove old layers entries
+        $(".layers-list-item").remove();
+        //Show layers
+        loadLayers(themeid);
+     };
+     
+     var saveTheme = function () {
+        //get active item in left panel
+        var theme = $("#themes-list .active");
+        //get edited values (right panel)
+        var title = $("#theme-edit-title").val();        
+        var themeid = $("#theme-edit").attr("data-themeid");
+        var collapsed = $("#theme-edit-collapsed").prop('checked');
+        var icon = $.trim($("#theme-edit-icon").val());
+        //update values in left panel
+        theme.attr("data-theme", title);      
+        theme.attr("data-theme-collapsed", collapsed);
+        theme.attr("data-theme-icon", icon);
+        theme.find(".theme-name").text(title);
+        var nb_layers = $("#themeLayers .list-group-item").length;
+        theme.find(".badge").text(nb_layers);
+        //deactivate theme edition
+        $("#themes-list .list-group-item").removeClass("active");
+        $("#panel-theme").hide();
+        
+        //save theme locally
+        config.themes[themeid].title = title;
+        config.themes[themeid].id = themeid;
+        config.themes[themeid].collapsed = collapsed;
+        config.themes[themeid].icon = icon;
+         
+        
+     };
+     
+     var deleteTheme = function (themeid) {
+        $("#panel-theme").hide();
+        delete config.themes[themeid];
+     };
+     
+     var deleteLayer = function (layerid) {
+        var themeid = $("#theme-edit").attr("data-themeid");
+        var index = config.themes[themeid].layers.findIndex(function(l){return l.id === layerid});
+        config.themes[themeid].layers.splice(index, 1);
+     };
+     
+     var createId = function (obj) {
+        var d = new Date();
+        var df = d.getFullYear() + ("0"+(d.getMonth()+1)).slice(-2)+
+            ("0" + d.getDate()).slice(-2) + ("0" + d.getHours()).slice(-2) + ("0" + d.getMinutes()).slice(-2) + ("0" + d.getSeconds()).slice(-2);
+        return obj+'-' + df;
+     };
+        
+      var saveApplicationParameters = function () {
+         //var conf = $('<config></config>');
+         var application = ['<application',
+            'title="'+$("#opt-title").val()+'"',            
+            'logo="'+$("#opt-logo").val()+'"',
+            'help="'+$("#opt-help").val()+'"',
+            'showhelp="'+($("#opt-showhelp").prop("checked") === true)+'"',   
+            'style="'+$("#opt-style").val()+'"',  
+            'exportpng="'+($('#opt-exportpng').prop('checked')=== true)+'"',
+            'measuretools="'+($('#opt-measuretools').prop('checked')=== true)+'"',            
+            '/>'].join(" ");
+            
+            
+         var center = map.getView().getCenter().join(",");
+         var zoom = map.getView().getZoom();
+         var mapoptions = '<mapoptions maxzoom="20" projection="EPSG:3857" center="'+center+'" zoom="'+zoom+'" />';
+            //'projextent="-20037508.342789244, -20037508.342789244, 20037508.342789244, 20037508.342789244"/>'].join(" ");
+            
+         var searchparameters = '<searchparameters localities="false"/>';
+         
+         var themes = ['<themes>'];
+         $.each(config.themes, function (i, t) {            
+            var theme = ['<theme id="'+t.id+'" name="'+t.title+'" collapsed="'+t.collapsed+'" icon="'+t.icon+'">'];
+            $(t.layers).each (function (i, l) {
+                var template = "";
+                if (l.usetemplate && l.template) {
+                    template = '<template><![CDATA['+ l.template+']]></template>';
+                    console.log(template,111);
+                }
+                var layer = ['<layer id="'+l.id+'"',
+                                    'name="'+l.title+'"',
+                                    'type="'+l.type+'"',
+                                    'url="'+l.url+'"',
+                                    'infoformat="'+l.infoformat+'"',
+                                    'metadata="'+l.metadata+'"',
+                                    'metadata-csw="'+l['metadata-csw']+'"',
+                                    'queryable="'+l.queryable+'"',
+                                    'visible="'+l.visible+'"',
+                                    'attribution="'+l.attribution+'"',
+                                    'fields="'+l.fields+'"',
+                                    'aliases="'+l.aliases+'"',
+                                    'style="'+l.style+'"',
+                                    'stylesalias="'+l.stylesalias+'"',
+                                    '>'+template+'</layer>'].join(" ");
+                theme.push(layer);
+            });
+            themes.push(theme);
+            themes.push('</theme>');
+         });
+         themes.push('</themes>');
+                     
+         var conf = ['<config>',
+            application,
+            mapoptions,
+            searchparameters,
+            _staticBaseLayers,
+            themes.join(","),
+         '</config>'].join("");
+         
+         $.ajax({
+          type: "POST",
+          url: "store.php",
+          data: conf,
+          success: function( data ) {
+            if (data.success && data.url) {
+            console.log(data.url);
+            window.open(data.url,'_blank');
+            }
+          }
+        });
+         
+         return conf;
+        
+      };
+      
+      var  loadApplicationParameters = function () {
+        var file = document.getElementById("filebutton").files[0];
+        if (file) {
+            var reader = new FileReader();
+            reader.readAsText(file, "UTF-8");
+            reader.onload = function (evt) {
+                document.getElementById("opt-file").innerHTML = evt.target.result;
+            }
+            reader.onerror = function (evt) {
+                document.getElementById("opt-file").innerHTML = "error reading file";
+            }
+        }
+      };
+      
+      var search = function () {
+        mv.resetSearch();
+        ogc.cswSearch();
+      };
+    </script>
+
+
+</body>
+</html>
