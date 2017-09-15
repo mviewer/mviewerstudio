@@ -19,7 +19,7 @@ var mv = (function () {
             console.log(results);
             var html = [];
             $.each(results, function (index, result) {
-                var div = ['<div class="csw-result col-sm-6 col-md-4" data-title="'+result.title+'" data-layerid="'+result.layerid+'" data-metadata="'+result.metadata+'" data-metadata-csw="'+result['metadata-csw']+'" data-url="'+result.wms+'" data-attribution="'+result.attribution+'" data-type="wms">',
+                var div = ['<div class="ogc-result csw-result col-sm-6 col-md-4" data-title="'+result.title+'" data-layerid="'+result.layerid+'" data-metadata="'+result.metadata+'" data-metadata-csw="'+result['metadata-csw']+'" data-url="'+result.wms+'" data-attribution="'+result.attribution+'" data-type="wms">',
                     '<div class="thumbnail">',
                       '<img src="'+result.image+'">',
                       '<div class="caption">',
@@ -33,44 +33,6 @@ var mv = (function () {
                 html.push(div);
            });
            $("#csw-results").append(html).show(); 
-           
-           $(".csw-result input[type=checkbox]").on("change", function(e){
-                e.stopPropagation();               
-                var ctl = e.currentTarget;
-                if (ctl.checked) {
-                    var conf = $(ctl).closest(".csw-result").data();
-                    $(".layers-list-item.active")                        
-                        .attr("data-type", "wms")
-                        .attr("data-url", conf.url)
-                        .attr("data-layerid", conf.layerid)
-                        .attr("data-title", conf.title)
-                        .attr("data-queryable", "true")
-                        .attr("infoformat", "text/html")
-                        .attr("data-metadata", conf.metadata)
-                        .attr("data-metadata-csw", mv.escapeXml(conf.metadataCsw))
-                        .attr("visible", true)
-                        .attr("data-attribution", conf.attribution)
-                        .find(".layer-name").text(conf.layerid);
-                        
-                    var layer = {
-                        "id": conf.layerid,
-                        "title": conf.title,
-                        "type": "wms",           
-                        "url": conf.url,
-                        "queryable": true, 
-                        "attribution": conf.attribution,
-                        "infoformat": "text/html",      
-                        "metadata": conf.metadata,
-                        "metadata-csw" : mv.escapeXml(conf.metadataCsw),
-                        "visible": true
-                    };
-                    
-                    config.themes[$("#theme-edit").attr("data-themeid")].layers.push(layer);
-                        
-                    $(ctl).closest(".modal").modal('hide');
-                }
-           });
-          
            
         },
         
@@ -133,15 +95,54 @@ var mv = (function () {
         
         },
         
+        showDistinctValues: function (values) {
+            var html = [];
+            $.each(values, function (id, value) {
+                html.push('<a onclick="$(this).toggleClass(\'active\');" class="list-group-item">'+value+'</a>');
+            });
+            $("#distinct_values a").remove();
+            $("#distinct_values").append(html.join(" "));
+        
+        },
+
+        saveAttributeFilter: function () {
+            var values = [];
+            var layerid = $(".layers-list-item.active").attr("data-layerid");
+            var fld = $("#attribute_filter_fields").val();
+            var operator = $("#attribute_filter_operators").val();
+            var selected = $("#distinct_values a.active");
+            var type = config.temp.layers[layerid].fields[fld].type;
+            
+            $.each(selected, function (id, value) {
+                if (type === 'string') {
+                    values.push("'"+$(value).text()+"'");
+                } else {
+                    values.push($(value).text());
+                }
+            });
+            var expression ="";
+            if (operator === "=") {
+                expression = values[0];
+            } else {
+                expression = "("+values.join(",")+")";
+            }
+            filter = fld+ " " + operator + " " + expression;
+            $("#frm-filter").val(filter);
+        },
         showFields: function (fields, layerid) {
             $("#frm-lis-fields .row.fld").remove();
+            $("#attribute_filter_fields option").remove();
             var themeid = $("#theme-edit").attr("data-themeid");
             function getLayerbyId(l) {
               return l.id === layerid;
             }
-            var layer = config.themes[themeid].layers.find(getLayerbyId);
-            
+            var layer = config.themes[themeid].layers.find(getLayerbyId);            
             $(fields).each(function (id, fld) {
+               
+            if (config.temp.layers[layerid].fields[fld]) {
+                 $("#attribute_filter_fields").append('<option value="'+fld+'">'+fld+'</option>');
+            }
+            attribute_filter_fields
             //name, alias, type
                 var alias="";
                 var selected = "";
@@ -177,20 +178,27 @@ var mv = (function () {
             console.log(results);
             var html = [];
              $.each(results, function (index, result) {
-                var div = ['<div class="wms-result col-sm-6 col-md-4" data-title="'+result.title+'" data-layerid="'+result.layerid+'" data-metadata="'+result.metadata+'" data-metadata-csw="'+result['metadata-csw']+'" data-url="'+result.wms+'" data-attribution="'+result.attribution+'" data-type="wms">',
+                var div = ['<div class="ogc-result wms-result col-sm-6 col-md-4" data-title="'+result.title+'" data-layerid="'+result.layerid+'" data-metadata="'+result.metadata+'" data-metadata-csw="'+result['metadata-csw']+'" data-url="'+result.wms+'" data-attribution="'+result.attribution+'" data-type="wms">',
                         '<h3>'+result.title+'</h3>',
                         '<p>'+result.abstract+'</p>',
                       '<input id="'+result.layerid+'-ck" type="checkbox" aria-label="...">',
                   '</div>'].join("");
                 html.push(div);
            });
-           $("#wms-results").append(html).show(); 
-           
-           $(".wms-result input[type=checkbox]").on("change", function(e){
-                e.stopPropagation();               
-                var ctl = e.currentTarget;
-                if (ctl.checked) {
-                    var conf = $(ctl).closest(".wms-result").data();
+           $("#wms-results").append(html).show();
+        },
+        
+        getConfLayers: function () {
+            var selected_layers = $(".ogc-result input[type='checkbox']:checked");            
+            var counter = 0;
+            var ogc_type = "";
+            selected_layers.each(function(i,ctl) {
+            if (ctl.checked) {
+                    var conf = $(ctl).closest(".ogc-result").data();
+                    if (counter > 0) {
+                        addLayer('Nouvelle couche');
+                        $(".list-group-item.layers-list-item").removeClass("active").last().addClass("active");
+                    }                    
                     $(".layers-list-item.active")                        
                         .attr("data-type", "wms")
                         .attr("data-url", conf.url)
@@ -200,9 +208,10 @@ var mv = (function () {
                         .attr("infoformat", "text/html")
                         .attr("data-metadata", conf.metadata)
                         .attr("data-metadata-csw", mv.escapeXml(conf.metadataCsw))
-                        .attr("visible", "text/html")
-                        .attr("attribution", conf.attribution)
-                        .find(".layer-name").text(conf.layerid);
+                        .attr("visible", true)
+                        .attr("data-attribution", conf.attribution)
+                        .find(".layer-name").text(conf.layerid);                        
+                    
                         
                      var layer = {
                         "id": conf.layerid,
@@ -217,13 +226,13 @@ var mv = (function () {
                         "visible": true
                     };
                     
-                    config.themes[$("#theme-edit").attr("data-themeid")].layers.push(layer);
-                        
-                    $(ctl).closest(".modal").modal('hide');
+                    config.themes[$("#theme-edit").attr("data-themeid")].layers.push(layer);    
                 }
-           });
-           
-           
+                counter+=1;
+             });
+             $("#mod-layerNew").modal('hide');
+             //remove selection from results
+             $(".ogc-result input[type='checkbox']:checked").prop("checked",false);
         },
         
          resetSearch: function () {           
@@ -259,7 +268,12 @@ var mv = (function () {
             $("#frm-metadata").val(layer.metadata);
             $("#frm-metadata-csw").val(layer["metadata-csw"]);
             $("#frm-visible").prop("checked", layer.visible);
-            $("#frm-attribution").val(layer.attribution);            
+            $("#frm-attribution").val(layer.attribution);
+            $("#frm-filter").val(layer.filter);
+            if (layer.usetemplate && layer.template) {
+                $("#frm-template").prop("checked", true);
+                console.log(layer.template);
+            }            
             ogc.getFieldsFromWMS(layer.url, layerid);
             ogc.getStylesFromWMS(layer.url, layerid);
         },
@@ -340,6 +354,7 @@ var mv = (function () {
             layer["attribution"] = $("#frm-attribution").val();
             layer.visible = ($("#frm-visible").prop("checked") === true);
             layer.usetemplate = ($("#frm-template").prop("checked") === true);
+            layer.filter = $("#frm-filter").val();
             
             //Fields
             layer.fieldsoptions = {};            
@@ -389,6 +404,7 @@ var mv = (function () {
                             '    metadata="'+$("#frm-metadata").val()+'"',
                             '    metadata-csw="'+$("#frm-metadata-csw").val()+'"',
                             '    attribution="'+$("#frm-attribution").val()+'"',
+                            '    filter="'+$("#frm-filter").val()+'"',
                             '    visible="'+($("#frm-visible").prop("checked") === true)+'">',
                         '</layer>'
                     ].join(" \n");

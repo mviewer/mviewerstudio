@@ -136,9 +136,12 @@ var ogc = (function () {
       };
       
       var _wmsCapabilitiesParse = function (data, layerid) {
-        var styles = $(data).find("Layer Layer Name").filter(function( index, name ) {
+        var layer =  $(data).find("Layer Layer Name").filter(function( index, name ) {
              return $(name).text() === layerid;
-        }).parent().find("Style");
+        }).parent();
+        var styles = layer.find("Style");
+        var crs = layer.find("CRS").first().text();
+        config.temp.layers[layerid].projection = crs;
         var lst = [];
         styles.each(function (index, style) {            
             lst.push({"name" : $(style).find("Name").text(), "src": $(style).find("OnlineResource").attr("xlink\:href")});
@@ -187,11 +190,26 @@ var ogc = (function () {
                 });
       };
       
-      var _DescribeFeatureTypeParse = function (data, typename, layerid) {
-        var fields = [];
-        $(data).find("xsd\\:element, element").each(function (id, fld){
-            fields.push($(fld).attr("name"));
-        });
+      var _DescribeFeatureTypeParse = function (data, typename, layerid, url) {
+        var fields = [];        
+        var layer = {wfs_url: url, fields:{}};
+        $(data).find("xsd\\:sequence, sequence").find("xsd\\:element, element").each(function (id, fld){
+            var _type;
+            var xml_type = $(fld).attr("type");
+            if (xml_type.search("gml")!= -1) {
+                _type = "geometry";
+                layer.geometry = $(fld).attr("name");
+            } else if (xml_type.search("string")!= -1) {
+                _type = "string";
+                fields.push($(fld).attr("name"));
+                layer.fields[$(fld).attr("name")] = {"type": _type};
+            } else {
+                _type = "number";
+                fields.push($(fld).attr("name"));
+                layer.fields[$(fld).attr("name")] = {"type": _type};
+            }
+            config.temp.layers[layerid] = layer;            
+        });       
         mv.showFields(fields, layerid);        
       };
       
@@ -203,7 +221,7 @@ var ogc = (function () {
                     dataType: "xml",
                     contentType: "application/xml",
                     success: function (data) {
-                        _DescribeFeatureTypeParse(data, typename, layerid);
+                        _DescribeFeatureTypeParse(data, typename, layerid, url);
                     },                
                     error: function (xhr, ajaxOptions, thrownError) {
                         alert("Problème avec la requête" +  thrownError);
@@ -227,8 +245,7 @@ var ogc = (function () {
                 });
       };
       
-      var _describeLayerParse = function (xml, layerid) {
-        console.log(xml, layerid);
+      var _describeLayerParse = function (xml, layerid) {        
         var wfs_url = $(xml).find("LayerDescription").attr("wfs").split("?")[0];
         var typename = $(xml).find("LayerDescription Query").attr("typeName");
         _getFields(wfs_url, typename, layerid);
@@ -248,6 +265,19 @@ var ogc = (function () {
                         alert("Problème avec la requête" +  thrownError);
                     }
                 });
+      };
+      
+      var _getDictinctValues = function (data, propertyname) {
+        var distinctValues = [];
+        var testValues = {};
+        $.each(data.features, function (id,feature) {
+            var value = feature.properties[propertyname];
+            if (!testValues[value]) {
+                distinctValues.push(value);
+                testValues[value] = true;
+            }            
+        });
+        mv.showDistinctValues(distinctValues);
       };
 
     return {
@@ -273,6 +303,23 @@ var ogc = (function () {
         
         getStylesFromWMS (url, layerid) {
             _getStyles (url, layerid);
+        },
+        
+        getFeatures (url, typename, propertyname) {            
+             $.ajax({
+                    type: "GET",
+                    url: url+'?SERVICE=WFS&VERSION=1.0.0&REQUEST=GETFEATURE&TYPENAME='+typename+'&outputFormat=application/json&propertyName='+propertyname+'&maxFeatures=100',
+                    crossDomain: true,                    
+                    dataType: "json",
+                    contentType: "application/json",
+                    success: function (data) {
+                        _getDictinctValues(data, propertyname);
+                    },                
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        alert("Problème avec la requête" +  thrownError);
+                    }
+                });
+            
         }
     }
 
