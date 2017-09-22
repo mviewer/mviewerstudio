@@ -32,9 +32,10 @@ var ogc = (function () {
             '<ogc:PropertyName>Type</ogc:PropertyName><ogc:Literal>dataset</ogc:Literal></ogc:PropertyIsLike>',
             '<ogc:PropertyIsLike wildCard="*" singleChar="." escapeChar="!">',
             '<ogc:PropertyName>Type</ogc:PropertyName><ogc:Literal>series</ogc:Literal></ogc:PropertyIsLike>',
-            '</ogc:Or></ogc:And><ogc:BBOX>',
+            '</ogc:Or></ogc:And>',
+            /*'<ogc:BBOX>',
             '<gml:Envelope xmlns:gml="http://www.opengis.net/gml"><gml:lowerCorner>-180 -90</gml:lowerCorner>',
-            '<gml:upperCorner>180 90</gml:upperCorner></gml:Envelope></ogc:BBOX>',
+            '<gml:upperCorner>180 90</gml:upperCorner></gml:Envelope></ogc:BBOX>',*/
             '<ogc:Or><ogc:Or><ogc:PropertyIsEqualTo matchCase="true">',
             '<ogc:PropertyName>Title</ogc:PropertyName>',
             '<ogc:Literal>'+str+'</ogc:Literal>',
@@ -83,13 +84,13 @@ var ogc = (function () {
                     layer.image = $(metadata).find("gmd\\:identificationInfo, identificationInfo").find("gmd\\:MD_DataIdentification,  MD_DataIdentification")
                     .find("gmd\\:graphicOverview, graphicOverview").find("gmd\\:fileName, fileName").find("gco\\:CharacterString, CharacterString").text();
                     layer.wms = $(metadata).find("gmd\\:protocol, protocol").find("gco\\:CharacterString, CharacterString").filter(function( index, el ) {
-                        return $(el).text() === 'OGC:WMS';
+                        return $(el).text().search("OGC:WMS") >= 0;
                     }).parent().parent().find("gmd\\:URL, URL").text().split("?")[0];                    
                     layer.wfs = $(metadata).find("gmd\\:protocol, protocol").find("gco\\:CharacterString, CharacterString").filter(function( index, el ) {
-                        return $(el).text() === 'OGC:WFS';
+                        return $(el).text().search("OGC:WFS") >= 0;
                     }).parent().parent().find("gmd\\:URL, URL").text().split("?")[0];                    
                     layer.layerid = $(metadata).find("gmd\\:protocol, protocol").find("gco\\:CharacterString, CharacterString").filter(function( index, el ) {
-                        return $(el).text() === 'OGC:WMS';
+                        return $(el).text().search("OGC:WMS") >= 0;
                     }).parent().parent().find("gmd\\:name, name").find("gco\\:CharacterString, CharacterString").text();                    
                     layer.title = $(metadata).find("gmd\\:identificationInfo, identificationInfo").find("gmd\\:MD_DataIdentification,  MD_DataIdentification")
                     .find("gmd\\:citation, citation").find("gmd\\:CI_Citation, CI_Citation").find("gmd\\:title, title").find("gco\\:CharacterString, CharacterString").text();
@@ -174,10 +175,12 @@ var ogc = (function () {
             mv.showWMSResults(results);
       };
       
-      var _wmsAjax = function (url, keyword) {                
+      var _wmsAjax = function (url, keyword) {              
+                var proxy = "../proxy/?url=";
+                var url2 = proxy+encodeURIComponent(url+'?REQUEST=GetCapabilities&SERVICE=WMS&Version=1.3.0');
                 $.ajax({
                     type: "GET",
-                    url: url+'?REQUEST=GetCapabilities&SERVICE=WMS&Version=1.3.0',
+                    url: url2,
                     crossDomain: true,                    
                     dataType: "xml",
                     contentType: "application/xml",
@@ -185,7 +188,7 @@ var ogc = (function () {
                         _wmsParse(data, keyword);
                     },                
                     error: function (xhr, ajaxOptions, thrownError) {
-                        alert("Problème avec la requête" +  thrownError);
+                        alert("Problème avec la requête WMS GetCapabilities" +  thrownError);
                     }
                 });
       };
@@ -224,15 +227,19 @@ var ogc = (function () {
                         _DescribeFeatureTypeParse(data, typename, layerid, url);
                     },                
                     error: function (xhr, ajaxOptions, thrownError) {
-                        alert("Problème avec la requête" +  thrownError);
+                        alert("Problème avec la requête WFS DescribeFeatureType" +  thrownError);
                     }
                 });
       };
       
         var _getStyles = function (url, layerid) {
+            var proxy = "../proxy/?url=";
+            //var url2 =  proxy+encodeURIComponent(url+'?REQUEST=GetCapabilities&SERVICE=WMS&Version=1.3.0');
+            var url2 = url+'?REQUEST=GetCapabilities&SERVICE=WMS&Version=1.3.0';
+                    
          $.ajax({
                     type: "GET",
-                    url: url+'?REQUEST=GetCapabilities&SERVICE=WMS&Version=1.3.0',
+                    url: url2,
                     crossDomain: true,                    
                     dataType: "xml",
                     contentType: "application/xml",
@@ -240,7 +247,7 @@ var ogc = (function () {
                         _wmsCapabilitiesParse(data, layerid);
                     },                
                     error: function (xhr, ajaxOptions, thrownError) {
-                        alert("Problème avec la requête" +  thrownError);
+                        alert("Problème avec la requête WMS GetCapabilities" +  thrownError);
                     }
                 });
       };
