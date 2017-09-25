@@ -133,6 +133,19 @@ div#map_filter {
     font-size: smaller;
 }
 
+.bl img {
+    max-height: 80px;
+}
+
+.bl .thumbnail {
+    background-color: #dcdada;
+}
+.bl.visible .thumbnail {
+    background-color: #fff;
+}
+.bl .caption {
+    text-align: center;
+}
 
 </style>
 <body>   
@@ -296,9 +309,27 @@ div#map_filter {
                     
                 </div>
                 <div class="tab-pane" id="backgroundlayers-config">
-                    <h1>Couches de fond</h1>
+                    <div class="row">                    
+                    <div class="col-sm-6 col-md-6">
+                        <h1>Couches de fond</h1>
+                    </div>
+                    <div class="col-sm-6 col-md-6">
+                        <div class="form-group">
+                            <label class="control-label" for="frm-bl-mode">Mode d'affichage</label> 
+                            <select id="frm-bl-mode" name="bl-mode" class="form-control">                                    
+                                <option value="default">normal</option>
+                                 <option value="gallery">gallerie</option>                               
+                            </select>
+                        </div>
+                     </div>
+                    </div>
                     <div id="frm-bl"></div>
-                    <div id="frm-icon"></div>
+                    <div class="form-group">
+                            <label class="control-label" for="frm-bl-mode">Fond affiché au démarrage</label> 
+                            <select id="frm-bl-visible" name="bl-visible" class="form-control" onchange="mv.changeVisibleBaseLayer(this.value)" >                                    
+                                                                
+                            </select>
+                        </div>
                 </div>
                 
             </div> <!-- tab-content-->
@@ -851,14 +882,17 @@ div#map_filter {
          var zoom = map.getView().getZoom();
          var mapoptions = '<mapoptions maxzoom="20" projection="EPSG:3857" center="'+center+'" zoom="'+zoom+'" />';
             //'projextent="-20037508.342789244, -20037508.342789244, 20037508.342789244, 20037508.342789244"/>'].join(" ");
-         var baseLayers =   ['<baselayers style="default">'];
+         var baseLayersMode = $("#frm-bl-mode").val();
+         var visibleBaselayer = $("#frm-bl-visible").val();
+         var baseLayers =   ['<baselayers style="'+baseLayersMode+'">'];
          $(".bl input:checked").each(function (i, b) {
             // set first bl visible
-            var baseLayer = bl[$(b).parent().parent().attr("data-layerid")].definition;
-            if (i === 0) {
-                baseLayer = baseLayer.replace('visible="false"', 'visible="true"');
+            var baseLayer = bl[$(b).parent().parent().attr("data-layerid")];
+            var definition = baseLayer.definition;
+            if (baseLayer.id === visibleBaselayer) {
+                definition = definition.replace('visible="false"', 'visible="true"');
             }
-            baseLayers.push(baseLayer);
+            baseLayers.push(definition);
          });
          baseLayers.push('</baselayers>');
          var searchparameters = '<searchparameters localities="false"/>';
@@ -974,11 +1008,15 @@ div#map_filter {
                 map.getView().setCenter(mapoptions.attr("center").split(",").map(Number));
                 map.getView().setZoom(parseInt(mapoptions.attr("zoom")));
                 //BaseLayers
+                var baseLayersMode = $(xml).find("baselayers").attr("mode");
+                $("#frm-bl-mode").val(baseLayersMode);
                 var baselayers = $(xml).find("baselayer");
                 baselayers.each(function(id, bl) {
                     var id = $(bl).attr("id");
                     $("#frm-bl .bl[data-layerid='"+id+"'] input").prop("checked",true);
                 });
+                var visibleBaselayer = $(xml).find('baselayer[visible="true"]').attr("id");
+                $("#frm-bl-visible").val(visibleBaselayer).trigger('change');            
                 //tHEMES & layers
                 var themes = $(xml).find("theme");
                 themes.each(function(id, th) {                    

@@ -38,19 +38,22 @@ var mv = (function () {
         
         showBaseLayers: function (data) {
              var html = [];
+             var html2 = [];
              $.each(data, function (index, l) {
-                var div = ['<div class="bl col-sm-6 col-md-4" data-title="'+l.label+'" data-layerid="'+l.id+'" >',
-                         '<div class="thumbnail">',
-                      '<img src="'+l.thumbgallery+'">',
+                var div = ['<div class="bl col-sm-6 col-md-3" data-title="'+l.label+'" data-layerid="'+l.id+'" >',
+                         '<div class="thumbnail">',                      
                       '<div class="caption">',
-                        '<h3>'+l.label+'</h3>',
+                        '<h4>'+l.label+'</h4>',
                         '<p>'+l.title+'</p>',                    
-                      '</div>',                              
+                      '</div>',
+                      '<img src="'+l.thumbgallery+'">',                      
                       '<input id="'+l.id+'-bl" type="checkbox" aria-label="...">',
                   '</div>'].join("");
                 html.push(div);
+                html2.push('<option value="'+l.id+'" >'+l.label + ' - ' + l.title+'</option>');
            });
            $("#frm-bl").append(html);
+           $("#frm-bl-visible").append(html2);
         },
         
         showStyles: function (styles, layerid) {
@@ -445,6 +448,11 @@ var mv = (function () {
                     break;
             
             }
+        },
+        
+        changeVisibleBaseLayer : function (visibleBaselayer) {
+            $(".bl").removeClass("visible");
+            $(".bl[data-layerid='"+visibleBaselayer+"']").addClass("visible");
         }
         
         
