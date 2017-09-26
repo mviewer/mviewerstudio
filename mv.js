@@ -50,10 +50,20 @@ var mv = (function () {
                       '<input id="'+l.id+'-bl" type="checkbox" aria-label="...">',
                   '</div>'].join("");
                 html.push(div);
-                html2.push('<option value="'+l.id+'" >'+l.label + ' - ' + l.title+'</option>');
+                html2.push('<option disabled value="'+l.id+'" >'+l.label + ' - ' + l.title+'</option>');
            });
            $("#frm-bl").append(html);
            $("#frm-bl-visible").append(html2);
+           $(".bl input").bind("change", function (e) {
+            console.log($(this).parent().parent().attr("data-layerid"), $(e.currentTarget).prop('checked'));
+                var id = $(this).parent().parent().attr("data-layerid");
+                var value = $(e.currentTarget).prop('checked');
+                if (value === true) {
+                     $("#frm-bl-visible option[value='"+id+"']").removeAttr('disabled');
+                } else {
+                    $("#frm-bl-visible option[value='"+id+"']").attr('disabled', 'disabled');
+                }
+           });
         },
         
         showStyles: function (styles, layerid) {

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <title>Exemples de configuration mviewer</title>
+  <title>Kartenn generator</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">  
@@ -63,46 +63,46 @@ body {
     font-size: 20px;
     font-weight: bold;
 }
-option.alizarin {
+.alizarin {
     background-color: #E64B3B;   
 }
-option.blue {
+.blue {
     background-color: #F6F7F8;
 }
-option.default {
+.default {
     background-color: #34495D;
 }
-option.nephritis {
+.nephritis {
     background-color: #26AE60;
 }
-option.ripe_lemon {
+.ripe_lemon {
     background-color: #F6CA17;
 }
-option.amethyst {
+.amethyst {
     background-color: #9A59B6;
 }
-option.carrot {
+.carrot {
     background-color: #E67E21;
 }
-option.green {
+.green {
     background-color: #70BA50;
 }
-option.peter_river {
+.peter_river {
     background-color: #3497DB;
 }
-option.black {
+.black {
     background-color: #000000;
 }
-option.chambray {
+.chambray {
     background-color: #3A529A;
 }
-option.green_sea {
+.green_sea {
     background-color: #1ABC9C;
 }
-option.pink {    
+.pink {    
     background-color: #F62359;
 }
-option.wet_asphalt {    
+.wet_asphalt {    
     background-color: #34495D;
 }
 
@@ -147,19 +147,21 @@ div#map_filter {
     text-align: center;
 }
 
+select#opt-style {    
+    color: #fff;
+}
+
 </style>
 <body>   
     <nav class="navbar navbar-inverse">
   <div class="container-fluid">
     <div class="navbar-header">
-      <a class="navbar-brand" href="#">mviewer generator</a>
-    </div>
-    <ul class="nav navbar-nav">
-      <li class="active"><a href="#">Configuration</a></li>     
-    </ul>
+      <a class="navbar-brand" href="#">Générateur Kartenn</a>
+    </div>    
     <ul class="nav navbar-nav navbar-right">
-      <li><a role="button" data-toggle="modal" data-target="#mod-importfile" href="#"><span role="button" class="glyphicon glyphicon-import"></span>Import</a></li>
-      <li><a role="button" onclick="console.log(saveApplicationParameters());" href="#"><span class="glyphicon glyphicon-export"></span>Export</a></li>
+      <li><a role="button" data-toggle="modal" data-target="#mod-importfile" href="#"><span role="button" class="glyphicon glyphicon-import"></span>Importer</a></li>
+      <li><a role="button" onclick="saveApplicationParameters(false);" href="#"><span class="glyphicon glyphicon-download"></span>Télécharger</a></li>
+      <li><a role="button" onclick="saveApplicationParameters(true);" href="#"><span class="glyphicon glyphicon-globe"></span>Visualiser</a></li>
    </ul>
   </div>
 </nav>
@@ -212,12 +214,12 @@ div#map_filter {
                         
                         <!--style-->
                         <div class="form-group">
-                            <label class="control-label" for="frm-stylet">Style</label> 
+                            <label class="control-label" for="frm-style">Style</label> 
                             
-                                <select id="opt-style" name="style" class="form-control">                                    
+                                <select id="opt-style" name="style" class="form-control default"  onchange="updateTheme(this);">                                    
                                     <option class="alizarin" value="css/themes/alizarin.css">alizarin</option>
                                     <option class="blue" value="css/themes/blue.css">blue</option>
-                                    <option class="default" value="css/themes/default.css">default</option>
+                                    <option class="default" selected value="css/themes/default.css">default</option>
                                     <option class="nephritis" value="css/themes/nephritis.css">nephritis</option>
                                     <option class="ripe_lemon" value="css/themes/ripe_lemon.css">ripe_lemon</option>
                                     <option class="amethyst" value="css/themes/amethyst.css">amethyst</option>
@@ -232,6 +234,14 @@ div#map_filter {
                                 </select>
                             
                       </div>
+                      <!--<div class="row">
+                          <div class="list-group">
+                              <a  class="alizarin list-group-item  col-xs-6 col-md-3">Dapibus ac facilisis in</a>
+                              <a  class="blue list-group-item  col-xs-6 col-md-3">Cras sit amet nibh libero</a>
+                              <a  class="default list-group-item  col-xs-6 col-md-3">Porta ac consectetur ac</a>
+                              <a  class="nephritis list-group-item  col-xs-6 col-md-3">Vestibulum at eros</a>
+                         </div>
+                     </div>-->
                          
                           <!-- Options -->
                         <div class="form-group">
@@ -865,7 +875,7 @@ div#map_filter {
         return obj+'-' + df;
      };
         
-      var saveApplicationParameters = function () {
+      var saveApplicationParameters = function (option) {
          //var conf = $('<config></config>');
          var application = ['<application',
             'title="'+$("#opt-title").val()+'"',            
@@ -937,19 +947,24 @@ div#map_filter {
             themes.join(" "),
          '</config>'];
          
-         $.ajax({
-          type: "POST",
-          url: "store.php",
-          data: conf.join(""),
-          success: function( data ) {
-            if (data.success && data.url) {
-            console.log(data.url);
-            window.open(data.url,'_blank');
-            }
+         if (option) {         
+                 $.ajax({
+                  type: "POST",
+                  url: "store.php",
+                  data: conf.join(""),
+                  success: function( data ) {
+                    if (data.success && data.url) {
+                    console.log(data.url);
+                    window.open(data.url,'_blank');
+                    }
+                  }
+                });
+          } else {
+            var element = document.createElement('a');
+            element.setAttribute('href', 'data:text/xml;charset=utf-8,' +      encodeURI(conf.join("")));
+            element.setAttribute('download', "config.xml");
+            element.click();            
           }
-        });
-         
-         return conf.join("");
         
       };
       
@@ -991,7 +1006,10 @@ div#map_filter {
                     if (application.attr(value)) {
                         $("#opt-" + value).val(application.attr(value));
                     }
-                });
+                    if (value === "style") {
+                        updateTheme($("#opt-" + value)[0]);
+                    }
+                }); 
                 
                 ["exportpng", "measuretools"].forEach(function(value,id) {
                     if (application.attr(value) && application.attr(value) === "true") {
@@ -1008,12 +1026,15 @@ div#map_filter {
                 map.getView().setCenter(mapoptions.attr("center").split(",").map(Number));
                 map.getView().setZoom(parseInt(mapoptions.attr("zoom")));
                 //BaseLayers
-                var baseLayersMode = $(xml).find("baselayers").attr("mode");
+                var baseLayersMode = $(xml).find("baselayers").attr("mode") || "default";
                 $("#frm-bl-mode").val(baseLayersMode);
                 var baselayers = $(xml).find("baselayer");
+                //Reinitialisation
+                $(".bl input").prop("checked",false);
+                $("#frm-bl-visible option").attr('disabled', 'disabled');
                 baselayers.each(function(id, bl) {
                     var id = $(bl).attr("id");
-                    $("#frm-bl .bl[data-layerid='"+id+"'] input").prop("checked",true);
+                    $("#frm-bl .bl[data-layerid='"+id+"'] input").prop("checked",true).trigger('change');
                 });
                 var visibleBaselayer = $(xml).find('baselayer[visible="true"]').attr("id");
                 $("#frm-bl-visible").val(visibleBaselayer).trigger('change');            
@@ -1058,6 +1079,13 @@ div#map_filter {
       var search = function () {
         mv.resetSearch();
         ogc.cswSearch();
+      };
+      
+      var updateTheme = function (el) {
+        console.log(el);
+        var cls = $("#"+el.id+" option[value='"+el.value+"']").text();
+        $(el).removeClass().addClass("form-control " + cls);
+      
       };
     </script>
 
