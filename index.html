@@ -710,6 +710,13 @@ select#opt-style {
         '   layers="satellite" format="image/png" style="_null" matrixset="EPSG:3857" fromcapacity="false"',
         '   attribution="&lt;a href=\'http://applications.region-bretagne.fr/geonetwork/?uuid=3a0ac2e3-7af1-4dec-9f36-dae6b5a8c731\' target=\'_blank\' >partenaires GéoBretagne - IGN RGE BD ORTHO - PlanetObserver&lt;/a>" />'].join("")
       };
+       bl["ortho_ir"] = {
+        id:"ortho_ir", thumbgallery: "../mviewer/img/basemap/ir.jpg", title:"GéoBretagne", label:"Photo aérienne infra rouge", 
+        definition: ['<baselayer  visible="false" type="WMTS" id="ortho_ir" label="Photo aérienne infra rouge"',
+        '   title="GéoBretagne" thumbgallery="img/basemap/ir.jpg" url="http://geobretagne.fr/geoserver/gwc/service/wmts"',
+        '   layers="photo:ir-composite" format="image/jpeg" style="_null" matrixset="EPSG:3857" fromcapacity="false"',
+        '   attribution="&lt;a href=\'https://geobretagne.fr/geonetwork/apps/georchestra/?uuid=434b82a8-8d3c-4d9f-9eb3-0485f1a63eb6\' target=\'_blank\' >partenaires GéoBretagne - IGN RGE BD ORTHO - PlanetObserver&lt;/a>" />'].join("")
+      };
       bl["osm_google"] = {
         id:"osm_google", thumbgallery: "../mviewer/img/basemap/osm_google.png", title:"GéoBretagne", label: "OpenStreetMap",
         definition: ['<baselayer  visible="false" type="WMS" id="osm_google" label="OpenStreetMap" title="Plan OSM Géobretagne" thumbgallery="img/basemap/osm_google.png" ',
@@ -916,6 +923,10 @@ select#opt-style {
                     template = '<template><![CDATA['+ l.template+']]></template>';
                     console.log(template,111);
                 }
+                var filter = "";
+                if (l.filter) {
+                    filter = 'filter="'+l.filter+'"';
+                }
                 var layer = ['<layer id="'+l.id+'"',
                                     'name="'+l.title+'"',
                                     'type="'+l.type+'"',
@@ -926,7 +937,7 @@ select#opt-style {
                                     'queryable="'+l.queryable+'"',
                                     'visible="'+l.visible+'"',
                                     'attribution="'+l.attribution+'"',
-                                    'filter="'+l.filter+'"',
+                                    filter,
                                     'fields="'+(l.fields || '')+'"',
                                     'aliases="'+(l.aliases || '')+'"',
                                     'style="'+(l.style || '')+'"',
