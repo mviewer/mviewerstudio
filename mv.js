@@ -68,11 +68,15 @@ var mv = (function () {
         
         showStyles: function (styles, layerid) {
             $("#frm-lis-styles .layer-style").remove();
+            $("#frm-sld").val("");
             var themeid = $("#theme-edit").attr("data-themeid");
             function getLayerbyId(l) {
               return l.id === layerid;
             }
             var layer = config.themes[themeid].layers.find(getLayerbyId);
+            if (layer.sld) {
+                $("#frm-sld").val(layer.sld);
+            }
             var html = [];
             $(styles).each(function (id, style) {
                 style.name
@@ -108,29 +112,32 @@ var mv = (function () {
         
         },
         
-        showDistinctValues: function (values) {
+        showDistinctValues: function (values, option) {
+            console.log(option);
             var html = [];
             $.each(values, function (id, value) {
                 html.push('<a onclick="$(this).toggleClass(\'active\');" class="list-group-item">'+value+'</a>');
             });
             $("#distinct_values a").remove();
             $("#distinct_values").append(html.join(" "));
+            $("#mod-featuresview").modal();
+            $("#mod-featuresview").attr("data-target", option);
         
         },
 
-        saveAttributeFilter: function () {
+        saveSourceAttributeFilter: function () {
             var values = [];
             var layerid = $(".layers-list-item.active").attr("data-layerid");
             var fld = $("#attribute_filter_fields").val();
             var operator = $("#attribute_filter_operators").val();
-            var selected = $("#distinct_values a.active");
+            var selected = $("#source_fields_tags").tagsinput('items');
             var type = config.temp.layers[layerid].fields[fld].type;
             
             $.each(selected, function (id, value) {
                 if (type === 'string') {
-                    values.push("'"+$(value).text()+"'");
+                    values.push("'"+value+"'");
                 } else {
-                    values.push($(value).text());
+                    values.push(value);
                 }
             });
             var expression ="";
@@ -145,45 +152,50 @@ var mv = (function () {
         showFields: function (fields, layerid) {
             $("#frm-lis-fields .row.fld").remove();
             $("#attribute_filter_fields option").remove();
+            $("#opt-attributefield option").remove();            
             var themeid = $("#theme-edit").attr("data-themeid");
             function getLayerbyId(l) {
               return l.id === layerid;
             }
             var layer = config.themes[themeid].layers.find(getLayerbyId);            
-            $(fields).each(function (id, fld) {
-               
-            if (config.temp.layers[layerid].fields[fld]) {
-                 $("#attribute_filter_fields").append('<option value="'+fld+'">'+fld+'</option>');
-            }
-            attribute_filter_fields
-            //name, alias, type
-                var alias="";
-                var selected = "";
-                if (layer.fieldsoptions && layer.fieldsoptions[fld]) {
-                    alias = layer.fieldsoptions[fld].alias;
-                    selected = "selected";
-                } else {
-                    alias = fld;
-                    selected = "";
+            $(fields).each(function (id, fld) {               
+                if (config.temp.layers[layerid].fields[fld]) {
+                     $("#attribute_filter_fields, #opt-attributefield").append('<option value="'+fld+'">'+fld+'</option>');
                 }
-                var item = ['<div class="row fld '+selected+'" data-field="'+fld+'" ><div class="col-md-3 fld-name">'+fld+'</div>',
-                                '<div class="col-md-3 fld-alias"><input type="text" value="'+alias+'" class="form-control"></div>',
-                                '<div class="col-md-3 fld-option">',
-                                    '<select class="form-control" onchange="mv.fieldTypeSelectionChange(this)">',
-                                            '<option value="false">Non utilisé</option>',
-                                            '<option value="title">Titre</option>',
-                                            '<option value="link">Lien</option>',
-                                            '<option value="image">Image</option>',
-                                            '<option value="text">Texte</option>',
-                                    '</select></div></div>'].join("");
-                                
-                                                                
-                                
-               $("#frm-lis-fields").append(item);
-               if (layer.fieldsoptions && layer.fieldsoptions[fld]) {
-                    $("#frm-lis-fields .fld[data-field='"+fld+"'] option[value='"+layer.fieldsoptions[fld].type+"']").prop("selected",  "selected");
-               }
-            });          
+                //name, alias, type
+                    var alias="";
+                    var selected = "";
+                    if (layer.fieldsoptions && layer.fieldsoptions[fld]) {
+                        alias = layer.fieldsoptions[fld].alias;
+                        selected = "selected";
+                    } else {
+                        alias = fld;
+                        selected = "";
+                    }
+                    var item = ['<div class="row fld '+selected+'" data-field="'+fld+'" ><div class="col-md-3 fld-name">'+fld+'</div>',
+                                    '<div class="col-md-3 fld-alias"><input type="text" value="'+alias+'" class="form-control"></div>',
+                                    '<div class="col-md-3 fld-option">',
+                                        '<select class="form-control" onchange="mv.fieldTypeSelectionChange(this)">',
+                                                '<option value="false">Non utilisé</option>',
+                                                '<option value="title">Titre</option>',
+                                                '<option value="link">Lien</option>',
+                                                '<option value="image">Image</option>',
+                                                '<option value="text">Texte</option>',
+                                        '</select></div></div>'].join("");
+                                    
+                                                                    
+                                    
+                   $("#frm-lis-fields").append(item);
+                   if (layer.fieldsoptions && layer.fieldsoptions[fld]) {
+                        $("#frm-lis-fields .fld[data-field='"+fld+"'] option[value='"+layer.fieldsoptions[fld].type+"']").prop("selected",  "selected");
+                   }                   
+            });
+            if (layer.attributefilter && layer.attributefield) {
+                        $("#opt-attributefield").val(layer.attributefield);
+            }
+            if (layer.usetemplate && layer.template) {
+                mv.parseTemplate(layer.template.split("{{#features}}")[1].split("{{/features}}")[0]);                
+            }
                             
         },
         
@@ -264,6 +276,17 @@ var mv = (function () {
         },
         
         showLayerOptions: function (el) {
+            //clear forms
+            $("#layer_conf1 form").trigger('reset');
+            $("#layer_conf2 form").trigger('reset');
+            $("#frm-lis-fields").empty();
+            $("#layer_conf3 form").trigger('reset');
+            $("#frm-lis-styles").empty();
+            $("#layer_conf4 form").trigger('reset');
+            $("#layer_conf5 form").trigger('reset');
+            $("#layer_sections>.tab-pane").removeClass('active').first().addClass('active');
+            $("#layer_sections_menu li").removeClass('active').first().addClass('active');
+            
             var layerid = el.attr("data-layerid");
             var themeid = $("#theme-edit").attr("data-themeid");
             
@@ -274,21 +297,39 @@ var mv = (function () {
             
             $("#frm-type").val(layer.type);
             $("#frm-name").val(layer.title);
+            $("#frm-scalemin").val(layer.scalemin);
+            $("#frm-scalemax").val(layer.scalemax);
+            $("#frm-legendurl").val(layer.legendurl);
             $("#frm-layerid").val(layer.id);
             $("#frm-url").val(layer.url);
             $("#frm-queryable").prop("checked", (layer.queryable));            
-            $("#frm-infoformat option[value='"+layer.infoformat+"']").prop("selected", true);            
+            $("#frm-infoformat option[value='"+layer.infoformat+"']").prop("selected", true).trigger("change");            
             $("#frm-metadata").val(layer.metadata);
             $("#frm-metadata-csw").val(layer["metadata-csw"]);
             $("#frm-visible").prop("checked", layer.visible);
+            $("#frm-tiled").prop("checked", layer.tiled);
             $("#frm-attribution").val(layer.attribution);
             $("#frm-filter").val(layer.filter);
-            if (layer.usetemplate && layer.template) {
+            if (layer.attributefilter) {
+                $("#frm-attributelabel").val(layer.attributelabel);
+                layer.attributevalues.split(",").forEach(function (value,id) {
+                    $("#control_fields_tags").tagsinput('add', value);
+                });
+            }
+            if (layer.usetemplate && layer.templateurl) {
                 $("#frm-template").prop("checked", true);
-                console.log(layer.template);
-            }            
-            ogc.getFieldsFromWMS(layer.url, layerid);
-            ogc.getStylesFromWMS(layer.url, layerid);
+                $("#frm-template-url").val(layer.templateurl);
+                console.log(layer.templateurl);
+            }
+            if (layer.type === "wms") {
+                $("a[href='#layer_conf4']").parent().show();
+                $("a[href='#layer_conf5']").parent().show();
+                ogc.getFieldsFromWMS(layer.url, layerid);
+                ogc.getStylesFromWMS(layer.url, layerid);
+            } else {
+                $("a[href='#layer_conf4']").parent().hide();
+                $("a[href='#layer_conf4']").parent().hide();
+            }
         },
         
         writeFieldsOptions: function (layer) {
@@ -303,7 +344,7 @@ var mv = (function () {
                             template.title = '<h3 class="title-feature">{{'+options.name+'}}</h3>';
                             break;
                         case "text":
-                            template.text.push('<span>'+options.alias+':</span> {{'+options.name+'}}<br/>' );
+                            template.text.push('<div class="feature-text"><span>'+options.alias+':</span> {{'+options.name+'}}</div><br/>' );
                             break;
                         case "image":
                             template.photo.push('<img src="{{'+options.name+'}}" class="img-responsive" style="margin-top:5%;" />');
@@ -355,19 +396,38 @@ var mv = (function () {
               return l.id === layerid;
             }
             var layer = config.themes[themeid].layers.find(getLayerbyId);
-            
+            if ( $("#frm-scalemin").val()>= 0 && $("#frm-scalemax").val()> 0) {
+                layer.scalemin = $("#frm-scalemin").val();
+                layer.scalemax = $("#frm-scalemax").val();
+            } else {
+                delete layer.scalemin;
+                delete layer.scalemax;
+            }
             layer.type =  $("#frm-type").val();
             layer.title =  $("#frm-name").val();
             layer.id = $("#frm-layerid").val();
             layer.url =  $("#frm-url").val();
+            layer.legendurl =  $("#frm-legendurl").val();
             layer.queryable = ($("#frm-queryable").prop("checked") === true);            
             layer.infoformat = $("#frm-infoformat").val();           
             layer.metadata = $("#frm-metadata").val();
             layer["metadata-csw"] = $("#frm-metadata-csw").val();
             layer["attribution"] = $("#frm-attribution").val();
             layer.visible = ($("#frm-visible").prop("checked") === true);
+            layer.tiled = ($("#frm-tiled").prop("checked") === true);
             layer.usetemplate = ($("#frm-template").prop("checked") === true);
             layer.filter = $("#frm-filter").val();
+            
+            //Controle FilterAttributes            
+            var fld = $("#opt-attributefield").val();            
+            var values = $("#control_fields_tags").val();
+            var label =  $("#frm-attributelabel").val();
+            if (values.split(",").length>1) {
+                layer.attributefilter = true;
+                layer.attributefield = fld;
+                layer.attributevalues = values;
+                layer.attributelabel = label;
+            }
             
             //Fields
             layer.fieldsoptions = {};            
@@ -457,6 +517,43 @@ var mv = (function () {
                     //fdff
                     break;
             
+            }
+        },
+        
+        parseTemplate: function (tpl) {
+            var title = $(tpl).find(".title-feature").text().match("{{(.*)}}")[1];
+            $("#frm-lis-fields .fld[data-field='"+title+"'] .fld-option select").val("title").trigger("change");
+            var texts = [];
+            var photos = [];
+            var links = [];
+            $(tpl).find(".feature-text").each(function (i, t) {
+                var text = $(t).text().match("{{(.*)}}")[1];
+                var alias = $(t).find("span").text().split(":")[0];
+                texts.push({"text": text, "alias": alias});
+               $("#frm-lis-fields .fld[data-field='"+text+"'] .fld-option select").val("text").trigger("change");
+               $("#frm-lis-fields .fld[data-field='"+text+"'] .fld-alias input").val(alias);
+            });
+            $(tpl).find("img").each(function (i, img) {
+                var photo = $(img).attr("src").match("{{(.*)}}")[1];                
+                photos.push(photo);
+                $("#frm-lis-fields .fld[data-field='"+photo+"'] .fld-option select").val("image").trigger("change");
+            });
+            $(tpl).find("a").each(function (i, a) {
+                var link = $(a).attribute("href").match("{{(.*)}}")[1];
+                var alias = $(a).text();
+                links.push({"link": link, "alias": alias});
+                $("#frm-lis-fields .fld[data-field='"+link+"'] .fld-alias input").val(alias);
+                $("#frm-lis-fields .fld[data-field='"+link+"'] .fld-option select").val("link").trigger("change");
+            });
+            console.log(title, texts, photos, links);
+            
+        },
+        
+        showHideQueryParameters : function (value) {
+            if (value === "application/vnd.ogc.gml") {
+                $("#query-parameters").addClass("visible");
+            } else {
+                $("#query-parameters").removeClass("visible");
             }
         },
         

@@ -274,7 +274,7 @@ var ogc = (function () {
                 });
       };
       
-      var _getDictinctValues = function (data, propertyname) {
+      var _getDictinctValues = function (data, propertyname, option) {
         var distinctValues = [];
         var testValues = {};
         $.each(data.features, function (id,feature) {
@@ -284,7 +284,7 @@ var ogc = (function () {
                 testValues[value] = true;
             }            
         });
-        mv.showDistinctValues(distinctValues);
+        mv.showDistinctValues(distinctValues, option);
       };
 
     return {
@@ -312,7 +312,7 @@ var ogc = (function () {
             _getStyles (url, layerid);
         },
         
-        getFeatures (url, typename, propertyname) {            
+        getFeatures (url, typename, propertyname, option) {            
              $.ajax({
                     type: "GET",
                     url: url+'?SERVICE=WFS&VERSION=1.0.0&REQUEST=GETFEATURE&TYPENAME='+typename+'&outputFormat=application/json&propertyName='+propertyname+'&maxFeatures=100',
@@ -320,7 +320,7 @@ var ogc = (function () {
                     dataType: "json",
                     contentType: "application/json",
                     success: function (data) {
-                        _getDictinctValues(data, propertyname);
+                        _getDictinctValues(data, propertyname, option);
                     },                
                     error: function (xhr, ajaxOptions, thrownError) {
                         alert("Problème avec la requête" +  thrownError);

@@ -10,6 +10,8 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
   <script src="Sortable.min.js"></script>
   <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-tagsinput/0.8.0/bootstrap-tagsinput.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-tagsinput/0.8.0/bootstrap-tagsinput.css" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/proj4js/2.4.4/proj4.js"></script>
   <script src="https://openlayers.org/en/v4.2.0/build/ol.js"></script> 
   <script src="ogc.js"></script>
@@ -151,6 +153,25 @@ select#opt-style {
     color: #fff;
 }
 
+#frm-lis-styles .caption {
+    font-size: xx-small;
+}
+
+#frm-lis-styles input[type="text"] { 
+    width: 100%;
+    background: grey;
+    color: white;
+    font-size: x-small;
+}
+
+#query-parameters {
+    display: none;
+}
+
+#query-parameters.visible {
+    display: block;
+}
+
 </style>
 <body>   
     <nav class="navbar navbar-inverse">
@@ -270,12 +291,18 @@ select#opt-style {
                 </div>
                 <div class="tab-pane" id="themes-config">
                     <h1>Thématiques</h1>
+                     <div class="checkbox">
+                        <label for="opt-mini">
+                          <input type="checkbox" name="checkboxes" id="opt-mini">
+                          Minifier le panneau thématiques
+                        </label>
+                      </div>
                     <div class="row">                              
                         <div class="col-md-4">
                               <!-- List with handle -->
                               <div id="themes-list" class="list-group">                              
                               </div>
-                              <button id="btn-addTheme" class="btn btn-sm btn-primary glyphicon glyphicon-plus sign" onclick="addTheme('Nouvelle thématique', false, createId('theme'));"></button>
+                              <button id="btn-addTheme" class="btn btn-sm btn-primary glyphicon glyphicon-plus sign" onclick="addTheme('Nouvelle thématique', true, createId('theme'));"></button>
                      </div>                   
                      <div class="col-md-4">                   
                         <div id="panel-theme" class="panel panel-default panel-primary" style="display: none;">
@@ -382,13 +409,14 @@ select#opt-style {
                   <h4 class="modal-title">Edition de couche</h4>
                 </div>
                 <div class="modal-body">
-                    <ul class="nav nav-tabs" role="tablist">    
+                    <ul class="nav nav-tabs" role="tablist" id="layer_sections_menu">    
                         <li role="presentation" class="active"><a href="#layer_conf1"  role="tab" data-toggle="tab">Base</a></li>
                         <li role="presentation" ><a href="#layer_conf2"  role="tab" data-toggle="tab">Fiche d'information</a></li>
                         <li role="presentation" ><a href="#layer_conf3"  role="tab" data-toggle="tab">Affichage</a></li>
-                         <li role="presentation" ><a href="#layer_conf4"  role="tab" data-toggle="tab">Filtre</a></li>
+                        <li role="presentation" ><a href="#layer_conf4"  role="tab" data-toggle="tab">Filtre source</a></li>
+                        <li role="presentation" ><a href="#layer_conf5"  role="tab" data-toggle="tab">Filtre attributaire</a></li>
                     </ul>
-                    <div class="tab-content">
+                    <div class="tab-content" id="layer_sections">
                     <div role="tabpanel" class="tab-pane active" id="layer_conf1">
                    <form>
                       <div class="form-group">
@@ -418,7 +446,14 @@ select#opt-style {
                        <div class="form-group">
                         <label for="frm-metadata-csw">metadata</label>
                         <input type="text" class="form-control" id="frm-metadata-csw" placeholder="metadata-csw">
-                      </div>                 
+                      </div>
+                      <div class="form-group">
+                          <div class="checkbox">
+                            <label>
+                              <input id="frm-tiled" type="checkbox"> Tiled
+                            </label>
+                          </div>
+                        </div>
 
                     <div class="form-group">
                       <div class="checkbox">
@@ -441,23 +476,27 @@ select#opt-style {
                       <div class="form-group">
                             <label class="control-label" for="frm-infoformat">infoformat</label> 
                             
-                                <select id="frm-infoformat" name="infoformat" class="form-control">                                    
+                                <select id="frm-infoformat" name="infoformat" class="form-control" onchange="mv.showHideQueryParameters(this.value);">                                    
                                     <option value="text/html">text/html</option>
                                     <option value="application/vnd.ogc.gml">application/vnd.ogc.gml</option>                               
                                 </select>
                             
-                      </div>
-                      <div class="form-group">
-                          <div class="checkbox">
-                            <label>
-                              <input id="frm-template" type="checkbox">Utliser un template
-                            </label>
-                          </div>
-                      </div>
-                      <div class="form-group">
-                            <label class="control-label" for="frm-fields">Champs</label> 
-                            <div id="frm-lis-fields">                               
-                            </div >  
+                      </div>                     
+                      <div id="query-parameters">
+                             <div class="form-group">
+                                  <div class="checkbox">
+                                    <label>
+                                      <input id="frm-template" type="checkbox">Utliser un template
+                                    </label>
+                                  </div>
+                                    <label for="frm-template-url">URL template</label>
+                                    <input type="text" class="form-control" id="frm-template-url" placeholder="URL template"/>
+                              </div>
+                            <div class="form-group">
+                                <label class="control-label" for="frm-fields">Champs</label> 
+                                <div id="frm-lis-fields">                               
+                                </div >
+                            </div>
                             
                       </div>
 
@@ -470,18 +509,26 @@ select#opt-style {
                     
                       <div class="form-group">
                             <label class="control-label" for="frm-styles">Styles</label> 
-                            <div id="frm-lis-styles">                               
-                            </div >  
-                            
+                            <div class="row" id="frm-lis-styles">                               
+                            </div >
+                                    <label for="frm-sld">SLD externe</label>
+                                    <input type="text" class="form-control" id="frm-sld" placeholder="URL SLD externe"/>
+                                    
+                                    <label for="frm-legendurl">Légende statique</label>
+                                    <input type="text" class="form-control" id="frm-legendurl" placeholder="URL vers Image légende"/>
+                                    
+                                     <label for="frm-scalemin">Echelle mini</label>
+                                    <input type="number" class="form-control" id="frm-scalemin" placeholder="Echelle mini"/>
+                                    
+                                    <label for="frm-scalemax">Echelle maxi</label>
+                                    <input type="number" class="form-control" id="frm-scalemax" placeholder="Echelle maxi"/>
                       </div>
-
                   </form>
                  </div>
                  
                   <div role="tabpanel" class="tab-pane" id="layer_conf4">
-                  <form>
-                    
-                      <div class="form-group">
+                            <form>                    
+                      
                                 <div class="form-group">
                                     <label for="frm-filter">filter</label>
                                     <input type="textarea" class="form-control" id="frm-filter" placeholder="filtre cql">
@@ -493,34 +540,56 @@ select#opt-style {
                                   </ul>
                                   <!-- Tab panes -->
                                   <div class="tab-content">
-                                    <div role="tabpanel" class="tab-pane active" id="attribute_filter">
+                                        <div role="tabpanel" class="tab-pane active" id="attribute_filter">
                                                 <div class="form-group">
                                                     <label class="control-label" >Champs</label>                                                    
-                                                        <select id="attribute_filter_fields" name="fields" class="form-control" onchange="extractFeatures(this.value)";>
+                                                        <select id="attribute_filter_fields" name="fields" class="form-control" onchange="extractFeatures(this.value, 'source')";>
                                                         </select>
+                                                  </div>
+                                                  <div class="form-group">
                                                     <label class="control-label" >Opérateur</label>                                                    
                                                         <select id="attribute_filter_operators" name="operators" class="form-control">
                                                             <option value="=">=</option>
                                                             <option value="IN">IN</option>
                                                             <option value="NOT IN">NOT IN</option>
                                                         </select>
-                                                        <div class="row">
-                                                            <div class="col-md-6">
-                                                                 <label class="control-label" >Valeurs</label>
-                                                                 <div id="distinct_values" class="list-group"></div>
-                                                            </div>
+                                                   </div>
+                                                   <label class="control-label" >valeurs sélectionnées</label>
+                                                   <div class="form-group">                                                        
+                                                        <input type="text" value="" data-role="tagsinput" id="source_fields_tags" class="form-control"/>
+                                                   </div>
                                                             <div class="col-md-6" style="padding-top: 25px;">
-                                                                <button type="button" onclick="mv.saveAttributeFilter()" class="btn btn-default">Appliquer</button>
+                                                                <button type="button" onclick="mv.saveSourceAttributeFilter()" class="btn btn-default">Appliquer</button>
                                                             </div>
                                                              
-                                                        </div>
-                                              </div>
-                                    </div>
-                                    <div role="tabpanel" class="tab-pane" id="geo_filter">
-                                        <div id="map_filter" class="map" ></div>
-                                    </div>
-                                    
-                                  </div>                                 
+                                        </div>
+                                                                   
+                                        <div role="tabpanel" class="tab-pane" id="geo_filter">
+                                            <div id="map_filter" class="map" ></div>
+                                        </div>
+                                  </div> 
+                            </form>
+                        </div>
+                 
+                  <div role="tabpanel" class="tab-pane" id="layer_conf5">
+                  <form>
+                    
+                      <div class="form-group">
+                                <div class="form-group">
+                                    <label for="frm-attributelabel">Label</label>
+                                    <input type="textarea" class="form-control" id="frm-attributelabel" placeholder="Texte à afficher">
+                                 </div>                                
+                                 
+                                <div class="form-group">
+                                    <label class="control-label" >Champs</label>                                                    
+                                        <select id="opt-attributefield" name="fields" class="form-control" onchange="extractFeatures(this.value,'control')";>
+                                        </select>
+                                        <label class="control-label" >valeurs sélectionnées</label>
+                                           <div class="form-group">                                                        
+                                                <input type="text" value="" data-role="tagsinput" id="control_fields_tags" class="form-control"/>
+                                           </div>                                       
+                              </div>
+                                                                
                       </div>
 
                   </form>
@@ -555,6 +624,28 @@ select#opt-style {
                 <div class="modal-footer">
                   <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
                 </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Modal featuresView-->
+          <div class="modal fade" id="mod-featuresview" role="dialog">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal">&times;</button>
+                  <h4 class="modal-title">Extraction de données</h4>
+                </div>
+                <div class="modal-body">
+                        <div class="row">
+                             <div class="col-md-6">
+                                 <label class="control-label" >Valeurs</label>
+                                 <div id="distinct_values" class="list-group"></div>
+                            </div>
+                          </div><!-- /.row -->
+                        
+                </div>
+
               </div>
             </div>
           </div>
@@ -621,18 +712,21 @@ select#opt-style {
       //EPSG:2154
       proj4.defs("EPSG:2154","+proj=lcc +lat_1=49 +lat_2=44 +lat_0=46.5 +lon_0=3 +x_0=700000 +y_0=6600000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs");
         //Map      
+      
       var map = new ol.Map({
-        layers: [
-          new ol.layer.Tile({
-            source: new ol.source.OSM()
-          })
-        ],
-        target: 'map',
-        view: new ol.View({
-          center: [-307903.74898791354, 6141345.088741366],
-          zoom: 7
-        })
+                layers: [
+                  new ol.layer.Tile({
+                    source: new ol.source.OSM()
+                  })
+                ],
+                target: 'map',
+                view: new ol.View({
+                  center: [-307903.74898791354, 6141345.088741366],
+                  zoom: 7
+                })
       });
+      
+      var savedParameters;
       
       //Map_filter
       var draw;
@@ -653,14 +747,33 @@ select#opt-style {
           zoom: 7
         })
       });
+      var config;
       
-     
+      var newConfiguration = function () {            
+            ["opt-title", "opt-logo", "opt-help", "theme-edit-icon", "theme-edit-title"].forEach(function (param, id) {
+                $("#"+param).val("");
+            });
+            ["opt-exportpng", "opt-measuretools", "theme-edit-collapsed", "opt-mini"].forEach(function (param, id) {
+                $("#"+param).prop('checked', false);
+            });            
+            
+            $("#opt-style").val("css/themes/default.css").trigger("change");
+            $("#theme-edit-icon option").prop("selected", false);
+            $("#panel-theme").hide();
+            
+            map.getView().setCenter([-307903.74898791354, 6141345.088741366]);
+            map.getView().setZoom(7);
+            config = {
+                application: { title: "", logo: "" },
+                themes: {},
+                temp : { layers : {}}
+            };
+            //Store des parametres non gérés
+            savedParameters = {"application":[]};
+            $(".list-group-item").remove();
+      };
       
-      var config = {
-            application: { title: "", logo: "" },
-            themes: {},
-            temp : { layers : {}}
-      };      
+      
       var loadLayers = function (themeid) {
             var theme = config.themes[themeid];
             if (theme) {
@@ -832,7 +945,7 @@ select#opt-style {
         $("#theme-edit-icon option[value='"+icon+"']").prop("selected", true);
         //Remove old layers entries
         $(".layers-list-item").remove();
-        //Show layers
+        //Show layerslm
         loadLayers(themeid);
      };
      
@@ -883,22 +996,43 @@ select#opt-style {
      };
         
       var saveApplicationParameters = function (option) {
-         //var conf = $('<config></config>');
+         var savedProxy = "";
+         var savedOlscompletion = "";
+         var savedElasticsearch = "";
+         var savedSearchparameters = "";
          var application = ['<application',
             'title="'+$("#opt-title").val()+'"',            
             'logo="'+$("#opt-logo").val()+'"',
             'help="'+$("#opt-help").val()+'"',
-            'showhelp="'+($("#opt-showhelp").prop("checked") === true)+'"',   
+            //'showhelp="'+($("#opt-showhelp").prop("checked") === true)+'"',   
             'style="'+$("#opt-style").val()+'"',  
             'exportpng="'+($('#opt-exportpng').prop('checked')=== true)+'"',
-            'measuretools="'+($('#opt-measuretools').prop('checked')=== true)+'"',            
-            '/>'].join(" ");
+            'measuretools="'+($('#opt-measuretools').prop('checked')=== true)+'"'];
             
-            
+         savedParameters.application.forEach(function(parameter, id){
+            $.each(parameter,function(prop,val) {
+                console.log(prop,val)
+                application.push(prop+'="'+val+'"');
+            });
+         });            
+         application.push('/>');
+         application = application.join(" ");
+         if ( savedParameters.proxy  ) {
+            savedProxy = savedParameters.proxy;
+         }
+         if ( savedParameters.olscompletion  ) {
+            savedOlscompletion = savedParameters.olscompletion;
+         }
+         if ( savedParameters.elasticsearch  ) {
+            savedElasticsearch = savedParameters.elasticsearch;
+         }
+         if ( savedParameters.searchparameters  ) {
+            savedSearchparameters = savedParameters.searchparameters;
+         }   
          var center = map.getView().getCenter().join(",");
          var zoom = map.getView().getZoom();
          var mapoptions = '<mapoptions maxzoom="20" projection="EPSG:3857" center="'+center+'" zoom="'+zoom+'" />';
-            //'projextent="-20037508.342789244, -20037508.342789244, 20037508.342789244, 20037508.342789244"/>'].join(" ");
+            
          var baseLayersMode = $("#frm-bl-mode").val();
          var visibleBaselayer = $("#frm-bl-visible").val();
          var baseLayers =   ['<baselayers style="'+baseLayersMode+'">'];
@@ -912,24 +1046,50 @@ select#opt-style {
             baseLayers.push(definition);
          });
          baseLayers.push('</baselayers>');
-         var searchparameters = '<searchparameters localities="false"/>';
-         
-         var themes = ['<themes>'];
+         var themes = ['<themes mini="'+($('#opt-mini').prop('checked')=== true)+'">'];
          $.each(config.themes, function (i, t) {            
             var theme = ['<theme id="'+t.id+'" name="'+t.title+'" collapsed="'+t.collapsed+'" icon="'+t.icon+'">'];
             $(t.layers).each (function (i, l) {
                 var template = "";
                 if (l.usetemplate && l.template) {
-                    template = '<template><![CDATA['+ l.template+']]></template>';
-                    console.log(template,111);
+                    template = '<template><![CDATA['+ l.template+']]></template>';                    
+                }
+                if (l.usetemplate && l.templateurl) {
+                    template = '<template url="'+ l.templateurl+'" ></template>';
                 }
                 var filter = "";
                 if (l.filter) {
                     filter = 'filter="'+l.filter+'"';
                 }
+                var sld = "";
+                if (l.sld) {
+                    sld = 'sld="'+l.sld+'"';
+                }
+                var legendurl = "";
+                if (l.legendurl) {
+                    legendurl = 'legendurl="'+l.legendurl+'"';
+                }
+                var scalemin="";
+                if (l.scalemin) {
+                    scalemin = 'scalemin="'+l.scalemin+'"';
+                }
+                var scalemax="";
+                if (l.scalemax) {
+                    scalemax = 'scalemax="'+l.scalemax+'"';
+                }
+                var attributefilter ="";
+                if (l.attributefilter) {
+                    attributefilter = [
+                        'attributefilter="true"',
+                        'attributefield="'+l.attributefield+'"',
+                        'attributevalues="'+l.attributevalues+'"',
+                        'attributelabel="'+l.attributelabel+'"',
+                    ]. join(" ");
+                }
                 var layer = ['<layer id="'+l.id+'"',
                                     'name="'+l.title+'"',
                                     'type="'+l.type+'"',
+                                    'tiled="'+l.tiled+'"',
                                     'url="'+l.url+'"',
                                     'infoformat="'+l.infoformat+'"',
                                     'metadata="'+l.metadata+'"',
@@ -938,14 +1098,19 @@ select#opt-style {
                                     'visible="'+l.visible+'"',
                                     'attribution="'+l.attribution+'"',
                                     filter,
+                                    sld,
+                                    scalemin,
+                                    scalemax,
+                                    legendurl,
+                                    attributefilter,
                                     'fields="'+(l.fields || '')+'"',
                                     'aliases="'+(l.aliases || '')+'"',
                                     'style="'+(l.style || '')+'"',
                                     'stylesalias="'+(l.stylesalias || '')+'"',
-                                    '>'+template+'</layer>'];
+                                    '>'+template+'</layer>'];                
                 theme.push(layer.join(" "));
             });
-            themes.push(theme);
+            themes.push(theme.join(" "));
             themes.push('</theme>');
          });
          themes.push('</themes>');
@@ -953,7 +1118,10 @@ select#opt-style {
          var conf = ['<config>',
             application,
             mapoptions,
-            searchparameters,
+            savedProxy,
+            savedOlscompletion,
+            savedElasticsearch,
+            savedSearchparameters,
             baseLayers.join(" "),
             themes.join(" "),
          '</config>'];
@@ -997,10 +1165,10 @@ select#opt-style {
           map2.addInteraction(draw);        
       };
       
-      var extractFeatures = function (fld) {        
+      var extractFeatures = function (fld, option) {        
         var layerid = $(".layers-list-item.active").attr("data-layerid");
         var layer = config.temp.layers[layerid];        
-        ogc.getFeatures(layer.wfs_url,layerid,fld);
+        ogc.getFeatures(layer.wfs_url,layerid,fld, option);
       };
       
       var  loadApplicationParameters = function () {
@@ -1009,10 +1177,28 @@ select#opt-style {
             var reader = new FileReader();
             reader.readAsText(file, "UTF-8");
             reader.onload = function (evt) {
+                newConfiguration();
                 var xml = $.parseXML(evt.target.result);
                 console.log(xml);
-                //Application
-                var application = $(xml).find("application");
+                var proxy = $(xml).find("proxy");
+                var olscompletion = $(xml).find("olscompletion");
+                var elasticsearch = $(xml).find("elasticsearch");
+                var searchparameters = $(xml).find("searchparameters");                
+                [proxy, olscompletion, elasticsearch, searchparameters].forEach(function(param,id) {
+                    if (param.length>0) {
+                        savedParameters[param.selector] = param[0].outerHTML;
+                    }
+                });
+                //Application                
+                var application = $(xml).find("application");                
+                ["showhelp", "stats", "statsurl", "coordinates"].forEach(function(param,id) {
+                   // this parameters are not yet supported but must be saved for later
+                   var parameter = new Object();
+                   if (application.attr(param)) {
+                       parameter[param] = application.attr(param);
+                       savedParameters.application.push(parameter);
+                   }
+                });                
                 ["title", "logo", "help", "showhelp", "style"].forEach(function(value,id) {
                     if (application.attr(value)) {
                         $("#opt-" + value).val(application.attr(value));
@@ -1028,7 +1214,7 @@ select#opt-style {
                     }
                 });
                 //Mapoptions
-                var mapoptions = $(xml).find("mapoptions");
+                var mapoptions = $(xml).find("mapoptions");                
                 ["projection", "maxzoom"].forEach(function(value,id) {
                     if (mapoptions.attr(value)) {
                         $("#opt-" + value).val(mapoptions.attr(value));
@@ -1048,17 +1234,24 @@ select#opt-style {
                     $("#frm-bl .bl[data-layerid='"+id+"'] input").prop("checked",true).trigger('change');
                 });
                 var visibleBaselayer = $(xml).find('baselayer[visible="true"]').attr("id");
-                $("#frm-bl-visible").val(visibleBaselayer).trigger('change');            
+                $("#frm-bl-visible").val(visibleBaselayer).trigger('change');
                 //tHEMES & layers
+                var themePanel =  $(xml).find("themes");                
+                if (themePanel.attr("mini") === "true") {
+                    $('#opt-mini').prop('checked', true);
+                }
                 var themes = $(xml).find("theme");
                 themes.each(function(id, th) {                    
-                    addTheme ($(th).attr("name"), $(th).attr("collapsed"), $(th).attr("id"), $(th).attr("icon"));
+                    addTheme ($(th).attr("name"), ($(th).attr("collapsed") || true), $(th).attr("id"), $(th).attr("icon"));
                     var layers = $(th).find("layer");
                     layers.each(function(id, l) {
                         
                         var layer = {
                             id: $(l).attr("id"),
-                            type: $(l).attr("type"),
+                            type: $(l).attr("type") || "wms",
+                            tiled: ($(l).attr("tiled") === "true"),
+                            scalemin: $(l).attr("scalemin"),
+                            scalemax: $(l).attr("scalemax"),
                             title: $(l).attr("name"),
                             url: $(l).attr("url"),
                             queryable: ($(l).attr("queryable") === "true"),
@@ -1067,13 +1260,37 @@ select#opt-style {
                             "metadata-csw": mv.escapeXml($(l).attr("metadata-csw")),
                             attribution: $(l).attr("attribution"),
                             filter: $(l).attr("filter"),
-                            visible: ($(l).attr("queryable") === "true"),
+                            visible: ($(l).attr("visible") === "true"),
                             template: $(l).find("template").text(),
-                            usetemplate: ($(l).find("template") && $(l).find("template").text().length > 3)
-                            // Recupérer les fields sélectionnés dans un template ou dans la liste fields
-                            // permettre affichafe du template
-                            
+                            usetemplate: ($(l).find("template") && $(l).find("template").text().length > 3 || ($(l).find("template").attr("url") && ($(l).find("template").attr("url").length>1))),
+                            templateurl : false,
+                            fields:  $(l).attr("fields"),
+                            fieldsoptions : false,
+                            aliases:  $(l).attr("aliases"),
+                            style:  $(l).attr("style"),
+                            stylesalias:  $(l).attr("stylesalias"),
+                            sld: $(l).attr("sld"),
+                            legendurl: $(l).attr("legendurl"),
+                            attributefilter: ($(l).attr("attributefilter") === "true")
                         };
+                        if (layer.attributefilter) {
+                            layer.attributefield = $(l).attr("attributefield");
+                            layer.attributelabel = $(l).attr("attributelabel");
+                            layer.attributevalues = $(l).attr("attributevalues");
+                        }
+                        if (layer.usetemplate === true && $(l).find("template").attr("url")) {
+                            layer.templateurl = $(l).find("template").attr("url");
+                            console.log(layer.templateurl);                            
+                        }
+                        $("#frm-template").prop("checked", (layer.usetemplate)); 
+                        if (layer.fields && layer.aliases) {
+                            layer.fieldsoptions = {};            
+                            $(layer.fields.split(",")).each(function (index, fld) {
+                                var type = "text";                                
+                                var alias = layer.aliases.split(",")[index];                
+                                layer.fieldsoptions[fld] = {"name": fld, "alias": alias, "type": type};                
+                            });
+                        }
                         config.themes[$(th).attr("id")].layers.push(layer);
                         
                     });
@@ -1087,10 +1304,10 @@ select#opt-style {
         }
       };
       
-      var search = function () {
+      /*var search = function () {
         mv.resetSearch();
         ogc.cswSearch();
-      };
+      };*/
       
       var updateTheme = function (el) {
         console.log(el);
@@ -1098,6 +1315,20 @@ select#opt-style {
         $(el).removeClass().addClass("form-control " + cls);
       
       };
+      
+      newConfiguration();
+      
+      $('#mod-featuresview').on('hidden.bs.modal', function () {
+            var option = $(this).attr("data-target");
+            var target = "";
+            if (option === 'source') { target = "#source_fields_tags"; }
+            if (option === 'control') { target = "#control_fields_tags"; }
+            $("#distinct_values a.active").each(function (id, fld) {                
+                  $(target).tagsinput('add', $(fld).text());
+            });
+      });
+      
+      
     </script>
 
 
