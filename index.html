@@ -230,9 +230,9 @@ select#opt-style {
                           <label class="col-md-4 control-label" for="opt-help">Fichier d'aide</label>  
                           <div class="col-md-4">
                             <input id="opt-help" name="textinput" type="text" class="form-control input-md" placeholder="mviewer_help.html">  
-                          </div>
+                          </div>                          
                         </div>
-                        
+                                                                        
                         <!--style-->
                         <div class="form-group">
                             <label class="control-label" for="frm-style">Style</label> 
@@ -282,6 +282,25 @@ select#opt-style {
                             </label>
                           </div>
                           
+                          <div class="checkbox">
+                            <label for="opt-showhelp">
+                              <input type="checkbox" name="checkboxes" id="opt-showhelp">
+                              Afficher l'aide au démarrage
+                            </label>
+                          </div>
+                          
+                          <div class="checkbox">
+                            <label for="opt-coordinates">
+                              <input type="checkbox" name="checkboxes" id="opt-coordinates">
+                              Affichage des coordonnées au click
+                            </label>
+                          </div>                          
+                          <div class="checkbox">
+                            <label for="opt-togglealllayersfromtheme">
+                              <input type="checkbox" name="checkboxes" id="opt-togglealllayersfromtheme">
+                              toggle all layers from theme
+                            </label>
+                          </div>
                           </div>
                         </div>                        
                     
@@ -404,8 +423,7 @@ select#opt-style {
             <div class="modal-dialog">
               <div class="modal-content">
                 <div class="modal-header">
-                  <button type="button" class="close" data-dismiss="modal">&times;</button>
-                  <button type="button" class="btn btn-sm btn-success btn-layer-new glyphicon glyphicon-plus sign" data-toggle="modal" data-target="#mod-layerNew"></button>
+                  <button type="button" class="close" data-dismiss="modal">&times;</button>                  
                   <h4 class="modal-title">Edition de couche</h4>
                 </div>
                 <div class="modal-body">
@@ -462,6 +480,10 @@ select#opt-style {
                         </label>
                       </div>
                     </div>
+                    <div class="form-group" lang="en-US">
+                        <label for="frm-opacity">Opacité</label>
+                        <input type="number" class="form-control" id="frm-opacity" placeholder="Opacité (0 à 1)" step="0.1" min="0.1" max="1.0" value="1">
+                    </div>
                  </form>
                </div>
                <div role="tabpanel" class="tab-pane" id="layer_conf2">
@@ -470,6 +492,13 @@ select#opt-style {
                           <div class="checkbox">
                             <label>
                               <input id="frm-queryable" type="checkbox"> queryable
+                            </label>
+                          </div>
+                      </div>
+                       <div class="form-group">
+                          <div class="checkbox">
+                            <label>
+                              <input id="frm-searchable" type="checkbox"> searchable
                             </label>
                           </div>
                       </div>
@@ -530,13 +559,13 @@ select#opt-style {
                             <form>                    
                       
                                 <div class="form-group">
-                                    <label for="frm-filter">filter</label>
+                                    <label for="frm-filter">filtre actif</label>
                                     <input type="textarea" class="form-control" id="frm-filter" placeholder="filtre cql">
                                  </div>
                                  <!-- Nav tabs -->
                                   <ul class="nav nav-tabs" role="tablist">
                                     <li role="presentation" class="active" ><a href="#attribute_filter" aria-controls="attribute_filter" role="tab" data-toggle="tab">Filtre attributaire</a></li>
-                                    <li role="presentation" ><a href="#geo_filter" onclick="addgeoFilter();" aria-controls="geo_filter" role="tab" data-toggle="tab">Filtre géographique</a></li> 
+                                    <li role="presentation" ><a href="#geo_filter" aria-controls="geo_filter" role="tab" data-toggle="tab">Filtre géographique</a></li> 
                                   </ul>
                                   <!-- Tab panes -->
                                   <div class="tab-content">
@@ -753,7 +782,7 @@ select#opt-style {
             ["opt-title", "opt-logo", "opt-help", "theme-edit-icon", "theme-edit-title"].forEach(function (param, id) {
                 $("#"+param).val("");
             });
-            ["opt-exportpng", "opt-measuretools", "theme-edit-collapsed", "opt-mini"].forEach(function (param, id) {
+            ["opt-exportpng", "opt-measuretools", "theme-edit-collapsed", "opt-mini", "opt-showhelp", "opt-coordinates", "opt-togglealllayersfromtheme"].forEach(function (param, id) {
                 $("#"+param).prop('checked', false);
             });            
             
@@ -771,6 +800,9 @@ select#opt-style {
             //Store des parametres non gérés
             savedParameters = {"application":[]};
             $(".list-group-item").remove();
+            //Sélection par défaut des 2 1er baselayers
+            $(".bl:first input, .bl:nth-child(2) input").prop("checked", true).trigger("change");
+            $("#frm-bl-visible").val($("#frm-bl-visible option:not(:disabled)").first().val());
       };
       
       
@@ -787,6 +819,19 @@ select#opt-style {
          
       var bl = {};
       
+      
+      bl["positron"] = {
+        id:"positron", thumbgallery: "../mviewer/img/basemap/positron.png", title:"CartoDb", label:"Positron", 
+        definition: ['<baselayer  visible="false" type="OSM" id="positron" label="Positron" title="CartoDb" thumbgallery="img/basemap/positron.png" ', 
+			'url="http://{a-c}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png" maxzoom="20" ',
+			'attribution="Map tiles by  &lt;a href=\'http://cartodb.com/attributions\'>CartoDb &lt;/a>, under  &lt;a href=\'http://creativecommons.org/licenses/by/3.0/\'>CC BY 3.0 &lt;/a>" />'].join("")
+      };
+      
+      bl["esriworldimagery"] = {
+        id:"esriworldimagery", thumbgallery: "../mviewer/img/basemap/esriworldwide.jpg", title:"Esri world imagery", label: "Esri World imagery",
+        definition: ['<baselayer visible="false" type="OSM" id="esriworldimagery" label="Esri world imagery" title="Esri world imagery" ',
+            'thumbgallery="img/basemap/esriworldwide.jpg" url="http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}" ',
+            'attribution="Esri world imagery"/>'].join("")};
       
        bl["stamen1"] = {
         id:"stamen1", thumbgallery: "../mviewer/img/basemap/toner-lite.png", title:"Stamen Design", label:"Toner-lite", 
@@ -807,14 +852,6 @@ select#opt-style {
 			'url="http://{a-c}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png" maxzoom="20" ',
 			' attribution="Map tiles by  &lt;a href=\'http://cartodb.com/attributions\'>CartoDb &lt;/a>, under  &lt;a href=\'http://creativecommons.org/licenses/by/3.0/\'>CC BY 3.0 &lt;/a>" />'].join("")
       };
-      bl["positron"] = {
-        id:"positron", thumbgallery: "../mviewer/img/basemap/positron.png", title:"CartoDb", label:"Positron", 
-        definition: ['<baselayer  visible="false" type="OSM" id="positron" label="Positron" title="CartoDb" thumbgallery="img/basemap/positron.png" ', 
-			'url="http://{a-c}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png" maxzoom="20" ',
-			'attribution="Map tiles by  &lt;a href=\'http://cartodb.com/attributions\'>CartoDb &lt;/a>, under  &lt;a href=\'http://creativecommons.org/licenses/by/3.0/\'>CC BY 3.0 &lt;/a>" />'].join("")
-      };
-      
-      
       
       bl["ortho1"] = {
         id:"ortho1", thumbgallery: "../mviewer/img/basemap/ortho.jpg", title:"GéoBretagne", label:"Photo aérienne actuelle", 
@@ -841,12 +878,7 @@ select#opt-style {
         definition: ['<baselayer  visible="false" type="OSM" id="osm" label="OpenStreetMap" title="OpenStreetMap" thumbgallery="img/basemap/osm.png" ',
             'url="http://{a-c}.tile.openstreetmap.org/{z}/{x}/{y}.png" ',
             'attribution="Données : les contributeurs d\'&lt;a href=\'http://www.openstreetmap.org/\' target=\'_blank\'>OpenStreetMap &lt;/a>&lt;a href=\'http://www.openstreetmap.org/copyright\' target=\'_blank\'>ODbL &lt;/a>" />'].join("")
-      };
-      bl["esriworldimagery"] = {
-        id:"esriworldimagery", thumbgallery: "../mviewer/img/basemap/esriworldwide.jpg", title:"Esri world imagery", label: "Esri World imagery",
-        definition: ['<baselayer visible="false" type="OSM" id="esriworldimagery" label="Esri world imagery" title="Esri world imagery" ',
-            'thumbgallery="img/basemap/esriworldwide.jpg" url="http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}" ',
-            'attribution="Esri world imagery"/>'].join("")};
+      };      
       
       mv.showBaseLayers(bl);      
       
@@ -1003,11 +1035,13 @@ select#opt-style {
          var application = ['<application',
             'title="'+$("#opt-title").val()+'"',            
             'logo="'+$("#opt-logo").val()+'"',
-            'help="'+$("#opt-help").val()+'"',
-            //'showhelp="'+($("#opt-showhelp").prop("checked") === true)+'"',   
+            'help="'+$("#opt-help").val()+'"',            
             'style="'+$("#opt-style").val()+'"',  
-            'exportpng="'+($('#opt-exportpng').prop('checked')=== true)+'"',
-            'measuretools="'+($('#opt-measuretools').prop('checked')=== true)+'"'];
+            'exportpng="'+($('#opt-exportpng').prop('checked')=== true)+'"',            
+            'showhelp="'+($('#opt-showhelp').prop('checked')=== true)+'"',
+            'coordinates="'+($('#opt-coordinates').prop('checked')=== true)+'"',
+            'measuretools="'+($('#opt-measuretools').prop('checked')=== true)+'"',
+            'togglealllayersfromtheme="'+($('#opt-togglealllayersfromtheme').prop('checked')=== true)+'"'];
             
          savedParameters.application.forEach(function(parameter, id){
             $.each(parameter,function(prop,val) {
@@ -1095,7 +1129,9 @@ select#opt-style {
                                     'metadata="'+l.metadata+'"',
                                     'metadata-csw="'+l['metadata-csw']+'"',
                                     'queryable="'+l.queryable+'"',
+                                    'searchable="'+l.searchable+'"',
                                     'visible="'+l.visible+'"',
+                                    'opacity="'+l.opacity+'"',
                                     'attribution="'+l.attribution+'"',
                                     filter,
                                     sld,
@@ -1155,6 +1191,7 @@ select#opt-style {
             type: "Polygon"
           });
           draw.on('drawend', function (e) {
+            source.clear();
             var currentFeature = e.feature;//this is the feature fired the event
             var layer = config.temp.layers[layername];
             var projGeom = e.feature.getGeometry().clone().transform('EPSG:3857',layer.projection);
@@ -1185,13 +1222,14 @@ select#opt-style {
                 var elasticsearch = $(xml).find("elasticsearch");
                 var searchparameters = $(xml).find("searchparameters");                
                 [proxy, olscompletion, elasticsearch, searchparameters].forEach(function(param,id) {
+                    // this parameters are not yet supported but must be saved for later
                     if (param.length>0) {
                         savedParameters[param.selector] = param[0].outerHTML;
                     }
                 });
                 //Application                
                 var application = $(xml).find("application");                
-                ["showhelp", "stats", "statsurl", "coordinates"].forEach(function(param,id) {
+                ["stats", "statsurl"].forEach(function(param,id) {
                    // this parameters are not yet supported but must be saved for later
                    var parameter = new Object();
                    if (application.attr(param)) {
@@ -1199,7 +1237,7 @@ select#opt-style {
                        savedParameters.application.push(parameter);
                    }
                 });                
-                ["title", "logo", "help", "showhelp", "style"].forEach(function(value,id) {
+                ["title", "logo", "help", "style"].forEach(function(value,id) {
                     if (application.attr(value)) {
                         $("#opt-" + value).val(application.attr(value));
                     }
@@ -1208,7 +1246,7 @@ select#opt-style {
                     }
                 }); 
                 
-                ["exportpng", "measuretools"].forEach(function(value,id) {
+                ["exportpng", "measuretools", "showhelp", "coordinates", "togglealllayersfromtheme"].forEach(function(value,id) {
                     if (application.attr(value) && application.attr(value) === "true") {
                         $("#opt-" + value).prop("checked", true);
                     }
@@ -1255,12 +1293,14 @@ select#opt-style {
                             title: $(l).attr("name"),
                             url: $(l).attr("url"),
                             queryable: ($(l).attr("queryable") === "true"),
+                            searchable: ($(l).attr("searchable") === "true"),
                             infoformat: $(l).attr("infoformat"),
                             metadata: $(l).attr("metadata"),
                             "metadata-csw": mv.escapeXml($(l).attr("metadata-csw")),
                             attribution: $(l).attr("attribution"),
                             filter: $(l).attr("filter"),
                             visible: ($(l).attr("visible") === "true"),
+                            opacity: $(l).attr("opacity") || 1,
                             template: $(l).find("template").text(),
                             usetemplate: ($(l).find("template") && $(l).find("template").text().length > 3 || ($(l).find("template").attr("url") && ($(l).find("template").attr("url").length>1))),
                             templateurl : false,
@@ -1326,6 +1366,10 @@ select#opt-style {
             $("#distinct_values a.active").each(function (id, fld) {                
                   $(target).tagsinput('add', $(fld).text());
             });
+      });
+      
+      $('a[href="#geo_filter"]').on('shown.bs.tab', function (e) {
+          addgeoFilter();
       });
       
       

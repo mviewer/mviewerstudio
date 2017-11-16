@@ -269,7 +269,7 @@ var ogc = (function () {
                         _describeLayerParse(data, layerid);
                     },                
                     error: function (xhr, ajaxOptions, thrownError) {
-                        alert("Problème avec la requête" +  thrownError);
+                        alert("Problème avec la requête DescribeLayer" +  thrownError);
                     }
                 });
       };
@@ -323,7 +323,7 @@ var ogc = (function () {
                         _getDictinctValues(data, propertyname, option);
                     },                
                     error: function (xhr, ajaxOptions, thrownError) {
-                        alert("Problème avec la requête" +  thrownError);
+                        alert("Problème avec la requête GetFeature" +  thrownError);
                     }
                 });
             
