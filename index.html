@@ -495,6 +495,13 @@ select#opt-style {
                             </label>
                           </div>
                       </div>
+                      <div class="form-group">
+                          <div class="checkbox">
+                            <label>
+                              <input id="frm-secure" type="checkbox"> Couche protégée
+                            </label>
+                          </div>
+                      </div>
                        <div class="form-group">
                           <div class="checkbox">
                             <label>
@@ -510,7 +517,11 @@ select#opt-style {
                                     <option value="application/vnd.ogc.gml">application/vnd.ogc.gml</option>                               
                                 </select>
                             
-                      </div>                     
+                      </div>
+                      <div class="form-group">
+                        <label for="frm-featurecount">Featurecount</label>
+                        <input type="number" class="form-control" id="frm-featurecount" placeholder="Nombre max d'entités retournées" step="1" min="1" max="50" value="5">
+                      </div>
                       <div id="query-parameters">
                              <div class="form-group">
                                   <div class="checkbox">
@@ -1111,6 +1122,14 @@ select#opt-style {
                 if (l.scalemax) {
                     scalemax = 'scalemax="'+l.scalemax+'"';
                 }
+                var featurecount ="";
+                if (l.featurecount) {
+                    featurecount = 'featurecount="'+l.featurecount+'"';
+                }
+                var opacity ="";
+                if (l.opacity) {
+                    opacity = 'opacity="'+l.opacity+'"';
+                }
                 var attributefilter ="";
                 if (l.attributefilter) {
                     attributefilter = [
@@ -1129,10 +1148,12 @@ select#opt-style {
                                     'metadata="'+l.metadata+'"',
                                     'metadata-csw="'+l['metadata-csw']+'"',
                                     'queryable="'+l.queryable+'"',
+                                    'secure="'+l.secure+'"',                                    
                                     'searchable="'+l.searchable+'"',
                                     'visible="'+l.visible+'"',
-                                    'opacity="'+l.opacity+'"',
                                     'attribution="'+l.attribution+'"',
+                                    opacity,
+                                    featurecount,
                                     filter,
                                     sld,
                                     scalemin,
@@ -1293,7 +1314,9 @@ select#opt-style {
                             title: $(l).attr("name"),
                             url: $(l).attr("url"),
                             queryable: ($(l).attr("queryable") === "true"),
+                            featurecount: $(l).attr("featurecount"),
                             searchable: ($(l).attr("searchable") === "true"),
+                            secure: ($(l).attr("secure") === "true"),
                             infoformat: $(l).attr("infoformat"),
                             metadata: $(l).attr("metadata"),
                             "metadata-csw": mv.escapeXml($(l).attr("metadata-csw")),

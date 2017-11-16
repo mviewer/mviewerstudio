@@ -303,7 +303,9 @@ var mv = (function () {
             $("#frm-legendurl").val(layer.legendurl);
             $("#frm-layerid").val(layer.id);
             $("#frm-url").val(layer.url);
-            $("#frm-queryable").prop("checked", (layer.queryable));    
+            $("#frm-queryable").prop("checked", (layer.queryable));
+            $("#frm-featurecount").val(layer.featurecount);
+            $("#frm-secure").prop("checked", (layer.secure)); 
             $("#frm-searchable").prop("checked", (layer.searchable));  
             $("#frm-infoformat option[value='"+layer.infoformat+"']").prop("selected", true).trigger("change");            
             $("#frm-metadata").val(layer.metadata);
@@ -411,8 +413,10 @@ var mv = (function () {
             layer.url =  $("#frm-url").val();
             layer.legendurl =  $("#frm-legendurl").val();
             layer.queryable = ($("#frm-queryable").prop("checked") === true);
+            layer.secure = ($("#frm-secure").prop("checked") === true);
             layer.searchable = ($("#frm-searchable").prop("checked") === true); 
-            layer.infoformat = $("#frm-infoformat").val();           
+            layer.infoformat = $("#frm-infoformat").val();
+            layer.featurecount = $("#frm-featurecount").val();    
             layer.metadata = $("#frm-metadata").val();
             layer["metadata-csw"] = $("#frm-metadata-csw").val();
             layer["attribution"] = $("#frm-attribution").val();
