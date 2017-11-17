@@ -1039,6 +1039,9 @@ select#opt-style {
      };
         
       var saveApplicationParameters = function (option) {
+         var padding = function (n) {
+            return '\r\n' + " ".repeat(n);
+         };
          var savedProxy = "";
          var savedOlscompletion = "";
          var savedElasticsearch = "";
@@ -1059,28 +1062,27 @@ select#opt-style {
                 console.log(prop,val)
                 application.push(prop+'="'+val+'"');
             });
-         });            
-         application.push('/>');
-         application = application.join(" ");
+         });
+         application = application.join(padding(4)) + '>'+padding(0)+'</application>';
          if ( savedParameters.proxy  ) {
-            savedProxy = savedParameters.proxy;
+            savedProxy = padding(0) + savedParameters.proxy;
          }
          if ( savedParameters.olscompletion  ) {
-            savedOlscompletion = savedParameters.olscompletion;
+            savedOlscompletion = padding(0) + savedParameters.olscompletion;
          }
          if ( savedParameters.elasticsearch  ) {
-            savedElasticsearch = savedParameters.elasticsearch;
+            savedElasticsearch = padding(0) + savedParameters.elasticsearch;
          }
          if ( savedParameters.searchparameters  ) {
-            savedSearchparameters = savedParameters.searchparameters;
+            savedSearchparameters = padding(0) + savedParameters.searchparameters;
          }   
          var center = map.getView().getCenter().join(",");
          var zoom = map.getView().getZoom();
-         var mapoptions = '<mapoptions maxzoom="20" projection="EPSG:3857" center="'+center+'" zoom="'+zoom+'" />';
+         var mapoptions = padding(0) + '<mapoptions maxzoom="20" projection="EPSG:3857" center="'+center+'" zoom="'+zoom+'" />';
             
          var baseLayersMode = $("#frm-bl-mode").val();
          var visibleBaselayer = $("#frm-bl-visible").val();
-         var baseLayers =   ['<baselayers style="'+baseLayersMode+'">'];
+         var baseLayers =   [padding(0) + '<baselayers style="'+baseLayersMode+'">'];
          $(".bl input:checked").each(function (i, b) {
             // set first bl visible
             var baseLayer = bl[$(b).parent().parent().attr("data-layerid")];
@@ -1088,91 +1090,22 @@ select#opt-style {
             if (baseLayer.id === visibleBaselayer) {
                 definition = definition.replace('visible="false"', 'visible="true"');
             }
-            baseLayers.push(definition);
+            baseLayers.push(padding(4) + definition);
          });
-         baseLayers.push('</baselayers>');
-         var themes = ['<themes mini="'+($('#opt-mini').prop('checked')=== true)+'">'];
+         baseLayers.push(padding(0)+'</baselayers>');
+         var themes = [ padding(0)+ '<themes mini="'+($('#opt-mini').prop('checked')=== true)+'">'];
          $.each(config.themes, function (i, t) {            
-            var theme = ['<theme id="'+t.id+'" name="'+t.title+'" collapsed="'+t.collapsed+'" icon="'+t.icon+'">'];
+            var theme = [padding(4)+'<theme id="'+t.id+'" name="'+t.title+'" collapsed="'+t.collapsed+'" icon="'+t.icon+'">'];
             $(t.layers).each (function (i, l) {
-                var template = "";
-                if (l.usetemplate && l.template) {
-                    template = '<template><![CDATA['+ l.template+']]></template>';                    
-                }
-                if (l.usetemplate && l.templateurl) {
-                    template = '<template url="'+ l.templateurl+'" ></template>';
-                }
-                var filter = "";
-                if (l.filter) {
-                    filter = 'filter="'+l.filter+'"';
-                }
-                var sld = "";
-                if (l.sld) {
-                    sld = 'sld="'+l.sld+'"';
-                }
-                var legendurl = "";
-                if (l.legendurl) {
-                    legendurl = 'legendurl="'+l.legendurl+'"';
-                }
-                var scalemin="";
-                if (l.scalemin) {
-                    scalemin = 'scalemin="'+l.scalemin+'"';
-                }
-                var scalemax="";
-                if (l.scalemax) {
-                    scalemax = 'scalemax="'+l.scalemax+'"';
-                }
-                var featurecount ="";
-                if (l.featurecount) {
-                    featurecount = 'featurecount="'+l.featurecount+'"';
-                }
-                var opacity ="";
-                if (l.opacity) {
-                    opacity = 'opacity="'+l.opacity+'"';
-                }
-                var attributefilter ="";
-                if (l.attributefilter) {
-                    attributefilter = [
-                        'attributefilter="true"',
-                        'attributefield="'+l.attributefield+'"',
-                        'attributevalues="'+l.attributevalues+'"',
-                        'attributelabel="'+l.attributelabel+'"',
-                    ]. join(" ");
-                }
-                var layer = ['<layer id="'+l.id+'"',
-                                    'name="'+l.title+'"',
-                                    'type="'+l.type+'"',
-                                    'tiled="'+l.tiled+'"',
-                                    'url="'+l.url+'"',
-                                    'infoformat="'+l.infoformat+'"',
-                                    'metadata="'+l.metadata+'"',
-                                    'metadata-csw="'+l['metadata-csw']+'"',
-                                    'queryable="'+l.queryable+'"',
-                                    'secure="'+l.secure+'"',                                    
-                                    'searchable="'+l.searchable+'"',
-                                    'visible="'+l.visible+'"',
-                                    'attribution="'+l.attribution+'"',
-                                    opacity,
-                                    featurecount,
-                                    filter,
-                                    sld,
-                                    scalemin,
-                                    scalemax,
-                                    legendurl,
-                                    attributefilter,
-                                    'fields="'+(l.fields || '')+'"',
-                                    'aliases="'+(l.aliases || '')+'"',
-                                    'style="'+(l.style || '')+'"',
-                                    'stylesalias="'+(l.stylesalias || '')+'"',
-                                    '>'+template+'</layer>'];                
-                theme.push(layer.join(" "));
+                var layer = mv.writeLayerNode(l);
+                theme.push(layer);
             });
             themes.push(theme.join(" "));
-            themes.push('</theme>');
+            themes.push(padding(4)+'</theme>');
          });
-         themes.push('</themes>');
+         themes.push(padding(0)+'</themes>');
                      
-         var conf = ['<config>',
+         var conf = ['<config>\r\n',
             application,
             mapoptions,
             savedProxy,
@@ -1181,7 +1114,7 @@ select#opt-style {
             savedSearchparameters,
             baseLayers.join(" "),
             themes.join(" "),
-         '</config>'];
+            padding(0)+ '</config>'];
          
          if (option) {         
                  $.ajax({
@@ -1312,6 +1245,7 @@ select#opt-style {
                             scalemin: $(l).attr("scalemin"),
                             scalemax: $(l).attr("scalemax"),
                             title: $(l).attr("name"),
+                            name: $(l).attr("name"),
                             url: $(l).attr("url"),
                             queryable: ($(l).attr("queryable") === "true"),
                             featurecount: $(l).attr("featurecount"),
@@ -1323,7 +1257,7 @@ select#opt-style {
                             attribution: $(l).attr("attribution"),
                             filter: $(l).attr("filter"),
                             visible: ($(l).attr("visible") === "true"),
-                            opacity: $(l).attr("opacity") || 1,
+                            opacity: $(l).attr("opacity"),
                             template: $(l).find("template").text(),
                             usetemplate: ($(l).find("template") && $(l).find("template").text().length > 3 || ($(l).find("template").attr("url") && ($(l).find("template").attr("url").length>1))),
                             templateurl : false,

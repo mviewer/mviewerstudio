@@ -409,6 +409,7 @@ var mv = (function () {
             }
             layer.type =  $("#frm-type").val();
             layer.title =  $("#frm-name").val();
+            layer.name =  $("#frm-name").val();
             layer.id = $("#frm-layerid").val();
             layer.url =  $("#frm-url").val();
             layer.legendurl =  $("#frm-legendurl").val();
@@ -470,28 +471,94 @@ var mv = (function () {
                     layer.stylesalias = style_alias.join(",");
             }
             
+        },        
+       
+        form2xml: function () {
+            var el = $(".layers-list-item.active");
+            var layerid = el.attr("data-layerid");
+            var themeid = $("#theme-edit").attr("data-themeid");            
+            function getLayerbyId(l) {
+              return l.id === layerid;
+            }
+            var layer = config.themes[themeid].layers.find(getLayerbyId);
+            var xml = mv.writeLayerNode(layer);
+            /*var reg = reg = /" /g;
+            xml = xml.replace(reg, '" \r\n    ').replace('</layer>', '\r\n</layer>');*/
+            $("#mod-codeview").modal();
+            $("#mod-codeview pre").text(xml);
         },
         
-        form2xml: function () {
-            //Not complete eg fields, aliases...
-            var str =[
-                        '<layer',
-                            '    type="'+$("#frm-type").val()+'"',                            
-                            '    url="'+$("#frm-url").val()+'"',
-                            '    id="'+$("#frm-layerid").val()+'"',
-                            '    name="'+$("#frm-name").val()+'"',
-                            '    queryable="'+($("#frm-queryable").prop("checked") === true)+'"',
-                            '    infoformat="'+$("#frm-infoformat").val()+'"',
-                            '    metadata="'+$("#frm-metadata").val()+'"',
-                            '    metadata-csw="'+$("#frm-metadata-csw").val()+'"',
-                            '    attribution="'+$("#frm-attribution").val()+'"',
-                            '    filter="'+$("#frm-filter").val()+'"',
-                            '    visible="'+($("#frm-visible").prop("checked") === true)+'">',
-                        '</layer>'
-                    ].join(" \n");
-             console.log(str);
-             $("#mod-codeview").modal();
-             $("#mod-codeview pre").text(str);
+        writeLayerNode: function (l) {    
+             var padding = function (n) {
+                return '\r\n' + " ".repeat(n);
+             };
+             var layer_parameters = {};
+                //require parameters
+                var require_parameters = [
+                    "id",
+                    "name",
+                    "type",
+                    "url"
+                ];
+                require_parameters.forEach(function(p,i) {
+                   layer_parameters[p] = [p, '="', l[p], '"'].join('');                    
+                });                
+                //optional parameters
+                var optional_parameters = [ 
+                        "tiled",
+                        "visible",
+                        "infoformat",
+                        "fields",
+                        "aliases",
+                        "style",
+                        "stylesalias",
+                        "metadata",
+                        "metadata-csw",
+                        "attribution",
+                        "queryable",
+                        "searchable",
+                        "secure",                        
+                        "filter",
+                        "sld",
+                        "legendurl",
+                        "scalemin",
+                        "scalemax",
+                        "featurecount",
+                        "opacity" 
+                ];
+                optional_parameters.forEach(function(p,i) {
+                    if (l[p]) {
+                        layer_parameters[p] = [p, '="', l[p], '"'].join('');
+                    }
+                });
+                //more complexes parameters                
+                var attributefilter ="";
+                if (l.attributefilter) {
+                    attributefilter = [
+                        'attributefilter="true"',
+                        'attributefield="'+l.attributefield+'"',
+                        'attributevalues="'+l.attributevalues+'"',
+                        'attributelabel="'+l.attributelabel+'"',
+                    ]. join(" ");
+                    layer_parameters.attributefilter = attributefilter;
+                }                
+                //template exception
+                var template = "";
+                if (l.usetemplate && l.template) {
+                    template = '<template><![CDATA['+ l.template+']]></template>';
+                }
+                if (l.usetemplate && l.templateurl) {
+                    template = '<template url="'+ l.templateurl+'" ></template>';
+                }                
+                var layer = [padding(8) +'<layer '];
+                $.each(layer_parameters, function (prop, parameter) {
+                    layer.push(padding(12) + parameter);
+                });
+                layer.push('>');
+                layer.push(template);
+                layer.push(padding(8)+'</layer>');
+            
+            return layer.join("");
         },
         
         escapeXml: function (unsafe) {
