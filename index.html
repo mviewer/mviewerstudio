@@ -172,6 +172,17 @@ select#opt-style {
     display: block;
 }
 
+#searchelasticsearch_options,  #searchlocalities_options{
+    border-left: thick solid #333;
+    display: none;
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+#fuse_options {
+    display: none;
+}
+
 </style>
 <body>   
     <nav class="navbar navbar-inverse">
@@ -191,7 +202,8 @@ select#opt-style {
             <ul id="tabs" class="nav nav-tabs" data-tabs="tabs">
                 <li class="active"><a href="#application-config" data-toggle="tab">Application</a></li>
                 <li><a href="#themes-config" data-toggle="tab">Thématiques</a></li>
-                <li><a href="#backgroundlayers-config" data-toggle="tab">Couches de fond</a></li>                            
+                <li><a href="#backgroundlayers-config" data-toggle="tab">Couches de fond</a></li>
+                <li><a href="#search-config" data-toggle="tab">Recherche</a></li>
             </ul>
             <div class="tab-content">
                 <div class="tab-pane active" id="application-config">
@@ -388,6 +400,109 @@ select#opt-style {
                         </div>
                 </div>
                 
+                
+                <div class="tab-pane" id="search-config">
+                        <h1>Paramètres de recherche</h1>
+                        
+                        
+                    <div class="checkbox">
+                            <label for="opt-searchfeatures" >
+                              <input type="checkbox" id="opt-searchfeatures" value="0" >
+                              Activer la recherche d'entités
+                            </label>
+                      </div> 
+
+                    <div class="form-group">
+                            <label class="control-label col-md-4" for="frm-globalsearch">Elasticsearch</label>
+                                <select id="frm-globalsearch" name="globalsearch" class="form-control" onchange="mv.changeGlobalSearch(this.value)" style="width:auto;">
+                                    <option value="false">Non utilisé</option>
+                                    <option value="elasticsearch">Activé</option>                                     
+                                </select>
+                      </div>
+                                         
+                      <form  id="searchelasticsearch_options" class="form-horizontal">
+                           
+                            <div class="form-group">
+                              <label class="col-md-4 control-label" for="opt-elasticsearch-url">URL Elasticsearch</label>  
+                              <div class="col-md-4">
+                                <input id="opt-elasticsearch-url" type="text" placeholder="Url Elasticsearch" class="form-control input-md">  
+                              </div>
+                            </div>
+                           
+                            <div class="form-group">
+                              <label class="col-md-4 control-label" for="opt-elasticsearch-geometryfield">geometryfield</label>  
+                              <div class="col-md-4">
+                                <input id="opt-elasticsearch-geometryfield" type="text" placeholder="geometryfield" class="form-control input-md">  
+                              </div>
+                            </div>
+                            
+                            <div class="form-group">
+                              <label class="col-md-4 control-label" for="opt-elasticsearch-linkid">linkid</label>  
+                              <div class="col-md-4">
+                                <input id="opt-elasticsearch-linkid" type="text" placeholder="linkid" class="form-control input-md">  
+                              </div>
+                            </div>
+                           
+                            <div class="form-group">
+                              <label class="col-md-4 control-label" for="opt-elasticsearch-doctypes">doctypes</label>  
+                              <div class="col-md-4">
+                                <input id="opt-elasticsearch-doctypes" type="text" placeholder="doctypes" class="form-control input-md">  
+                              </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                    <label class="control-label col-md-4" for="opt-elasticsearch-querymode">Mode</label>
+                                        <select id="opt-elasticsearch-querymode"  class="form-control" style="width:auto;" onchange="">
+                                            <option value="match">match</option>
+                                            <option value="term">term</option>
+                                            <option value="phrase">phrase</option>                               
+                                        </select>
+                             </div>
+                             
+                              <div class="checkbox">
+                                    <label for="opt-elasticsearch-bbox" >
+                                      <input type="checkbox" id="opt-elasticsearch-bbox" value="0" >
+                                      Rechercher dans l'emprise de la carte
+                                    </label>
+                              </div> 
+                            
+                             <div class="form-group">
+                                    <label class="control-label col-md-4" for="opt-elasticsearch-version">Version</label>
+                                        <select id="opt-elasticsearch-version"  class="form-control" style="width:auto;" onchange="">
+                                            <option value="current">current</option>
+                                            <option value="1.4">1.4</option>                                                            
+                                        </select>
+                             </div>
+                          
+                            
+                      </form>                      
+
+                      <div class="form-group">
+                            <label class="control-label col-md-4" for="frm-searchlocalities">recherche d'adresses</label>
+                                <select id="frm-searchlocalities" name="searchlocalities" class="form-control" onchange="mv.changeSearchLocalities(this.value)" style="width:auto;">
+                                    <option value="false">Non utilisé</option>
+                                    <option value="ban">Base adresse Nationale</option>
+                                    <option value="geoportail">Géoportail</option>                               
+                                </select>
+                      </div>
+                      
+                 <form id="searchlocalities_options" class="form-horizontal">
+                                    <div class="form-group">
+                                      <label class="col-md-4 control-label" for="opt-searchlocalities-url">URL</label>  
+                                      <div class="col-md-4">
+                                        <input id="opt-searchlocalities-url" type="text" placeholder="Url" class="form-control input-md">  
+                                      </div>
+                                    </div>
+                                   
+                                    <div class="form-group">
+                                      <label class="col-md-4 control-label" for="opt-searchlocalities-attribution">Attribution</label>  
+                                      <div class="col-md-4">
+                                        <input id="opt-searchlocalities-attribution" type="text" placeholder="Attribution du service" class="form-control input-md">  
+                                      </div>
+                                    </div>                        
+                        </form>                    
+                
+                
             </div> <!-- tab-content-->
         </div>
         
@@ -433,6 +548,7 @@ select#opt-style {
                         <li role="presentation" ><a href="#layer_conf3"  role="tab" data-toggle="tab">Affichage</a></li>
                         <li role="presentation" ><a href="#layer_conf4"  role="tab" data-toggle="tab">Filtre source</a></li>
                         <li role="presentation" ><a href="#layer_conf5"  role="tab" data-toggle="tab">Filtre attributaire</a></li>
+                        <li role="presentation" ><a href="#layer_conf6"  role="tab" data-toggle="tab">Recherche</a></li>
                     </ul>
                     <div class="tab-content" id="layer_sections">
                     <div role="tabpanel" class="tab-pane active" id="layer_conf1">
@@ -441,9 +557,18 @@ select#opt-style {
                         <label for="frm-layer-title">Nom</label>
                         <input type="text" class="form-control" id="frm-name" placeholder="nom de la couche">
                       </div>
-                      <div class="form-group">
+                      <!--<div class="form-group">
                         <label for="frm-type">Type</label>
                         <input type="text" class="form-control" id="frm-type" placeholder="type">
+                      </div>-->
+                      <div class="form-group">
+                            <label class="control-label" for="frm-type">Type</label>
+                                <select id="frm-type" name="type" class="form-control" onchange="mv.changeLayerType(this.value);">                                    
+                                    <option value="wms">wms</option>
+                                    <option value="geojson">geojson</option>
+                                    <option value="kml">kml</option>
+                                    <option value="customlayer">customlayer</option>
+                                </select>                            
                       </div>
                       <div class="form-group">
                         <label for="frm-layerid">id</label>
@@ -501,14 +626,7 @@ select#opt-style {
                               <input id="frm-secure" type="checkbox"> Couche protégée
                             </label>
                           </div>
-                      </div>
-                       <div class="form-group">
-                          <div class="checkbox">
-                            <label>
-                              <input id="frm-searchable" type="checkbox"> searchable
-                            </label>
-                          </div>
-                      </div>
+                      </div>                       
                       <div class="form-group">
                             <label class="control-label" for="frm-infoformat">infoformat</label> 
                             
@@ -632,6 +750,36 @@ select#opt-style {
                                                                 
                       </div>
 
+                  </form>
+                 </div>
+                 
+                    <div role="tabpanel" class="tab-pane" id="layer_conf6">
+                  <form>                    
+                       <div class="form-group">
+                          <div class="checkbox">
+                            <label>
+                              <input id="frm-searchable" type="checkbox"> searchable
+                            </label>
+                          </div>
+                      </div>
+                      <div class="form-group">
+                        <label class="control-label" for="frm-searchengine" >Moteur de recherche</label>                                                    
+                            <select id="frm-searchengine" class="form-control" onchange="mv.changeSearchEngine(this.value)" >
+                                <option value="elasticsearch">elasticsearch</option>
+                                <option value="fuse">fuse</option>
+                            </select>
+                       </div>
+                       <div id="fuse_options">
+                           <div class="form-group">
+                                <label for="frm-fusesearchkeys">fusesearchkeys</label>
+                                <input type="text" class="form-control" id="frm-fusesearchkeys" placeholder="fusesearchkeys">
+                           </div>
+                           
+                           <div class="form-group">
+                                <label for="frm-fusesearchkeys">fusesearchresult</label>
+                                <input type="text" class="form-control" id="frm-fusesearchresult" placeholder="fusesearchresult">
+                           </div>
+                       </div>
                   </form>
                  </div>
                  
@@ -1043,8 +1191,8 @@ select#opt-style {
             return '\r\n' + " ".repeat(n);
          };
          var savedProxy = "";
-         var savedOlscompletion = "";
-         var savedElasticsearch = "";
+         var olscompletion = "";
+         var elasticsearch = "";
          var savedSearchparameters = "";
          var application = ['<application',
             'title="'+$("#opt-title").val()+'"',            
@@ -1067,15 +1215,34 @@ select#opt-style {
          if ( savedParameters.proxy  ) {
             savedProxy = padding(0) + savedParameters.proxy;
          }
-         if ( savedParameters.olscompletion  ) {
-            savedOlscompletion = padding(0) + savedParameters.olscompletion;
+         var search_params = {"bbox":false, "localities": false, "features":false, "static":false};
+         if ( $("#frm-searchlocalities").val() !="false"  ) {
+            olscompletion = [padding(0) + '<olscompletion type="'+$("#frm-searchlocalities").val()+'"',
+                'url="'+$("#opt-searchlocalities-url").val()+'"',
+                'attribution="'+$("#opt-searchlocalities-attribution").val()+'" />'].join(" ");
+                search_params.localities = true;
          }
-         if ( savedParameters.elasticsearch  ) {
-            savedElasticsearch = padding(0) + savedParameters.elasticsearch;
+         if ( $("#frm-globalsearch").val() === "elasticsearch" && $("#opt-elasticsearch-url").val() ) {
+            elasticsearch = [padding(0) + '<elasticsearch url="'+$("#opt-elasticsearch-url").val()+'"',
+                'geometryfield="'+$("#opt-elasticsearch-geometryfield").val()+'"',
+                'linkid="'+$("#opt-elasticsearch-linkid").val()+'"',
+                'doctypes="'+$("#opt-elasticsearch-doctypes").val()+'"',
+                'mode="'+($("#opt-elasticsearch-mode").val() || 'match')+'"',
+                'version="'+$("#opt-elasticsearch-version").val()+'" />'].join(" ");                
+                if ($("#opt-elasticsearch-doctypes").val().length >=0) {
+                    search_params.static = "true";
+                }
+                if ($("#opt-elasticsearch-bbox").prop("checked")) {
+                    search_params.bbox = "true";
+                } 
          }
-         if ( savedParameters.searchparameters  ) {
-            savedSearchparameters = padding(0) + savedParameters.searchparameters;
-         }   
+        if  ( $("#opt-searchfeatures").prop("checked") ) {
+            search_params.features = true;
+        }        
+         
+         
+         searchparameters = padding(0) + '<searchparameters bbox="'+search_params.bbox+'" localities="'+search_params.localities+'" features="'+search_params.features+'" static="'+search_params.static+'"/>';
+         
          var center = map.getView().getCenter().join(",");
          var zoom = map.getView().getZoom();
          var mapoptions = padding(0) + '<mapoptions maxzoom="20" projection="EPSG:3857" center="'+center+'" zoom="'+zoom+'" />';
@@ -1109,9 +1276,9 @@ select#opt-style {
             application,
             mapoptions,
             savedProxy,
-            savedOlscompletion,
-            savedElasticsearch,
-            savedSearchparameters,
+            olscompletion,
+            elasticsearch,
+            searchparameters,
             baseLayers.join(" "),
             themes.join(" "),
             padding(0)+ '</config>'];
@@ -1173,9 +1340,32 @@ select#opt-style {
                 console.log(xml);
                 var proxy = $(xml).find("proxy");
                 var olscompletion = $(xml).find("olscompletion");
+                if (olscompletion && olscompletion.attr("type")) {
+                    $("#frm-searchlocalities").val(olscompletion.attr("type")).trigger("change");
+                }
+                if (olscompletion && olscompletion.attr("url")) {
+                    $("#opt-searchlocalities-url").val(olscompletion.attr("url"));
+                }
+                if (olscompletion && olscompletion.attr("attribution")) {
+                    $("#opt-searchlocalities-attribution").val(olscompletion.attr("attribution"));
+                }
                 var elasticsearch = $(xml).find("elasticsearch");
-                var searchparameters = $(xml).find("searchparameters");                
-                [proxy, olscompletion, elasticsearch, searchparameters].forEach(function(param,id) {
+                if (elasticsearch && elasticsearch.attr("url")) {
+                     $("#frm-globalsearch").val("elasticsearch").trigger("change");
+                     ["url", "geometryfield", "linkid", "doctype", "mode", "version"].forEach(function(param,id) {
+                          $("#opt-elasticsearch-"+param).val(elasticsearch.attr(param));
+                      });
+                }
+                var searchparameters = $(xml).find("searchparameters"); 
+                if ( searchparameters && searchparameters.attr("bbox") ) {
+                        $("#opt-elasticsearch-bbox").prop("checked", (searchparameters.attr("bbox") === "true"));
+                }
+                if ( searchparameters && searchparameters.attr("features") ) {
+                        $("#opt-searchfeatures").prop("checked", (searchparameters.attr("features") === "true"));
+                }
+                
+             
+                [proxy].forEach(function(param,id) {
                     // this parameters are not yet supported but must be saved for later
                     if (param.length>0) {
                         savedParameters[param.selector] = param[0].outerHTML;
@@ -1246,10 +1436,13 @@ select#opt-style {
                             scalemax: $(l).attr("scalemax"),
                             title: $(l).attr("name"),
                             name: $(l).attr("name"),
-                            url: $(l).attr("url"),
+                            url: mv.escapeXml($(l).attr("url")),
                             queryable: ($(l).attr("queryable") === "true"),
                             featurecount: $(l).attr("featurecount"),
                             searchable: ($(l).attr("searchable") === "true"),
+                            searchengine:$(l).attr("searchengine"),
+                            fusesearchkeys:$(l).attr("fusesearchkeys"),
+                            fusesearchresult:$(l).attr("fusesearchresult"),
                             secure: ($(l).attr("secure") === "true"),
                             infoformat: $(l).attr("infoformat"),
                             metadata: $(l).attr("metadata"),

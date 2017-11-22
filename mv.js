@@ -284,6 +284,7 @@ var mv = (function () {
             $("#frm-lis-styles").empty();
             $("#layer_conf4 form").trigger('reset');
             $("#layer_conf5 form").trigger('reset');
+             $("#layer_conf6 form").trigger('reset');
             $("#layer_sections>.tab-pane").removeClass('active').first().addClass('active');
             $("#layer_sections_menu li").removeClass('active').first().addClass('active');
             
@@ -295,7 +296,7 @@ var mv = (function () {
             }
             var layer = config.themes[themeid].layers.find(getLayerbyId);
             
-            $("#frm-type").val(layer.type);
+            $("#frm-type").val(layer.type).trigger("change");
             $("#frm-name").val(layer.title);
             $("#frm-scalemin").val(layer.scalemin);
             $("#frm-scalemax").val(layer.scalemax);
@@ -306,7 +307,10 @@ var mv = (function () {
             $("#frm-queryable").prop("checked", (layer.queryable));
             $("#frm-featurecount").val(layer.featurecount);
             $("#frm-secure").prop("checked", (layer.secure)); 
-            $("#frm-searchable").prop("checked", (layer.searchable));  
+            $("#frm-searchable").prop("checked", (layer.searchable));
+            $("#frm-searchengine").val(layer.searchengine).trigger("change");
+            $("#frm-fusesearchkeys").val(layer.fusesearchkeys);
+            $("#frm-fusesearchresult").val(layer.fusesearchresult);
             $("#frm-infoformat option[value='"+layer.infoformat+"']").prop("selected", true).trigger("change");            
             $("#frm-metadata").val(layer.metadata);
             $("#frm-metadata-csw").val(layer["metadata-csw"]);
@@ -415,7 +419,10 @@ var mv = (function () {
             layer.legendurl =  $("#frm-legendurl").val();
             layer.queryable = ($("#frm-queryable").prop("checked") === true);
             layer.secure = ($("#frm-secure").prop("checked") === true);
-            layer.searchable = ($("#frm-searchable").prop("checked") === true); 
+            layer.searchable = ($("#frm-searchable").prop("checked") === true);
+            layer.searchengine = $("#frm-searchengine").val();
+            layer.fusesearchkeys = $("#frm-fusesearchkeys").val();
+            layer.fusesearchresult = $("#frm-fusesearchresult").val();
             layer.infoformat = $("#frm-infoformat").val();
             layer.featurecount = $("#frm-featurecount").val();    
             layer.metadata = $("#frm-metadata").val();
@@ -517,6 +524,9 @@ var mv = (function () {
                         "attribution",
                         "queryable",
                         "searchable",
+                        "searchengine",
+                        "fusesearchkeys",
+                        "fusesearchresult",
                         "secure",                        
                         "filter",
                         "sld",
@@ -635,6 +645,48 @@ var mv = (function () {
         changeVisibleBaseLayer : function (visibleBaselayer) {
             $(".bl").removeClass("visible");
             $(".bl[data-layerid='"+visibleBaselayer+"']").addClass("visible");
+        },
+        
+        changeGlobalSearch: function (value) {
+            switch (value) {
+                case "false":
+                    $("#searchelasticsearch_options").hide();
+                    break;
+                 case "elasticsearch":                    
+                    $("#searchelasticsearch_options").show();
+                    break;                    
+            }
+        },
+        
+        changeSearchLocalities: function (value) {
+            switch (value) {
+                case "false":
+                    $("#searchlocalities_options").hide();
+                    break;
+                 case "ban":
+                 case  "geoportail":               
+                    $("#searchlocalities_options").show();
+                    break;                       
+            }
+        },
+        
+        changeSearchEngine: function (value) {
+            if (value === "fuse") {
+                $("#fuse_options").show();
+            } else {
+                $("#fuse_options").hide();
+            }
+        },
+        
+        changeLayerType: function (value) {
+           switch (value) {
+            case "wms":
+                $("#frm-searchengine option[value='fuse']").attr("disabled","disabled");
+                break;
+            case "geojson":                
+                $("#frm-searchengine option[value='fuse']").removeAttr('disabled');
+                break;
+           }
         }
         
         
