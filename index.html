@@ -172,8 +172,7 @@ select#opt-style {
     display: block;
 }
 
-#searchelasticsearch_options,  #searchlocalities_options{
-    border-left: thick solid #333;
+#searchelasticsearch_options,  #searchlocalities_options{   
     display: none;
     padding-top: 20px;
     padding-bottom: 20px;
@@ -182,6 +181,13 @@ select#opt-style {
 #fuse_options {
     display: none;
 }
+
+.checkbox.lg input[type=checkbox] {
+    transform: scale(2);
+    margin-left: -30px!important;
+}
+
+
 
 </style>
 <body>   
@@ -247,8 +253,8 @@ select#opt-style {
                                                                         
                         <!--style-->
                         <div class="form-group">
-                            <label class="control-label" for="frm-style">Style</label> 
-                            
+                            <label class="control-label col-md-4" for="frm-style">Style</label> 
+                                <div class="col-md-4">
                                 <select id="opt-style" name="style" class="form-control default"  onchange="updateTheme(this);">                                    
                                     <option class="alizarin" value="css/themes/alizarin.css">alizarin</option>
                                     <option class="blue" value="css/themes/blue.css">blue</option>
@@ -265,7 +271,7 @@ select#opt-style {
                                     <option class="pink" value="css/themes/pink.css">pink</option>
                                     <option class="wet_asphalt" value="css/themes/wet_asphalt.css">wet_asphalt</option>
                                 </select>
-                            
+                            </div>
                       </div>
                       <!--<div class="row">
                           <div class="list-group">
@@ -333,7 +339,9 @@ select#opt-style {
                               <!-- List with handle -->
                               <div id="themes-list" class="list-group">                              
                               </div>
-                              <button id="btn-addTheme" class="btn btn-sm btn-primary glyphicon glyphicon-plus sign" onclick="addTheme('Nouvelle thématique', true, createId('theme'));"></button>
+                              <button id="btn-addTheme" class="btn btn-sm btn-primary" onclick="addTheme('Nouvelle thématique', true, createId('theme'));">
+                                <span class="glyphicon glyphicon-plus" aria-hidden="true"> </span> Ajouter une thématique
+                              </button>
                      </div>                   
                      <div class="col-md-4">                   
                         <div id="panel-theme" class="panel panel-default panel-primary" style="display: none;">
@@ -362,8 +370,12 @@ select#opt-style {
                                 <!-- List with handle -->
                               <div id="themeLayers" class="list-group">                                
                               </div>
-                              <button id="btn-addLayer" class="btn btn-sm btn-info glyphicon glyphicon-plus sign" onclick="addLayer('Nouvelle couche');"></button>
-                              <button id="btn-saveTheme" class="btn btn-sm btn-success glyphicon glyphicon-ok" onclick="saveTheme();"></button>
+                              <button id="btn-addLayer" class="btn btn-sm btn-info" onclick="addLayer('Nouvelle couche');">
+                                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Ajouter une couche
+                              </button>
+                              <button id="btn-saveTheme" class="btn btn-sm btn-success" onclick="saveTheme();">
+                                    <span class="glyphicon glyphicon-ok" aria-hidden="true"></span> Enregistrer la thématique
+                              </button>
                               </div>
                         </div>
                    </div>
@@ -378,42 +390,50 @@ select#opt-style {
                 </div>
                 <div class="tab-pane" id="backgroundlayers-config">
                     <div class="row">                    
-                    <div class="col-sm-6 col-md-6">
-                        <h1>Couches de fond</h1>
-                    </div>
-                    <div class="col-sm-6 col-md-6">
-                        <div class="form-group">
-                            <label class="control-label" for="frm-bl-mode">Mode d'affichage</label> 
-                            <select id="frm-bl-mode" name="bl-mode" class="form-control">                                    
-                                <option value="default">normal</option>
-                                 <option value="gallery">gallerie</option>                               
-                            </select>
+                        <div class="col-sm-6 col-md-6">
+                            <h1>Couches de fond</h1>
                         </div>
-                     </div>
+                        <div class="col-sm-3 col-md-3">
+                            <div class="form-group">
+                                <label class="control-label" for="frm-bl-mode">Mode d'affichage</label> 
+                                <select id="frm-bl-mode" name="bl-mode" class="form-control">                                    
+                                    <option value="default">normal</option>
+                                     <option value="gallery">gallerie</option>                               
+                                </select>
+                            </div>
+                         </div>
+                         <div class="col-sm-3 col-md-3">
+                             <div class="form-group">
+                                    <label class="control-label" for="frm-bl-mode">Fond affiché au démarrage</label> 
+                                    <select id="frm-bl-visible" name="bl-visible" class="form-control" onchange="mv.changeVisibleBaseLayer(this.value)" ></select>
+                             </div>
+                          </div>
                     </div>
-                    <div id="frm-bl"></div>
-                    <div class="form-group">
-                            <label class="control-label" for="frm-bl-mode">Fond affiché au démarrage</label> 
-                            <select id="frm-bl-visible" name="bl-visible" class="form-control" onchange="mv.changeVisibleBaseLayer(this.value)" >                                    
-                                                                
-                            </select>
-                        </div>
+                    <div id="frm-bl"></div>                    
                 </div>
                 
                 
                 <div class="tab-pane" id="search-config">
                         <h1>Paramètres de recherche</h1>
                         
+                        <div class="well well-lg">
+                            <p>La recherche peut être activée si la couche est de type geojson.
+                            Cette fonctionnalité est également activable pour les couches de type WMS à la condition que les entités qui composent cette couche soient également indexées dans Elasticsearch.</p>
+                        </div>
+                        <div class="well well-lg">
+                            <div class="checkbox lg">
+                                    <label for="opt-searchfeatures" >
+                                      <input type="checkbox" id="opt-searchfeatures" value="0" >
+                                      Activer la recherche d'entités
+                                    </label>
+                              </div> 
+                        </div>
                         
-                    <div class="checkbox">
-                            <label for="opt-searchfeatures" >
-                              <input type="checkbox" id="opt-searchfeatures" value="0" >
-                              Activer la recherche d'entités
-                            </label>
-                      </div> 
-
+               <div class="panel panel-primary">
+               <div class="panel-heading"> <h3 class="panel-title">Elasticsearch</h3> </div>
+                <div class="panel-body">
                     <div class="form-group">
-                            <label class="control-label col-md-4" for="frm-globalsearch">Elasticsearch</label>
+                            <label class="control-label col-md-4" for="frm-globalsearch">Options</label>
                                 <select id="frm-globalsearch" name="globalsearch" class="form-control" onchange="mv.changeGlobalSearch(this.value)" style="width:auto;">
                                     <option value="false">Non utilisé</option>
                                     <option value="elasticsearch">Activé</option>                                     
@@ -475,15 +495,22 @@ select#opt-style {
                              </div>
                           
                             
-                      </form>                      
+                      </form> 
+                
+                 </div>
 
+</div>                      
+<div class="panel panel-primary">
+    <div class="panel-heading"> <h3 class="panel-title">Recherche d'adresses</h3> </div>
+            <div class="panel-body">
                       <div class="form-group">
-                            <label class="control-label col-md-4" for="frm-searchlocalities">recherche d'adresses</label>
-                                <select id="frm-searchlocalities" name="searchlocalities" class="form-control" onchange="mv.changeSearchLocalities(this.value)" style="width:auto;">
-                                    <option value="false">Non utilisé</option>
-                                    <option value="ban">Base adresse Nationale</option>
-                                    <option value="geoportail">Géoportail</option>                               
-                                </select>
+                            <label class="control-label col-md-4" for="frm-searchlocalities">Service utilisé</label>                               
+                                    <select id="frm-searchlocalities" name="searchlocalities" class="form-control" onchange="mv.changeSearchLocalities(this.value)" style="width:auto;">
+                                        <option value="false">Non utilisé</option>
+                                        <option value="ban">Base adresse Nationale</option>
+                                        <option value="geoportail">Géoportail</option>      
+                                    </select>
+
                       </div>
                       
                  <form id="searchlocalities_options" class="form-horizontal">
@@ -500,8 +527,9 @@ select#opt-style {
                                         <input id="opt-searchlocalities-attribution" type="text" placeholder="Attribution du service" class="form-control input-md">  
                                       </div>
                                     </div>                        
-                        </form>                    
-                
+                        </form>      
+                 </div>
+     </div>           
                 
             </div> <!-- tab-content-->
         </div>
@@ -946,7 +974,7 @@ select#opt-style {
             });            
             
             $("#opt-style").val("css/themes/default.css").trigger("change");
-            $("#theme-edit-icon option").prop("selected", false);
+            $("#theme-edit-icon option").prop("selected", false);            
             $("#panel-theme").hide();
             
             map.getView().setCenter([-307903.74898791354, 6141345.088741366]);
@@ -1119,6 +1147,9 @@ select#opt-style {
                 collapsed: collapsed,
                 layers: []
             };
+            if (title === "Nouvelle thématique") {
+                $(".themes-list-item[data-themeid='"+themeid+"'] .theme-edit").trigger("click");
+            }
      };
      
      var editTheme = function (item) {
@@ -1134,6 +1165,9 @@ select#opt-style {
         $("#theme-edit").attr("data-themeid", themeid);
         $("#theme-edit-icon").val(icon);
         $("#theme-edit-icon option[value='"+icon+"']").prop("selected", true);
+        if (icon === "undefined") {
+                $("#theme-edit-icon option[value='folder-open']").prop("selected", true);
+         }
         //Remove old layers entries
         $(".layers-list-item").remove();
         //Show layerslm
