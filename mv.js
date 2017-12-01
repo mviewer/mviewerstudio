@@ -241,6 +241,7 @@ var mv = (function () {
                      var layer = {
                         "id": conf.layerid,
                         "title": conf.title,
+                        "name": conf.title,
                         "type": "wms",           
                         "url": conf.url,
                         "queryable": true, 
@@ -477,6 +478,8 @@ var mv = (function () {
                     layer.style = style_names.join(",");
                     layer.stylesalias = style_alias.join(",");
             }
+            
+            $("#mod-layerOptions").modal('hide');
             
         },        
        
