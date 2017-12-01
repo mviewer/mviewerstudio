@@ -1078,7 +1078,10 @@ select#opt-style {
             var el = sortableLayerList.closest(evt.item); // get dragged item
             deleteLayer(el.getAttribute('data-layerid'));
             el && el.parentNode.removeChild(el);
-          }
+          },
+          onEnd: function (evt) {                            
+                sortLayers(evt.oldIndex, evt.newIndex);
+            }
         });
         
        var sortableThemeList = Sortable.create(document.getElementById('themes-list'), {
@@ -1091,8 +1094,28 @@ select#opt-style {
             var themeid = $(el).attr("data-themeid");
             deleteTheme(themeid);
             el && el.parentNode.removeChild(el);
-          }
+          },
+          onEnd: function (evt) {
+                sortThemes();
+            }
         });
+        
+        sortThemes = function () {
+            var orderedThemes = {};                
+            $(".themes-list-item").each(function(i,item) {
+                var id = $(this).attr("data-themeid");
+                orderedThemes[id] = config.themes[id];
+            });
+            config.themes = orderedThemes;
+        };
+        
+        sortLayers = function (fromIndex, toIndex) {
+            var themeid = $("#themes-list .active").attr("data-themeid");
+            var arr = config.themes[themeid].layers;
+            var element = arr[fromIndex];
+            arr.splice(fromIndex, 1);
+            arr.splice(toIndex, 0, element);
+        };
       
       $('input[type=file]').change(function () {
             loadApplicationParameters();
