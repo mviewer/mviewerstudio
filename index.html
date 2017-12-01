@@ -574,8 +574,8 @@ select#opt-style {
                         <li role="presentation" class="active"><a href="#layer_conf1"  role="tab" data-toggle="tab">Base</a></li>
                         <li role="presentation" ><a href="#layer_conf2"  role="tab" data-toggle="tab">Fiche d'information</a></li>
                         <li role="presentation" ><a href="#layer_conf3"  role="tab" data-toggle="tab">Affichage</a></li>
-                        <li role="presentation" ><a href="#layer_conf4"  role="tab" data-toggle="tab">Filtre source</a></li>
-                        <li role="presentation" ><a href="#layer_conf5"  role="tab" data-toggle="tab">Filtre attributaire</a></li>
+                        <li role="presentation" ><a href="#layer_conf4"  role="tab" data-toggle="tab">Filtre</a></li>
+                        <li role="presentation" ><a href="#layer_conf5"  role="tab" data-toggle="tab">Liste de choix</a></li>
                         <li role="presentation" ><a href="#layer_conf6"  role="tab" data-toggle="tab">Recherche</a></li>
                     </ul>
                     <div class="tab-content" id="layer_sections">
@@ -713,6 +713,7 @@ select#opt-style {
                  </div>
                  
                   <div role="tabpanel" class="tab-pane" id="layer_conf4">
+                            <div class="well">Filtre côté serveur</div>
                             <form>                    
                       
                                 <div class="form-group">
@@ -726,7 +727,7 @@ select#opt-style {
                                   </ul>
                                   <!-- Tab panes -->
                                   <div class="tab-content">
-                                        <div role="tabpanel" class="tab-pane active" id="attribute_filter">
+                                        <div role="tabpanel" class="tab-pane active" id="attribute_filter">                                            
                                                 <div class="form-group">
                                                     <label class="control-label" >Champs</label>                                                    
                                                         <select id="attribute_filter_fields" name="fields" class="form-control" onchange="extractFeatures(this.value, 'source')";>
@@ -758,6 +759,7 @@ select#opt-style {
                         </div>
                  
                   <div role="tabpanel" class="tab-pane" id="layer_conf5">
+                    <div class="well">Filtre côté client</div>
                   <form>
                     
                       <div class="form-group">
@@ -1140,7 +1142,7 @@ select#opt-style {
             '<span class="layer-remove glyphicon glyphicon-remove" title="Supprimer" ></span>',
             '<span class="layer-edit glyphicon glyphicon-pencil" title="Editer cette couche" onclick="editLayer(this);"></span>',
             '<span class="layer-name">'+title+'</span>',
-            '</div>'].join(""));
+            '</div>'].join("")).find(".layer-edit").last().click();
      };
      
      var editLayer = function (item) {        
