@@ -1356,7 +1356,9 @@ select#opt-style {
             var element = document.createElement('a');
             element.setAttribute('href', 'data:text/xml;charset=utf-8,' +      encodeURI(conf.join("")));
             element.setAttribute('download', "config.xml");
+            document.body.appendChild(element);
             element.click();            
+            document.body.removeChild(element);
           }
         
       };
