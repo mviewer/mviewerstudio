@@ -21,7 +21,7 @@ var mv = (function () {
             $.each(results, function (index, result) {
                 var div = ['<div class="ogc-result csw-result col-sm-6 col-md-4" data-title="'+result.title+'" data-layerid="'+result.layerid+'" data-metadata="'+result.metadata+'" data-metadata-csw="'+result['metadata-csw']+'" data-url="'+result.wms+'" data-attribution="'+result.attribution+'" data-type="wms">',
                     '<div class="thumbnail">',
-                      '<img src="'+result.image+'">',
+                      /*'<img src="'+result.image+'">',*/
                       '<div class="caption">',
                         '<h3>'+result.title+'</h3>',
                         '<p>'+result.abstract+'</p>',                    
@@ -665,9 +665,14 @@ var mv = (function () {
             switch (value) {
                 case "false":
                     $("#searchlocalities_options").hide();
+                    $("#opt-searchlocalities-url").val("");
                     break;
                  case "ban":
-                 case  "geoportail":               
+                    $("#searchlocalities_options").show();
+                    $("#opt-searchlocalities-url").val('https://api-adresse.data.gouv.fr/search/');
+                    break;
+                 case  "geoportail":
+                    $("#opt-searchlocalities-url").val("");
                     $("#searchlocalities_options").show();
                     break;                       
             }

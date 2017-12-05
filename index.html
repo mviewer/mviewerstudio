@@ -40,7 +40,7 @@ body {
 .layer-remove, .theme-remove {
   float: right;
   padding-right: 10px;
-  color: red;
+  color: #000000;
   font-size: 1.2em;
   cursor: pointer;
 }
@@ -48,7 +48,7 @@ body {
 .layer-edit, .theme-edit{
   float: right;
   padding-right: 10px;
-  color: grey;
+  color: #000000;
   cursor: pointer;
   font-size: 1.2em;
 }
@@ -132,7 +132,17 @@ div#map_filter {
     font-size: 16px;
 }
 .ogc-result .thumbnail p {
-    font-size: smaller;
+    font-size: 12px;
+    display: block; /* Fallback for non-webkit */
+  display: -webkit-box;
+  max-width: 400px;
+  height: 84; /* Fallback for non-webkit (12*1.4*5**/
+  margin: 0 auto;  
+  line-height: 1.4;
+  -webkit-line-clamp: 5;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .bl img {
@@ -187,6 +197,26 @@ select#opt-style {
     margin-left: -30px!important;
 }
 
+#themes-list .list-group-item.active, #themeLayers .list-group-item.active {
+    color: #31708f;
+    background-color: #d9edf7;
+    border-color: #bce8f1;
+}
+
+
+#csw-results {
+    padding-top: 20px;
+}
+
+.themes-list-item .btn-group, layers-list-item .btn-group{
+    margin-top: -3px;
+    margin-right: -8px;
+}
+
+.themes-list-item .label-info {    
+    margin-left: 3px;
+}
+
 
 
 </style>
@@ -198,7 +228,7 @@ select#opt-style {
     </div>    
     <ul class="nav navbar-nav navbar-right">
       <li><a role="button" data-toggle="modal" data-target="#mod-importfile" href="#"><span role="button" class="glyphicon glyphicon-import"></span>Importer</a></li>
-      <li><a role="button" onclick="saveApplicationParameters(false);" href="#"><span class="glyphicon glyphicon-download"></span>Télécharger</a></li>
+      <li><a role="button" onclick="saveApplicationParameters(false);" href="#"><span class="glyphicon glyphicon-download"></span>Enregistrer l'application</a></li>
       <li><a role="button" onclick="saveApplicationParameters(true);" href="#"><span class="glyphicon glyphicon-globe"></span>Visualiser</a></li>
    </ul>
   </div>
@@ -207,7 +237,7 @@ select#opt-style {
         <div id="content">
             <ul id="tabs" class="nav nav-tabs" data-tabs="tabs">
                 <li class="active"><a href="#application-config" data-toggle="tab">Application</a></li>
-                <li><a href="#themes-config" data-toggle="tab">Thématiques</a></li>
+                <li><a href="#themes-config" data-toggle="tab">Thématiques & données</a></li>
                 <li><a href="#backgroundlayers-config" data-toggle="tab">Couches de fond</a></li>
                 <li><a href="#search-config" data-toggle="tab">Recherche</a></li>
             </ul>
@@ -215,12 +245,13 @@ select#opt-style {
                 <div class="tab-pane active" id="application-config">
                    
                     <form class="form-horizontal">
+                    <h1>Paramétrage de l'application</h1>      
                         <fieldset>
 
                         <!-- MAp -->
-                        <legend>Paramétrage de l'application</legend>                      
+                                        
                         <div class="form-group">
-                          <label class="col-md-4 control-label" for="map">Etendue géographique</label>  
+                          <label class="col-md-4 control-label" for="map">Cadrage initial</label>  
                           <div class="col-md-4">
                               <div id="map" class="map"></div>
                           </div>
@@ -237,17 +268,17 @@ select#opt-style {
                                                 
                         <!-- logo-->
                         <div class="form-group">
-                          <label class="col-md-4 control-label" for="opt-logo">Logo</label>  
+                          <label class="col-md-4 control-label" for="opt-logo">URL du Logo</label>  
                           <div class="col-md-4">
-                            <input id="opt-logo" name="textinput" type="text" class="form-control input-md">  
+                            <input id="opt-logo" name="textinput" type="text" class="form-control input-md" placeholder="https://geobretagne.fr/pub/logo/region-bretagne.jpg">  
                           </div>
                         </div>
 
                        <!-- help-->
                         <div class="form-group">
-                          <label class="col-md-4 control-label" for="opt-help">Fichier d'aide</label>  
+                          <label class="col-md-4 control-label" for="opt-help">Fichier d'aide (format html)</label>  
                           <div class="col-md-4">
-                            <input id="opt-help" name="textinput" type="text" class="form-control input-md" placeholder="mviewer_help.html">  
+                            <input id="opt-help" name="textinput" type="text" class="form-control input-md" placeholder="Ex: mviewer_help.html">  
                           </div>                          
                         </div>
                                                                         
@@ -316,7 +347,7 @@ select#opt-style {
                           <div class="checkbox">
                             <label for="opt-togglealllayersfromtheme">
                               <input type="checkbox" name="checkboxes" id="opt-togglealllayersfromtheme">
-                              toggle all layers from theme
+                              Afficher/masquer toutes les données d'une thématique en un clic.
                             </label>
                           </div>
                           </div>
@@ -327,26 +358,40 @@ select#opt-style {
                     </form>
                 </div>
                 <div class="tab-pane" id="themes-config">
-                    <h1>Thématiques</h1>
-                     <div class="checkbox">
-                        <label for="opt-mini">
-                          <input type="checkbox" name="checkboxes" id="opt-mini">
-                          Minifier le panneau thématiques
-                        </label>
-                      </div>
+                    <h1>Thématiques et données</h1>
+                    <div class="well"><h4>Sélection, paramétrage et organisation des données</h4>
+                        <p>Dans cette section, créer une ou plusieurs thématiques que vous peuplerez avec des données provenant de différentes plateformes</p>
+                    </div>
+                                
                     <div class="row">                              
                         <div class="col-md-4">
-                              <!-- List with handle -->
-                              <div id="themes-list" class="list-group">                              
-                              </div>
-                              <button id="btn-addTheme" class="btn btn-sm btn-primary" onclick="addTheme('Nouvelle thématique', true, createId('theme'));">
-                                <span class="glyphicon glyphicon-plus" aria-hidden="true"> </span> Ajouter une thématique
-                              </button>
+                              <!-- List with handle -->                              
+                              <div class="panel panel-default">
+                                  <div class="panel-heading">Panneau des thématiques</div>
+                                  <div class="panel-body">
+                                    <div id="themes-list" class="list-group">                              
+                                    </div>
+                                    <div class="pull-right">
+                                     <button id="btn-addTheme" class="btn btn-lg btn-primary" onclick="addTheme('Nouvelle thématique', true, createId('theme'));">
+                                        <span class="glyphicon glyphicon-plus" aria-hidden="true"> </span> Ajouter une thématique
+                                     </button>
+                                     </div>
+                                  </div>
+                                  <div class="panel-footer">
+                                    <div class="checkbox">
+                                        <label for="opt-mini">
+                                          <input type="checkbox" name="checkboxes" id="opt-mini">
+                                          Option d'affichage : réduire le panneau des thématiques au démarrage
+                                        </label>
+                                      </div> 
+                                  </div>
+                                </div>
+                             
                      </div>                   
                      <div class="col-md-4">                   
-                        <div id="panel-theme" class="panel panel-default panel-primary" style="display: none;">
+                        <div id="panel-theme" class="panel panel-info" style="display: none;">
                               <div class="panel-heading">
-                                <h3 class="panel-title">Thématique</h3>
+                                <h3 class="panel-title">Paramétrage de la Thématique sélectionnée</h3>
                               </div>
                               <div class="panel-body" id="theme-edit" data-themeid="">
                                 <div class="input-group">
@@ -370,24 +415,37 @@ select#opt-style {
                                 <!-- List with handle -->
                               <div id="themeLayers" class="list-group">                                
                               </div>
-                              <button id="btn-addLayer" class="btn btn-sm btn-info" onclick="addLayer('Nouvelle couche');">
-                                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Ajouter une couche
-                              </button>
-                              <button id="btn-saveTheme" class="btn btn-sm btn-success" onclick="saveTheme();">
-                                    <span class="glyphicon glyphicon-ok" aria-hidden="true"></span> Enregistrer la thématique
-                              </button>
+                              <div class="row">
+                                  <div class="col-md-12">
+                                      <div class="pull-right">
+                                      <button id="btn-addLayer" class="btn btn-lg btn-primary" onclick="addLayer('Nouvelle couche');">
+                                            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Ajouter des données
+                                      </button>
+                                      </div>
+                                  </div>
                               </div>
+                              </div>
+                               <div class="panel-footer">
+                                  <div class="row">
+                                  <div class="col-md-12">
+                                      <button id="btn-saveTheme" class="btn btn-sm btn-success" onclick="saveTheme();">
+                                            <span class="glyphicon glyphicon-ok" aria-hidden="true"></span> Enregistrer la thématique
+                                      </button>
+                                      <div class="pull-right">
+                                        <button class="btn btn-sm btn-default" onclick="$('#panel-theme').hide();">
+                                            <span class="glyphicon glyphicon-remove"></span>Fermer
+                                        </button>
+                                      </div>
+                                   </div>
+                                   </div>
+                              </div>                           
                         </div>
+                   
                    </div>
-                   </div>
-
-
-
-
-
-
-                    
-                </div>
+                
+            </div>
+                
+        </div>
                 <div class="tab-pane" id="backgroundlayers-config">
                     <div class="row">                    
                         <div class="col-sm-6 col-md-6">
@@ -429,7 +487,38 @@ select#opt-style {
                               </div> 
                         </div>
                         
-               <div class="panel panel-primary">
+                <div class="panel panel-default">
+                <div class="panel-heading"> <h3 class="panel-title">Recherche d'adresses</h3> </div>
+                        <div class="panel-body">
+                                  <div class="form-group">
+                                        <label class="control-label col-md-4" for="frm-searchlocalities">Service utilisé</label>                               
+                                                <select id="frm-searchlocalities" name="searchlocalities" class="form-control" onchange="mv.changeSearchLocalities(this.value)" style="width:auto;">
+                                                    <option value="false">Non utilisé</option>
+                                                    <option value="ban">Base adresse Nationale</option>
+                                                    <option value="geoportail">Géoportail</option>      
+                                                </select>
+
+                                  </div>
+                                  
+                             <form id="searchlocalities_options" class="form-horizontal">
+                                                <div class="form-group">
+                                                  <label class="col-md-4 control-label" for="opt-searchlocalities-url">URL</label>  
+                                                  <div class="col-md-4">
+                                                    <input id="opt-searchlocalities-url" type="text" placeholder="Url" class="form-control input-md">  
+                                                  </div>
+                                                </div>
+                                               
+                                                <div class="form-group">
+                                                  <label class="col-md-4 control-label" for="opt-searchlocalities-attribution">Attribution</label>  
+                                                  <div class="col-md-4">
+                                                    <input id="opt-searchlocalities-attribution" type="text" placeholder="Attribution du service" class="form-control input-md">  
+                                                  </div>
+                                                </div>                        
+                                    </form>      
+                             </div>
+                 </div>           
+                        
+               <div class="panel panel-default">
                <div class="panel-heading"> <h3 class="panel-title">Elasticsearch</h3> </div>
                 <div class="panel-body">
                     <div class="form-group">
@@ -500,36 +589,7 @@ select#opt-style {
                  </div>
 
 </div>                      
-<div class="panel panel-primary">
-    <div class="panel-heading"> <h3 class="panel-title">Recherche d'adresses</h3> </div>
-            <div class="panel-body">
-                      <div class="form-group">
-                            <label class="control-label col-md-4" for="frm-searchlocalities">Service utilisé</label>                               
-                                    <select id="frm-searchlocalities" name="searchlocalities" class="form-control" onchange="mv.changeSearchLocalities(this.value)" style="width:auto;">
-                                        <option value="false">Non utilisé</option>
-                                        <option value="ban">Base adresse Nationale</option>
-                                        <option value="geoportail">Géoportail</option>      
-                                    </select>
 
-                      </div>
-                      
-                 <form id="searchlocalities_options" class="form-horizontal">
-                                    <div class="form-group">
-                                      <label class="col-md-4 control-label" for="opt-searchlocalities-url">URL</label>  
-                                      <div class="col-md-4">
-                                        <input id="opt-searchlocalities-url" type="text" placeholder="Url" class="form-control input-md">  
-                                      </div>
-                                    </div>
-                                   
-                                    <div class="form-group">
-                                      <label class="col-md-4 control-label" for="opt-searchlocalities-attribution">Attribution</label>  
-                                      <div class="col-md-4">
-                                        <input id="opt-searchlocalities-attribution" type="text" placeholder="Attribution du service" class="form-control input-md">  
-                                      </div>
-                                    </div>                        
-                        </form>      
-                 </div>
-     </div>           
                 
             </div> <!-- tab-content-->
         </div>
@@ -572,7 +632,7 @@ select#opt-style {
                 <div class="modal-body">
                     <ul class="nav nav-tabs" role="tablist" id="layer_sections_menu">    
                         <li role="presentation" class="active"><a href="#layer_conf1"  role="tab" data-toggle="tab">Base</a></li>
-                        <li role="presentation" ><a href="#layer_conf2"  role="tab" data-toggle="tab">Fiche d'information</a></li>
+                        <li role="presentation" ><a href="#layer_conf2"  role="tab" data-toggle="tab">Fiche</a></li>
                         <li role="presentation" ><a href="#layer_conf3"  role="tab" data-toggle="tab">Affichage</a></li>
                         <li role="presentation" ><a href="#layer_conf4"  role="tab" data-toggle="tab">Filtre</a></li>
                         <li role="presentation" ><a href="#layer_conf5"  role="tab" data-toggle="tab">Liste de choix</a></li>
@@ -611,32 +671,20 @@ select#opt-style {
                         <input type="text" class="form-control" id="frm-attribution" placeholder="Attribution">
                       </div>
                       <div class="form-group">
-                        <label for="frm-metadata">metadata</label>
+                        <label for="frm-metadata">URL fiche de métadonnées (html)</label>
                         <input type="text" class="form-control" id="frm-metadata" placeholder="metadata">
                       </div>
                        <div class="form-group">
-                        <label for="frm-metadata-csw">metadata</label>
+                        <label for="frm-metadata-csw">URL fiche de métadonnées (xml)</label>
                         <input type="text" class="form-control" id="frm-metadata-csw" placeholder="metadata-csw">
                       </div>
                       <div class="form-group">
                           <div class="checkbox">
                             <label>
-                              <input id="frm-tiled" type="checkbox"> Tiled
+                              <input id="frm-secure" type="checkbox"> Donnée protégée
                             </label>
                           </div>
-                        </div>
-
-                    <div class="form-group">
-                      <div class="checkbox">
-                        <label>
-                          <input id="frm-visible" type="checkbox"> Visible
-                        </label>
-                      </div>
-                    </div>
-                    <div class="form-group" lang="en-US">
-                        <label for="frm-opacity">Opacité</label>
-                        <input type="number" class="form-control" id="frm-opacity" placeholder="Opacité (0 à 1)" step="0.1" min="0.1" max="1.0" value="1">
-                    </div>
+                      </div>   
                  </form>
                </div>
                <div role="tabpanel" class="tab-pane" id="layer_conf2">
@@ -644,29 +692,28 @@ select#opt-style {
                     <div class="form-group">
                           <div class="checkbox">
                             <label>
-                              <input id="frm-queryable" type="checkbox"> queryable
+                              <input id="frm-queryable" type="checkbox">interrogeable
                             </label>
                           </div>
                       </div>
-                      <div class="form-group">
-                          <div class="checkbox">
-                            <label>
-                              <input id="frm-secure" type="checkbox"> Couche protégée
-                            </label>
+                      <div class="row">
+                        <div class="col-md-6">
+                          <div class="form-group">
+                                <label class="control-label" for="frm-infoformat">Format de la fiche d'information</label> 
+                                
+                                    <select id="frm-infoformat" name="infoformat" class="form-control" onchange="mv.showHideQueryParameters(this.value);">                                    
+                                        <option value="text/html">standard</option>
+                                        <option value="application/vnd.ogc.gml">personnalisé</option>                               
+                                    </select>
+                                
                           </div>
-                      </div>                       
-                      <div class="form-group">
-                            <label class="control-label" for="frm-infoformat">infoformat</label> 
-                            
-                                <select id="frm-infoformat" name="infoformat" class="form-control" onchange="mv.showHideQueryParameters(this.value);">                                    
-                                    <option value="text/html">text/html</option>
-                                    <option value="application/vnd.ogc.gml">application/vnd.ogc.gml</option>                               
-                                </select>
-                            
-                      </div>
-                      <div class="form-group">
-                        <label for="frm-featurecount">Featurecount</label>
-                        <input type="number" class="form-control" id="frm-featurecount" placeholder="Nombre max d'entités retournées" step="1" min="1" max="50" value="5">
+                          </div>
+                          <div class="col-md-6">
+                          <div class="form-group">
+                            <label for="frm-featurecount">Limitation du nombre de réponses</label>
+                            <input type="number" class="form-control" id="frm-featurecount" placeholder="Nombre max d'entités retournées" step="1" min="1" max="50" value="5">
+                          </div>
+                          </div>
                       </div>
                       <div id="query-parameters">
                              <div class="form-group">
@@ -693,21 +740,52 @@ select#opt-style {
                  <div role="tabpanel" class="tab-pane" id="layer_conf3">
                   <form>
                     
-                      <div class="form-group">
-                            <label class="control-label" for="frm-styles">Styles</label> 
-                            <div class="row" id="frm-lis-styles">                               
-                            </div >
+                      <div class="form-group">                            
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                          <div class="checkbox">
+                                            <label>
+                                              <input id="frm-tiled" type="checkbox"> Couche tuilée
+                                            </label>
+                                          </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                    <div class="form-group">
+                                      <div class="checkbox">
+                                        <label>
+                                          <input id="frm-visible" type="checkbox"> Visible au démarrage
+                                        </label>
+                                      </div>
+                                    </div>
+                                    </div>                                    
+                             </div>
                                     <label for="frm-sld">SLD externe</label>
                                     <input type="text" class="form-control" id="frm-sld" placeholder="URL SLD externe"/>
                                     
                                     <label for="frm-legendurl">Légende statique</label>
                                     <input type="text" class="form-control" id="frm-legendurl" placeholder="URL vers Image légende"/>
-                                    
-                                     <label for="frm-scalemin">Echelle mini</label>
-                                    <input type="number" class="form-control" id="frm-scalemin" placeholder="Echelle mini"/>
-                                    
+                                     <div class="row">
+                                        <div class="col-md-4">
+                                        <div class="form-group" lang="en-US">
+                                            <label for="frm-opacity">Opacité</label>
+                                            <input type="number" class="form-control" id="frm-opacity" placeholder="Opacité (0 à 1)" step="0.1" min="0.1" max="1.0" value="1">
+                                        </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                             <label for="frm-scalemin">Echelle mini</label>
+                                            <input type="number" class="form-control" id="frm-scalemin" placeholder="Echelle mini"/>
+                                        </div>
+                                         <div class="col-md-4">
                                     <label for="frm-scalemax">Echelle maxi</label>
                                     <input type="number" class="form-control" id="frm-scalemax" placeholder="Echelle maxi"/>
+                                    </div>
+                                 </div>
+                                 
+                                 <label class="control-label" for="frm-styles">Styles</label> 
+                                    <div class="row" id="frm-lis-styles">                               
+                                 </div >
                       </div>
                   </form>
                  </div>
@@ -741,13 +819,17 @@ select#opt-style {
                                                             <option value="NOT IN">NOT IN</option>
                                                         </select>
                                                    </div>
-                                                   <label class="control-label" >valeurs sélectionnées</label>
-                                                   <div class="form-group">                                                        
-                                                        <input type="text" value="" data-role="tagsinput" id="source_fields_tags" class="form-control"/>
+                                                   <div class="row">
+                                                        <div class="col-md-9">
+                                                           <label class="control-label" >valeurs sélectionnées</label>
+                                                           <div class="form-group">                                                        
+                                                                <input type="text" value="" data-role="tagsinput" id="source_fields_tags" class="form-control"/>
+                                                           </div>
+                                                        </div>                                                        
+                                                        <div class="col-md-3" style="padding-top: 25px;">
+                                                                <button type="button" onclick="mv.saveSourceAttributeFilter()" class="btn btn-default">Appliquer le filtre</button>
+                                                        </div>
                                                    </div>
-                                                            <div class="col-md-6" style="padding-top: 25px;">
-                                                                <button type="button" onclick="mv.saveSourceAttributeFilter()" class="btn btn-default">Appliquer</button>
-                                                            </div>
                                                              
                                         </div>
                                                                    
@@ -776,7 +858,7 @@ select#opt-style {
                                            <div class="form-group">                                                        
                                                 <input type="text" value="" data-role="tagsinput" id="control_fields_tags" class="form-control"/>
                                            </div>                                       
-                              </div>
+                                </div>
                                                                 
                       </div>
 
@@ -788,7 +870,7 @@ select#opt-style {
                        <div class="form-group">
                           <div class="checkbox">
                             <label>
-                              <input id="frm-searchable" type="checkbox"> searchable
+                              <input id="frm-searchable" type="checkbox"> Activer la recherche pour cette donnée
                             </label>
                           </div>
                       </div>
@@ -817,8 +899,8 @@ select#opt-style {
                  </div>
                 </div>
                 <div class="modal-footer">
-                  <button type="button" onclick="mv.saveLayerOptions()" class="btn btn-default">Enregistrer</button>
-                  <button type="button" onclick="mv.form2xml()" class="btn btn-default">Voir</button>
+                  <button type="button" onclick="mv.saveLayerOptions()" class="btn btn-success">Enregistrer</button>
+                  <button type="button" onclick="mv.form2xml()" class="btn btn-info">Voir</button>
                   <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
                 </div>
               </div>
@@ -874,15 +956,15 @@ select#opt-style {
               <div class="modal-content">
                 <div class="modal-header">
                   <button type="button" class="close" data-dismiss="modal">&times;</button>
-                  <h4 class="modal-title">Nouvelle(s) couche(s)</h4>
+                  <h4 class="modal-title">Rechercher des données</h4>
                 </div>
                 <div class="modal-body">
                         <div class="row">
-                             <div class="col-lg-6">
+                             <div class="col-md-12">
                                 <div class="input-group">
                                   <input type="text" id="input-ogc-filter" class="form-control" aria-label="..." placeholder="Rechercher...">
                                   <div class="input-group-btn">
-                                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Providers<span class="caret"></span></button>
+                                    <button type="button" class="btn btn-warning dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Fournisseurs de données<span class="caret"></span></button>
                                     <ul class="dropdown-menu dropdown-menu-right">
                                       <li class="active" ><a data-providertype="csw" data-provider="https://geobretagne.fr/geonetwork/srv/fre/csw" data-metadata-app="https://geobretagne.fr/geonetwork/apps/georchestra/" href="#">Catalogue géoBretagne</a></li>
                                       <li><a data-providertype="csw" data-provider="http://applications.region-bretagne.fr/geonetwork/srv/fre/csw" data-metadata-app="http://applications.region-bretagne.fr/geonetwork/" href="#">Catalogue de la Région</a></li>    
@@ -894,7 +976,7 @@ select#opt-style {
                                       <li><a data-providertype="wms" data-provider="http://ows.region-bretagne.fr/geoserver/rb/wms" href="#">Serveur WMS de la Région</a></li>
                                       <li><a href="#">Serveur WFS</a></li>
                                     </ul>
-                                    <button type="button" class="btn btn-critical" onclick="mv.search()" >Rechercher</button>
+                                    <button type="button" class="btn btn-primary" onclick="mv.search()" >Rechercher</button>
                                   </div><!-- /btn-group -->
                                 </div><!-- /input-group -->
                               </div><!-- /.col-lg-6 -->
@@ -1137,22 +1219,29 @@ select#opt-style {
         if (!config.themes[$("#theme-edit").attr("data-themeid")]) {
             saveTheme();
         }
-        $("#themeLayers").append(['<div class="list-group-item layers-list-item" data-layerid="'+layerid+'">',
-            '<span class="glyphicon glyphicon-move" aria-hidden="true"></span>',
-            '<span class="layer-remove glyphicon glyphicon-remove" title="Supprimer" ></span>',
-            '<span class="layer-edit glyphicon glyphicon-pencil" title="Editer cette couche" onclick="editLayer(this);"></span>',
+        var item = $("#themeLayers").append(['<div class="list-group-item layers-list-item" data-layerid="'+layerid+'">',
+            '<span class="glyphicon glyphicon-move" aria-hidden="true"></span>', 
+            '<div class="pull-right btn-group" role="group">',            
+            '<button class="btn btn-sm btn-warning" onclick="editLayer(this);"><span class="layer-edit glyphicon glyphicon-pencil" title="Editer cette couche"></span></button>',
+            '<button class="btn btn-sm btn-warning"><span class="layer-remove glyphicon glyphicon-remove" title="Supprimer"></span></button>',
+            '</div>',
             '<span class="layer-name">'+title+'</span>',
-            '</div>'].join("")).find(".layer-edit").last().click();
+            '</div>'].join(""));
+            
+         if (title === 'Nouvelle couche') {
+            item.find(".layer-edit").last().click();
+         }           
      };
      
      var editLayer = function (item) {        
         $("#themeLayers .list-group-item").removeClass("active");
-        $(item).parent().addClass("active");        
-        var title = $(item).parent().find(".layer-name").text();
-        var layerid = $(item).parent().attr("data-layerid");        
+        var element = $(item).parent().parent();
+        element.addClass("active");        
+        var title = element.find(".layer-name").text();
+        var layerid = element.attr("data-layerid");        
         if (layerid != "undefined") {            
             $("#mod-layerOptions").modal();
-            mv.showLayerOptions($(item).parent());            
+            mv.showLayerOptions(element);            
         } else {
             $("#mod-layerNew").modal();
         }        
@@ -1160,11 +1249,12 @@ select#opt-style {
      
      var addTheme = function (title, collapsed, themeid, icon) {
         $("#themes-list").append(['<div class="list-group-item themes-list-item" data-theme="'+title+'" data-themeid="'+themeid+'" data-theme-collapsed="'+collapsed+'" data-theme-icon="'+icon+'">',
-            '<span class="glyphicon glyphicon-move" aria-hidden="true"></span>',
-            '<span class="badge">0</span>',
-            '<span class="theme-remove glyphicon glyphicon-remove" title="Supprimer"></span>',
-            '<span class="theme-edit glyphicon glyphicon-pencil" title="Editer ce thème" onclick="editTheme(this);"></span>',
-            '<span class="theme-name">'+title+'</span></div>'].join(""));
+            '<span class="glyphicon glyphicon-move" aria-hidden="true"></span>',            
+            '<div class="pull-right btn-group" role="group">',            
+            '<button class="btn btn-sm btn-warning" onclick="editTheme(this);"><span class="theme-edit glyphicon glyphicon-pencil" title="Editer ce thème"></span></button>',
+            '<button class="btn btn-sm btn-warning"><span class="theme-remove glyphicon glyphicon-remove" title="Supprimer"></span></button>',
+            '</div>',
+            '<span class="theme-name">'+title+'</span><span class="label label-info">0</span></div>'].join(""));
             config.themes[themeid] = {
                 title:title,
                 id: themeid,
@@ -1173,17 +1263,17 @@ select#opt-style {
                 layers: []
             };
             if (title === "Nouvelle thématique") {
-                $(".themes-list-item[data-themeid='"+themeid+"'] .theme-edit").trigger("click");
+                $(".themes-list-item[data-themeid='"+themeid+"'] .theme-edit").parent().trigger("click");
             }
      };
      
      var editTheme = function (item) {
         $("#themes-list .list-group-item").removeClass("active");
-        $(item).parent().addClass("active");
-        var title = $(item).parent().attr("data-theme");
-        var themeid = $(item).parent().attr("data-themeid");
-        var collapsed = ($(item).parent().attr("data-theme-collapsed")==="true")?false:true;
-        var icon = $(item).parent().attr("data-theme-icon");
+        $(item).parent().parent().addClass("active");
+        var title = $(item).parent().parent().attr("data-theme");
+        var themeid = $(item).parent().parent().attr("data-themeid");
+        var collapsed = ($(item).parent().parent().attr("data-theme-collapsed")==="true")?false:true;
+        var icon = $(item).parent().parent().attr("data-theme-icon");
         $("#panel-theme").show();
         $("#theme-edit-title").val(title);
         $("#theme-edit-collapsed").prop('checked', collapsed);
@@ -1213,7 +1303,7 @@ select#opt-style {
         theme.attr("data-theme-icon", icon);
         theme.find(".theme-name").text(title);
         var nb_layers = $("#themeLayers .list-group-item").length;
-        theme.find(".badge").text(nb_layers);
+        theme.find(".label").text(nb_layers);
         //deactivate theme edition
         $("#themes-list .list-group-item").removeClass("active");
         $("#panel-theme").hide();
@@ -1466,8 +1556,8 @@ select#opt-style {
                 map.getView().setCenter(mapoptions.attr("center").split(",").map(Number));
                 map.getView().setZoom(parseInt(mapoptions.attr("zoom")));
                 //BaseLayers
-                var baseLayersMode = $(xml).find("baselayers").attr("mode") || "default";
-                $("#frm-bl-mode").val(baseLayersMode);
+                var baseLayersMode = $(xml).find("baselayers").attr("mode") || "default";                
+                $("#frm-bl-mode option[value='"+baseLayersMode+"']").prop("selected", true);
                 var baselayers = $(xml).find("baselayer");
                 //Reinitialisation
                 $(".bl input").prop("checked",false);
@@ -1487,8 +1577,9 @@ select#opt-style {
                 themes.each(function(id, th) {                    
                     addTheme ($(th).attr("name"), ($(th).attr("collapsed") || true), $(th).attr("id"), $(th).attr("icon"));
                     var layers = $(th).find("layer");
+                    var counter = 0;
                     layers.each(function(id, l) {
-                        
+                        counter +=1;
                         var layer = {
                             id: $(l).attr("id"),
                             type: $(l).attr("type") || "wms",
@@ -1545,6 +1636,7 @@ select#opt-style {
                         config.themes[$(th).attr("id")].layers.push(layer);
                         
                     });
+                    $(".themes-list-item[data-themeid='"+$(th).attr("id")+"'] .label").text(counter);
                 });
                 
                 $("#mod-importfile").modal("hide");
