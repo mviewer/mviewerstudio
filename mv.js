@@ -435,6 +435,7 @@ var mv = (function () {
             layer["attribution"] = $("#frm-attribution").val();
             layer.visible = ($("#frm-visible").prop("checked") === true);
             layer.opacity = $("#frm-opacity").val();
+            layer.sld = $("#frm-sld").val();
             layer.tiled = ($("#frm-tiled").prop("checked") === true);
             layer.usetemplate = ($("#frm-template").prop("checked") === true);
             layer.filter = $("#frm-filter").val();
