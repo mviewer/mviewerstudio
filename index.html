@@ -792,12 +792,23 @@ select#opt-style {
                  
                   <div role="tabpanel" class="tab-pane" id="layer_conf4">
                             <div class="well">Filtre côté serveur</div>
-                            <form>                    
-                      
-                                <div class="form-group">
+                            <form>
+                                <div class="row">
+                                    <div class="col-md-12">
                                     <label for="frm-filter">filtre actif</label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                <div class="col-md-8">
+                                <div class="form-group">                                    
                                     <input type="textarea" class="form-control" id="frm-filter" placeholder="filtre cql">
                                  </div>
+                                 </div>
+                                 <div class="col-md-4">
+                                 <button type="button" onclick="$('#filter_wizard').toggle();" class="btn btn-primary">Créer un filtre</button>
+                                 </div>
+                                 </div>
+                                 <div id="filter_wizard" style="display:none;">
                                  <!-- Nav tabs -->
                                   <ul class="nav nav-tabs" role="tablist">
                                     <li role="presentation" class="active" ><a href="#attribute_filter" aria-controls="attribute_filter" role="tab" data-toggle="tab">Filtre attributaire</a></li>
@@ -820,14 +831,14 @@ select#opt-style {
                                                         </select>
                                                    </div>
                                                    <div class="row">
-                                                        <div class="col-md-9">
+                                                        <div class="col-md-8">
                                                            <label class="control-label" >valeurs sélectionnées</label>
                                                            <div class="form-group">                                                        
                                                                 <input type="text" value="" data-role="tagsinput" id="source_fields_tags" class="form-control"/>
                                                            </div>
                                                         </div>                                                        
-                                                        <div class="col-md-3" style="padding-top: 25px;">
-                                                                <button type="button" onclick="mv.saveSourceAttributeFilter()" class="btn btn-default">Appliquer le filtre</button>
+                                                        <div class="col-md-4" style="padding-top: 25px;">
+                                                                <button type="button" onclick="mv.saveSourceAttributeFilter()" class="btn btn-success">Appliquer le filtre</button>
                                                         </div>
                                                    </div>
                                                              
@@ -837,6 +848,7 @@ select#opt-style {
                                             <div id="map_filter" class="map" ></div>
                                         </div>
                                   </div> 
+                                </div>
                             </form>
                         </div>
                  
@@ -934,7 +946,7 @@ select#opt-style {
               <div class="modal-content">
                 <div class="modal-header">
                   <button type="button" class="close" data-dismiss="modal">&times;</button>
-                  <h4 class="modal-title">Extraction de données</h4>
+                  <h4 class="modal-title">Sélection de données</h4>
                 </div>
                 <div class="modal-body">
                         <div class="row">
@@ -1156,29 +1168,29 @@ select#opt-style {
       var sortableLayerList = Sortable.create(document.getElementById('themeLayers'), {
           handle: '.glyphicon-move',          
           animation: 150,
-          ghostClass: 'ghost',
-          filter: '.layer-remove',
-          onFilter: function (evt) {
-            var el = sortableLayerList.closest(evt.item); // get dragged item
-            deleteLayer(el.getAttribute('data-layerid'));
-            el && el.parentNode.removeChild(el);
-          },
+          ghostClass: 'ghost',          
           onEnd: function (evt) {                            
                 sortLayers(evt.oldIndex, evt.newIndex);
             }
         });
         
-       var sortableThemeList = Sortable.create(document.getElementById('themes-list'), {
-          handle: '.glyphicon-move',          
-          animation: 150,
-          ghostClass: 'ghost',
-          filter: '.theme-remove',
-          onFilter: function (evt) {
-            var el = sortableThemeList.closest(evt.item); // get dragged item
+       var deleteThemeItem = function (btn) {
+            var el = $(btn).closest(".list-group-item")[0];            
             var themeid = $(el).attr("data-themeid");
             deleteTheme(themeid);
             el && el.parentNode.removeChild(el);
-          },
+       };
+        
+       var deleteLayerItem = function (btn) {
+            var el = $(btn).closest(".layers-list-item")[0];            
+            deleteLayer(el.getAttribute('data-layerid'));            
+            el && el.parentNode.removeChild(el);
+       };
+       
+       var sortableThemeList = Sortable.create(document.getElementById('themes-list'), {
+          handle: '.glyphicon-move',          
+          animation: 150,
+          ghostClass: 'ghost',          
           onEnd: function (evt) {
                 sortThemes();
             }
@@ -1223,7 +1235,7 @@ select#opt-style {
             '<span class="glyphicon glyphicon-move" aria-hidden="true"></span>', 
             '<div class="pull-right btn-group" role="group">',            
             '<button class="btn btn-sm btn-warning" onclick="editLayer(this);"><span class="layer-edit glyphicon glyphicon-pencil" title="Editer cette couche"></span></button>',
-            '<button class="btn btn-sm btn-warning"><span class="layer-remove glyphicon glyphicon-remove" title="Supprimer"></span></button>',
+            '<button class="btn btn-sm btn-warning" onclick="deleteLayerItem(this);"><span class="layer-remove glyphicon glyphicon-remove" title="Supprimer"></span></button>',
             '</div>',
             '<span class="layer-name">'+title+'</span>',
             '</div>'].join(""));
@@ -1248,11 +1260,15 @@ select#opt-style {
      };
      
      var addTheme = function (title, collapsed, themeid, icon) {
+        if ($("#panel-theme").is(":visible")) {
+            alert("Enregister d'abord votre thématique");
+            return;
+        }
         $("#themes-list").append(['<div class="list-group-item themes-list-item" data-theme="'+title+'" data-themeid="'+themeid+'" data-theme-collapsed="'+collapsed+'" data-theme-icon="'+icon+'">',
             '<span class="glyphicon glyphicon-move" aria-hidden="true"></span>',            
             '<div class="pull-right btn-group" role="group">',            
             '<button class="btn btn-sm btn-warning" onclick="editTheme(this);"><span class="theme-edit glyphicon glyphicon-pencil" title="Editer ce thème"></span></button>',
-            '<button class="btn btn-sm btn-warning"><span class="theme-remove glyphicon glyphicon-remove" title="Supprimer"></span></button>',
+            '<button class="btn btn-sm btn-warning" onclick="deleteThemeItem(this);" ><span class="theme-remove glyphicon glyphicon-remove" title="Supprimer"></span></button>',
             '</div>',
             '<span class="theme-name">'+title+'</span><span class="label label-info">0</span></div>'].join(""));
             config.themes[themeid] = {
@@ -1281,7 +1297,7 @@ select#opt-style {
         $("#theme-edit-icon").val(icon);
         $("#theme-edit-icon option[value='"+icon+"']").prop("selected", true);
         if (icon === "undefined") {
-                $("#theme-edit-icon option[value='folder-open']").prop("selected", true);
+                $("#theme-edit-icon option[value='caret-right']").prop("selected", true);
          }
         //Remove old layers entries
         $(".layers-list-item").remove();
@@ -1470,6 +1486,7 @@ select#opt-style {
             var format = new ol.format.WKT();
             var wktRepresenation  = format.writeGeometry(projGeom);            
             $("#frm-filter").val('INTERSECTS('+layer.geometry+ ',' + wktRepresenation + ')');
+            $("#filter_wizard").hide();
           });
           map2.addInteraction(draw);        
       };
@@ -1478,6 +1495,9 @@ select#opt-style {
         var layerid = $(".layers-list-item.active").attr("data-layerid");
         var layer = config.temp.layers[layerid];        
         ogc.getFeatures(layer.wfs_url,layerid,fld, option);
+        if (option === 'control') {
+            $("#frm-attributelabel").val(fld);
+        }
       };
       
       var  loadApplicationParameters = function () {

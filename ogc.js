@@ -96,7 +96,11 @@ var ogc = (function () {
                     .find("gmd\\:citation, citation").find("gmd\\:CI_Citation, CI_Citation").find("gmd\\:title, title").find("gco\\:CharacterString, CharacterString").text();
                     layer.metadata = metadata_url + '?uuid=' + layer.identifier;
                     layer['metadata-csw'] = csw_url + '?SERVICE=CSW&VERSION=2.0.2&REQUEST=GetRecordById&elementSetName=full&ID&ID=' + layer.identifier;
-                    results.push(layer);               
+                    if (layer.layerid!="" && layer.wms!="") {
+                        results.push(layer);     
+                     } else {
+                        console.log("Fiche de métadonnée incomplète : "+ layer.identifier);
+                     } 
                 });
             
             } else {
