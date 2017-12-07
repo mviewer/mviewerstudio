@@ -4,12 +4,12 @@
   <title>Kartenn generator</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">  
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">  
   <link rel="stylesheet" href="https://openlayers.org/en/v4.2.0/css/ol.css" type="text/css">
-  <link href="../mviewer/lib/font-awesome-4.6.3/css/font-awesome.min.css" rel="stylesheet">
+  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
   <script src="Sortable.min.js"></script>
-  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-tagsinput/0.8.0/bootstrap-tagsinput.min.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-tagsinput/0.8.0/bootstrap-tagsinput.css" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/proj4js/2.4.4/proj4.js"></script>
@@ -224,7 +224,7 @@ select#opt-style {
     <nav class="navbar navbar-inverse">
   <div class="container-fluid">
     <div class="navbar-header">
-      <a class="navbar-brand" href="#">Générateur Kartenn</a>
+      <a class="navbar-brand" href="#">Générateur mviewer - version beta 1</a>
     </div>    
     <ul class="nav navbar-nav navbar-right">
       <li><a role="button" data-toggle="modal" data-target="#mod-importfile" href="#"><span role="button" class="glyphicon glyphicon-import"></span>Importer</a></li>
@@ -979,13 +979,13 @@ select#opt-style {
                                     <button type="button" class="btn btn-warning dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Fournisseurs de données<span class="caret"></span></button>
                                     <ul class="dropdown-menu dropdown-menu-right">
                                       <li class="active" ><a data-providertype="csw" data-provider="https://geobretagne.fr/geonetwork/srv/fre/csw" data-metadata-app="https://geobretagne.fr/geonetwork/apps/georchestra/" href="#">Catalogue géoBretagne</a></li>
-                                      <li><a data-providertype="csw" data-provider="http://applications.region-bretagne.fr/geonetwork/srv/fre/csw" data-metadata-app="http://applications.region-bretagne.fr/geonetwork/" href="#">Catalogue de la Région</a></li>    
+                                      <li><a data-providertype="csw" data-provider="https://applications.region-bretagne.fr/geonetwork/srv/fre/csw" data-metadata-app="https://applications.region-bretagne.fr/geonetwork/" href="#">Catalogue de la Région</a></li>    
                                        <li><a data-providertype="csw" data-provider="https://www.cigalsace.org/geonetwork/srv/fre/csw" data-metadata-app="https://www.cigalsace.org/geonetwork/" href="#">Catalogue de la Région Grand Est</a></li>
-                                       <li><a data-providertype="csw" data-provider="../proxy/?url=http://www.geopal.org/geonetwork/srv/fre/csw" data-metadata-app="http://www.geopal.org/geonetwork/" href="#">Catalogue de la Région Pays de la Loire</a></li>
+                                       <li><a data-providertype="csw" data-provider="../proxy/?url=https://www.geopal.org/geonetwork/srv/fre/csw" data-metadata-app="https://www.geopal.org/geonetwork/" href="#">Catalogue de la Région Pays de la Loire</a></li>
 
                                        
                                       <li role="separator" class="divider"></li>
-                                      <li><a data-providertype="wms" data-provider="http://ows.region-bretagne.fr/geoserver/rb/wms" href="#">Serveur WMS de la Région</a></li>
+                                      <li><a data-providertype="wms" data-provider="https://ows.region-bretagne.fr/geoserver/rb/wms" href="#">Serveur WMS de la Région</a></li>
                                       <li><a href="#">Serveur WFS</a></li>
                                     </ul>
                                     <button type="button" class="btn btn-primary" onclick="mv.search()" >Rechercher</button>
@@ -1104,63 +1104,63 @@ select#opt-style {
       
       
       bl["positron"] = {
-        id:"positron", thumbgallery: "../mviewer/img/basemap/positron.png", title:"CartoDb", label:"Positron", 
+        id:"positron", thumbgallery: "img/basemap/positron.png", title:"CartoDb", label:"Positron", 
         definition: ['<baselayer  visible="false" type="OSM" id="positron" label="Positron" title="CartoDb" thumbgallery="img/basemap/positron.png" ', 
-			'url="http://{a-c}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png" maxzoom="20" ',
-			'attribution="Map tiles by  &lt;a href=\'http://cartodb.com/attributions\'>CartoDb &lt;/a>, under  &lt;a href=\'http://creativecommons.org/licenses/by/3.0/\'>CC BY 3.0 &lt;/a>" />'].join("")
+			'url="https://{a-c}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png" maxzoom="20" ',
+			'attribution="Map tiles by  &lt;a href=\'https://cartodb.com/attributions\'>CartoDb &lt;/a>, under  &lt;a href=\'https://creativecommons.org/licenses/by/3.0/\'>CC BY 3.0 &lt;/a>" />'].join("")
       };
       
       bl["esriworldimagery"] = {
-        id:"esriworldimagery", thumbgallery: "../mviewer/img/basemap/esriworldwide.jpg", title:"Esri world imagery", label: "Esri World imagery",
+        id:"esriworldimagery", thumbgallery: "img/basemap/esriworldwide.jpg", title:"Esri world imagery", label: "Esri World imagery",
         definition: ['<baselayer visible="false" type="OSM" id="esriworldimagery" label="Esri world imagery" title="Esri world imagery" ',
             'thumbgallery="img/basemap/esriworldwide.jpg" url="http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}" ',
             'attribution="Esri world imagery"/>'].join("")};
       
        bl["stamen1"] = {
-        id:"stamen1", thumbgallery: "../mviewer/img/basemap/toner-lite.png", title:"Stamen Design", label:"Toner-lite", 
+        id:"stamen1", thumbgallery: "img/basemap/toner-lite.png", title:"Stamen Design", label:"Toner-lite", 
         definition: ['<baselayer  visible="false" type="OSM" id="stamen1" label="Toner-lite" title="Stamen Design" thumbgallery="img/basemap/toner-lite.png" ',
 			'url="http://{a-d}.tile.stamen.com/toner-lite/{z}/{x}/{y}.png" maxzoom="20" ',
 			' attribution="Map tiles by  &lt;a href=\'http://stamen.com/\'>Stamen Design &lt;/a>, under  &lt;a href=\'http://creativecommons.org/licenses/by/3.0/\'>CC BY 3.0 &lt;/a>" />'].join("")
       };
       bl["stamen2"] = {
-        id:"stamen2", thumbgallery: "../mviewer/img/basemap/watercolor.jpg", title:"Stamen Design", label:"Watercolor", 
+        id:"stamen2", thumbgallery: "img/basemap/watercolor.jpg", title:"Stamen Design", label:"Watercolor", 
         definition: [' <baselayer  visible="false" type="OSM" id="stamen2" label="Watercolor" title="Stamen Design" thumbgallery="img/basemap/watercolor.jpg" ',
 			'url="http://{a-c}.tile.stamen.com/watercolor/{z}/{x}/{y}.jpg" maxzoom="20" ',
 			' attribution="Map tiles by  &lt;a href=\'http://stamen.com/\'>Stamen Design &lt;/a>, under  &lt;a href=\'http://creativecommons.org/licenses/by/3.0/\'>CC BY 3.0 &lt;/a>" />'].join("")
       };
       
        bl["darkmatter"] = {
-        id:"darkmatter", thumbgallery: "../mviewer/img/basemap/darkmatter.png", title:"CartoDb", label:"Dark Matter", 
+        id:"darkmatter", thumbgallery: "img/basemap/darkmatter.png", title:"CartoDb", label:"Dark Matter", 
         definition: [' <baselayer  visible="false" type="OSM" id="darkmatter" label="Dark Matter" title="CartoDb" thumbgallery="img/basemap/darkmatter.png" ',
-			'url="http://{a-c}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png" maxzoom="20" ',
-			' attribution="Map tiles by  &lt;a href=\'http://cartodb.com/attributions\'>CartoDb &lt;/a>, under  &lt;a href=\'http://creativecommons.org/licenses/by/3.0/\'>CC BY 3.0 &lt;/a>" />'].join("")
+			'url="https://{a-c}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png" maxzoom="20" ',
+			' attribution="Map tiles by  &lt;a href=\'https://cartodb.com/attributions\'>CartoDb &lt;/a>, under  &lt;a href=\'https://creativecommons.org/licenses/by/3.0/\'>CC BY 3.0 &lt;/a>" />'].join("")
       };
       
       bl["ortho1"] = {
-        id:"ortho1", thumbgallery: "../mviewer/img/basemap/ortho.jpg", title:"GéoBretagne", label:"Photo aérienne actuelle", 
+        id:"ortho1", thumbgallery: "img/basemap/ortho.jpg", title:"GéoBretagne", label:"Photo aérienne actuelle", 
         definition: ['<baselayer  visible="false" type="WMTS" id="ortho1" label="Photo aérienne actuelle"',
-        '   title="GéoBretagne" thumbgallery="img/basemap/ortho.jpg" url="http://tile.geobretagne.fr/gwc02/service/wmts"',
+        '   title="GéoBretagne" thumbgallery="img/basemap/ortho.jpg" url="https://tile.geobretagne.fr/gwc02/service/wmts"',
         '   layers="satellite" format="image/png" style="_null" matrixset="EPSG:3857" fromcapacity="false"',
-        '   attribution="&lt;a href=\'http://applications.region-bretagne.fr/geonetwork/?uuid=3a0ac2e3-7af1-4dec-9f36-dae6b5a8c731\' target=\'_blank\' >partenaires GéoBretagne - IGN RGE BD ORTHO - PlanetObserver&lt;/a>" />'].join("")
+        '   attribution="&lt;a href=\'https://applications.region-bretagne.fr/geonetwork/?uuid=3a0ac2e3-7af1-4dec-9f36-dae6b5a8c731\' target=\'_blank\' >partenaires GéoBretagne - IGN RGE BD ORTHO - PlanetObserver&lt;/a>" />'].join("")
       };
        bl["ortho_ir"] = {
-        id:"ortho_ir", thumbgallery: "../mviewer/img/basemap/ir.jpg", title:"GéoBretagne", label:"Photo aérienne infra rouge", 
+        id:"ortho_ir", thumbgallery: "img/basemap/ir.jpg", title:"GéoBretagne", label:"Photo aérienne infra rouge", 
         definition: ['<baselayer  visible="false" type="WMTS" id="ortho_ir" label="Photo aérienne infra rouge"',
-        '   title="GéoBretagne" thumbgallery="img/basemap/ir.jpg" url="http://geobretagne.fr/geoserver/gwc/service/wmts"',
+        '   title="GéoBretagne" thumbgallery="img/basemap/ir.jpg" url="https://geobretagne.fr/geoserver/gwc/service/wmts"',
         '   layers="photo:ir-composite" format="image/jpeg" style="_null" matrixset="EPSG:3857" fromcapacity="false"',
         '   attribution="&lt;a href=\'https://geobretagne.fr/geonetwork/apps/georchestra/?uuid=434b82a8-8d3c-4d9f-9eb3-0485f1a63eb6\' target=\'_blank\' >partenaires GéoBretagne - IGN RGE BD ORTHO - PlanetObserver&lt;/a>" />'].join("")
       };
       bl["osm_google"] = {
-        id:"osm_google", thumbgallery: "../mviewer/img/basemap/osm_google.png", title:"GéoBretagne", label: "OpenStreetMap",
+        id:"osm_google", thumbgallery: "img/basemap/osm_google.png", title:"GéoBretagne", label: "OpenStreetMap",
         definition: ['<baselayer  visible="false" type="WMS" id="osm_google" label="OpenStreetMap" title="Plan OSM Géobretagne" thumbgallery="img/basemap/osm_google.png" ',
-            'url="http://osm.geobretagne.fr/gwc01/service/wms" layers="osm:google" format="image/png" ',
-            'attribution="GéoBretagne. Données : les contributeurs d\'&lt;a href=\'http://www.openstreetmap.org/\' target=\'_blank\'>OpenStreetMap &lt;/a>,  &lt;a href=\'http://www.openstreetmap.org/copyright\' target=\'_blank\'>ODbL &lt;/a>" />'].join("")
+            'url="https://osm.geobretagne.fr/gwc01/service/wms" layers="osm:google" format="image/png" ',
+            'attribution="GéoBretagne. Données : les contributeurs d\'&lt;a href=\'https://www.openstreetmap.org/\' target=\'_blank\'>OpenStreetMap &lt;/a>,  &lt;a href=\'https://www.openstreetmap.org/copyright\' target=\'_blank\'>ODbL &lt;/a>" />'].join("")
       };
       bl["osm"] = {
-        id:"osm", thumbgallery: "../mviewer/img/basemap/osm.png", title:"OpenStreetMap", label:"OpenStreetMap", 
+        id:"osm", thumbgallery: "img/basemap/osm.png", title:"OpenStreetMap", label:"OpenStreetMap", 
         definition: ['<baselayer  visible="false" type="OSM" id="osm" label="OpenStreetMap" title="OpenStreetMap" thumbgallery="img/basemap/osm.png" ',
-            'url="http://{a-c}.tile.openstreetmap.org/{z}/{x}/{y}.png" ',
-            'attribution="Données : les contributeurs d\'&lt;a href=\'http://www.openstreetmap.org/\' target=\'_blank\'>OpenStreetMap &lt;/a>&lt;a href=\'http://www.openstreetmap.org/copyright\' target=\'_blank\'>ODbL &lt;/a>" />'].join("")
+            'url="https://{a-c}.tile.openstreetmap.org/{z}/{x}/{y}.png" ',
+            'attribution="Données : les contributeurs d\'&lt;a href=\'https://www.openstreetmap.org/\' target=\'_blank\'>OpenStreetMap &lt;/a>&lt;a href=\'https://www.openstreetmap.org/copyright\' target=\'_blank\'>ODbL &lt;/a>" />'].join("")
       };      
       
       mv.showBaseLayers(bl);      
