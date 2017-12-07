@@ -376,7 +376,7 @@ var mv = (function () {
                     }
                 }
             });
-            if (layer.usetemplate) {
+            if (layer.usetemplate && !layer.templateurl) {
                 template.template.push('{{#features}}');
                 template.template.push('<li class="item" style="width:238px;">');
                 template.template.push(template.title);
@@ -394,7 +394,7 @@ var mv = (function () {
                 template.template.push('</li>');
                 template.template.push('{{/features}}');
                 console.log(template.template.join(" \n"));
-                layer.template = template.template.join(" \n");
+                layer.template = template.template.join(" \n");   
             } else {            
                 layer.fields = fields.join(",");
                 layer.aliases = aliases.join(",");
@@ -421,6 +421,12 @@ var mv = (function () {
             layer.name =  $("#frm-name").val();
             layer.id = $("#frm-layerid").val();
             layer.url =  $("#frm-url").val();
+            var _url =  $("#frm-url").val();
+            if (_url.indexOf("&")>0 && _url.indexOf("&amp;") == -1) {
+                layer.url =  mv.escapeXml(_url);
+            } else {
+                layer.url =  _url;
+            }
             layer.legendurl =  $("#frm-legendurl").val();
             layer.queryable = ($("#frm-queryable").prop("checked") === true);
             layer.secure = ($("#frm-secure").prop("checked") === true);
@@ -438,6 +444,7 @@ var mv = (function () {
             layer.sld = $("#frm-sld").val();
             layer.tiled = ($("#frm-tiled").prop("checked") === true);
             layer.usetemplate = ($("#frm-template").prop("checked") === true);
+            layer.templateurl = ($("#frm-template-url").val() == "")?false:$("#frm-template-url").val();
             layer.filter = $("#frm-filter").val();
             
             //Controle FilterAttributes            
