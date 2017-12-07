@@ -689,6 +689,8 @@ select#opt-style {
                </div>
                <div role="tabpanel" class="tab-pane" id="layer_conf2">
                   <form>
+                     <div class="row">
+                        <div class="col-md-6">
                     <div class="form-group">
                           <div class="checkbox">
                             <label>
@@ -696,11 +698,22 @@ select#opt-style {
                             </label>
                           </div>
                       </div>
+                      </div>
+                      <div class="col-md-6">
+                          <div class="form-group">
+                                <label class="control-label" for="frm-infopanel">Position fiche info</label>
+                                    <select id="frm-infopanel" name="infoformat" class="form-control" >                                    
+                                        <option value="right-panel">Panneau de droite</option>
+                                        <option value="bottom-panel">Panneau du bas</option>                               
+                                    </select>
+                                
+                          </div>
+                          </div>
+                      </div>
                       <div class="row">
                         <div class="col-md-6">
                           <div class="form-group">
-                                <label class="control-label" for="frm-infoformat">Format de la fiche d'information</label> 
-                                
+                                <label class="control-label" for="frm-infoformat">Format de la fiche d'information</label>
                                     <select id="frm-infoformat" name="infoformat" class="form-control" onchange="mv.showHideQueryParameters(this.value);">                                    
                                         <option value="text/html">standard</option>
                                         <option value="application/vnd.ogc.gml">personnalisé</option>                               
@@ -1611,6 +1624,7 @@ select#opt-style {
                             url: mv.escapeXml($(l).attr("url")),
                             queryable: ($(l).attr("queryable") === "true"),
                             featurecount: $(l).attr("featurecount"),
+                            infopanel: $(l).attr("infopanel") || 'right-panel',
                             searchable: ($(l).attr("searchable") === "true"),
                             searchengine:$(l).attr("searchengine"),
                             fusesearchkeys:$(l).attr("fusesearchkeys"),

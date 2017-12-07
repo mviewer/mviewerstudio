@@ -311,6 +311,7 @@ var mv = (function () {
             $("#frm-url").val(layer.url);
             $("#frm-queryable").prop("checked", (layer.queryable));
             $("#frm-featurecount").val(layer.featurecount);
+            $("#frm-infopanel option[value='"+layer.infopanel+"']").prop("selected", true);   
             $("#frm-secure").prop("checked", (layer.secure)); 
             $("#frm-searchable").prop("checked", (layer.searchable));
             $("#frm-searchengine").val(layer.searchengine).trigger("change");
@@ -435,7 +436,8 @@ var mv = (function () {
             layer.fusesearchkeys = $("#frm-fusesearchkeys").val();
             layer.fusesearchresult = $("#frm-fusesearchresult").val();
             layer.infoformat = $("#frm-infoformat").val();
-            layer.featurecount = $("#frm-featurecount").val();    
+            layer.featurecount = $("#frm-featurecount").val();
+            layer.infopanel = $("#frm-infopanel").val();            
             layer.metadata = $("#frm-metadata").val();
             layer["metadata-csw"] = $("#frm-metadata-csw").val();
             layer["attribution"] = $("#frm-attribution").val();
@@ -549,6 +551,7 @@ var mv = (function () {
                         "scalemin",
                         "scalemax",
                         "featurecount",
+                        "infopanel",
                         "opacity" 
                 ];
                 optional_parameters.forEach(function(p,i) {
