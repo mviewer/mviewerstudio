@@ -94,7 +94,7 @@ var ogc = (function () {
                     }).parent().parent().find("gmd\\:name, name").find("gco\\:CharacterString, CharacterString").text();                    
                     layer.title = $(metadata).find("gmd\\:identificationInfo, identificationInfo").find("gmd\\:MD_DataIdentification,  MD_DataIdentification")
                     .find("gmd\\:citation, citation").find("gmd\\:CI_Citation, CI_Citation").find("gmd\\:title, title").find("gco\\:CharacterString, CharacterString").text();
-                    layer.metadata = metadata_url + '?uuid=' + layer.identifier;
+                    layer.metadata = metadata_url + layer.identifier;
                     layer['metadata-csw'] = csw_url + '?SERVICE=CSW&VERSION=2.0.2&REQUEST=GetRecordById&elementSetName=full&ID&ID=' + layer.identifier;
                     if (layer.layerid!="" && layer.wms!="") {
                         results.push(layer);     
@@ -114,7 +114,7 @@ var ogc = (function () {
                     layer.layerid = $(metadata).find('[protocol="OGC:WMS"]').attr('name');
                     layer.title = $(metadata).find("title").first().text();
                     layer.attribution="Attributions";
-                    layer.metadata = metadata_url + '?uuid=' + layer.identifier;
+                    layer.metadata = metadata_url + layer.identifier;
                     layer['metadata-csw'] = csw_url + '?SERVICE=CSW&VERSION=2.0.2&REQUEST=GetRecordById&elementSetName=full&ID&ID=' + layer.identifier;
                     results.push(layer);               
                 });
