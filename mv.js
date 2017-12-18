@@ -590,7 +590,7 @@ var mv = (function () {
         },
         
         escapeXml: function (unsafe) {
-            return unsafe.replace(/[<>&'"]/g, function (c) {
+            return unsafe.replace(/[<>&"]/g, function (c) {
                 switch (c) {
                     case '<': return '&lt;';
                     case '>': return '&gt;';

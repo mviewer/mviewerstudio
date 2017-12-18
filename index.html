@@ -304,16 +304,7 @@ select#opt-style {
                                 </select>
                             </div>
                       </div>
-                      <!--<div class="row">
-                          <div class="list-group">
-                              <a  class="alizarin list-group-item  col-xs-6 col-md-3">Dapibus ac facilisis in</a>
-                              <a  class="blue list-group-item  col-xs-6 col-md-3">Cras sit amet nibh libero</a>
-                              <a  class="default list-group-item  col-xs-6 col-md-3">Porta ac consectetur ac</a>
-                              <a  class="nephritis list-group-item  col-xs-6 col-md-3">Vestibulum at eros</a>
-                         </div>
-                     </div>-->
-                         
-                          <!-- Options -->
+                     
                         <div class="form-group">
                           <label class="col-md-4 control-label" for="checkboxes">options</label>
                           <div class="col-md-4">
@@ -606,8 +597,7 @@ select#opt-style {
                                 <div class="alert alert-info">
                                     <input type="file" name="filebutton" style="visibility:hidden;" id="filebutton" />
                                     <label>Choisissez un fichier</label>
-                                    <div class="input-append">
-                                        <!-- This input is here purely for cosmetic reasons. The actual file is uploaded from the hidden input box !-->
+                                    <div class="input-append">                                        
                                         <input type="text" id="subfile" class="input-xlarge">
                                         <a class="btn btn-primary btn-sm" onclick="$('#filebutton').click();">Parcourir</a>
                                     </div>
@@ -990,16 +980,7 @@ select#opt-style {
                                   <input type="text" id="input-ogc-filter" class="form-control" aria-label="..." placeholder="Rechercher...">
                                   <div class="input-group-btn">
                                     <button type="button" class="btn btn-warning dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Fournisseurs de données<span class="caret"></span></button>
-                                    <ul class="dropdown-menu dropdown-menu-right">
-                                      <li class="active" ><a data-providertype="csw" data-provider="https://geobretagne.fr/geonetwork/srv/fre/csw" data-metadata-app="https://geobretagne.fr/geonetwork/srv/eng/catalog.search?node=srv#/metadata/" href="#">Catalogue géoBretagne</a></li>
-                                      <li><a data-providertype="csw" data-provider="https://applications.region-bretagne.fr/geonetwork/srv/fre/csw" data-metadata-app="https://applications.region-bretagne.fr/geonetwork/srv/fre/catalog.search#/metadata/" href="#">Catalogue de la Région</a></li>    
-                                       <li><a data-providertype="csw" data-provider="https://www.cigalsace.org/geonetwork/srv/fre/csw" data-metadata-app="https://www.cigalsace.org/geonetwork/?uuid=" href="#">Catalogue de la Région Grand Est</a></li>
-                                       <li><a data-providertype="csw" data-provider="../proxy/?url=https://www.geopal.org/geonetwork/srv/fre/csw" data-metadata-app="https://www.geopal.org/geonetwork/?uuid=" href="#">Catalogue de la Région Pays de la Loire</a></li>
-
-                                       
-                                      <li role="separator" class="divider"></li>
-                                      <li><a data-providertype="wms" data-provider="https://ows.region-bretagne.fr/geoserver/rb/wms" href="#">Serveur WMS de la Région</a></li>
-                                      <li><a href="#">Serveur WFS</a></li>
+                                    <ul class="dropdown-menu dropdown-menu-right" id="providers_list">
                                     </ul>
                                     <button type="button" class="btn btn-primary" onclick="mv.search()" >Rechercher</button>
                                   </div><!-- /btn-group -->
@@ -1011,7 +992,17 @@ select#opt-style {
                          <div class="row ogc-results" id="wfs-results" style="display: none;"></div>
                          </div>
                          <div class="modal-footer">
-                          <button type="button" class="btn btn-success" onclick="mv.getConfLayers();">Sélectionner</button>
+                          <div class="pull-left">
+                            <div class="form form-inline">
+                              <div class="form-group">
+                                <input class="form-control custom-url" type="text" placeholder="URL du fournisseur..."> </input>
+                                <select class="form-control"><option>csw</option><option>wms</option></select>
+                                <input class="form-control custom-title" type="text" placeholder="Nom..."> </input>
+                                <button type="button" class="btn btn-primary" onclick="addNewProvider(this);">Ajouter un fournisseur</button>
+                              </div>
+                             </div>
+                          </div>
+                          <button type="button" class="btn btn-success" onclick="mv.getConfLayers();">Sélectionner</button>                          
                           <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
                         </div>
                 </div>
@@ -1024,7 +1015,43 @@ select#opt-style {
         
     </div>
     <script>
+        var _conf;
         $(document).ready(function(){
+             $.ajax({
+                    type: "GET",
+                    url: "config.json",                                        
+                    dataType: "json",
+                    contentType: "application/json",
+                    success: function (data) {
+                        _conf = data.app_conf;
+                        mv.showBaseLayers(_conf.baselayers);                       
+                        //Sélection par défaut des 2 1er baselayers
+                        $("#frm-bl .bl input").slice(0,2).prop("checked",true).trigger('change');
+                        $("#frm-bl-visible").val($("#frm-bl-visible option:not(:disabled)").first().val());
+                        map2.getView().setCenter(_conf.map.center);
+                        map2.getView().setZoom(_conf.map.zoom);
+                        var csw_providers = [];
+                        var wms_providers = [];
+                        _conf.data_providers.csw.forEach(function(provider,id) {
+                            var cls = "active";
+                            if (id > 0) {
+                                cls ="";
+                            } 
+                            csw_providers.push('<li class="'+cls+'"><a onclick="setActiveProvider(this);" data-providertype="csw" class="dropdown-toggle" data-provider="'+provider.url+'" data-metadata-app="'+provider.baseref+'" href="#">'+provider.title+'</a></li>');
+                        });
+                        $("#providers_list").append(csw_providers.join(" "));
+                        $("#providers_list").append('<li role="separator" class="divider"></li>');
+                         _conf.data_providers.wms.forEach(function(provider,id) {                            
+                            wms_providers.push('<li><a onclick="setActiveProvider(this);" data-providertype="wms" data-provider="'+provider.url+'" href="#">'+provider.title+'</a></li>');
+                        });
+                        $("#providers_list").append(wms_providers.join(" "));
+                        $("#providers_list").append('<li role="separator" class="divider"></li>');
+                        newConfiguration();
+                    },                
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        alert("Problème avec la récupération de la configuration");
+                    }
+             });
              $('#tabs').tab();
              $.get("icons-fontawesome.html",function( data ) {
                 $("#theme-edit-icon").append(data);
@@ -1044,11 +1071,7 @@ select#opt-style {
                     source: new ol.source.OSM()
                   })
                 ],
-                target: 'map',
-                view: new ol.View({
-                  center: [-307903.74898791354, 6141345.088741366],
-                  zoom: 7
-                })
+                target: 'map'                
       });
       
       var savedParameters;
@@ -1066,11 +1089,7 @@ select#opt-style {
           }),
           vector
         ],
-        target: 'map_filter',
-        view: new ol.View({
-          center: [-307903.74898791354, 6141345.088741366],
-          zoom: 7
-        })
+        target: 'map_filter'
       });
       var config;
       
@@ -1086,8 +1105,8 @@ select#opt-style {
             $("#theme-edit-icon option").prop("selected", false);            
             $("#panel-theme").hide();
             
-            map.getView().setCenter([-307903.74898791354, 6141345.088741366]);
-            map.getView().setZoom(7);
+            map.getView().setCenter(_conf.map.center);
+            map.getView().setZoom(_conf.map.zoom);
             config = {
                 application: { title: "", logo: "" },
                 themes: {},
@@ -1095,10 +1114,7 @@ select#opt-style {
             };
             //Store des parametres non gérés
             savedParameters = {"application":[]};
-            $(".list-group-item").remove();
-            //Sélection par défaut des 2 1er baselayers
-            $(".bl:first input, .bl:nth-child(2) input").prop("checked", true).trigger("change");
-            $("#frm-bl-visible").val($("#frm-bl-visible option:not(:disabled)").first().val());
+            $(".list-group-item").remove();           
       };
       
       
@@ -1110,73 +1126,6 @@ select#opt-style {
                  });
             }
       };
-      
-              
-         
-      var bl = {};
-      
-      
-      bl["positron"] = {
-        id:"positron", thumbgallery: "img/basemap/positron.png", title:"CartoDb", label:"Positron", 
-        definition: ['<baselayer  visible="false" type="OSM" id="positron" label="Positron" title="CartoDb" thumbgallery="img/basemap/positron.png" ', 
-			'url="https://{a-c}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png" maxzoom="20" ',
-			'attribution="Map tiles by  &lt;a href=\'https://cartodb.com/attributions\'>CartoDb &lt;/a>, under  &lt;a href=\'https://creativecommons.org/licenses/by/3.0/\'>CC BY 3.0 &lt;/a>" />'].join("")
-      };
-      
-      bl["esriworldimagery"] = {
-        id:"esriworldimagery", thumbgallery: "img/basemap/esriworldwide.jpg", title:"Esri world imagery", label: "Esri World imagery",
-        definition: ['<baselayer visible="false" type="OSM" id="esriworldimagery" label="Esri world imagery" title="Esri world imagery" ',
-            'thumbgallery="img/basemap/esriworldwide.jpg" url="http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}" ',
-            'attribution="Esri world imagery"/>'].join("")};
-      
-       bl["stamen1"] = {
-        id:"stamen1", thumbgallery: "img/basemap/toner-lite.png", title:"Stamen Design", label:"Toner-lite", 
-        definition: ['<baselayer  visible="false" type="OSM" id="stamen1" label="Toner-lite" title="Stamen Design" thumbgallery="img/basemap/toner-lite.png" ',
-			'url="http://{a-d}.tile.stamen.com/toner-lite/{z}/{x}/{y}.png" maxzoom="20" ',
-			' attribution="Map tiles by  &lt;a href=\'http://stamen.com/\'>Stamen Design &lt;/a>, under  &lt;a href=\'http://creativecommons.org/licenses/by/3.0/\'>CC BY 3.0 &lt;/a>" />'].join("")
-      };
-      bl["stamen2"] = {
-        id:"stamen2", thumbgallery: "img/basemap/watercolor.jpg", title:"Stamen Design", label:"Watercolor", 
-        definition: [' <baselayer  visible="false" type="OSM" id="stamen2" label="Watercolor" title="Stamen Design" thumbgallery="img/basemap/watercolor.jpg" ',
-			'url="http://{a-c}.tile.stamen.com/watercolor/{z}/{x}/{y}.jpg" maxzoom="20" ',
-			' attribution="Map tiles by  &lt;a href=\'http://stamen.com/\'>Stamen Design &lt;/a>, under  &lt;a href=\'http://creativecommons.org/licenses/by/3.0/\'>CC BY 3.0 &lt;/a>" />'].join("")
-      };
-      
-       bl["darkmatter"] = {
-        id:"darkmatter", thumbgallery: "img/basemap/darkmatter.png", title:"CartoDb", label:"Dark Matter", 
-        definition: [' <baselayer  visible="false" type="OSM" id="darkmatter" label="Dark Matter" title="CartoDb" thumbgallery="img/basemap/darkmatter.png" ',
-			'url="https://{a-c}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png" maxzoom="20" ',
-			' attribution="Map tiles by  &lt;a href=\'https://cartodb.com/attributions\'>CartoDb &lt;/a>, under  &lt;a href=\'https://creativecommons.org/licenses/by/3.0/\'>CC BY 3.0 &lt;/a>" />'].join("")
-      };
-      
-      bl["ortho1"] = {
-        id:"ortho1", thumbgallery: "img/basemap/ortho.jpg", title:"GéoBretagne", label:"Photo aérienne actuelle", 
-        definition: ['<baselayer  visible="false" type="WMTS" id="ortho1" label="Photo aérienne actuelle"',
-        '   title="GéoBretagne" thumbgallery="img/basemap/ortho.jpg" url="https://tile.geobretagne.fr/gwc02/service/wmts"',
-        '   layers="satellite" format="image/png" style="_null" matrixset="EPSG:3857" fromcapacity="false"',
-        '   attribution="&lt;a href=\'https://applications.region-bretagne.fr/geonetwork/?uuid=3a0ac2e3-7af1-4dec-9f36-dae6b5a8c731\' target=\'_blank\' >partenaires GéoBretagne - IGN RGE BD ORTHO - PlanetObserver&lt;/a>" />'].join("")
-      };
-       bl["ortho_ir"] = {
-        id:"ortho_ir", thumbgallery: "img/basemap/ir.jpg", title:"GéoBretagne", label:"Photo aérienne infra rouge", 
-        definition: ['<baselayer  visible="false" type="WMTS" id="ortho_ir" label="Photo aérienne infra rouge"',
-        '   title="GéoBretagne" thumbgallery="img/basemap/ir.jpg" url="https://geobretagne.fr/geoserver/gwc/service/wmts"',
-        '   layers="photo:ir-composite" format="image/jpeg" style="_null" matrixset="EPSG:3857" fromcapacity="false"',
-        '   attribution="&lt;a href=\'https://geobretagne.fr/geonetwork/apps/georchestra/?uuid=434b82a8-8d3c-4d9f-9eb3-0485f1a63eb6\' target=\'_blank\' >partenaires GéoBretagne - IGN RGE BD ORTHO - PlanetObserver&lt;/a>" />'].join("")
-      };
-      bl["osm_google"] = {
-        id:"osm_google", thumbgallery: "img/basemap/osm_google.png", title:"GéoBretagne", label: "OpenStreetMap",
-        definition: ['<baselayer  visible="false" type="WMS" id="osm_google" label="OpenStreetMap" title="Plan OSM Géobretagne" thumbgallery="img/basemap/osm_google.png" ',
-            'url="https://osm.geobretagne.fr/gwc01/service/wms" layers="osm:google" format="image/png" ',
-            'attribution="GéoBretagne. Données : les contributeurs d\'&lt;a href=\'https://www.openstreetmap.org/\' target=\'_blank\'>OpenStreetMap &lt;/a>,  &lt;a href=\'https://www.openstreetmap.org/copyright\' target=\'_blank\'>ODbL &lt;/a>" />'].join("")
-      };
-      bl["osm"] = {
-        id:"osm", thumbgallery: "img/basemap/osm.png", title:"OpenStreetMap", label:"OpenStreetMap", 
-        definition: ['<baselayer  visible="false" type="OSM" id="osm" label="OpenStreetMap" title="OpenStreetMap" thumbgallery="img/basemap/osm.png" ',
-            'url="https://{a-c}.tile.openstreetmap.org/{z}/{x}/{y}.png" ',
-            'attribution="Données : les contributeurs d\'&lt;a href=\'https://www.openstreetmap.org/\' target=\'_blank\'>OpenStreetMap &lt;/a>&lt;a href=\'https://www.openstreetmap.org/copyright\' target=\'_blank\'>ODbL &lt;/a>" />'].join("")
-      };      
-      
-      mv.showBaseLayers(bl);      
       
       var sortableLayerList = Sortable.create(document.getElementById('themeLayers'), {
           handle: '.glyphicon-move',          
@@ -1230,15 +1179,7 @@ select#opt-style {
             loadApplicationParameters();
         });
         
-      $(".dropdown-menu li a").click(function(){
-         $(this).parent().parent().find(".active").removeClass("active");
-         var url = $(this).data("provider");
-         var type = $(this).data("providertype");
-         $(this).parent().addClass("active");
-         //ogc.setLayerFinderMode({type: type, url: url });
-     });
-     
-         
+              
      var addLayer = function (title, layerid) {
         // test if theme is saved
         if (!config.themes[$("#theme-edit").attr("data-themeid")]) {
@@ -1363,6 +1304,17 @@ select#opt-style {
             ("0" + d.getDate()).slice(-2) + ("0" + d.getHours()).slice(-2) + ("0" + d.getMinutes()).slice(-2) + ("0" + d.getSeconds()).slice(-2);
         return obj+'-' + df;
      };
+     
+     var createBaseLayerDef = function (bsl) {
+         var parameters ="";
+         $.each(bsl, function(param, value) {
+            if (param === "attribution") {
+                value = mv.escapeXml(value);
+            }
+            parameters += param+'="' + value +'" ';            
+         });
+         return parameters;
+     };
         
       var saveApplicationParameters = function (option) {
          var padding = function (n) {
@@ -1429,9 +1381,12 @@ select#opt-style {
          var visibleBaselayer = $("#frm-bl-visible").val();
          var baseLayers =   [padding(0) + '<baselayers style="'+baseLayersMode+'">'];
          $(".bl input:checked").each(function (i, b) {
-            // set first bl visible
-            var baseLayer = bl[$(b).parent().parent().attr("data-layerid")];
-            var definition = baseLayer.definition;
+            // set first bl visible           
+            var baseLayer = _conf.baselayers[$(b).parent().parent().attr("data-layerid")];                        
+            var definition = [
+             '<baselayer visible="false" ',
+             createBaseLayerDef(baseLayer),
+             ' ></baselayer>'].join("");
             if (baseLayer.id === visibleBaselayer) {
                 definition = definition.replace('visible="false"', 'visible="true"');
             }
@@ -1693,7 +1648,22 @@ select#opt-style {
       
       };
       
-      newConfiguration();
+      var setActiveProvider = function (el) {      
+         $(el).parent().parent().find(".active").removeClass("active");         
+         $(el).parent().addClass("active");
+     };
+      
+      var addNewProvider = function (el) {
+        var frm = $(el).closest("div");
+        var url = frm.find("input.custom-url").val();
+        var type = frm.find("select").val();
+        var title = frm.find("input.custom-title").val();
+        $("#providers_list").append('<li><a onclick="setActiveProvider(this);" data-providertype="'+type+'" data-provider="'+url+'" href="#">'+title+'</a></li>').trigger("click");
+        frm.find("input.custom-url").val("");
+        frm.find("select").val("");
+        frm.find("input.custom-title").val("");
+      };
+          
       
       $('#mod-featuresview').on('hidden.bs.modal', function () {
             var option = $(this).attr("data-target");
