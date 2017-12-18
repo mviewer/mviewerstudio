@@ -2,6 +2,7 @@
 	"app_conf": {
         "mviewer_instance": "http://172.16.10.30/mviewer/",
         "generator_path_from_mviewer" :"../mymap/",
+        "generator_folder" : "/var/www/htdocs/mymap/",
         "map": {
             "center": [-307903.74898791354, 6141345.088741366],
             "zoom": 7
@@ -119,7 +120,7 @@
                 },
                 {
                     "title" : "Catalogue de la Région Grand Est",
-                    "url": "https://www.cigalsace.org/geonetwork/srv/fre/csw",
+                    "url": "https://geobretagne.fr/geonetwork/srv/fre/csw",
                     "baseref": "https://www.cigalsace.org/geonetwork/"
                 },
                 {
