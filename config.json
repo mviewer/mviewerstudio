@@ -1,8 +1,8 @@
 {
 	"app_conf": {
         "mviewer_instance": "http://172.16.10.30/mviewer/",
-        "generator_path_from_mviewer" :"../mymap/",
-        "generator_folder" : "/var/www/htdocs/mymap/",
+        "conf_path_from_mviewer" :"../mymap/conf/",
+        "export_conf_folder" : "/var/www/htdocs/mymap/conf/",
         "map": {
             "center": [-307903.74898791354, 6141345.088741366],
             "zoom": 7
@@ -76,7 +76,7 @@
 				"title": "GéoBretagne",
 				"label": "Photo aérienne infra rouge",
 				"type": "WMTS",
-				"url": "https://tile.geobretagne.fr/gwc02/service/wmts",
+				"url": "https://geobretagne.fr/geoserver/gwc/service/wmts",
                 "layers": "photo:ir-composite",
                 "format": "image/jpeg",
                 "style": "_null",
