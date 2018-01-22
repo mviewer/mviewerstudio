@@ -1405,7 +1405,7 @@ select#opt-style {
          });
          themes.push(padding(0)+'</themes>');
                      
-         var conf = ['<config>\r\n',
+         var conf = ['<?xml version="1.0" encoding="UTF-8"?>\r\n<config>\r\n',
             application,
             mapoptions,
             savedProxy,
@@ -1419,12 +1419,15 @@ select#opt-style {
          if (option) {         
                  $.ajax({
                   type: "POST",
-                  url: "srv/store.php",
+                  url: _conf.upload_service,
                   data: conf.join(""),
+                  dataType: 'json',
+                  contentType: 'text/xml',
                   success: function( data ) {
-                    if (data.success && data.url) {
-                    console.log(data.url);
-                    window.open(data.url,'_blank');
+                    if (data.success && data.filepath) {
+                    console.log(data.filepath);
+                    var url = _conf.mviewer_instance + '?config=' + _conf.conf_path_from_mviewer + data.filepath;
+                    window.open(url,'_blank');
                     }
                   }
                 });

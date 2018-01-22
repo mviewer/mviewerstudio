@@ -1,5 +1,6 @@
 {
 	"app_conf": {
+        "upload_service": "srv/store.php",
         "mviewer_instance": "http://172.16.10.30/mviewer/",
         "conf_path_from_mviewer" :"../mymap/conf/",
         "export_conf_folder" : "/var/www/htdocs/mymap/conf/",
