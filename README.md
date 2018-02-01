@@ -1,22 +1,22 @@
-# mv_gen
-mviewer generator
+# mviewerstudio
+mviewer studio
 
 Configuration
 --------------
 
-La configuration s'effectue dans le fichier config.json. La configuration se décompose en 3 sections.
-La première section concerne le paramétrage global de l'application
+La configuration s'effectue dans le fichier config.json. La configuration se dÃ©compose en 3 sections.
+La premiÃ¨re section concerne le paramÃ©trage global de l'application
 
-#### paramètres 
+#### paramÃ¨tres 
 
-* **upload_service**: Service web utilisé pour stocker les configurations mviewer créées avec le générateur. Valeur par défaut : ``srv/store.php``. Il est également possible d'utiliser le service "Doc service" de Georchestra. exemple  ``../mapfishapp/ws/mviewer/``. Dans le dernier cas, les fichiers de configuration sont stockés dans la base georchestra.
-* **export_conf_folder**: Dossier utilisé pour le stockage des fichiers de configuration mviewer générés. Ce paramètre est utilisé si le paramètre précédent est ``srv/store.php``.
-* **mviewer_instance**: url de l'instance mviewer utilisée. exemple : http://localhost/mviewer/
-* **conf_path_from_mviewer**: Chemin permettant de charger le fichier de configuration généré depuis le mviewer. le chemin peut être relatif. Exemple ../mviewer/conf/
-* **map** : Paramétrage du cadrage initial de la carte grâce aux propriétés center et zoom.
+* **upload_service**: Service web utilisÃ© pour stocker les configurations mviewer crÃ©Ã©es avec le gÃ©nÃ©rateur. Valeur par dÃ©faut : ``srv/store.php``. Il est Ã©galement possible d'utiliser le service "Doc service" de Georchestra. exemple  ``../mapfishapp/ws/mviewer/``. Dans le dernier cas, les fichiers de configuration sont stockÃ©s dans la base georchestra.
+* **export_conf_folder**: Dossier utilisÃ© pour le stockage des fichiers de configuration mviewer gÃ©nÃ©rÃ©s. Ce paramÃ¨tre est utilisÃ© si le paramÃ¨tre prÃ©cÃ©dent est ``srv/store.php``.
+* **mviewer_instance**: url de l'instance mviewer utilisÃ©e. exemple : http://localhost/mviewer/
+* **conf_path_from_mviewer**: Chemin permettant de charger le fichier de configuration gÃ©nÃ©rÃ© depuis le mviewer. le chemin peut Ãªtre relatif. Exemple ../mviewer/conf/
+* **map** : ParamÃ©trage du cadrage initial de la carte grÃ¢ce aux propriÃ©tÃ©s center et zoom.
 
-La deuxième section concerne le paramétrage des fonds de plan
+La deuxiÃ¨me section concerne le paramÃ©trage des fonds de plan
 
 
-La dernière section concerne le paramétrage des différents fournisseurs de données
+La derniÃ¨re section concerne le paramÃ©trage des diffÃ©rents fournisseurs de donnÃ©es
 
