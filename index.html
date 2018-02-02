@@ -1434,7 +1434,8 @@ select#opt-style {
                 });
           } else {
             var element = document.createElement('a');
-            element.setAttribute('href', 'data:text/xml;charset=utf-8,' +      encodeURI(conf.join("")));
+            var blob = new Blob([conf.join("")], {type : 'text/xml'});
+            element.setAttribute('href', window.URL.createObjectURL(blob));
             element.setAttribute('download', "config.xml");
             document.body.appendChild(element);
             element.click();            
