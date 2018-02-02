@@ -1336,6 +1336,8 @@ select#opt-style {
             'measuretools="'+($('#opt-measuretools').prop('checked')=== true)+'"',
             'togglealllayersfromtheme="'+($('#opt-togglealllayersfromtheme').prop('checked')=== true)+'"'];
             
+         config.title = $("#opt-title").val();
+            
          savedParameters.application.forEach(function(parameter, id){
             $.each(parameter,function(prop,val) {
                 console.log(prop,val)
@@ -1407,6 +1409,7 @@ select#opt-style {
          themes.push(padding(0)+'</themes>');
                      
          var conf = ['<?xml version="1.0" encoding="UTF-8"?>\r\n<config>\r\n',
+            '<metadata>\r\n'+mv.createDubliCore(config)+'\r\n</metadata>\r\n',
             application,
             mapoptions,
             savedProxy,
