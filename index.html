@@ -1024,6 +1024,7 @@ select#opt-style {
                     contentType: "application/json",
                     success: function (data) {
                         _conf = data.app_conf;
+                        _conf.proxy = "../proxy/?url=";
                         mv.showBaseLayers(_conf.baselayers);                       
                         //Sélection par défaut des 2 1er baselayers
                         $("#frm-bl .bl input").slice(0,2).prop("checked",true).trigger('change');
