@@ -1525,7 +1525,7 @@ select#opt-style {
                 });                
                 ["title", "logo", "help", "style"].forEach(function(value,id) {
                     if (application.attr(value)) {
-                        $("#opt-" + value).val(application.attr(value));
+                        $("#opt-" + value).val(application.attr(value)).trigger("change");
                     }
                     if (value === "style") {
                         updateTheme($("#opt-" + value)[0]);
