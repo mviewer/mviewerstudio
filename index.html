@@ -270,7 +270,7 @@ select#opt-style {
                         <div class="form-group">
                           <label class="col-md-4 control-label" for="opt-logo">URL du Logo</label>  
                           <div class="col-md-4">
-                            <input id="opt-logo" name="textinput" type="text" class="form-control input-md" placeholder="https://geobretagne.fr/pub/logo/region-bretagne.jpg">  
+                            <input id="opt-logo" name="textinput" type="text" class="form-control input-md checkedurl" placeholder="https://geobretagne.fr/pub/logo/region-bretagne.jpg">  
                           </div>
                         </div>
 
@@ -278,7 +278,7 @@ select#opt-style {
                         <div class="form-group">
                           <label class="col-md-4 control-label" for="opt-help">Fichier d'aide (format html)</label>  
                           <div class="col-md-4">
-                            <input id="opt-help" name="textinput" type="text" class="form-control input-md" placeholder="Ex: mviewer_help.html">  
+                            <input id="opt-help" name="textinput" type="text" class="form-control input-md checkedurl" placeholder="Ex: mviewer_help.html">  
                           </div>                          
                         </div>
                                                                         
@@ -654,7 +654,7 @@ select#opt-style {
                       </div>
                        <div class="form-group">
                         <label for="frm-url">url</label>
-                        <input type="text" class="form-control" id="frm-url" placeholder="url">
+                        <input type="text" class="form-control checkedurl" id="frm-url" placeholder="url">
                       </div>
                        <div class="form-group">
                         <label for="frm-attribution">Attributions</label>
@@ -662,11 +662,11 @@ select#opt-style {
                       </div>
                       <div class="form-group">
                         <label for="frm-metadata">URL fiche de métadonnées (html)</label>
-                        <input type="text" class="form-control" id="frm-metadata" placeholder="metadata">
+                        <input type="text" class="form-control checkedurl" id="frm-metadata" placeholder="metadata">
                       </div>
                        <div class="form-group">
                         <label for="frm-metadata-csw">URL fiche de métadonnées (xml)</label>
-                        <input type="text" class="form-control" id="frm-metadata-csw" placeholder="metadata-csw">
+                        <input type="text" class="form-control checkedurl" id="frm-metadata-csw" placeholder="metadata-csw">
                       </div>
                       <div class="form-group">
                           <div class="checkbox">
@@ -726,7 +726,7 @@ select#opt-style {
                                     </label>
                                   </div>
                                     <label for="frm-template-url">URL template</label>
-                                    <input type="text" class="form-control" id="frm-template-url" placeholder="URL template"/>
+                                    <input type="text" class="form-control checkedurl" id="frm-template-url" placeholder="URL template"/>
                               </div>
                             <div class="form-group">
                                 <label class="control-label" for="frm-fields">Champs</label> 
@@ -765,10 +765,10 @@ select#opt-style {
                                     </div>                                    
                              </div>
                                     <label for="frm-sld">SLD externe</label>
-                                    <input type="text" class="form-control" id="frm-sld" placeholder="URL SLD externe"/>
+                                    <input type="text" class="form-control checkedurl" id="frm-sld" placeholder="URL SLD externe"/>
                                     
                                     <label for="frm-legendurl">Légende statique</label>
-                                    <input type="text" class="form-control" id="frm-legendurl" placeholder="URL vers Image légende"/>
+                                    <input type="text" class="form-control checkedurl" id="frm-legendurl" placeholder="URL vers Image légende"/>
                                      <div class="row">
                                         <div class="col-md-4">
                                         <div class="form-group" lang="en-US">
@@ -1682,6 +1682,7 @@ select#opt-style {
           addgeoFilter();
       });
       
+      $( ".checkedurl" ).change(mv.checkURL);
       
     </script>
 
