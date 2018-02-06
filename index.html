@@ -601,7 +601,8 @@ select#opt-style {
                                         <input type="text" id="subfile" class="input-xlarge">
                                         <a class="btn btn-primary btn-sm" onclick="$('#filebutton').click();">Parcourir</a>
                                     </div>
-                               </div>                               
+                               </div>
+                               <div class="list-group" id="liste_applications"><h4>Mes applications</h4></div>
                 </div>
                 <div class="modal-footer">
                   <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
@@ -1177,7 +1178,7 @@ select#opt-style {
         };
       
       $('input[type=file]').change(function () {
-            loadApplicationParameters();
+            loadApplicationParametersFromFile();
         });
         
               
@@ -1476,167 +1477,14 @@ select#opt-style {
         }
       };
       
-      var  loadApplicationParameters = function () {
+      var  loadApplicationParametersFromFile = function () {
         var file = document.getElementById("filebutton").files[0];
         if (file) {
             var reader = new FileReader();
             reader.readAsText(file, "UTF-8");
-            reader.onload = function (evt) {
-                newConfiguration();
+            reader.onload = function (evt) {                
                 var xml = $.parseXML(evt.target.result);
-                console.log(xml);
-                var proxy = $(xml).find("proxy");
-                var olscompletion = $(xml).find("olscompletion");
-                if (olscompletion && olscompletion.attr("type")) {
-                    $("#frm-searchlocalities").val(olscompletion.attr("type")).trigger("change");
-                }
-                if (olscompletion && olscompletion.attr("url")) {
-                    $("#opt-searchlocalities-url").val(olscompletion.attr("url"));
-                }
-                if (olscompletion && olscompletion.attr("attribution")) {
-                    $("#opt-searchlocalities-attribution").val(olscompletion.attr("attribution"));
-                }
-                var elasticsearch = $(xml).find("elasticsearch");
-                if (elasticsearch && elasticsearch.attr("url")) {
-                     $("#frm-globalsearch").val("elasticsearch").trigger("change");
-                     ["url", "geometryfield", "linkid", "doctype", "mode", "version"].forEach(function(param,id) {
-                          $("#opt-elasticsearch-"+param).val(elasticsearch.attr(param));
-                      });
-                }
-                var searchparameters = $(xml).find("searchparameters"); 
-                if ( searchparameters && searchparameters.attr("bbox") ) {
-                        $("#opt-elasticsearch-bbox").prop("checked", (searchparameters.attr("bbox") === "true"));
-                }
-                if ( searchparameters && searchparameters.attr("features") ) {
-                        $("#opt-searchfeatures").prop("checked", (searchparameters.attr("features") === "true"));
-                }
-                
-             
-                [proxy].forEach(function(param,id) {
-                    // this parameters are not yet supported but must be saved for later
-                    if (param.length>0) {
-                        savedParameters[param.selector] = param[0].outerHTML;
-                    }
-                });
-                //Application                
-                var application = $(xml).find("application");                
-                ["stats", "statsurl"].forEach(function(param,id) {
-                   // this parameters are not yet supported but must be saved for later
-                   var parameter = new Object();
-                   if (application.attr(param)) {
-                       parameter[param] = application.attr(param);
-                       savedParameters.application.push(parameter);
-                   }
-                });                
-                ["title", "logo", "help", "style"].forEach(function(value,id) {
-                    if (application.attr(value)) {
-                        $("#opt-" + value).val(application.attr(value)).trigger("change");
-                    }
-                    if (value === "style") {
-                        updateTheme($("#opt-" + value)[0]);
-                    }
-                }); 
-                
-                ["exportpng", "measuretools", "showhelp", "coordinates", "togglealllayersfromtheme"].forEach(function(value,id) {
-                    if (application.attr(value) && application.attr(value) === "true") {
-                        $("#opt-" + value).prop("checked", true);
-                    }
-                });
-                //Mapoptions
-                var mapoptions = $(xml).find("mapoptions");                
-                ["projection", "maxzoom"].forEach(function(value,id) {
-                    if (mapoptions.attr(value)) {
-                        $("#opt-" + value).val(mapoptions.attr(value));
-                    }
-                });               
-                map.getView().setCenter(mapoptions.attr("center").split(",").map(Number));
-                map.getView().setZoom(parseInt(mapoptions.attr("zoom")));
-                //BaseLayers
-                var baseLayersMode = $(xml).find("baselayers").attr("mode") || "default";                
-                $("#frm-bl-mode option[value='"+baseLayersMode+"']").prop("selected", true);
-                var baselayers = $(xml).find("baselayer");
-                //Reinitialisation
-                $(".bl input").prop("checked",false);
-                $("#frm-bl-visible option").attr('disabled', 'disabled');
-                baselayers.each(function(id, bl) {
-                    var id = $(bl).attr("id");
-                    $("#frm-bl .bl[data-layerid='"+id+"'] input").prop("checked",true).trigger('change');
-                });
-                var visibleBaselayer = $(xml).find('baselayer[visible="true"]').attr("id");
-                $("#frm-bl-visible").val(visibleBaselayer).trigger('change');
-                //tHEMES & layers
-                var themePanel =  $(xml).find("themes");                
-                if (themePanel.attr("mini") === "true") {
-                    $('#opt-mini').prop('checked', true);
-                }
-                var themes = $(xml).find("theme");
-                themes.each(function(id, th) {                    
-                    addTheme ($(th).attr("name"), ($(th).attr("collapsed") || true), $(th).attr("id"), $(th).attr("icon"));
-                    var layers = $(th).find("layer");
-                    var counter = 0;
-                    layers.each(function(id, l) {
-                        counter +=1;
-                        var layer = {
-                            id: $(l).attr("id"),
-                            type: $(l).attr("type") || "wms",
-                            tiled: ($(l).attr("tiled") === "true"),
-                            scalemin: $(l).attr("scalemin"),
-                            scalemax: $(l).attr("scalemax"),
-                            title: $(l).attr("name"),
-                            name: $(l).attr("name"),
-                            url: mv.escapeXml($(l).attr("url")),
-                            queryable: ($(l).attr("queryable") === "true"),
-                            featurecount: $(l).attr("featurecount"),
-                            infopanel: $(l).attr("infopanel") || 'right-panel',
-                            searchable: ($(l).attr("searchable") === "true"),
-                            searchengine:$(l).attr("searchengine"),
-                            fusesearchkeys:$(l).attr("fusesearchkeys"),
-                            fusesearchresult:$(l).attr("fusesearchresult"),
-                            secure: ($(l).attr("secure") === "true"),
-                            infoformat: $(l).attr("infoformat"),
-                            metadata: $(l).attr("metadata"),
-                            "metadata-csw": mv.escapeXml($(l).attr("metadata-csw")),
-                            attribution: $(l).attr("attribution"),
-                            filter: $(l).attr("filter"),
-                            visible: ($(l).attr("visible") === "true"),
-                            opacity: $(l).attr("opacity"),
-                            template: $(l).find("template").text(),
-                            usetemplate: ($(l).find("template") && $(l).find("template").text().length > 3 || ($(l).find("template").attr("url") && ($(l).find("template").attr("url").length>1))),
-                            templateurl : false,
-                            fields:  $(l).attr("fields"),
-                            fieldsoptions : false,
-                            aliases:  $(l).attr("aliases"),
-                            style:  $(l).attr("style"),
-                            stylesalias:  $(l).attr("stylesalias"),
-                            sld: $(l).attr("sld"),
-                            legendurl: $(l).attr("legendurl"),
-                            attributefilter: ($(l).attr("attributefilter") === "true")
-                        };
-                        if (layer.attributefilter) {
-                            layer.attributefield = $(l).attr("attributefield");
-                            layer.attributelabel = $(l).attr("attributelabel");
-                            layer.attributevalues = $(l).attr("attributevalues");
-                        }
-                        if (layer.usetemplate === true && $(l).find("template").attr("url")) {
-                            layer.templateurl = $(l).find("template").attr("url");
-                            console.log(layer.templateurl);                            
-                        }
-                        $("#frm-template").prop("checked", (layer.usetemplate)); 
-                        if (layer.fields && layer.aliases) {
-                            layer.fieldsoptions = {};            
-                            $(layer.fields.split(",")).each(function (index, fld) {
-                                var type = "text";                                
-                                var alias = layer.aliases.split(",")[index];                
-                                layer.fieldsoptions[fld] = {"name": fld, "alias": alias, "type": type};                
-                            });
-                        }
-                        config.themes[$(th).attr("id")].layers.push(layer);
-                        
-                    });
-                    $(".themes-list-item[data-themeid='"+$(th).attr("id")+"'] .label").text(counter);
-                });
-                
-                $("#mod-importfile").modal("hide");
+                mv.parseApplication(xml);                
             }
             reader.onerror = function (evt) {
                 alert("error reading file");
@@ -1644,11 +1492,21 @@ select#opt-style {
         }
       };
       
-      /*var search = function () {
-        mv.resetSearch();
-        ogc.cswSearch();
-      };*/
+      var  loadApplicationParametersFromHistory = function (url) {
+        $.ajax({
+              type: "GET",
+              url: url,
+              success: function( data ) {
+                  mv.parseApplication(data);                
+              },
+              error: function (xhr, ajaxOptions, thrownError) {
+                        alert("Problème avec la requête de récupération de l'application " +  thrownError);
+                    }
+        });
+        
+      };
       
+            
       var updateTheme = function (el) {
         console.log(el);
         var cls = $("#"+el.id+" option[value='"+el.value+"']").text();
@@ -1688,6 +1546,10 @@ select#opt-style {
       });
       
       $( ".checkedurl" ).change(mv.checkURL);
+      
+      $("#mod-importfile").on('shown.bs.modal', function () {
+          mv.getListeApplications();
+      })
       
     </script>
 
