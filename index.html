@@ -1421,30 +1421,34 @@ select#opt-style {
             themes.join(" "),
             padding(0)+ '</config>'];
          
-         if (option) {         
-                 $.ajax({
-                  type: "POST",
-                  url: _conf.upload_service,
-                  data: conf.join(""),
-                  dataType: 'json',
-                  contentType: 'text/xml',
-                  success: function( data ) {
-                    if (data.success && data.filepath) {
-                    console.log(data.filepath);
-                    var url = _conf.mviewer_instance + '?config=' + _conf.conf_path_from_mviewer + data.filepath;
-                    window.open(url,'_blank');
-                    }
-                  }
-                });
-          } else {
-            var element = document.createElement('a');
-            var blob = new Blob([conf.join("")], {type : 'text/xml'});
-            element.setAttribute('href', window.URL.createObjectURL(blob));
-            element.setAttribute('download', "config.xml");
-            document.body.appendChild(element);
-            element.click();            
-            document.body.removeChild(element);
-          }
+         if (mv.validateXML(conf.join(""))) {
+             if (option) {
+                     $.ajax({
+                      type: "POST",
+                      url: _conf.upload_service,
+                      data: conf.join(""),
+                      dataType: 'json',
+                      contentType: 'text/xml',
+                      success: function( data ){
+                        if (data.success && data.filepath) {
+                        console.log(data.filepath);
+                        var url = _conf.mviewer_instance + '?config=' + _conf.conf_path_from_mviewer + data.filepath;
+                        window.open(url,'mvs_vizualize');
+                        }
+                      }
+                    });
+              } else {
+                var element = document.createElement('a');
+                var blob = new Blob([conf.join("")], {type : 'text/xml'});
+                element.setAttribute('href', window.URL.createObjectURL(blob));
+                element.setAttribute('download', "config.xml");
+                document.body.appendChild(element);
+                element.click();
+                document.body.removeChild(element);
+              }
+        } else {
+            alert("Document xml invalide");
+        }
         
       };
       
