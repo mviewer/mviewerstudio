@@ -1026,7 +1026,7 @@ select#opt-style {
                     success: function (data) {
                         _conf = data.app_conf;
                         _conf.proxy = "../proxy/?url=";
-                        mv.showBaseLayers(_conf.baselayers);                       
+                        mv.showBaseLayers(_conf.baselayers, "default-bl");                       
                         //Sélection par défaut des 2 1er baselayers
                         $("#frm-bl .bl input").slice(0,2).prop("checked",true).trigger('change');
                         $("#frm-bl-visible").val($("#frm-bl-visible option:not(:disabled)").first().val());
@@ -1115,8 +1115,9 @@ select#opt-style {
                 temp : { layers : {}}
             };
             //Store des parametres non gérés
-            savedParameters = {"application":[]};
-            $(".list-group-item").remove();           
+            savedParameters = {"application":[], "baselayers": {}};
+            $(".list-group-item").remove();
+            $("#frm-bl .custom-bl").remove();
       };
       
       
@@ -1386,7 +1387,7 @@ select#opt-style {
          var baseLayers =   [padding(0) + '<baselayers style="'+baseLayersMode+'">'];
          $(".bl input:checked").each(function (i, b) {
             // set first bl visible           
-            var baseLayer = _conf.baselayers[$(b).parent().parent().attr("data-layerid")];                        
+            var baseLayer = _conf.baselayers[$(b).parent().parent().attr("data-layerid")] || savedParameters.baselayers[$(b).parent().parent().attr("data-layerid")];                        
             var definition = [
              '<baselayer visible="false" ',
              createBaseLayerDef(baseLayer),
