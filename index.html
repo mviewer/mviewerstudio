@@ -602,7 +602,12 @@ select#opt-style {
                                         <a class="btn btn-primary btn-sm" onclick="$('#filebutton').click();">Parcourir</a>
                                     </div>
                                </div>
-                               <div class="list-group" id="liste_applications"><h4>Mes applications</h4></div>
+                               <div class="row">
+                                 <div class="col-md-6"><h4>Mes applications</h4></div>
+                                  <div class="col-md-6"><button type="button" class="btn btn-danger" onclick="deleteMyApplications();">Supprimer mes applications</button></div>
+                                </div>
+                               <div class="list-group" id="liste_applications">
+                               </div>
                 </div>
                 <div class="modal-footer">
                   <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
@@ -1495,6 +1500,20 @@ select#opt-style {
                 alert("error reading file");
             }
         }
+      };
+
+      var deleteMyApplications = function () {
+        $.ajax({
+              type: "GET",
+              url: "srv/delete.php",
+              success: function( data ) {
+                  alert(data.deleted_files + " application(s) supprimée(s)");
+                  $("#liste_applications a").remove();
+              },
+              error: function (xhr, ajaxOptions, thrownError) {
+                        alert("Problème avec la requête de suppression " +  thrownError);
+                    }
+        });
       };
       
       var  loadApplicationParametersFromHistory = function (url) {
