@@ -104,8 +104,21 @@
 				"type": "OSM",
 				"url": "https://{a-c}.tile.openstreetmap.org/{z}/{x}/{y}.png",				
 				"attribution": "Données : les contributeurs d'<a href=\"https://www.openstreetmap.org/\" target=\"_blank\">OpenStreetMap </a><a href=\"https://www.openstreetmap.org/copyright\" target=\"_blank\">ODbL </a>"
-			}
-            
+			},
+			"scan_ign": {
+				"id":"scan_ign",
+				"thumbgallery":"img/basemap/scan.jpg",
+				"title":"GéoPortail",
+				"label":"Cartes IGN",
+				"type":"WMTS",
+				"url":"https://geobretagne.fr/geoportail/wmts",
+				"layers":"GEOGRAPHICALGRIDSYSTEMS.MAPS",
+				"format":"image/jpeg",
+				"fromcapacity":"false",
+				"attribution":"<a href='http://www.geoportail.fr/' target='_blank'><img src='https://api.ign.fr/geoportail/api/js/latest/theme/geoportal/img/logo_gp.gif'></a>",
+				"style":"normal",
+				"matrixset":"PM",
+				"maxzoom":"22"}
 		},
         "data_providers" : { 
             "csw" : [
