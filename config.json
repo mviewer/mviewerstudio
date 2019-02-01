@@ -1,9 +1,15 @@
 {
 	"app_conf": {
+        "studio_title": "GéoBretagne mviewer studio",
         "upload_service": "srv/store.php",
         "mviewer_instance": "http://172.16.10.30/mviewer/",
         "conf_path_from_mviewer" :"../mymap/conf/",
         "export_conf_folder" : "/var/www/htdocs/mymap/conf/",
+        "app_form_placeholders": {
+            "app_title": "Kartenn",
+            "logo_url": "https://geobretagne.fr/pub/logo/region-bretagne.jpg",
+            "help_file": "mviewer_help.html"
+        },
         "map": {
             "center": [-307903.74898791354, 6141345.088741366],
             "zoom": 7
