@@ -8,12 +8,27 @@ $(document).ready(function(){
 		success: function (data) {
 			_conf = data.app_conf;
 			_conf.proxy = "../proxy/?url=";
-			mv.showBaseLayers(_conf.baselayers, "default-bl");                       
-			//Sélection par défaut des 2 1er baselayers
+
+			// Update web page title and title in the brand navbar
+			document.title = _conf.studio_title;
+			$("#studio-title").text(_conf.studio_title);
+
+			// Base layers
+			mv.showBaseLayers(_conf.baselayers, "default-bl");
+			// Sélection par défaut des 2 1er baselayers
 			$("#frm-bl .bl input").slice(0,2).prop("checked",true).trigger('change');
 			$("#frm-bl-visible").val($("#frm-bl-visible option:not(:disabled)").first().val());
+
+			// Map extent
 			map2.getView().setCenter(_conf.map.center);
 			map2.getView().setZoom(_conf.map.zoom);
+
+			// Form placeholders
+			$("#opt-title").attr("placeholder", _conf.app_form_placeholders.app_title);
+			$("#opt-logo").attr("placeholder", _conf.app_form_placeholders.logo_url);
+			$("#opt-help").attr("placeholder", _conf.app_form_placeholders.help_file);
+
+			// Thematic layers providers
 			var csw_providers = [];
 			var wms_providers = [];
 			_conf.data_providers.csw.forEach(function(provider,id) {
