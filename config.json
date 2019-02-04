@@ -5,6 +5,7 @@
         "mviewer_instance": "http://172.16.10.30/mviewer/",
         "conf_path_from_mviewer" :"../mymap/conf/",
         "export_conf_folder" : "/var/www/htdocs/mymap/conf/",
+        "proxy" : "../proxy/?url=",
         "app_form_placeholders": {
             "app_title": "Kartenn",
             "logo_url": "https://geobretagne.fr/pub/logo/region-bretagne.jpg",

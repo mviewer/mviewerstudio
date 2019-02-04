@@ -7,7 +7,9 @@ $(document).ready(function(){
 		contentType: "application/json",
 		success: function (data) {
 			_conf = data.app_conf;
-			_conf.proxy = "../proxy/?url=";
+			if (_conf.proxy === undefined) {
+			    _conf.proxy = "../proxy/?url=";
+			}
 
 			// Update web page title and title in the brand navbar
 			document.title = _conf.studio_title;
