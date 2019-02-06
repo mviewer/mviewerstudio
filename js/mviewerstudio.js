@@ -48,7 +48,20 @@ $(document).ready(function(){
 			$("#providers_list").append(wms_providers.join(" "));
 			$("#providers_list").append('<li role="separator" class="divider"></li>');
 			newConfiguration();
-		},                
+
+            // Get user info
+            $.ajax({
+                type: "GET",
+                url: "user_info",
+                dataType: "json",
+                contentType: "application/json",
+                success: function (data) {
+                    if(data){
+                        $("#user_connected").text('Connecté en tant que ' + data.first_name + ' ' + data.last_name +' (' + data.organisation.legal_name + ')');
+                    }
+                }
+            });
+		},
 		error: function (xhr, ajaxOptions, thrownError) {
 			alert("Problème avec la récupération de la configuration");
 		}
@@ -317,6 +330,10 @@ var createBaseLayerDef = function (bsl) {
 };
 
 var saveApplicationParameters = function (option) {
+    // option == 0 : save serverside
+    // option == 1 : save serverside + download
+    // option == 2 : save serverside + launch map
+
 	var padding = function (n) {
 		return '\r\n' + " ".repeat(n);
 	};
@@ -420,38 +437,47 @@ var saveApplicationParameters = function (option) {
 		padding(0)+ '</config>'];
 
 	if (mv.validateXML(conf.join(""))) {
-		if (option) {
-			console.log(_conf.upload_service);
-			$.ajax({
-				type: "POST",
-				url: _conf.upload_service,
-				data: conf.join(""),
-				dataType: 'json',
-				contentType: 'text/xml',
-				success: function( data ){
-					console.log('success');
+
+		// Save the map serverside
+        $.ajax({
+            type: "POST",
+            url: _conf.upload_service,
+            data: conf.join(""),
+            dataType: 'json',
+            contentType: 'text/xml',
+            success: function( data ) {
+
+                if (option == 0) {
+                    // Ok it's been saved and that's it
+                    alert("Fichier sauvegardé sur le serveur (" + data.filepath + ").");
+
+                } else if (option == 1) {
+                    // Download map config file
+                    var element = document.createElement('a');
+                    var blob = new Blob([conf.join("")], {type : 'text/xml'});
+                    element.setAttribute('href', window.URL.createObjectURL(blob));
+                    element.setAttribute('download', "config.xml");
+                    document.body.appendChild(element);
+                    element.click();
+                    document.body.removeChild(element);
+
+                } else {
+                    // Preview the map
 					if (data.success && data.filepath) {
 						console.log(data.filepath);
 						var url = _conf.mviewer_instance + '?config=' + _conf.conf_path_from_mviewer + data.filepath;
 						window.open(url,'mvs_vizualize');
 					}
-				},
-				error: function(xhr, status, error) {
-					console.log('error xhr:' + xhr.responseText);
-					console.log('error status:' + status);
-					console.log('error:' + error);
-				}
-			});
-		} 
-		else {
-			var element = document.createElement('a');
-			var blob = new Blob([conf.join("")], {type : 'text/xml'});
-			element.setAttribute('href', window.URL.createObjectURL(blob));
-			element.setAttribute('download', "config.xml");
-			document.body.appendChild(element);
-			element.click();
-			document.body.removeChild(element);
-		}
+                }
+
+            },
+            error: function(xhr, status, error) {
+                console.log('error xhr:' + xhr.responseText);
+                console.log('error status:' + status);
+                console.log('error:' + error);
+                alert("Echec de la sauvegarde du fichier.\nVeuillez consulter votre administrateur.")
+            }
+        });
 	} else {
 		alert("Document xml invalide");
 	}
