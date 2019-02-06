@@ -51,40 +51,40 @@
 
 								<!-- Map -->		
 								<div class="form-group">
-									<label class="col-md-4 control-label" for="map">Cadrage initial</label>  
-									<div class="col-md-4">
+									<label class="col-md-5 control-label" for="map">Cadrage initial</label>
+									<div class="col-md-5">
 										<div id="map" class="map"></div>
 									</div>
 								</div> 
 							   
 								 <!-- Title-->
 								<div class="form-group">
-									<label class="col-md-4 control-label" for="opt-title">Titre de l'application</label>  
-									<div class="col-md-4">
+									<label class="col-md-5 control-label" for="opt-title">Titre de l'application</label>
+									<div class="col-md-5">
 										<input id="opt-title" name="textinput" type="text" placeholder="Kartenn" class="form-control input-md">  
 									</div>
 								</div>
 					
 								<!-- logo-->
 								<div class="form-group">
-									<label class="col-md-4 control-label" for="opt-logo">URL du logo</label>  
-									<div class="col-md-4">
+									<label class="col-md-5 control-label" for="opt-logo">URL du logo</label>
+									<div class="col-md-5">
 										<input id="opt-logo" name="textinput" type="text" class="form-control input-md checkedurl" placeholder="https://geobretagne.fr/pub/logo/region-bretagne.jpg">  
 									</div>
 								</div>
 
 							   <!-- help-->
 								<div class="form-group">
-									<label class="col-md-4 control-label" for="opt-help">Fichier d'aide (format html)</label>  
-									<div class="col-md-4">
+									<label class="col-md-5 control-label" for="opt-help">Fichier d'aide (format html)</label>
+									<div class="col-md-5">
 										<input id="opt-help" name="textinput" type="text" class="form-control input-md checkedurl" placeholder="Ex: mviewer_help.html">  
 									</div>                          
 								</div>
 																				
 								<!--style-->
 								<div class="form-group">
-									<label class="control-label col-md-4" for="frm-style">Style</label> 
-										<div class="col-md-4">
+									<label class="control-label col-md-5" for="frm-style">Style</label>
+										<div class="col-md-5">
 										<select id="opt-style" name="style" class="form-control default"  onchange="updateTheme(this);">                                    
 											<option class="alizarin" value="css/themes/alizarin.css">alizarin</option>
 											<option class="blue" value="css/themes/blue.css">blue</option>
@@ -105,8 +105,8 @@
 								</div>
 							 
 								<div class="form-group">
-									<label class="col-md-4 control-label" for="checkboxes">Options</label>
-									<div class="col-md-4">
+									<label class="col-md-5 control-label" for="checkboxes">Options</label>
+									<div class="col-md-5">
 										<div class="checkbox">
 											<label for="opt-measuretools">
 												<input type="checkbox" name="checkboxes" id="opt-measuretools">
@@ -196,7 +196,6 @@
 											<label class="control-label" for="theme-edit-icon">Icone</label>
 											<select id="theme-edit-icon" name="icon" class="form-control"></select>
 										</div>
-										</br>
 										<!-- List with handle -->
 										<div id="themeLayers" class="list-group"></div>
 										<div class="row">
@@ -602,7 +601,7 @@
 												<div role="tabpanel" class="tab-pane active" id="attribute_filter">                                            
 													<div class="form-group">
 														<label class="control-label" >Champs</label>                                                    
-														<select id="attribute_filter_fields" name="fields" class="form-control" onchange="extractFeatures(this.value, 'source')";>
+														<select id="attribute_filter_fields" name="fields" class="form-control" onchange="extractFeatures(this.value, 'source')">
 														</select>
 													</div>
 													<div class="form-group">
@@ -643,7 +642,7 @@
 											</div>
 											<div class="form-group">
 												<label class="control-label" >Champs</label>                                                    
-												<select id="opt-attributefield" name="fields" class="form-control" onchange="extractFeatures(this.value,'control')";>
+												<select id="opt-attributefield" name="fields" class="form-control" onchange="extractFeatures(this.value,'control')">
 												</select>
 												<label class="control-label" >valeurs sélectionnées</label>
 												<div class="form-group">                                                        

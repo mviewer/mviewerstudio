@@ -80,6 +80,11 @@ body {
 .row.fld.selected {
     background-color: #9E9E9E;
 }
+
+#map {
+    height: 20em;
+}
+
 #theme-edit-icon {
 	font-family: 'FontAwesome', 'sans-serif';
 	font-size: 20px;
