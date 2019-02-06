@@ -425,7 +425,7 @@ var saveApplicationParameters = function (option) {
 	themes.push(padding(0)+'</themes>');
 			 
 	var conf = ['<?xml version="1.0" encoding="UTF-8"?>\r\n<config>\r\n',
-		'<metadata>\r\n'+mv.createDubliCore(config)+'\r\n</metadata>\r\n',
+		'<metadata>\r\n'+mv.createDublinCore(config)+'\r\n</metadata>\r\n',
 		application,
 		mapoptions,
 		savedProxy,
