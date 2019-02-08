@@ -463,11 +463,16 @@ var saveApplicationParameters = function (option) {
 
                 } else {
                     // Preview the map
-					if (data.success && data.filepath) {
-						console.log(data.filepath);
-						var url = _conf.mviewer_instance + '?config=' + _conf.conf_path_from_mviewer + data.filepath;
-						window.open(url,'mvs_vizualize');
-					}
+                    if (data.success && data.filepath) {
+                        console.log(data.filepath);
+                        // Build a short and readable URL for the map
+                        var filePathWithNoXmlExtension = data.filepath;
+                        if (filePathWithNoXmlExtension.endsWith(".xml")) {
+                            filePathWithNoXmlExtension = filePathWithNoXmlExtension.substring(0, filePathWithNoXmlExtension.length-4);
+                        }
+                        var url = _conf.mviewer_instance + '#' + filePathWithNoXmlExtension;
+                        window.open(url,'mvs_vizualize');
+                    }
                 }
 
             },
