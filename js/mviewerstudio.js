@@ -269,7 +269,7 @@ var editTheme = function (item) {
     $("#theme-edit-icon").val(icon);
     $("#theme-edit-icon option[value='"+icon+"']").prop("selected", true);
     if (icon === "undefined") {
-        $("#theme-edit-icon option[value='caret-right']").prop("selected", true);
+        $("#theme-edit-icon option[value='fas fa-caret-right']").prop("selected", true);
     }
     //Remove old layers entries
     $(".layers-list-item").remove();
