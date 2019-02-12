@@ -49,6 +49,11 @@ $(document).ready(function(){
             $("#providers_list").append('<li role="separator" class="divider"></li>');
             newConfiguration();
 
+            // Default params for layers
+            if (_conf.default_params && _conf.default_params.layer) {
+                mv.setDefaultLayerProperties(_conf.default_params.layer);
+            }
+
             // Get user info
             $.ajax({
                 type: "GET",
