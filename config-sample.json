@@ -189,6 +189,11 @@
                     "url": "https://ows.region-bretagne.fr/geoserver/rb/wms"
                 }
             ]
+        },
+        "default_params" : {
+            "layer": {
+                "info_format": "text/html"
+            }
         }
 	}
 }
