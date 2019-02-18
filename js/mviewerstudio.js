@@ -101,8 +101,16 @@ $(document).ready(function(){
                 dataType: "json",
                 contentType: "application/json",
                 success: function (data) {
-                    if(data){
-                        $("#user_connected").text('Connecté en tant que ' + data.first_name + ' ' + data.last_name +' (' + data.organisation.legal_name + ')');
+                    if (data) {
+                        if (data.userGroups.length > 1) {
+                            mv.updateUserGroupList(data);
+                            $("#mod-groupselection").modal({
+                                backdrop: 'static',
+                                keyboard: false});
+                        } else {
+                            var userGroup = data.userGroups[0];
+                            mv.updateUserInfo(data.firstName + ' ' + data.lastName, userGroup.slugName, userGroup.fullName);
+                        }
                     }
                 }
             });
@@ -632,7 +640,7 @@ var deleteMyApplications = function () {
         url: "srv/delete.php",
         success: function( data ) {
             alert(data.deleted_files + " application(s) supprimée(s)");
-            $("#liste_applications a").remove();
+            mv.getListeApplications();
         },
         error: function (xhr, ajaxOptions, thrownError) {
             alert("Problème avec la requête de suppression " +  thrownError);
