@@ -439,6 +439,11 @@ var saveApplicationParameters = function (option) {
 
     config.title = $("#opt-title").val();
 
+    if(config.title == ''){
+        alert('Attention, vous devez obligatoirement indiquer un titre à votre application avant de sauvegarder.');
+        return;
+    }
+
     savedParameters.application.forEach(function(parameter, id){
         $.each(parameter,function(prop,val) {
             console.log(prop,val)
