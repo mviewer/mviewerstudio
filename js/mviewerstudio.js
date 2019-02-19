@@ -95,25 +95,29 @@ $(document).ready(function(){
             }
 
             // Get user info
-            $.ajax({
-                type: "GET",
-                url: _conf.user_info,
-                dataType: "json",
-                contentType: "application/json",
-                success: function (data) {
-                    if (data) {
-                        if (data.userGroups.length > 1) {
-                            mv.updateUserGroupList(data);
-                            $("#mod-groupselection").modal({
-                                backdrop: 'static',
-                                keyboard: false});
-                        } else {
-                            var userGroup = data.userGroups[0];
-                            mv.updateUserInfo(data.firstName + ' ' + data.lastName, userGroup.slugName, userGroup.fullName);
+            if (_conf.user_info_visible) {
+                $.ajax({
+                    type: "GET",
+                    url: "user_info",
+                    dataType: "json",
+                    contentType: "application/json",
+                    success: function (data) {
+                        if (data) {
+                            if (data.userGroups.length > 1) {
+                                mv.updateUserGroupList(data);
+                                $("#mod-groupselection").modal({
+                                    backdrop: 'static',
+                                    keyboard: false});
+                            } else {
+                                var userGroup = data.userGroups[0];
+                                mv.updateUserInfo(data.firstName + ' ' + data.lastName, userGroup.slugName, userGroup.fullName);
+                            }
                         }
                     }
-                }
-            });
+                });
+            } else {
+                mv.hideUserInfo();
+            }
         },
         error: function (xhr, ajaxOptions, thrownError) {
             alert("Problème avec la récupération de la configuration");
