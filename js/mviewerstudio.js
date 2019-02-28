@@ -17,6 +17,10 @@ $(document).ready(function(){
                 _conf.proxy = "../proxy/?url=";
             }
 
+            if (_conf.logout_url) {
+                $("#menu_user_logout").attr("href", _conf.logout_url);
+            }
+
             // Update web page title and title in the brand navbar
             document.title = _conf.studio_title;
             $("#studio-title").text(_conf.studio_title);

@@ -35,6 +35,8 @@ Le chemin peut être relatif (par exemple ``../mviewer/conf/``).
 * **proxy** : Chemin du proxy par lequel les requêtes envoyées par mviewerstudio passeront.
 Valeur par défaut si ce paramètre est absent ``../proxy/?url=``.
 
+* **logout_url** : URL utilisée par le menu de déconnexion.
+
 * **app_form_placeholders** : Exemples de valeurs présentes dans le formulaire de création de l'application :
   * **app_title** : Nom de l'application qui sera créée
   * **logo_url** : URL du logo à afficher dans l'application
