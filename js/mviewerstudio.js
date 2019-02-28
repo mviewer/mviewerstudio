@@ -381,7 +381,6 @@ var saveTheme = function () {
     theme.find(".label").text(nb_layers);
     //deactivate theme edition
     $("#themes-list .list-group-item").removeClass("active");
-    $("#panel-theme").hide();
 
     //save theme locally
     config.themes[themeid].title = title;
