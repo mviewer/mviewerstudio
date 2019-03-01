@@ -456,8 +456,8 @@ var saveApplicationParameters = function (option) {
         });
     });
     application = application.join(padding(4)) + '>'+padding(0)+'</application>';
-    if ( savedParameters.proxy  ) {
-        savedProxy = padding(0) + savedParameters.proxy;
+    if ( _conf.proxy ) {
+        savedProxy = padding(0) + "<proxy url='" + _conf.proxy + "'/>";
     }
     var search_params = {"bbox":false, "localities": false, "features":false, "static":false};
     if ( $("#frm-searchlocalities").val() !="false"  ) {
