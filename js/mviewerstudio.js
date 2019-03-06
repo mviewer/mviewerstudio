@@ -699,6 +699,9 @@ var updateTheme = function (el) {
 var setActiveProvider = function (el) {
     $(el).parent().parent().find(".active").removeClass("active");
     $(el).parent().addClass("active");
+    $("#search-message").text("");
+    $("#search-message").hide();
+    $("#provider_search_btn").prop('disabled', false);
 };
 
 var addNewProvider = function (el) {

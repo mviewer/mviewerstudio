@@ -912,12 +912,15 @@
                                             Fournisseurs de données<span class="caret"></span></button>
                                         <ul class="dropdown-menu dropdown-menu-right" id="providers_list">
                                         </ul>
-                                        <button type="button" class="btn btn-primary" onclick="mv.search()">Rechercher
+                                        <button id="provider_search_btn" type="button" class="btn btn-primary" disabled="enabled" onclick="mv.search()">Rechercher
                                         </button>
                                     </div><!-- /btn-group -->
                                 </div><!-- /input-group -->
                             </div><!-- /.col-lg-6 -->
                         </div><!-- /.row -->
+                        <div class="row text-center text-warning" style="padding: 1rem;" id="search-message">
+                            Aucun fournisseur sélectionné. Veuillez en choisir un.
+                        </div>
                         <div class="row ogc-results" id="csw-results" style="display: none;"></div>
                         <div class="row ogc-results" id="wms-results" style="display: none;"></div>
                         <div class="row ogc-results" id="wfs-results" style="display: none;"></div>
