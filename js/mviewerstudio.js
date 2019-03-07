@@ -666,6 +666,9 @@ var  loadApplicationParametersFromRemoteFile = function (url) {
     $.ajax({
         type: "GET",
         url: url,
+        headers: {
+            "Cache-Control": "private, no-store, max-age=0"
+        },
         success: function( data ) {
             mv.parseApplication(data);
         },
