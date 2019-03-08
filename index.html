@@ -182,12 +182,12 @@
                             <div class="panel-body">
                                 <div id="themes-list" class="list-group"></div>
                                 <div class="btn-group">
-                                    <button id="btn-addTheme" title="Créer une nouvelle thématique" class="btn btn-lg btn-primary"
+                                    <button id="btn-addTheme" title="Créer une nouvelle thématique" class="btn btn-primary"
                                             onclick="addTheme('Nouvelle thématique', true, createId('theme'));">
                                         <span class="glyphicon glyphicon-plus" aria-hidden="true"> </span> Créer
                                     </button>
-                                    <button id="btn-importTheme" title="Importer une thématique depuis un autre mviewer" class="btn btn-lg btn-success" onclick="$('#mod-themesview input').prop('checked', false);" data-toggle="modal" data-target="#mod-themesview">
-                                        <span class="glyphicon glyphicon-plus" aria-hidden="true"> </span> importer
+                                    <button id="btn-importTheme" title="Importer une thématique depuis un autre mviewer" class="btn btn-success" onclick="$('#mod-themesview input').prop('checked', false);" data-toggle="modal" data-target="#mod-themesview">
+                                        <span class="glyphicon glyphicon-plus" aria-hidden="true"> </span> Importer
                                     </button>
                                 </div>
                             </div>
@@ -227,7 +227,7 @@
                                 <div class="row">
                                     <div class="col-md-12">
                                         <div class="pull-right">
-                                            <button id="btn-addLayer" class="btn btn-lg btn-primary"
+                                            <button id="btn-addLayer" class="btn btn btn-primary"
                                                     onclick="addLayer('Nouvelle couche');">
                                                 <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                                                 Ajouter des données
@@ -239,12 +239,13 @@
                             <div class="panel-footer">
                                 <div class="row">
                                     <div class="col-md-12">
-                                        <button id="btn-saveTheme" class="btn btn-sm btn-success"
-                                                onclick="saveTheme();">
-                                            <span class="glyphicon glyphicon-ok" aria-hidden="true"></span> Ok
-                                        </button>
                                         <div class="pull-right">
-                                            <button class="btn btn-sm btn-default" onclick="$('#panel-theme').hide();">
+                                            <button id="btn-saveTheme" class="btn btn btn-success"
+                                                    onclick="saveTheme();">
+                                                <span class="glyphicon glyphicon-ok" aria-hidden="true"></span> Ok
+                                            </button>
+                                            &nbsp;&nbsp;
+                                            <button class="btn btn btn-default" onclick="$('#panel-theme').hide();">
                                                 <span class="glyphicon glyphicon-remove"></span> Annuler
                                             </button>
                                         </div>

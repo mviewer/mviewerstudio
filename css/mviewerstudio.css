@@ -20,7 +20,7 @@ body {
 	font-size: 1.2em;
 	cursor: pointer;
 }
-.layer-edit, .theme-edit{
+.layer-edit, .theme-edit {
 	float: right;
     padding-right: 0.2em;
     padding-left: 0.2em;
@@ -146,7 +146,7 @@ select#opt-style {
 #query-parameters.visible {
     display: block;
 }
-#searchelasticsearch_options,  #searchlocalities_options{
+#searchelasticsearch_options,  #searchlocalities_options {
     display: none;
     padding-top: 20px;
     padding-bottom: 20px;
@@ -166,7 +166,7 @@ select#opt-style {
 #csw-results {
     padding-top: 20px;
 }
-.themes-list-item .btn-group, layers-list-item .btn-group{
+.themes-list-item .btn-group, .layers-list-item .btn-group {
     margin-top: -3px;
     margin-right: -8px;
 }
