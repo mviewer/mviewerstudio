@@ -381,6 +381,7 @@ var saveTheme = function () {
     theme.find(".label").text(nb_layers);
     //deactivate theme edition
     $("#themes-list .list-group-item").removeClass("active");
+    $("#panel-theme").hide();
 
     //save theme locally
     config.themes[themeid].title = title;
@@ -667,7 +668,7 @@ var  loadApplicationParametersFromRemoteFile = function (url) {
         type: "GET",
         url: url,
         headers: {
-            "Cache-Control": "no-store, max-age=0"
+            "Cache-Control": "private, no-store, max-age=0"
         },
         success: function( data ) {
             mv.parseApplication(data);
