@@ -667,7 +667,7 @@ var  loadApplicationParametersFromRemoteFile = function (url) {
         type: "GET",
         url: url,
         headers: {
-            "Cache-Control": "private, no-store, max-age=0"
+            "Cache-Control": "no-store, max-age=0"
         },
         success: function( data ) {
             mv.parseApplication(data);
