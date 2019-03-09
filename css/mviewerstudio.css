@@ -86,7 +86,7 @@ body {
 }
 
 #map {
-    height: 20em;
+    height: 25em;
 }
 
 #theme-edit-icon {
@@ -160,4 +160,7 @@ select#opt-style {
     margin-left: 0.5em;
     font-size: 100%;
     float: right;
+}
+.tab-content .tab-pane {
+    margin-top: 1em;
 }

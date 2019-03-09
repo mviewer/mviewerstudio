@@ -44,6 +44,19 @@
 </nav>
 <div class="container">
     <div id="content">
+        <!-- Title-->
+        <form class="form-horizontal">
+            <fieldset>
+                <div class="form-group">
+                    <label class="col-md-5 control-label" for="opt-title">Titre de l'application</label>
+                    <div class="col-md-5">
+                        <input id="opt-title" name="textinput" type="text" placeholder="Kartenn"
+                               class="form-control input-md">
+                    </div>
+                </div>
+            </fieldset>
+        </form>
+
         <ul id="tabs" class="nav nav-tabs" data-tabs="tabs">
             <li class="active"><a href="#application-config" data-toggle="tab">Application</a></li>
             <li><a href="#themes-config" data-toggle="tab">Thématiques & données</a></li>
@@ -53,121 +66,119 @@
         <div class="tab-content">
             <div class="tab-pane active" id="application-config">
 
-                <form class="form-horizontal">
-                    <h1>Paramétrage de l'application</h1>
-                    <fieldset>
+                <div class="row">
 
-                        <!-- Map -->
-                        <div class="form-group">
-                            <label class="col-md-5 control-label" for="map">Cadrage initial</label>
-                            <div class="col-md-5">
-                                <div id="map" class="map"></div>
-                            </div>
-                        </div>
-
-                        <!-- Title-->
-                        <div class="form-group">
-                            <label class="col-md-5 control-label" for="opt-title">Titre de l'application</label>
-                            <div class="col-md-5">
-                                <input id="opt-title" name="textinput" type="text" placeholder="Kartenn"
-                                       class="form-control input-md">
-                            </div>
-                        </div>
-
-                        <!-- logo-->
-                        <div class="form-group">
-                            <label class="col-md-5 control-label" for="opt-logo">URL du logo</label>
-                            <div class="col-md-5">
-                                <input id="opt-logo" name="textinput" type="text"
-                                       class="form-control input-md checkedurl"
-                                       placeholder="https://geobretagne.fr/pub/logo/region-bretagne.jpg">
-                            </div>
-                        </div>
-
-                        <!-- help-->
-                        <div class="form-group">
-                            <label class="col-md-5 control-label" for="opt-help">Fichier d'aide (format html)</label>
-                            <div class="col-md-5">
-                                <input id="opt-help" name="textinput" type="text"
-                                       class="form-control input-md checkedurl" placeholder="Ex: mviewer_help.html">
-                            </div>
-                        </div>
-
-                        <!--style-->
-                        <div class="form-group">
-                            <label class="control-label col-md-5" for="frm-style">Style</label>
-                            <div class="col-md-5">
-                                <select id="opt-style" name="style" class="form-control default"
-                                        onchange="updateTheme(this);">
-                                    <option class="alizarin" value="css/themes/alizarin.css">alizarin</option>
-                                    <option class="blue" value="css/themes/blue.css">blue</option>
-                                    <option class="default" selected value="css/themes/default.css">default</option>
-                                    <option class="nephritis" value="css/themes/nephritis.css">nephritis</option>
-                                    <option class="ripe_lemon" value="css/themes/ripe_lemon.css">ripe_lemon</option>
-                                    <option class="amethyst" value="css/themes/amethyst.css">amethyst</option>
-                                    <option class="carrot" value="css/themes/carrot.css">carrot</option>
-                                    <option class="green" value="css/themes/green.css">green</option>
-                                    <option class="peter_river" value="css/themes/peter_river.css">peter_river</option>
-                                    <option class="black" value="css/themes/black.css">black</option>
-                                    <option class="chambray" value="css/themes/chambray.css">chambray</option>
-                                    <option class="green_sea" value="css/themes/green_sea.css">green_sea</option>
-                                    <option class="pink" value="css/themes/pink.css">pink</option>
-                                    <option class="wet_asphalt" value="css/themes/wet_asphalt.css">wet_asphalt</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="col-md-5 control-label" for="checkboxes">Options</label>
-                            <div class="col-md-5">
-                                <div class="checkbox">
-                                    <label for="opt-measuretools">
-                                        <input type="checkbox" name="checkboxes" id="opt-measuretools">
-                                        Outils de mesures
-                                    </label>
+                    <div class="col-md-7">
+                        <form class="form-horizontal">
+                            <fieldset>
+                                <!-- logo-->
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label" for="opt-logo">URL du logo</label>
+                                    <div class="col-md-8">
+                                        <input id="opt-logo" name="textinput" type="text"
+                                               class="form-control input-md checkedurl"
+                                               placeholder="https://geobretagne.fr/pub/logo/region-bretagne.jpg">
+                                    </div>
                                 </div>
 
-                                <div class="checkbox">
-                                    <label for="opt-exportpng">
-                                        <input type="checkbox" name="checkboxes" id="opt-exportpng">
-                                        Export de la carte au format png
-                                    </label>
+                                <!-- help-->
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label" for="opt-help">Page d'aide (html)</label>
+                                    <div class="col-md-8">
+                                        <input id="opt-help" name="textinput" type="text"
+                                               class="form-control input-md checkedurl" placeholder="Ex: mviewer_help.html">
+                                    </div>
                                 </div>
 
-                                <div class="checkbox">
-                                    <label for="opt-showhelp">
-                                        <input type="checkbox" name="checkboxes" id="opt-showhelp">
-                                        Afficher l'aide au démarrage
-                                    </label>
+                                <!--style-->
+                                <div class="form-group">
+                                    <label class="control-label col-md-4" for="frm-style">Style</label>
+                                    <div class="col-md-8">
+                                        <select id="opt-style" name="style" class="form-control default"
+                                                onchange="updateTheme(this);">
+                                            <option class="alizarin" value="css/themes/alizarin.css">alizarin</option>
+                                            <option class="blue" value="css/themes/blue.css">blue</option>
+                                            <option class="default" selected value="css/themes/default.css">default</option>
+                                            <option class="nephritis" value="css/themes/nephritis.css">nephritis</option>
+                                            <option class="ripe_lemon" value="css/themes/ripe_lemon.css">ripe_lemon</option>
+                                            <option class="amethyst" value="css/themes/amethyst.css">amethyst</option>
+                                            <option class="carrot" value="css/themes/carrot.css">carrot</option>
+                                            <option class="green" value="css/themes/green.css">green</option>
+                                            <option class="peter_river" value="css/themes/peter_river.css">peter_river</option>
+                                            <option class="black" value="css/themes/black.css">black</option>
+                                            <option class="chambray" value="css/themes/chambray.css">chambray</option>
+                                            <option class="green_sea" value="css/themes/green_sea.css">green_sea</option>
+                                            <option class="pink" value="css/themes/pink.css">pink</option>
+                                            <option class="wet_asphalt" value="css/themes/wet_asphalt.css">wet_asphalt</option>
+                                        </select>
+                                    </div>
                                 </div>
 
-                                <div class="checkbox">
-                                    <label for="opt-coordinates">
-                                        <input type="checkbox" name="checkboxes" id="opt-coordinates">
-                                        Affichage des coordonnées au click
-                                    </label>
-                                </div>
-                                <div class="checkbox">
-                                    <label for="opt-togglealllayersfromtheme">
-                                        <input type="checkbox" name="checkboxes" id="opt-togglealllayersfromtheme">
-                                        Afficher/masquer toutes les données d'une thématique en un clic
-                                    </label>
-                                </div>
-                                <div class="checkbox">
-                                    <label for="opt-hideprotectedlayers">
-                                        <input type="checkbox" name="checkboxes" id="opt-hideprotectedlayers">
-                                        Masquer les couches thématiques en accès restreint
-                                        (lorsqu'elles ne sont pas accessibles)
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label" for="checkboxes">Options</label>
+                                    <div class="col-md-8">
+                                        <div class="checkbox">
+                                            <label for="opt-measuretools">
+                                                <input type="checkbox" name="checkboxes" id="opt-measuretools">
+                                                Outils de mesures
+                                            </label>
+                                        </div>
 
-                    </fieldset>
-                </form>
+                                        <div class="checkbox">
+                                            <label for="opt-exportpng">
+                                                <input type="checkbox" name="checkboxes" id="opt-exportpng">
+                                                Export de la carte au format png
+                                            </label>
+                                        </div>
+
+                                        <div class="checkbox">
+                                            <label for="opt-showhelp">
+                                                <input type="checkbox" name="checkboxes" id="opt-showhelp">
+                                                Afficher l'aide au démarrage
+                                            </label>
+                                        </div>
+
+                                        <div class="checkbox">
+                                            <label for="opt-coordinates">
+                                                <input type="checkbox" name="checkboxes" id="opt-coordinates">
+                                                Affichage des coordonnées au click
+                                            </label>
+                                        </div>
+                                        <div class="checkbox">
+                                            <label for="opt-togglealllayersfromtheme">
+                                                <input type="checkbox" name="checkboxes" id="opt-togglealllayersfromtheme">
+                                                Afficher/masquer toutes les données d'une thématique en un clic
+                                            </label>
+                                        </div>
+                                        <div class="checkbox">
+                                            <label for="opt-hideprotectedlayers">
+                                                <input type="checkbox" name="checkboxes" id="opt-hideprotectedlayers">
+                                                Masquer les couches thématiques en accès restreint
+                                                (lorsqu'elles ne sont pas accessibles)
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </form>
+                    </div>
+                    <div class="col-md-5">
+                        <form class="form-horizontal">
+                            <fieldset>
+                                <!-- Map -->
+                                <div class="form-group">
+                                    <div class="col-md-12">
+                                        <div id="map" class="map"></div>
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </form>
+                    </div>
+
+                </div>
             </div>
+
             <div class="tab-pane" id="themes-config">
-                <h1>Thématiques et données</h1>
                 <div class="well">
                     <h4>Sélection, paramétrage et organisation des données</h4>
                     <p>Dans cette section, créer une ou plusieurs thématiques que vous peuplerez avec des données
@@ -259,7 +270,6 @@
             <div class="tab-pane" id="backgroundlayers-config">
                 <div class="row">
                     <div class="col-sm-6 col-md-6">
-                        <h1>Couches de fond</h1>
                     </div>
                     <div class="col-sm-3 col-md-3">
                         <div class="form-group">
@@ -282,7 +292,6 @@
             </div>
 
             <div class="tab-pane" id="search-config">
-                <h1>Paramètres de recherche</h1>
 
                 <div class="well well-lg">
                     <p>
