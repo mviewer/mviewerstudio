@@ -1,36 +1,36 @@
 body {
-	width:100%;
-	height:100%;
-}    
+    width:100%;
+    height:100%;
+}
 .glyphicon-move {
-	cursor: move;
-	cursor: -webkit-grabbing;
+    cursor: move;
+    cursor: -webkit-grabbing;
     top: 0.15em;
     padding-right: 0.5em;
 }
 .ghost {
-	opacity: 1;
-	background: #337ab7;
+    opacity: 1;
+    background: #337ab7;
 }
 .layer-remove, .theme-remove {
-	float: right;
+    float: right;
     padding-right: 0.2em;
     padding-left: 0.2em;
-	color: #000000;
-	font-size: 1.2em;
-	cursor: pointer;
+    color: #000000;
+    font-size: 1.2em;
+    cursor: pointer;
 }
 .layer-edit, .theme-edit {
-	float: right;
+    float: right;
     padding-right: 0.2em;
     padding-left: 0.2em;
-	color: #000000;
-	cursor: pointer;
-	font-size: 1.2em;
+    color: #000000;
+    cursor: pointer;
+    font-size: 1.2em;
 }
 .btn-layer-new {
-	float: right;
-	margin-right: 20px;
+    float: right;
+    margin-right: 20px;
 }
 #opt-style option {
     color: #FFFFFF;
@@ -90,31 +90,15 @@ body {
 }
 
 #theme-edit-icon {
-	font-family: 'Font Awesome 5 Free', 'sans-serif';
-	font-size: 20px;
-	height: 45px;
+    font-family: 'Font Awesome 5 Free', 'sans-serif';
+    font-size: 20px;
+    height: 45px;
 }
 div#map_filter {
     height: 300px!important;
 }
-.ogc-result .thumbnail img {
-    max-height: 150px;
-}
-.ogc-result .thumbnail h3 {
-    font-size: 16px;
-}
-.ogc-result .thumbnail p {
-    font-size: 12px;
-    display: block; /* Fallback for non-webkit */
-	display: -webkit-box;
-	max-width: 400px;
-	height: 84; /* Fallback for non-webkit (12*1.4*5**/
-	margin: 0 auto;
-	line-height: 1.4;
-	-webkit-line-clamp: 5;
-	-webkit-box-orient: vertical;
-	overflow: hidden;
-	text-overflow: ellipsis;
+.ogc-result .checkbox {
+    margin-bottom: 0;
 }
 .bl img {
     max-height: 80px;
@@ -162,9 +146,6 @@ select#opt-style {
     color: #31708f;
     background-color: #d9edf7;
     border-color: #bce8f1;
-}
-#csw-results {
-    padding-top: 20px;
 }
 .themes-list-item .btn-group, .layers-list-item .btn-group {
     margin-top: -3px;
