@@ -930,13 +930,13 @@
                             <div class="form form-inline">
                                 <div class="form-group">
                                     <input class="form-control custom-url" type="text"
-                                           placeholder="URL du fournisseur..."> </input>
+                                           placeholder="URL du fournisseur..." oninput="updateAddProviderButtonState(this);"> </input>
                                     <select class="form-control">
-                                        <option>csw</option>
-                                        <option>wms</option>
+                                        <option value="csw">CSW</option>
+                                        <option value="wms">WMS</option>
                                     </select>
-                                    <input class="form-control custom-title" type="text" placeholder="Nom..."> </input>
-                                    <button type="button" class="btn btn-primary" onclick="addNewProvider(this);">
+                                    <input class="form-control custom-title" type="text" placeholder="Nom..." oninput="updateAddProviderButtonState(this);"> </input>
+                                    <button id="add_provider_btn" type="button" class="btn btn-primary" disabled onclick="addNewProvider(this);">
                                         Ajouter un fournisseur
                                     </button>
                                 </div>

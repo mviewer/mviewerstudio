@@ -746,10 +746,21 @@ var addNewProvider = function (el) {
     var url = frm.find("input.custom-url").val();
     var type = frm.find("select").val();
     var title = frm.find("input.custom-title").val();
-    $("#providers_list").append('<li><a onclick="setActiveProvider(this);" data-providertype="'+type+'" data-provider="'+url+'" href="#">'+title+'</a></li>').trigger("click");
-    frm.find("input.custom-url").val("");
-    frm.find("select").val("");
-    frm.find("input.custom-title").val("");
+
+    if (title && url) {
+        $("#providers_list").append('<li><a onclick="setActiveProvider(this);" data-providertype="' + type +
+            '" data-provider="' + url + '" href="#">' + title + '</a></li>').trigger("click");
+        frm.find("input.custom-url").val("");
+        frm.find("input.custom-title").val("");
+        updateAddProviderButtonState(el);
+    }
+};
+
+var updateAddProviderButtonState = function (el) {
+    var frm = $(el).closest("div");
+    var url = frm.find("input.custom-url").val();
+    var title = frm.find("input.custom-title").val();
+    $("#add_provider_btn").prop('disabled', !(url && title));
 };
 
 $('#mod-featuresview').on('hidden.bs.modal', function () {
