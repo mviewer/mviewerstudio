@@ -84,7 +84,9 @@ $(document).ready(function(){
                 nb_providers ++;
             });
             $("#providers_list").append(csw_providers.join(" "));
-            $("#providers_list").append('<li role="separator" class="divider"></li>');
+            if (_conf.data_providers.csw.length > 0) {
+                $("#providers_list").append('<li role="separator" class="divider"></li>');
+            }
 
             _conf.data_providers.wms.forEach(function(provider, id) {
                 var cls = "active";
@@ -97,8 +99,11 @@ $(document).ready(function(){
                     provider.title + '</a></li>');
                 nb_providers ++;
             });
+
             $("#providers_list").append(wms_providers.join(" "));
-            $("#providers_list").append('<li role="separator" class="divider"></li>');
+            if(_conf.data_providers.wms.length > 0) {
+                $("#providers_list").append('<li role="separator" class="divider"></li>');
+
             if (API.xml) {
                 loadApplicationParametersFromRemoteFile(API.xml);
             } else if (API.wmc) {
