@@ -97,6 +97,10 @@ body {
 div#map_filter {
     height: 300px!important;
 }
+#providers_dropdown {
+    width: 25em;
+    text-align: right;
+}
 .ogc-result .checkbox {
     margin-bottom: 0;
 }

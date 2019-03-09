@@ -71,17 +71,31 @@ $(document).ready(function(){
             } else {
                 $("#btn-importTheme").remove();
             }
-            _conf.data_providers.csw.forEach(function(provider,id) {
+            nb_providers = 0
+            _conf.data_providers.csw.forEach(function(provider, id) {
                 var cls = "active";
-                if (id > 0) {
+                if (nb_providers > 0) {
                     cls ="";
                 }
-                csw_providers.push('<li class="'+cls+'"><a onclick="setActiveProvider(this);" data-providertype="csw" class="dropdown-toggle" data-provider="'+provider.url+'" data-metadata-app="'+provider.baseref+'" href="#">'+provider.title+'</a></li>');
+                csw_providers.push('<li class="' + cls + '">' +
+                    '<a onclick="setActiveProvider(this);" data-providertype="csw" class="dropdown-toggle"' +
+                    ' data-provider="' + provider.url + '" data-metadata-app="' + provider.baseref + '" href="#">' +
+                    provider.title + '</a></li>');
+                nb_providers ++;
             });
             $("#providers_list").append(csw_providers.join(" "));
             $("#providers_list").append('<li role="separator" class="divider"></li>');
-            _conf.data_providers.wms.forEach(function(provider,id) {
-                wms_providers.push('<li><a onclick="setActiveProvider(this);" data-providertype="wms" data-provider="'+provider.url+'" href="#">'+provider.title+'</a></li>');
+
+            _conf.data_providers.wms.forEach(function(provider, id) {
+                var cls = "active";
+                if (nb_providers > 0) {
+                    cls ="";
+                }
+                wms_providers.push('<li class="' + cls + '">' +
+                    '<a onclick="setActiveProvider(this);" data-providertype="wms" class="dropdown-toggle"' +
+                    ' data-provider="' + provider.url + '" href="#">' +
+                    provider.title + '</a></li>');
+                nb_providers ++;
             });
             $("#providers_list").append(wms_providers.join(" "));
             $("#providers_list").append('<li role="separator" class="divider"></li>');
@@ -92,6 +106,8 @@ $(document).ready(function(){
             } else {
                 newConfiguration();
             }
+
+            updateProviderSearchButtonState();
 
             // Default params for layers
             if (_conf.default_params && _conf.default_params.layer) {
@@ -703,9 +719,21 @@ var updateTheme = function (el) {
 var setActiveProvider = function (el) {
     $(el).parent().parent().find(".active").removeClass("active");
     $(el).parent().addClass("active");
-    $("#search-message").text("");
-    $("#search-message").hide();
-    $("#provider_search_btn").prop('disabled', false);
+    updateProviderSearchButtonState();
+};
+
+var updateProviderSearchButtonState = function () {
+    var active_provider_item = $("#providers_list").find(".active");
+    if (active_provider_item) {
+        $("#providers_dropdown").html(active_provider_item.text() + ' <span class="caret"/>');
+        $("#search-message").text("");
+        $("#search-message").hide();
+        $("#provider_search_btn").prop('disabled', false);
+    } else {
+        $("#provider_search_btn").prop('disabled', true);
+        $("#search-message").text("Aucun fournisseur sélectionné. Veuillez en choisir un.");
+        $("#search-message").show();
+    }
 };
 
 var addNewProvider = function (el) {

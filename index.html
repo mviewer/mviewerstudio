@@ -907,16 +907,16 @@
                                     <input type="text" id="input-ogc-filter" class="form-control" aria-label="..."
                                            placeholder="Rechercher...">
                                     <div class="input-group-btn">
-                                        <button type="button" class="btn btn-warning dropdown-toggle"
+                                        <button id="providers_dropdown" type="button" class="btn btn-warning dropdown-toggle"
                                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                            Fournisseurs de données<span class="caret"></span></button>
+                                            Fournisseurs de données<span class="caret"/></button>
                                         <ul class="dropdown-menu dropdown-menu-right" id="providers_list">
                                         </ul>
-                                        <button id="provider_search_btn" type="button" class="btn btn-primary" disabled="enabled" onclick="mv.search()">Rechercher
+                                        <button id="provider_search_btn" type="button" class="btn btn-primary" disabled="enabled" onclick="mv.search()"><span class="glyphicon glyphicon-search"/>
                                         </button>
                                     </div><!-- /btn-group -->
                                 </div><!-- /input-group -->
-                            </div><!-- /.col-lg-6 -->
+                            </div><!-- /.col-md-12 -->
                         </div><!-- /.row -->
                         <div class="row text-center text-warning" style="padding: 1rem;" id="search-message">
                             Aucun fournisseur sélectionné. Veuillez en choisir un.
