@@ -77,10 +77,14 @@ $(document).ready(function(){
                 if (nb_providers > 0) {
                     cls ="";
                 }
-                csw_providers.push('<li class="' + cls + '">' +
-                    '<a onclick="setActiveProvider(this);" data-providertype="csw" class="dropdown-toggle"' +
-                    ' data-provider="' + provider.url + '" data-metadata-app="' + provider.baseref + '" href="#">' +
-                    provider.title + '</a></li>');
+                csw_provider_html = '<li class="' + cls + '">';
+                csw_provider_html += '<a onclick="setActiveProvider(this);" href="#" class="dropdown-toggle"';
+                csw_provider_html += ' data-providertype="csw" data-provider="' + provider.url + '"';
+                if (provider.baseref) {
+                    csw_provider_html += ' data-metadata-app="' + provider.baseref + '"';
+                }
+                csw_provider_html += '>' + provider.title + '</a></li>';
+                csw_providers.push(csw_provider_html);
                 nb_providers ++;
             });
             $("#providers_list").append(csw_providers.join(" "));
