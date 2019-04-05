@@ -89,11 +89,14 @@ body {
     height: 25em;
 }
 
-#theme-edit-icon {
-    font-family: 'Font Awesome 5 Free', 'sans-serif';
-    font-size: 20px;
-    height: 45px;
+.selected-icon {
+    margin:.2em .5em;
+    padding:0.1em .5em;
+    border:1px solid #337ab7;
+    background-color: #d9edf7;
+    color:#337ab7;
 }
+
 div#map_filter {
     height: 300px!important;
 }

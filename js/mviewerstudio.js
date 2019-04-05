@@ -153,12 +153,6 @@ $(document).ready(function(){
         }
     });
     $('#tabs').tab();
-    $.get("img/icons/icons-fontawesome.html",function( data ) {
-        $("#theme-edit-icon").append(data);
-        $("#theme-edit-icon option").each(function(i, el) {
-            $(el).attr("value", $.trim($(el).text().split("[")[0]));
-        });
-    });
 });
 
 //EPSG:2154
@@ -203,7 +197,6 @@ var newConfiguration = function () {
     });
 
     $("#opt-style").val("css/themes/default.css").trigger("change");
-    $("#theme-edit-icon option").prop("selected", false);
     $("#panel-theme").hide();
 
     map.getView().setCenter(_conf.map.center);
@@ -374,15 +367,16 @@ var editTheme = function (item) {
     var themeid = $(item).parent().parent().attr("data-themeid");
     var collapsed = ($(item).parent().parent().attr("data-theme-collapsed")==="true")?false:true;
     var icon = $(item).parent().parent().attr("data-theme-icon");
+    if (icon === "undefined") icon = 'fas fa-caret-right';
+
     $("#panel-theme").show();
     $("#theme-edit-title").val(title);
     $("#theme-edit-collapsed").prop('checked', collapsed);
     $("#theme-edit").attr("data-themeid", themeid);
-    $("#theme-edit-icon").val(icon);
-    $("#theme-edit-icon option[value='"+icon+"']").prop("selected", true);
-    if (icon === "undefined") {
-        $("#theme-edit-icon option[value='fas fa-caret-right']").prop("selected", true);
-    }
+    $("#theme-pick-icon").val(icon);
+    $("#theme-pick-icon").siblings('.selected-icon').attr('class', 'selected-icon');
+    $("#theme-pick-icon").siblings('.selected-icon').addClass(icon);
+
     //Remove old layers entries
     $(".layers-list-item").remove();
     //Show layerslm
@@ -396,7 +390,7 @@ var saveTheme = function () {
     var title = $("#theme-edit-title").val();
     var themeid = $("#theme-edit").attr("data-themeid");
     var collapsed = !$("#theme-edit-collapsed").prop('checked');
-    var icon = $.trim($("#theme-edit-icon").val());
+    var icon = $.trim($("#theme-pick-icon").val());
     //update values in left panel
     theme.attr("data-theme", title);
     theme.attr("data-theme-collapsed", collapsed);
