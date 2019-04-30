@@ -1,5 +1,11 @@
 var _conf;
+var API = {};
 $(document).ready(function(){
+    //Get URL Parameters
+    if (window.location.search) {
+        $.extend(API, $.parseJSON('{"' + decodeURIComponent(window.location.search.substring(1)
+            .replace(/&/g, "\",\"").replace(/=/g,"\":\"")) + '"}'));
+    }
     $.ajax({
         type: "GET",
         url: "config.json",
@@ -47,7 +53,11 @@ $(document).ready(function(){
             });
             $("#providers_list").append(wms_providers.join(" "));
             $("#providers_list").append('<li role="separator" class="divider"></li>');
-            newConfiguration();
+            if (API.xml) {
+                loadApplicationParametersFromRemoteFile(API.xml);
+            } else {
+                newConfiguration();
+            }
 
             // Get user info
             $.ajax({
@@ -554,7 +564,7 @@ var deleteMyApplications = function () {
     });
 };
 
-var  loadApplicationParametersFromHistory = function (url) {
+var  loadApplicationParametersFromRemoteFile = function (url) {
     $.ajax({
         type: "GET",
         url: url,
