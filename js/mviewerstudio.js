@@ -107,7 +107,7 @@ var map2 = new ol.Map({
 });
 var config;
 
-var newConfiguration = function () {            
+var newConfiguration = function () {
     ["opt-title", "opt-logo", "opt-help", "theme-edit-icon", "theme-edit-title"].forEach(function (param, id) {
         $("#"+param).val("");
     });
@@ -215,7 +215,7 @@ var addLayer = function (title, layerid) {
      }
 };
 
-var editLayer = function (item) {        
+var editLayer = function (item) {
     $("#themeLayers .list-group-item").removeClass("active");
     var element = $(item).parent().parent();
     element.addClass("active");
@@ -393,7 +393,7 @@ var saveApplicationParameters = function (option) {
     }
 
     searchparameters = padding(0) + '<searchparameters bbox="'+search_params.bbox+'" localities="'+search_params.localities+'" features="'+search_params.features+'" static="'+search_params.static+'"/>';
- 
+
     var center = map.getView().getCenter().join(",");
     var zoom = map.getView().getZoom();
     var mapoptions = padding(0) + '<mapoptions maxzoom="20" projection="EPSG:3857" center="'+center+'" zoom="'+zoom+'" />';
@@ -468,7 +468,13 @@ var saveApplicationParameters = function (option) {
                     if (data.success && data.filepath) {
                         console.log(data.filepath);
                         // Build a short and readable URL for the map
-                        var filePathWithNoXmlExtension = data.filepath;
+                        var filePathWithNoXmlExtension = "";
+                        //Get path from mviewer/apps eg store for mviewer/apps/store
+                        if (_conf.conf_path_from_mviewer) {
+                            filePathWithNoXmlExtension = [_conf.conf_path_from_mviewer, data.filepath].join("/");
+                        } else {
+                            filePathWithNoXmlExtension = _conf.conf_path_from_mviewer + data.filepath;
+                        }
                         if (filePathWithNoXmlExtension.endsWith(".xml")) {
                             filePathWithNoXmlExtension = filePathWithNoXmlExtension.substring(0, filePathWithNoXmlExtension.length-4);
                         }
@@ -510,7 +516,7 @@ var addgeoFilter = function () {
     map2.addInteraction(draw);
 };
 
-var extractFeatures = function (fld, option) {        
+var extractFeatures = function (fld, option) {
     var layerid = $(".layers-list-item.active").attr("data-layerid");
     var layer = config.temp.layers[layerid];
     ogc.getFeatures(layer.wfs_url,layerid,fld, option);
@@ -569,7 +575,7 @@ var updateTheme = function (el) {
     $(el).removeClass().addClass("form-control " + cls);
 };
 
-var setActiveProvider = function (el) {      
+var setActiveProvider = function (el) {
     $(el).parent().parent().find(".active").removeClass("active");
     $(el).parent().addClass("active");
 };
@@ -584,7 +590,7 @@ var addNewProvider = function (el) {
     frm.find("select").val("");
     frm.find("input.custom-title").val("");
 };
-  
+
 $('#mod-featuresview').on('hidden.bs.modal', function () {
     var option = $(this).attr("data-target");
     var target = "";
