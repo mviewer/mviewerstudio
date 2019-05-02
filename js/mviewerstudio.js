@@ -55,6 +55,8 @@ $(document).ready(function(){
             $("#providers_list").append('<li role="separator" class="divider"></li>');
             if (API.xml) {
                 loadApplicationParametersFromRemoteFile(API.xml);
+            } else if (API.wmc) {
+                loadApplicationParametersFromWMC(API.wmc);
             } else {
                 newConfiguration();
             }
@@ -578,6 +580,19 @@ var  loadApplicationParametersFromRemoteFile = function (url) {
 
 };
 
+var loadApplicationParametersFromWMC = function (url) {
+    $.ajax({
+        type: "GET",
+        url: url,
+        success: function( data ) {
+            mv.parseWMC(data);
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+            alert("Problème avec la requête de récupération de l'application " +  thrownError);
+        }
+    });
+
+};
 
 var updateTheme = function (el) {
     console.log(el);
