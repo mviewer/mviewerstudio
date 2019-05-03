@@ -8,7 +8,7 @@
             "used": true,
             "apps_folder": "store"
         },
-        "user_info": "user_info.php",
+        "user_info": "srv/user_info.php",
         "export_conf_folder" : "/var/www/htdocs/mviewer/apps/store/",
         "proxy" : "../proxy/?url=",
         "app_form_placeholders": {
