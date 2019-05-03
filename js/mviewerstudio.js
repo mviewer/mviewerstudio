@@ -477,20 +477,26 @@ var saveApplicationParameters = function (option) {
 
                 } else {
                     // Preview the map
+                    var url = "";
                     if (data.success && data.filepath) {
                         console.log(data.filepath);
                         // Build a short and readable URL for the map
-                        var filePathWithNoXmlExtension = "";
-                        //Get path from mviewer/apps eg store for mviewer/apps/store
-                        if (_conf.conf_path_from_mviewer) {
-                            filePathWithNoXmlExtension = [_conf.conf_path_from_mviewer, data.filepath].join("/");
+                        if (_conf.mviewer_short_url && _conf.mviewer_short_url.used) {
+                            var filePathWithNoXmlExtension = "";
+                            //Get path from mviewer/apps eg store for mviewer/apps/store
+                            if (_conf.mviewer_short_url.apps_folder) {
+                                filePathWithNoXmlExtension = [_conf.mviewer_short_url.apps_folder, data.filepath].join("/");
+                            } else {
+                                filePathWithNoXmlExtension = data.filepath;
+                            }
+                            if (filePathWithNoXmlExtension.endsWith(".xml")) {
+                                filePathWithNoXmlExtension = filePathWithNoXmlExtension.substring(0, filePathWithNoXmlExtension.length-4);
+                            }
+                            url = _conf.mviewer_instance + '#' + filePathWithNoXmlExtension;
                         } else {
-                            filePathWithNoXmlExtension = _conf.conf_path_from_mviewer + data.filepath;
+                            // Build a classic URL for the map
+                            url = _conf.mviewer_instance + '?config=' + _conf.conf_path_from_mviewer + data.filepath;
                         }
-                        if (filePathWithNoXmlExtension.endsWith(".xml")) {
-                            filePathWithNoXmlExtension = filePathWithNoXmlExtension.substring(0, filePathWithNoXmlExtension.length-4);
-                        }
-                        var url = _conf.mviewer_instance + '#' + filePathWithNoXmlExtension;
                         window.open(url,'mvs_vizualize');
                     }
                 }

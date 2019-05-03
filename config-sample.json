@@ -3,7 +3,11 @@
         "studio_title": "GéoBretagne mviewer studio",
         "upload_service": "srv/store.php",
         "mviewer_instance": "http://172.16.10.30/mviewer/",
-        "conf_path_from_mviewer" :"store",
+        "conf_path_from_mviewer" :"apps/store/",
+        "mviewer_short_url": {
+            "used": true,
+            "apps_folder": "store"
+        },
         "export_conf_folder" : "/var/www/htdocs/mviewer/apps/store/",
         "proxy" : "../proxy/?url=",
         "app_form_placeholders": {
