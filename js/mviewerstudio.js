@@ -64,7 +64,7 @@ $(document).ready(function(){
             // Get user info
             $.ajax({
                 type: "GET",
-                url: "user_info",
+                url: _conf.user_info,
                 dataType: "json",
                 contentType: "application/json",
                 success: function (data) {
