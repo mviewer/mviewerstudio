@@ -22,6 +22,16 @@ est utilisé si le paramètre précédent est ``srv/store.php``.
 * **conf_path_from_mviewer** : Chemin permettant de charger le fichier de configuration généré depuis le mviewer.
 Le chemin peut être relatif (par exemple ``../mviewer/conf/``).
 
+* **mviewer_short_url** : Utilisation du système d'URL courtes (mviewer/#monappli au lieu de mviewer/?config=apps/monappli.xml):
+  * **used** : true | false.
+  * **apps_folder** : chemin d'accès depuis le répertoire apps (exemple store pour apps/store).
+  
+* **external_themes** : Utilisation du mécanisme d'import de thématiques externes (présentes dans d'autres mviewers):
+  * **used** : true | false.
+  * **url** : chemin d'accès vers liste format json.  
+  
+* **user_info** : url vers service retournant l'identidé de la personne connectée.
+  
 * **proxy** : Chemin du proxy par lequel les requêtes envoyées par mviewerstudio passeront.
 Valeur par défaut si ce paramètre est absent ``../proxy/?url=``.
 
