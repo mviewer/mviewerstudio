@@ -1,4 +1,5 @@
 <?php
+header('Content-type: application/json; charset=utf-8',true);
 function getUser() {
     $user = "anonymous";
     foreach (getallheaders() as $name => $value) {
@@ -12,8 +13,8 @@ function getUser() {
 }
 
 function getUserInfos() {
-    $firstname = "a";
-    $lastname = "b";
+    $firstname = "";
+    $lastname = "";
     foreach (getallheaders() as $name => $value) {
         if (substr( $name, 0, 4 ) === "sec-") {
             if ($name ===  "sec-firstname") {
