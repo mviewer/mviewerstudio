@@ -54,8 +54,8 @@ $(document).ready(function(){
                                         '</div>'].join(""));
                            mv.themes.forEach(function(theme, idx) {
                                html.push(['<div class="checkbox list-group-item">',
-                                        '<label for="import-theme-'+idx+'">',
-                                            '<input type="checkbox" data-url="'+mv.url+'" data-theme-label="'+theme.label+'" data-theme-id="'+theme.id+'" name="checkboxes" id="import-theme-'+idx+'">',
+                                        '<label for="import-theme-'+theme.id+id+'">',
+                                            '<input type="checkbox" data-url="'+mv.url+'" data-theme-label="'+theme.label+'" data-theme-id="'+theme.id+'" name="checkboxes" id="import-theme-'+theme.id+id+'">',
                                             theme.label,
                                         '</label></div>'].join(""));
                            });
