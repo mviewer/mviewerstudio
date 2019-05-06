@@ -33,7 +33,7 @@
             "esriworldimagery": {
 				"id": "esriworldimagery",
 				"thumbgallery": "img/basemap/esriworldwide.jpg",
-				"title": "Esri world imagery",
+				"title": "Esri",
 				"label": "Esri world imagery",
 				"type": "OSM",
 				"url": "http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
