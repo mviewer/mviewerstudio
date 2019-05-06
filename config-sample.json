@@ -8,10 +8,6 @@
             "used": true,
             "apps_folder": "store"
         },
-        "external_themes": {
-            "used": true,
-            "url": "themes.json"
-        },
         "user_info": "srv/user_info.php",
         "export_conf_folder" : "/var/www/htdocs/mviewer/apps/store/",
         "proxy" : "../proxy/?url=",
@@ -144,12 +140,26 @@
 				"attribution":"<a href='http://www.geoportail.fr/' target='_blank'><img src='https://api.ign.fr/geoportail/api/js/latest/theme/geoportal/img/logo_gp.gif'></a>",
 				"style":"normal",
 				"matrixset":"PM",
+				"maxzoom":"22"},
+			"scan_ign": {
+				"id":"scan_ign",
+				"thumbgallery":"img/basemap/scan-express.jpg",
+				"title":"GéoPortail",
+				"label":"SCAN Express",
+				"type":"WMTS",
+				"url":"https://geobretagne.fr/geoportail/wmts",
+				"layers":"GEOGRAPHICALGRIDSYSTEMS.MAPS.SCAN-EXPRESS.STANDARD",
+				"format":"image/jpeg",
+				"fromcapacity":"false",
+				"attribution":"<a href='http://www.geoportail.fr/' target='_blank'><img src='https://api.ign.fr/geoportail/api/js/latest/theme/geoportal/img/logo_gp.gif'></a>",
+				"style":"normal",
+				"matrixset":"PM",
 				"maxzoom":"22"}
 		},
         "data_providers" : {
             "csw" : [
                 {
-                    "title" : "Catalogue géoBretagne",
+                    "title" : "Catalogue GéoBretagne",
                     "url": "https://geobretagne.fr/geonetwork/srv/fre/csw",
                     "baseref": "https://geobretagne.fr/geonetwork/srv/eng/catalog.search?node=srv#/metadata/"
                 },
