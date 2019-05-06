@@ -1,0 +1,22 @@
+[{
+    "mviewer": "Kartenn Territoires",
+    "url": "http://kartenn.region-bretagne.fr/kartoviz/apps/region/territoire/territoire.xml",
+    "themes": [
+        {
+            "id": "territoire", "label": "Découpages territoriaux"
+        },
+        {
+            "id": "habitant", "label": "Population"
+        }
+    ]
+},
+{
+    "mviewer": "Démo Isochrones",
+    "url": "http://kartenn.region-bretagne.fr/kartoviz/demo/isochrones.xml",
+    "themes": [
+        {
+            "id": "isochrones", "label": "Calcul isochrones"
+        }
+    ]
+}
+]

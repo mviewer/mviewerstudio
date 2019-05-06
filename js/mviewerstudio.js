@@ -39,6 +39,34 @@ $(document).ready(function(){
             // Thematic layers providers
             var csw_providers = [];
             var wms_providers = [];
+            if (_conf.external_themes && _conf.external_themes.used && _conf.external_themes.url) {
+                 $.ajax({
+                    type: "GET",
+                    url: _conf.external_themes.url,
+                    dataType: "json",
+                    contentType: "application/json",
+                    success: function (data) {
+                       _conf.external_themes.data = data;
+                       var html = [];
+                       data.forEach(function(mv, id) {
+                           html.push(['<div class="list-group-item list-group-item-info">',
+                                            mv.mviewer,
+                                        '</div>'].join(""));
+                           mv.themes.forEach(function(theme, idx) {
+                               html.push(['<div class="checkbox list-group-item">',
+                                        '<label for="import-theme-'+idx+'">',
+                                            '<input type="checkbox" data-url="'+mv.url+'" data-theme-label="'+theme.label+'" data-theme-id="'+theme.id+'" name="checkboxes" id="import-theme-'+idx+'">',
+                                            theme.label,
+                                        '</label></div>'].join(""));
+                           });
+
+                       });
+                       $("#mod-themesview .list-group").append(html);
+                    }
+                 });
+            } else {
+                $("#btn-importTheme").remove();
+            }
             _conf.data_providers.csw.forEach(function(provider,id) {
                 var cls = "active";
                 if (id > 0) {
@@ -140,7 +168,7 @@ var newConfiguration = function () {
     };
     //Store des parametres non gérés
     savedParameters = {"application":[], "baselayers": {}};
-    $(".list-group-item").remove();
+    $("#themes-list, #themeLayers, #liste_applications, #distinct_values").find(".list-group-item").remove();
     $("#frm-bl .custom-bl").remove();
 };
 
@@ -241,12 +269,33 @@ var editLayer = function (item) {
     }
 };
 
-var addTheme = function (title, collapsed, themeid, icon) {
+var importThemes = function () {
+    console.log( _conf.external_themes.data );
+    $("#importedThemes input:checked").each(function (id, item) {
+        var url = $(item).attr("data-url");
+        var id  = $(item).attr("data-theme-id");
+        var label  = $(item).attr("data-theme-label");
+        addTheme(label, true, id, false, url);
+    });
+};
+
+var addTheme = function (title, collapsed, themeid, icon, url) {
     if ($("#panel-theme").is(":visible")) {
         alert("Enregister d'abord votre thématique");
         return;
     }
-    $("#themes-list").append([
+    if (url) {
+        //external theme
+         $("#themes-list").append([
+        '<div class="list-group-item list-group-item-info themes-list-item" data-theme-url="'+url+'" data-theme="'+title+'" data-themeid="'+themeid+'" data-theme-collapsed="'+collapsed+'" data-theme-icon="'+icon+'">',
+            '<span class="glyphicon glyphicon-move" aria-hidden="true"></span>',
+            '<div class="pull-right btn-group" role="group">',
+                '<button class="btn btn-sm btn-warning" onclick="deleteThemeItem(this);" ><span class="theme-remove glyphicon glyphicon-remove" title="Supprimer"></span></button>',
+            '</div>',
+            '<span class="theme-name">'+title+'</span><span class="label label-success">Ext.</span>',
+        '</div>'].join(""));
+    } else {
+         $("#themes-list").append([
         '<div class="list-group-item themes-list-item" data-theme="'+title+'" data-themeid="'+themeid+'" data-theme-collapsed="'+collapsed+'" data-theme-icon="'+icon+'">',
             '<span class="glyphicon glyphicon-move" aria-hidden="true"></span>',
             '<div class="pull-right btn-group" role="group">',
@@ -255,11 +304,15 @@ var addTheme = function (title, collapsed, themeid, icon) {
             '</div>',
             '<span class="theme-name">'+title+'</span><span class="label label-info">0</span>',
         '</div>'].join(""));
+    }
+
+
     config.themes[themeid] = {
         title:title,
         id: themeid,
         icon: icon,
         collapsed: collapsed,
+        url: url,
         layers: []
     };
     if (title === "Nouvelle thématique") {
@@ -427,14 +480,24 @@ var saveApplicationParameters = function (option) {
     });
     baseLayers.push(padding(0)+'</baselayers>');
     var themes = [ padding(0)+ '<themes mini="'+($('#opt-mini').prop('checked')=== true)+'">'];
-    $.each(config.themes, function (i, t) {
-        var theme = [padding(4)+'<theme id="'+t.id+'" name="'+t.title+'" collapsed="'+t.collapsed+'" icon="'+t.icon+'">'];
-        $(t.layers).each (function (i, l) {
-            var layer = mv.writeLayerNode(l);
-            theme.push(layer);
-        });
-        themes.push(theme.join(" "));
-        themes.push(padding(4)+'</theme>');
+    // Respect theme order
+    $(".themes-list-item").each(function (id, theme) {
+        var themeid =  $(theme).attr("data-themeid");
+        if (config.themes[themeid]) {
+            var t = config.themes[themeid];
+            var theme = [];
+            if (t.url) {
+                theme = [padding(4)+'<theme id="'+t.id+'" url="'+t.url+'" name="'+t.title+'" collapsed="'+t.collapsed+'" icon="'+t.icon+'">'];
+            } else {
+                theme = [padding(4)+'<theme id="'+t.id+'" name="'+t.title+'" collapsed="'+t.collapsed+'" icon="'+t.icon+'">'];
+            }
+            $(t.layers).each (function (i, l) {
+                var layer = mv.writeLayerNode(l);
+                theme.push(layer);
+            });
+            themes.push(theme.join(" "));
+            themes.push(padding(4)+'</theme>');
+            }
     });
     themes.push(padding(0)+'</themes>');
 

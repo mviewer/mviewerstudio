@@ -8,6 +8,10 @@
             "used": true,
             "apps_folder": "store"
         },
+        "external_themes": {
+            "used": true,
+            "url": "themes.json"
+        },
         "user_info": "srv/user_info.php",
         "export_conf_folder" : "/var/www/htdocs/mviewer/apps/store/",
         "proxy" : "../proxy/?url=",

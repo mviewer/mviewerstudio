@@ -162,7 +162,7 @@
                 <div class="well">
                     <h4>Sélection, paramétrage et organisation des données</h4>
                     <p>Dans cette section, créer une ou plusieurs thématiques que vous peuplerez avec des données
-                        provenant de différentes plateformes</p>
+                        provenant de différentes plateformes. Il également est possible d'importer des thématiques externes</p>
                 </div>
 
                 <div class="row">
@@ -172,11 +172,13 @@
                             <div class="panel-heading">Panneau des thématiques</div>
                             <div class="panel-body">
                                 <div id="themes-list" class="list-group"></div>
-                                <div class="pull-right">
-                                    <button id="btn-addTheme" class="btn btn-lg btn-primary"
+                                <div class="btn-group">
+                                    <button id="btn-addTheme" title="Créer une nouvelle thématique" class="btn btn-lg btn-primary"
                                             onclick="addTheme('Nouvelle thématique', true, createId('theme'));">
-                                        <span class="glyphicon glyphicon-plus" aria-hidden="true"> </span> Ajouter une
-                                        thématique
+                                        <span class="glyphicon glyphicon-plus" aria-hidden="true"> </span> Créer
+                                    </button>
+                                    <button id="btn-importTheme" title="Importer une thématique depuis un autre mviewer" class="btn btn-lg btn-success" onclick="$('#mod-themesview input').prop('checked', false);" data-toggle="modal" data-target="#mod-themesview">
+                                        <span class="glyphicon glyphicon-plus" aria-hidden="true"> </span> importer
                                     </button>
                                 </div>
                             </div>
@@ -809,6 +811,29 @@
                                 <div id="distinct_values" class="list-group"></div>
                             </div>
                         </div><!-- /.row -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal Themes import-->
+        <div class="modal fade" id="mod-themesview" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Sélection de Thématiques</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div id="importedThemes" class="list-group">
+                                </div>
+                            </div>
+                        </div><!-- /.row -->
+                    </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-success" data-dismiss="modal" onclick="importThemes()">Importer</button>
                     </div>
                 </div>
             </div>
