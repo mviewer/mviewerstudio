@@ -8,6 +8,10 @@
             "used": true,
             "apps_folder": "store"
         },
+        "external_themes": {
+            "used": false,
+            "url": "https://geobretagne.fr/minicatalog/csv"
+        },
         "user_info": "srv/user_info.php",
         "export_conf_folder" : "/var/www/htdocs/mviewer/apps/store/",
         "proxy" : "../proxy/?url=",

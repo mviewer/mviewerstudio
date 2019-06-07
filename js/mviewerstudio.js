@@ -43,25 +43,25 @@ $(document).ready(function(){
                  $.ajax({
                     type: "GET",
                     url: _conf.external_themes.url,
-                    dataType: "json",
-                    contentType: "application/json",
-                    success: function (data) {
-                       _conf.external_themes.data = data;
-                       var html = [];
-                       data.forEach(function(mv, id) {
-                           html.push(['<div class="list-group-item list-group-item-info">',
-                                            mv.mviewer,
-                                        '</div>'].join(""));
-                           mv.themes.forEach(function(theme, idx) {
-                               html.push(['<div class="checkbox list-group-item">',
-                                        '<label for="import-theme-'+theme.id+id+'">',
-                                            '<input type="checkbox" data-url="'+mv.url+'" data-theme-label="'+theme.label+'" data-theme-id="'+theme.id+'" name="checkboxes" id="import-theme-'+theme.id+id+'">',
-                                            theme.label,
-                                        '</label></div>'].join(""));
-                           });
-
-                       });
-                       $("#mod-themesview .list-group").append(html);
+					success: function (csv) {
+						_conf.external_themes.data = Papa.parse(csv, {
+							header: true
+						}).data;
+						var html = [];
+					   _conf.external_themes.data.forEach(function(mv, id) {
+							if (mv.xml && mv.id) {
+								var url = mv.xml;
+								var themeid = mv.id;
+								if (url && themeid) {
+									html.push(['<div class="checkbox list-group-item">',
+										'<label for="import-theme-'+themeid+id+'">',
+											'<input type="checkbox" data-url="'+url+'" data-theme-label="'+mv.title+'" data-theme-id="'+themeid+'" name="checkboxes" id="import-theme-'+themeid+id+'">',
+											mv.title,
+										'</label></div>'].join(""));
+								}
+							}
+						});
+					   $("#mod-themesview .list-group").append(html);
                     }
                  });
             } else {
