@@ -10,7 +10,7 @@ La configuration s'effectue dans le fichier config.json (à créer à partir d'u
 page dans votre navigateur internet.
 
 * **upload_service** : Service web utilisé pour stocker les configurations mviewer créées avec le générateur.
-Valeur par défaut : ``srv/store.php``. Il est également possible d'utiliser le service "Doc service" de geOrchestra
+Valeur par défaut : ``srv/store.php``. Ne pas oublier d'autoriser l'utilisateur apache à accéder en écriture au répertoire. Il est également possible d'utiliser le service "Doc service" de geOrchestra
 (par exemple ``../mapfishapp/ws/mviewer/``). Dans ce dernier cas, les fichiers de configuration sont stockés dans la
 base de données de geOrchestra.
 
