@@ -321,7 +321,7 @@ var importThemes = function () {
 
 var addTheme = function (title, collapsed, themeid, icon, url) {
     if ($("#panel-theme").is(":visible")) {
-        alert("Enregister d'abord votre thématique");
+        alert("Enregistrez d'abord votre thématique.");
         return;
     }
     if (url) {
