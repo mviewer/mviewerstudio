@@ -17,6 +17,10 @@ $(document).ready(function(){
                 _conf.proxy = "../proxy/?url=";
             }
 
+            if (_conf.logout_url) {
+                $("#menu_user_logout").attr("href", _conf.logout_url);
+            }
+
             // Update web page title and title in the brand navbar
             document.title = _conf.studio_title;
             $("#studio-title").text(_conf.studio_title);
@@ -67,20 +71,43 @@ $(document).ready(function(){
             } else {
                 $("#btn-importTheme").remove();
             }
-            _conf.data_providers.csw.forEach(function(provider,id) {
+            nb_providers = 0
+            _conf.data_providers.csw.forEach(function(provider, id) {
                 var cls = "active";
-                if (id > 0) {
+                if (nb_providers > 0) {
                     cls ="";
                 }
-                csw_providers.push('<li class="'+cls+'"><a onclick="setActiveProvider(this);" data-providertype="csw" class="dropdown-toggle" data-provider="'+provider.url+'" data-metadata-app="'+provider.baseref+'" href="#">'+provider.title+'</a></li>');
+                csw_provider_html = '<li class="' + cls + '">';
+                csw_provider_html += '<a onclick="setActiveProvider(this);" href="#" class="dropdown-toggle"';
+                csw_provider_html += ' data-providertype="csw" data-provider="' + provider.url + '"';
+                if (provider.baseref) {
+                    csw_provider_html += ' data-metadata-app="' + provider.baseref + '"';
+                }
+                csw_provider_html += '>' + provider.title + '</a></li>';
+                csw_providers.push(csw_provider_html);
+                nb_providers ++;
             });
             $("#providers_list").append(csw_providers.join(" "));
-            $("#providers_list").append('<li role="separator" class="divider"></li>');
-            _conf.data_providers.wms.forEach(function(provider,id) {
-                wms_providers.push('<li><a onclick="setActiveProvider(this);" data-providertype="wms" data-provider="'+provider.url+'" href="#">'+provider.title+'</a></li>');
+            if (_conf.data_providers.csw.length > 0) {
+                $("#providers_list").append('<li role="separator" class="divider"></li>');
+            }
+
+            _conf.data_providers.wms.forEach(function(provider, id) {
+                var cls = "active";
+                if (nb_providers > 0) {
+                    cls ="";
+                }
+                wms_providers.push('<li class="' + cls + '">' +
+                    '<a onclick="setActiveProvider(this);" data-providertype="wms" class="dropdown-toggle"' +
+                    ' data-provider="' + provider.url + '" href="#">' +
+                    provider.title + '</a></li>');
+                nb_providers ++;
             });
+
             $("#providers_list").append(wms_providers.join(" "));
-            $("#providers_list").append('<li role="separator" class="divider"></li>');
+            if(_conf.data_providers.wms.length > 0) {
+                $("#providers_list").append('<li role="separator" class="divider"></li>');
+
             if (API.xml) {
                 loadApplicationParametersFromRemoteFile(API.xml);
             } else if (API.wmc) {
@@ -89,30 +116,43 @@ $(document).ready(function(){
                 newConfiguration();
             }
 
+            updateProviderSearchButtonState();
+
+            // Default params for layers
+            if (_conf.default_params && _conf.default_params.layer) {
+                mv.setDefaultLayerProperties(_conf.default_params.layer);
+            }
+
             // Get user info
-            $.ajax({
-                type: "GET",
-                url: _conf.user_info,
-                dataType: "json",
-                contentType: "application/json",
-                success: function (data) {
-                    if(data){
-                        $("#user_connected").text('Connecté en tant que ' + data.first_name + ' ' + data.last_name +' (' + data.organisation.legal_name + ')');
+            if (_conf.user_info_visible) {
+                $.ajax({
+                    type: "GET",
+                    url: "user_info",
+                    dataType: "json",
+                    contentType: "application/json",
+                    success: function (data) {
+                        if (data) {
+                            if (data.userGroups.length > 1) {
+                                mv.updateUserGroupList(data);
+                                $("#mod-groupselection").modal({
+                                    backdrop: 'static',
+                                    keyboard: false});
+                            } else {
+                                var userGroup = data.userGroups[0];
+                                mv.updateUserInfo(data.firstName + ' ' + data.lastName, userGroup.slugName, userGroup.fullName);
+                            }
+                        }
                     }
-                }
-            });
+                });
+            } else {
+                mv.hideUserInfo();
+            }
         },
         error: function (xhr, ajaxOptions, thrownError) {
             alert("Problème avec la récupération de la configuration");
         }
     });
     $('#tabs').tab();
-    $.get("img/icons/icons-fontawesome.html",function( data ) {
-        $("#theme-edit-icon").append(data);
-        $("#theme-edit-icon option").each(function(i, el) {
-            $(el).attr("value", $.trim($(el).text().split("[")[0]));
-        });
-    });
 });
 
 //EPSG:2154
@@ -151,12 +191,12 @@ var newConfiguration = function () {
     ["opt-title", "opt-logo", "opt-help", "theme-edit-icon", "theme-edit-title"].forEach(function (param, id) {
         $("#"+param).val("");
     });
-    ["opt-exportpng", "opt-measuretools", "theme-edit-collapsed", "opt-mini", "opt-showhelp", "opt-coordinates", "opt-togglealllayersfromtheme"].forEach(function (param, id) {
+    ["opt-exportpng", "opt-measuretools", "theme-edit-collapsed", "opt-mini", "opt-showhelp", "opt-coordinates",
+        "opt-togglealllayersfromtheme", "opt-hideprotectedlayers"].forEach(function (param, id) {
         $("#"+param).prop('checked', false);
     });
 
     $("#opt-style").val("css/themes/default.css").trigger("change");
-    $("#theme-edit-icon option").prop("selected", false);
     $("#panel-theme").hide();
 
     map.getView().setCenter(_conf.map.center);
@@ -281,7 +321,7 @@ var importThemes = function () {
 
 var addTheme = function (title, collapsed, themeid, icon, url) {
     if ($("#panel-theme").is(":visible")) {
-        alert("Enregister d'abord votre thématique");
+        alert("Enregistrez d'abord votre thématique.");
         return;
     }
     if (url) {
@@ -327,15 +367,16 @@ var editTheme = function (item) {
     var themeid = $(item).parent().parent().attr("data-themeid");
     var collapsed = ($(item).parent().parent().attr("data-theme-collapsed")==="true")?false:true;
     var icon = $(item).parent().parent().attr("data-theme-icon");
+    if (icon === "undefined") icon = 'fas fa-caret-right';
+
     $("#panel-theme").show();
     $("#theme-edit-title").val(title);
     $("#theme-edit-collapsed").prop('checked', collapsed);
     $("#theme-edit").attr("data-themeid", themeid);
-    $("#theme-edit-icon").val(icon);
-    $("#theme-edit-icon option[value='"+icon+"']").prop("selected", true);
-    if (icon === "undefined") {
-        $("#theme-edit-icon option[value='fas fa-caret-right']").prop("selected", true);
-    }
+    $("#theme-pick-icon").val(icon);
+    $("#theme-pick-icon").siblings('.selected-icon').attr('class', 'selected-icon');
+    $("#theme-pick-icon").siblings('.selected-icon').addClass(icon);
+
     //Remove old layers entries
     $(".layers-list-item").remove();
     //Show layerslm
@@ -349,7 +390,7 @@ var saveTheme = function () {
     var title = $("#theme-edit-title").val();
     var themeid = $("#theme-edit").attr("data-themeid");
     var collapsed = !$("#theme-edit-collapsed").prop('checked');
-    var icon = $.trim($("#theme-edit-icon").val());
+    var icon = $.trim($("#theme-pick-icon").val());
     //update values in left panel
     theme.attr("data-theme", title);
     theme.attr("data-theme-collapsed", collapsed);
@@ -418,9 +459,15 @@ var saveApplicationParameters = function (option) {
         'showhelp="'+($('#opt-showhelp').prop('checked')=== true)+'"',
         'coordinates="'+($('#opt-coordinates').prop('checked')=== true)+'"',
         'measuretools="'+($('#opt-measuretools').prop('checked')=== true)+'"',
-        'togglealllayersfromtheme="'+($('#opt-togglealllayersfromtheme').prop('checked')=== true)+'"'];
+        'togglealllayersfromtheme="'+($('#opt-togglealllayersfromtheme').prop('checked')=== true)+'"',
+        'hideprotectedlayers="'+($('#opt-hideprotectedlayers').prop('checked')=== true)+'"'];
 
     config.title = $("#opt-title").val();
+
+    if(config.title == ''){
+        alert('Attention, vous devez obligatoirement indiquer un titre à votre application avant de sauvegarder.');
+        return;
+    }
 
     savedParameters.application.forEach(function(parameter, id){
         $.each(parameter,function(prop,val) {
@@ -429,8 +476,8 @@ var saveApplicationParameters = function (option) {
         });
     });
     application = application.join(padding(4)) + '>'+padding(0)+'</application>';
-    if ( savedParameters.proxy  ) {
-        savedProxy = padding(0) + savedParameters.proxy;
+    if ( _conf.proxy ) {
+        savedProxy = padding(0) + "<proxy url='" + _conf.proxy + "'/>";
     }
     var search_params = {"bbox":false, "localities": false, "features":false, "static":false};
     if ( $("#frm-searchlocalities").val() !="false"  ) {
@@ -627,7 +674,7 @@ var deleteMyApplications = function () {
         url: "srv/delete.php",
         success: function( data ) {
             alert(data.deleted_files + " application(s) supprimée(s)");
-            $("#liste_applications a").remove();
+            mv.getListeApplications();
         },
         error: function (xhr, ajaxOptions, thrownError) {
             alert("Problème avec la requête de suppression " +  thrownError);
@@ -639,6 +686,9 @@ var  loadApplicationParametersFromRemoteFile = function (url) {
     $.ajax({
         type: "GET",
         url: url,
+        headers: {
+            "Cache-Control": "private, no-store, max-age=0"
+        },
         success: function( data ) {
             mv.parseApplication(data);
         },
@@ -672,6 +722,21 @@ var updateTheme = function (el) {
 var setActiveProvider = function (el) {
     $(el).parent().parent().find(".active").removeClass("active");
     $(el).parent().addClass("active");
+    updateProviderSearchButtonState();
+};
+
+var updateProviderSearchButtonState = function () {
+    var active_provider_item = $("#providers_list").find(".active");
+    if (active_provider_item) {
+        $("#providers_dropdown").html(active_provider_item.text() + ' <span class="caret"/>');
+        $("#search-message").text("");
+        $("#search-message").hide();
+        $("#provider_search_btn").prop('disabled', false);
+    } else {
+        $("#provider_search_btn").prop('disabled', true);
+        $("#search-message").text("Aucun fournisseur sélectionné. Veuillez en choisir un.");
+        $("#search-message").show();
+    }
 };
 
 var addNewProvider = function (el) {
@@ -679,10 +744,21 @@ var addNewProvider = function (el) {
     var url = frm.find("input.custom-url").val();
     var type = frm.find("select").val();
     var title = frm.find("input.custom-title").val();
-    $("#providers_list").append('<li><a onclick="setActiveProvider(this);" data-providertype="'+type+'" data-provider="'+url+'" href="#">'+title+'</a></li>').trigger("click");
-    frm.find("input.custom-url").val("");
-    frm.find("select").val("");
-    frm.find("input.custom-title").val("");
+
+    if (title && url) {
+        $("#providers_list").append('<li><a onclick="setActiveProvider(this);" data-providertype="' + type +
+            '" data-provider="' + url + '" href="#">' + title + '</a></li>').trigger("click");
+        frm.find("input.custom-url").val("");
+        frm.find("input.custom-title").val("");
+        updateAddProviderButtonState(el);
+    }
+};
+
+var updateAddProviderButtonState = function (el) {
+    var frm = $(el).closest("div");
+    var url = frm.find("input.custom-url").val();
+    var title = frm.find("input.custom-title").val();
+    $("#add_provider_btn").prop('disabled', !(url && title));
 };
 
 $('#mod-featuresview').on('hidden.bs.modal', function () {

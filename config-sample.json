@@ -15,6 +15,7 @@
         "user_info": "srv/user_info.php",
         "export_conf_folder" : "/var/www/htdocs/mviewer/apps/store/",
         "proxy" : "../proxy/?url=",
+        "user_info_visible": false,
         "app_form_placeholders": {
             "app_title": "Kartenn",
             "logo_url": "https://geobretagne.fr/pub/logo/region-bretagne.jpg",
@@ -189,6 +190,11 @@
                     "url": "https://ows.region-bretagne.fr/geoserver/rb/wms"
                 }
             ]
+        },
+        "default_params" : {
+            "layer": {
+                "info_format": "text/html"
+            }
         }
 	}
 }
