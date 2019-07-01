@@ -142,15 +142,16 @@ $(document).ready(function(){
                                 mv.updateUserInfo(data.firstName + ' ' + data.lastName, userGroup.slugName, userGroup.fullName);
                             }
                         }
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        alert("Problème avec la récupération de la configuration");
                     }
                 });
             } else {
                 mv.hideUserInfo();
             }
-        },
-        error: function (xhr, ajaxOptions, thrownError) {
-            alert("Problème avec la récupération de la configuration");
         }
+      }
     });
     $('#tabs').tab();
 });
