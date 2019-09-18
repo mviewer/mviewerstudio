@@ -107,7 +107,7 @@ $(document).ready(function(){
             $("#providers_list").append(wms_providers.join(" "));
             if(_conf.data_providers.wms.length > 0) {
                 $("#providers_list").append('<li role="separator" class="divider"></li>');
-
+	    }
             if (API.xml) {
                 loadApplicationParametersFromRemoteFile(API.xml);
             } else if (API.wmc) {
@@ -151,7 +151,6 @@ $(document).ready(function(){
                 mv.hideUserInfo();
             }
         }
-      }
     });
     $('#tabs').tab();
 });
