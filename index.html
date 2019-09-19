@@ -563,11 +563,12 @@
                                                placeholder="metadata-csw">
                                     </div>
                                     <div class="form-group">
-                                        <div class="checkbox">
-                                            <label>
-                                                <input id="frm-secure" type="checkbox"> Donnée protégée
-                                            </label>
-                                        </div>
+                                        <label class="control-label" for="frm-type">Contraintes d'accès</label>
+                                        <select id="frm-secure" name="type" class="form-control">
+                                            <option value="public">Accès public</option>
+                                            <option value="global">Accès soumis à authentification globale (CAS georchestra)</option>
+                                            <option value="layer">Accès soumis à authentification au niveau du service (Basic Authent)</option>
+                                        </select>
                                     </div>
                                     <div class="form-group">
                                         <div class="checkbox">
