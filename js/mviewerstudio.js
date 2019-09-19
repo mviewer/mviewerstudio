@@ -194,7 +194,7 @@ var newConfiguration = function () {
         $("#"+param).val("");
     });
     ["opt-exportpng", "opt-measuretools", "theme-edit-collapsed", "opt-mini", "opt-showhelp", "opt-coordinates",
-        "opt-togglealllayersfromtheme", "opt-hideprotectedlayers"].forEach(function (param, id) {
+        "opt-togglealllayersfromtheme"].forEach(function (param, id) {
         $("#"+param).prop('checked', false);
     });
 
@@ -461,8 +461,7 @@ var saveApplicationParameters = function (option) {
         'showhelp="'+($('#opt-showhelp').prop('checked')=== true)+'"',
         'coordinates="'+($('#opt-coordinates').prop('checked')=== true)+'"',
         'measuretools="'+($('#opt-measuretools').prop('checked')=== true)+'"',
-        'togglealllayersfromtheme="'+($('#opt-togglealllayersfromtheme').prop('checked')=== true)+'"',
-        'hideprotectedlayers="'+($('#opt-hideprotectedlayers').prop('checked')=== true)+'"'];
+        'togglealllayersfromtheme="'+($('#opt-togglealllayersfromtheme').prop('checked')=== true)+'"'];
 
     config.title = $("#opt-title").val();
 
