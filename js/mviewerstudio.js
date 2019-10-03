@@ -1,6 +1,12 @@
 var _conf;
 var API = {};
+var VERSION="3.1";
+
 $(document).ready(function(){
+   
+    //Mviewer Studio version
+    console.log("MviewerStudio version " + VERSION);
+    
     //Get URL Parameters
     if (window.location.search) {
         $.extend(API, $.parseJSON('{"' + decodeURIComponent(window.location.search.substring(1)
@@ -549,7 +555,7 @@ var saveApplicationParameters = function (option) {
     });
     themes.push(padding(0)+'</themes>');
 
-    var conf = ['<?xml version="1.0" encoding="UTF-8"?>\r\n<config>\r\n',
+    var conf = ['<?xml version="1.0" encoding="UTF-8"?>\r\n<config mviewerstudioversion="'+VERSION+'">\r\n',
         '<metadata>\r\n'+mv.createDublinCore(config)+'\r\n</metadata>\r\n',
         application,
         mapoptions,
