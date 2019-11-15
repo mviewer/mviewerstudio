@@ -77,43 +77,50 @@ $(document).ready(function(){
             } else {
                 $("#btn-importTheme").remove();
             }
+
             nb_providers = 0
-            _conf.data_providers.csw.forEach(function(provider, id) {
-                var cls = "active";
-                if (nb_providers > 0) {
-                    cls ="";
+
+            if (_conf.data_providers && _conf.data_providers.csw) {
+                _conf.data_providers.csw.forEach(function(provider, id) {
+                    var cls = "active";
+                    if (nb_providers > 0) {
+                        cls ="";
+                    }
+                    csw_provider_html = '<li class="' + cls + '">';
+                    csw_provider_html += '<a onclick="setActiveProvider(this);" href="#" class="dropdown-toggle"';
+                    csw_provider_html += ' data-providertype="csw" data-provider="' + provider.url + '"';
+                    if (provider.baseref) {
+                        csw_provider_html += ' data-metadata-app="' + provider.baseref + '"';
+                    }
+                    csw_provider_html += '>' + provider.title + '</a></li>';
+                    csw_providers.push(csw_provider_html);
+                    nb_providers ++;
+                });
+                $("#providers_list").append(csw_providers.join(" "));
+                if (_conf.data_providers.csw.length > 0) {
+                    $("#providers_list").append('<li role="separator" class="divider"></li>');
                 }
-                csw_provider_html = '<li class="' + cls + '">';
-                csw_provider_html += '<a onclick="setActiveProvider(this);" href="#" class="dropdown-toggle"';
-                csw_provider_html += ' data-providertype="csw" data-provider="' + provider.url + '"';
-                if (provider.baseref) {
-                    csw_provider_html += ' data-metadata-app="' + provider.baseref + '"';
-                }
-                csw_provider_html += '>' + provider.title + '</a></li>';
-                csw_providers.push(csw_provider_html);
-                nb_providers ++;
-            });
-            $("#providers_list").append(csw_providers.join(" "));
-            if (_conf.data_providers.csw.length > 0) {
-                $("#providers_list").append('<li role="separator" class="divider"></li>');
             }
 
-            _conf.data_providers.wms.forEach(function(provider, id) {
-                var cls = "active";
-                if (nb_providers > 0) {
-                    cls ="";
-                }
-                wms_providers.push('<li class="' + cls + '">' +
-                    '<a onclick="setActiveProvider(this);" data-providertype="wms" class="dropdown-toggle"' +
-                    ' data-provider="' + provider.url + '" href="#">' +
-                    provider.title + '</a></li>');
-                nb_providers ++;
-            });
+            if (_conf.data_providers && _conf.data_providers.wms) {
+                _conf.data_providers.wms.forEach(function(provider, id) {
+                    var cls = "active";
+                    if (nb_providers > 0) {
+                        cls ="";
+                    }
+                    wms_providers.push('<li class="' + cls + '">' +
+                        '<a onclick="setActiveProvider(this);" data-providertype="wms" class="dropdown-toggle"' +
+                        ' data-provider="' + provider.url + '" href="#">' +
+                        provider.title + '</a></li>');
+                    nb_providers ++;
+                });
 
-            $("#providers_list").append(wms_providers.join(" "));
-            if(_conf.data_providers.wms.length > 0) {
-                $("#providers_list").append('<li role="separator" class="divider"></li>');
-	    }
+                $("#providers_list").append(wms_providers.join(" "));
+                if(_conf.data_providers.wms.length > 0) {
+                    $("#providers_list").append('<li role="separator" class="divider"></li>');
+                }
+            }
+
             if (API.xml) {
                 loadApplicationParametersFromRemoteFile(API.xml);
             } else if (API.wmc) {
