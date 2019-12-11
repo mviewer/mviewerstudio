@@ -1,5 +1,8 @@
-# mviewerstudio
-mviewer studio
+# Mviewerstudio
+
+Mviewer Studio permet de générer une configuration pour [mviewer](https://github.com/geobretagne/mviewer) de manière graphique.
+
+Application écrite en javascript et php
 
 Configuration
 --------------
