@@ -1,1 +1,17 @@
-conf/*
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+#test
+.pytest_cache/
+
+*.egg-info/
+*.egg
+
+
+
+#IDE stuff
+.idea
+.vscode
+*.iml
