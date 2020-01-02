@@ -24,7 +24,7 @@ def login_required(func):
     return _login_required
 
 
-def _get_current_user() -> User:
+def _get_current_user() -> "User":
     if has_app_context():
         roles = [request.headers.get("sec-roles", "").split(";")]
         return User(

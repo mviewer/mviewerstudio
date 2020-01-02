@@ -15,4 +15,5 @@ ERROR_HANDLERS = (
     (400, lambda e: _jsonify_exception(e)),
     (503, lambda e: _jsonify_exception(e)),
     (403, lambda e: _jsonify_exception(e)),
+    (404, lambda e: _jsonify_exception(e))
 )

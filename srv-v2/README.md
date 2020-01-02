@@ -14,8 +14,7 @@ Vous pouvez utiliser la composition docker présente à la racine du dépot. Le 
 ## Développement
 
 ```bash
-# mettez vous dans un .venv, ex: python -m venv .venv && source .venv/bin/activate, ou via pew ou
-pyenv par exemple
+# mettez vous dans un .venv, ex: python -m venv .venv && source .venv/bin/activate, ou via pew ou pyenv par exemple
 pip install -r requirements.txt -r dev-requirements.txt
 pip install -e .
 flask run
@@ -24,7 +23,7 @@ flask run
 
 ## Production
 
-Il vous faudra un serveur wsgi pour servir les pages. Exemple de servceur : gunicorn, waitress,
+Il vous faudra un serveur wsgi pour servir les pages. Exemple de serveur : gunicorn, waitress,
 uwsgi. Le `Dockerfile` peut vous donner un exemple avec gunicorn
 
 ```

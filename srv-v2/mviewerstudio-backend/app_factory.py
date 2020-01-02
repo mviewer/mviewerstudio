@@ -19,7 +19,7 @@ def setup_logging(app: Flask) -> None:
 
 
 def load_config(app: Flask) -> None:
-    app.config.from_object("settings.Config")
+    app.config.from_object("mviewerstudio-backend.settings.Config")
     app.config.from_envvar("CONFIG_FILE", silent=True)
 
 

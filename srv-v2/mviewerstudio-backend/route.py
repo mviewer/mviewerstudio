@@ -6,7 +6,7 @@ from glob import glob
 from defusedxml.ElementTree import parse
 from pathlib import Path
 
-basic_store = Blueprint("basic-store")
+basic_store = Blueprint("basic-store", __name__)
 
 
 @basic_store.route("/user_infos", methods=["GET"])
@@ -15,7 +15,7 @@ def user() -> Response:
     return jsonify(current_user.as_dict())
 
 
-@basic_store.route("store", methods=["POST"])
+@basic_store.route("/store", methods=["POST"])
 @login_required
 def store_mviewer_config() -> Response:
     raw_xml = request.data.decode("utf-8")
@@ -23,19 +23,19 @@ def store_mviewer_config() -> Response:
     filehash = hashlib.md5()
     filehash.update(xml_with_replaced_user.encode("utf-8"))
     filename = f"{filehash.hexdigest()}.xml"
-    absolute_path = os.path.join(basic_store.config.export_conf_folder, filename)
+    absolute_path = os.path.join(basic_store.config.EXPORT_CONF_FOLDER, filename)
     with open(absolute_path, "w") as f:
         f.write(xml_with_replaced_user)
     return jsonify({"success": True, "filepath": filename})
 
 
-@basic_store.route("list", methods=["GET"])
+@basic_store.route("/list", methods=["GET"])
 @login_required
 def list_stored_mviewer_config() -> Response:
     """
     Return all mviewer config created by the current user
     """
-    filepath = os.path.join(basic_store.config.export_conf_folder, "*.xml")
+    filepath = os.path.join(basic_store.config.EXPORT_CONF_FOLDER, "*.xml")
     files = glob(filepath)
     files.sort(key=os.path.getmtime, reverse=True)
     metadatas = list()
@@ -44,8 +44,8 @@ def list_stored_mviewer_config() -> Response:
         description = xml.find("//metadata/RDF/Description")
         if description.find("//creator").text == current_user.username:
             url = f.replace(
-                basic_store.config["export_conf_folder"],
-                basic_store.config["conf_path_from_mviewer"],
+                basic_store.config["EXPORT_CONF_FOLDER"],
+                basic_store.config["CONF_PATH_FROM_MVIEWER"],
             )
             metadata = {
                 "url": url,

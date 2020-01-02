@@ -1,3 +1,4 @@
 class Config:
-    conf_path_from_mviewer = "apps/store/"
-    export_conf_folder = "./store"
+    CONF_PATH_FROM_MVIEWER = "apps/store/"
+    EXPORT_CONF_FOLDER = "./store"
+    LOG_LEVEL = "INFO"
