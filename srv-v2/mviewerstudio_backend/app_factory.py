@@ -10,7 +10,7 @@ def init_sentry():
     # sentry is a services that collect exception. it sends data _ONLY_ if you
     # specify the SENTRY_DSN envrionment variable. Sentry is an opensource
     # software (https://github.com/getsentry/sentry) that can be self hosted or
-    # available as SaaS. No impact if you don't want to use it.
+    # available as SaaS. *No impact* if you don't want to use it.
     sentry_sdk.init(integrations=[FlaskIntegration()])
 
 
@@ -19,7 +19,7 @@ def setup_logging(app: Flask) -> None:
 
 
 def load_config(app: Flask) -> None:
-    app.config.from_object("mviewerstudio-backend.settings.Config")
+    app.config.from_object("mviewerstudio_backend.settings.Config")
     app.config.from_envvar("CONFIG_FILE", silent=True)
 
 

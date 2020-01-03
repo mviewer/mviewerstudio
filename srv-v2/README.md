@@ -20,6 +20,11 @@ pip install -e .
 flask run
 ```
 
+### test
+
+* Lancer les tests unitaires : `pytest mviewerstudio_backend`
+* Vérifier les types : `mypy --ignore-missing mviewerstudio-backend`
+
 
 ## Production
 

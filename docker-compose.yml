@@ -1,0 +1,11 @@
+version: '3'
+services:
+  studio-frontend:
+    build: .
+    image: mviewer/studio-frontend
+    ports:
+      - 8080:80
+  studio-backend:
+    build: srv-v2/
+    image: mviewer/studio-backend
+  
