@@ -3,6 +3,8 @@ from .login_utils import _get_current_user, User
 import pytest
 from .app_factory import create_app
 import hashlib
+import os
+from pathlib import Path
 
 test_xml = """<?xml version="1.0" encoding="UTF-8"?>
 <config mviewerstudioversion="3.1">
@@ -42,6 +44,12 @@ test_xml = """<?xml version="1.0" encoding="UTF-8"?>
 
 
 @pytest.fixture
+def cleandir():
+    yield
+    [Path(f"./store/{f}").unlink() for f in os.listdir("./store")]
+
+
+@pytest.fixture
 def client():
     app = create_app()
     app.testing = True
@@ -71,6 +79,7 @@ def header_client2():
     }
 
 
+@pytest.mark.usefixtures("cleandir")
 class TestAuthenticationUser:
     def test_no_headers(self):
         app = create_app()
@@ -127,25 +136,32 @@ class TestUserInfos:
         }
 
 
+@pytest.mark.usefixtures("cleandir")
 class TestStoreMviewerConfig:
     def test_store(self, client, header_client1):
-        x = test_xml.format(
-            title="test_store", creator="test_user", publisher="test_publisher"
+        client_data = test_xml.format(
+            title="test_store1", creator="test_user", publisher="test_publisher"
         )
         filehash = hashlib.md5()
-        filehash.update(x.encode("utf-8"))
+        filehash.update(client_data.encode("utf-8"))
         filehash = filehash.hexdigest()
-        p = client.post("/store.php", data=x, headers=header_client1)
+        p = client.post("/store.php", data=client_data, headers=header_client1)
         assert p.status_code == 200
         assert p.json == {"filepath": f"{filehash}.xml", "success": True}
+        assert len(os.listdir("./store")) == 1
+        assert os.listdir("./store")[0] == f"{filehash}.xml"
 
 
+@pytest.mark.usefixtures("cleandir")
 class TestListStoredMviewerConfig:
     def test_list_one(self, client, header_client1):
-        x = test_xml.format(
-            title="test_store", creator="foo", publisher="test_publisher"
+        """
+        create a file and list it.
+        """
+        client_data = test_xml.format(
+            title="test_store2", creator="foo", publisher="test_publisher"
         )
-        client.post("/store.php", data=x, headers=header_client1)
+        client.post("/store.php", data=client_data, headers=header_client1)
         r = client.get("/list.php", headers=header_client1)
         assert r.status_code == 200
         assert r.json == [
@@ -153,20 +169,42 @@ class TestListStoredMviewerConfig:
                 "creator": "foo",
                 "date": "2020-01-03T14:23:51.018Z",
                 "subjects": None,
-                "title": "test_store",
-                "url": "apps/store//237989e159d5abc0899673bae0eb3cec.xml",
+                "title": "test_store2",
+                "url": "apps/store//7a0c162ff13791609f553839bd5b80c3.xml",
             }
         ]
 
     def test_list_different_user(self, client, header_client1, header_client2):
-        x = test_xml.format(
-            title="test_store", creator="test_user", publisher="test_publisher"
+        """
+        Create a file with user1, and listing with user2 should return no file created
+        by user2
+        """
+        client_data = test_xml.format(
+            title="test_store3", creator="test_user", publisher="test_publisher"
         )
-        client.post("/store.php", data=x, headers=header_client1)
+        client.post("/store.php", data=client_data, headers=header_client1)
         r = client.get("/list.php", headers=header_client2)
         assert r.status_code == 200
         assert r.json == []
 
 
+@pytest.mark.usefixtures("cleandir")
 class TestDeleteMviewerConfig:
-    pass
+    def test_delete_one(self, client, header_client1, header_client2):
+        """
+        Create two file, with 2 users, call `delete` endpoint, with user 1. 
+        It should only delete 1 file.
+        """
+        client1_data = test_xml.format(
+            title="test_store4", creator="foo", publisher="test_publisher"
+        )
+        client.post("/store.php", data=client1_data, headers=header_client1)
+        client2_data = test_xml.format(
+            title="test_store5", creator="toto", publisher="test_publisher"
+        )
+        client.post("/store.php", data=client2_data, headers=header_client2)
+        r = client.get("/delete.php", headers=header_client1)
+        assert r.status_code == 200
+        assert r.json == {"deleted_files": 1}
+        # file of user2 should remain.
+        assert len(os.listdir("./store")) == 1
