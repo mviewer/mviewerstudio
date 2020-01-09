@@ -6,6 +6,6 @@ services:
     ports:
       - 8080:80
   studio-backend:
-    build: srv-v2/
+    build: srv/python/
     image: mviewer/studio-backend
   
