@@ -2,11 +2,14 @@ var _conf;
 var API = {};
 var VERSION = "3.1-snapshot";
 
+var mviewer = {};
+
 $(document).ready(function(){
-   
+
     //Mviewer Studio version
     console.log("MviewerStudio version " + VERSION);
-    
+
+
     //Get URL Parameters
     if (window.location.search) {
         $.extend(API, $.parseJSON('{"' + decodeURIComponent(window.location.search.substring(1)
@@ -46,6 +49,9 @@ $(document).ready(function(){
             $("#opt-title").attr("placeholder", _conf.app_form_placeholders.app_title);
             $("#opt-logo").attr("placeholder", _conf.app_form_placeholders.logo_url);
             $("#opt-help").attr("placeholder", _conf.app_form_placeholders.help_file);
+
+            // translate
+            _initTranslate();
 
             // Thematic layers providers
             var csw_providers = [];
@@ -504,7 +510,7 @@ var saveApplicationParameters = function (option) {
     config.title = $("#opt-title").val();
 
     if(config.title == ''){
-        alert('Attention, vous devez obligatoirement indiquer un titre à votre application avant de sauvegarder.');
+        alert(mviewer.lang[lang]('msg.give_title_before_save'));
         return;
     }
 
@@ -614,7 +620,7 @@ var saveApplicationParameters = function (option) {
 
                 if (option == 0) {
                     // Ok it's been saved and that's it
-                    alert("Fichier sauvegardé sur le serveur (" + data.filepath + ").");
+                    alert(mviewer.lang[lang]('msg.file_saved_on_server') + " (" + data.filepath + ").");
 
                 } else if (option == 1) {
                     // Download map config file
@@ -658,11 +664,11 @@ var saveApplicationParameters = function (option) {
                     status: status,
                     error: error
                 });
-                alert("Echec de la sauvegarde du fichier.\nVeuillez consulter votre administrateur.");
+                alert(mviewer.tr('msg.save_failure'));
             }
         });
     } else {
-        alert("Document xml invalide");
+        alert(mviewer.tr('msg.xml_doc_invalid'));
     }
 };
 
@@ -815,6 +821,72 @@ var updateAddProviderButtonState = function (el) {
     var url = frm.find("input.custom-url").val();
     var title = frm.find("input.custom-title").val();
     $("#add_provider_btn").prop('disabled', !(url && title));
+};
+
+
+ // Set translation tool, using i18next
+ // see http://i18next.com/docs/
+ // the ?lang parameter is used to set the locale
+ var url = new URL(location.href);
+ var lang = url.searchParams.get("lang");
+ if (lang == null) {
+    lang = "fr";
+ }
+ var _configureTranslate = function (dic) {
+    mviewer.lang = {};
+    //load i18n for all languages availables
+    Object.entries(dic).forEach(function (l) {
+        mviewer.lang[l[0]] = i18n.create({"values": l[1]});
+    });
+    if (mviewer.lang[lang]) {
+        mviewer.tr = mviewer.lang[lang];
+        _elementTranslate("body");
+        mviewer.lang.lang = lang;
+    } else {
+         console.log("langue non disponible " + lang);
+    }
+};
+
+ var _initTranslate = function() {
+    mviewer.tr = function (s) { return s; };
+    if (lang) {
+        var defaultFile = "mviewerstudio.i18n.json";
+        $.ajax({
+            url: defaultFile,
+            dataType: "json",
+            success: _configureTranslate,
+            error: function () {
+                console.log("Error: can't load JSON lang file!")
+            }
+        });
+    }
+  };
+
+/**
+ * Translate DOM elements
+ * @param element String - tag to identify DOM elements to translate
+ */
+
+var _elementTranslate = function (element) {
+    // translate each html elements with i18n as attribute
+    var htmlType = ["placeholder", "title", "accesskey", "alt", "value", "data-original-title"];
+    var _element = $(element);
+    _element.find("[i18n]").each((i, el) => {
+        let find = false;
+        let tr = mviewer.lang[lang]($(el).attr("i18n"));
+        htmlType.forEach((att) => {
+            if ($(el).attr(att) && tr) {
+                $(el).attr(att, tr);
+                find = true;
+            }
+        });
+        if(!find && $(el).text().indexOf("{{")=== -1) {
+            // don't change the value => fallback is the language used in the html file
+            //$(el).text(tr);
+        }
+    });
+    var ret = (element === "body")?true:_element[0].outerHTML;
+    return ret;
 };
 
 $('#mod-featuresview').on('hidden.bs.modal', function () {
