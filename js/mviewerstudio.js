@@ -3,10 +3,39 @@ var API = {};
 var VERSION="3.1";
 
 $(document).ready(function(){
-   
+
     //Mviewer Studio version
     console.log("MviewerStudio version " + VERSION);
-    
+
+     // Set translation tool, using i18next
+     // see http://i18next.com/docs/
+     // the ?lang parameter is used to set the locale
+     var url = new URL(location.href);
+     var lang = url.searchParams.get("lang");
+     if (lang === undefined) {
+        lang = "fr";
+     }
+     i18next
+       .use(i18nextXHRBackend)
+       .init({
+       lng: lang, // evtl. use language-detector https://github.com/i18next/i18next-browser-languageDetector
+       fallbackLng: 'en',
+       backend: {
+         loadPath: 'i18n/{{lng}}-{{ns}}.json'
+       }
+     }, function(err, t) {
+       // for options see
+       // https://github.com/i18next/jquery-i18next#initialize-the-plugin
+       jqueryI18next.init(i18next, $);
+
+       // start localizing, details:
+       // https://github.com/i18next/jquery-i18next#usage-of-selector-function
+       $('.i18n').localize();
+       $('.nav').localize();
+       $('.control-label').localize();
+     });
+
+
     //Get URL Parameters
     if (window.location.search) {
         $.extend(API, $.parseJSON('{"' + decodeURIComponent(window.location.search.substring(1)
@@ -479,7 +508,7 @@ var saveApplicationParameters = function (option) {
     config.title = $("#opt-title").val();
 
     if(config.title == ''){
-        alert('Attention, vous devez obligatoirement indiquer un titre à votre application avant de sauvegarder.');
+        alert(i18next.t('msg.give_title_before_save'));
         return;
     }
 
@@ -587,7 +616,7 @@ var saveApplicationParameters = function (option) {
 
                 if (option == 0) {
                     // Ok it's been saved and that's it
-                    alert("Fichier sauvegardé sur le serveur (" + data.filepath + ").");
+                    alert(i18next.t('msg.file_saved_on_server') + " (" + data.filepath + ").");
 
                 } else if (option == 1) {
                     // Download map config file
@@ -630,11 +659,11 @@ var saveApplicationParameters = function (option) {
                 console.log('error xhr:' + xhr.responseText);
                 console.log('error status:' + status);
                 console.log('error:' + error);
-                alert("Echec de la sauvegarde du fichier.\nVeuillez consulter votre administrateur.")
+                alert(i18next.t('msg.save_failure'))
             }
         });
     } else {
-        alert("Document xml invalide");
+        alert(i18next.t('msg.xml_doc_invalid'));
     }
 };
 

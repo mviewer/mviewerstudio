@@ -20,6 +20,9 @@
     <script type="text/javascript" src="lib/openlayers/5.3/ol.js"></script>
     <script src="lib/ogc.js"></script>
     <script src="lib/mv.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/i18next/8.1.0/i18next.min.js" ></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/i18next-xhr-backend/3.2.2/i18nextXHRBackend.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-i18next/1.2.0/jquery-i18next.min.js" ></script>
 </head>
 
 <body>
@@ -28,18 +31,18 @@
         <div class="navbar-header">
             <a id="studio-title" class="navbar-brand" href="#">mviewer studio</a>
         </div>
-        <ul class="nav navbar-nav navbar-right">
-            <p class="navbar-text" id="user_connected">Non connecté</p>
+        <ul class="nav navbar-nav navbar-right i18n">
+            <p class="navbar-text" id="user_connected"><span data-i18n="banner.not_connected">Non connecté</span></p>
             <li><a role="button" data-toggle="modal" data-target="#mod-importfile" href="#">
-                <span role="button" class="glyphicon glyphicon-import"></span> Charger</a></li>
+                <span role="button" class="glyphicon glyphicon-import"></span> <span data-i18n="banner.load">Charger</span></a></li>
             <li><a role="button" onclick="saveApplicationParameters(0);" href="#"><span
-                    class="glyphicon glyphicon-floppy-disk"></span> Sauvegarder</a></li>
+                    class="glyphicon glyphicon-floppy-disk"></span> <span data-i18n="banner.save">Sauvegarder</span></a></li>
             <li><a role="button" onclick="saveApplicationParameters(1);" href="#"><span
-                    class="glyphicon glyphicon-download"></span> Télécharger</a></li>
+                    class="glyphicon glyphicon-download"></span> <span data-i18n="banner.download">Télécharger</span></a></li>
             <li><a role="button" onclick="saveApplicationParameters(2);" href="#"><span
-                    class="glyphicon glyphicon-globe"></span> Prévisualiser</a></li>
+                    class="glyphicon glyphicon-globe"></span> <span data-i18n="banner.preview">Prévisualiser</span></a></li>
             <li id="menu_user_logout"><a role="button" href="./logout"><span
-                    class="glyphicon glyphicon-off"></span> Déconnexion</a></li>
+                    class="glyphicon glyphicon-off"></span> <span data-i18n="banner.logout">Déconnexion</span></a></li>
         </ul>
     </div>
 </nav>
@@ -49,7 +52,7 @@
         <form class="form-horizontal">
             <fieldset>
                 <div class="form-group">
-                    <label class="col-md-5 control-label" for="opt-title">Titre de l'application</label>
+                    <label class="col-md-5 control-label i18n" for="opt-title" data-i18n="head.title">Titre</label>
                     <div class="col-md-5">
                         <input id="opt-title" name="textinput" type="text" placeholder="Kartenn"
                                class="form-control input-md">
@@ -58,11 +61,11 @@
             </fieldset>
         </form>
 
-        <ul id="tabs" class="nav nav-tabs" data-tabs="tabs">
-            <li class="active"><a href="#application-config" data-toggle="tab">Application</a></li>
-            <li><a href="#themes-config" data-toggle="tab">Thématiques & données</a></li>
-            <li><a href="#backgroundlayers-config" data-toggle="tab">Couches de fond</a></li>
-            <li><a href="#search-config" data-toggle="tab">Recherche</a></li>
+        <ul id="tabs" class="nav nav-tabs i18n" data-tabs="tabs">
+            <li class="active"><a href="#application-config" data-toggle="tab" data-i18n="tabs.app.title">Application</a></li>
+            <li><a href="#themes-config" data-toggle="tab" data-i18n="tabs.data.title">Thématiques & données</a></li>
+            <li><a href="#backgroundlayers-config" data-toggle="tab" data-i18n="tabs.bg.title">Couches de fond</a></li>
+            <li><a href="#search-config" data-toggle="tab" data-i18n="tabs.search.title">Recherche</a></li>
         </ul>
         <div class="tab-content">
             <div class="tab-pane active" id="application-config">
@@ -74,7 +77,7 @@
                             <fieldset>
                                 <!-- logo-->
                                 <div class="form-group">
-                                    <label class="col-md-4 control-label" for="opt-logo">URL du logo</label>
+                                    <label class="col-md-4 control-label" for="opt-logo" data-i18n="tabs.app.url">URL du logo</label>
                                     <div class="col-md-8">
                                         <input id="opt-logo" name="textinput" type="text"
                                                class="form-control input-md checkedurl"
@@ -84,7 +87,7 @@
 
                                 <!-- help-->
                                 <div class="form-group">
-                                    <label class="col-md-4 control-label" for="opt-help">Page d'aide (html)</label>
+                                    <label class="col-md-4 control-label" for="opt-help" data-i18n="tabs.app.help_link">Page d'aide (html)</label>
                                     <div class="col-md-8">
                                         <input id="opt-help" name="textinput" type="text"
                                                class="form-control input-md checkedurl" placeholder="Ex: mviewer_help.html">
@@ -93,7 +96,7 @@
 
                                 <!--style-->
                                 <div class="form-group">
-                                    <label class="control-label col-md-4" for="frm-style">Style</label>
+                                    <label class="control-label col-md-4" for="frm-style" data-i18n="tabs.app.style">Style</label>
                                     <div class="col-md-8">
                                         <select id="opt-style" name="style" class="form-control default"
                                                 onchange="updateTheme(this);">
@@ -115,40 +118,43 @@
                                     </div>
                                 </div>
 
-                                <div class="form-group">
-                                    <label class="col-md-4 control-label" for="checkboxes">Options</label>
+                                <div class="form-group i18n">
+                                    <label class="col-md-4 control-label" for="checkboxes" data-i18n="tabs.app.options">Options</label>
                                     <div class="col-md-8">
                                         <div class="checkbox">
                                             <label for="opt-measuretools">
                                                 <input type="checkbox" name="checkboxes" id="opt-measuretools">
-                                                Outils de mesures
+                                                <span class="i18n"  data-i18n="tabs.app.opt_measure">Outils de mesures</span>
                                             </label>
                                         </div>
 
                                         <div class="checkbox">
                                             <label for="opt-exportpng">
                                                 <input type="checkbox" name="checkboxes" id="opt-exportpng">
-                                                Export de la carte au format png
+                                                <span class="i18n"  data-i18n="tabs.app.opt_export">Export de la carte au format png</span>
                                             </label>
                                         </div>
 
                                         <div class="checkbox">
                                             <label for="opt-showhelp">
                                                 <input type="checkbox" name="checkboxes" id="opt-showhelp">
-                                                Afficher l'aide au démarrage
+
+                                                <span class="i18n"  data-i18n="tabs.app.opt_help">Afficher l'aide au démarrage</span>
                                             </label>
                                         </div>
 
                                         <div class="checkbox">
                                             <label for="opt-coordinates">
                                                 <input type="checkbox" name="checkboxes" id="opt-coordinates">
-                                                Affichage des coordonnées au click
+
+                                                <span class="i18n"  data-i18n="tabs.app.opt_coords">Affichage des coordonnées au click</span>
                                             </label>
                                         </div>
                                         <div class="checkbox">
                                             <label for="opt-togglealllayersfromtheme">
                                                 <input type="checkbox" name="checkboxes" id="opt-togglealllayersfromtheme">
-                                                Afficher/masquer toutes les données d'une thématique en un clic
+
+                                                <span class="i18n"  data-i18n="tabs.app.opt_data">Afficher/masquer toutes les données d'une thématique en un clic</span>
                                             </label>
                                         </div>
                                     </div>
@@ -174,8 +180,8 @@
 
             <div class="tab-pane" id="themes-config">
                 <div class="well">
-                    <h4>Sélection, paramétrage et organisation des données</h4>
-                    <p>Dans cette section, créer une ou plusieurs thématiques que vous peuplerez avec des données
+                    <h4 class="i18n" data-i18n="tabs.data.help_title">Sélection, paramétrage et organisation des données</h4>
+                    <p class="i18n" data-i18n="tabs.data.help_text">Dans cette section, créer une ou plusieurs thématiques que vous peuplerez avec des données
                         provenant de différentes plateformes. Il également est possible d'importer des thématiques externes</p>
                 </div>
 
@@ -183,16 +189,18 @@
                     <div class="col-md-6">
                         <!-- List with handle -->
                         <div class="panel panel-default">
-                            <div class="panel-heading">Panneau des thématiques</div>
+                            <div class="panel-heading i18n" data-i18n="tabs.data.themespanel.title">Panneau des thématiques</div>
                             <div class="panel-body">
                                 <div id="themes-list" class="list-group"></div>
                                 <div class="btn-group">
                                     <button id="btn-addTheme" title="Créer une nouvelle thématique" class="btn btn-primary"
                                             onclick="addTheme('Nouvelle thématique', true, createId('theme'));">
-                                        <span class="glyphicon glyphicon-plus" aria-hidden="true"> </span> Créer
+                                        <span class="glyphicon glyphicon-plus " aria-hidden="true"> </span>
+                                        <span class="i18n" data-i18n="tabs.data.themespanel.create">Créer</span>
                                     </button>
                                     <button id="btn-importTheme" title="Importer une thématique depuis un autre mviewer" class="btn btn-success" onclick="$('#mod-themesview input').prop('checked', false);" data-toggle="modal" data-target="#mod-themesview">
-                                        <span class="glyphicon glyphicon-plus" aria-hidden="true"> </span> Importer
+                                        <span class="glyphicon glyphicon-plus" aria-hidden="true"> </span>
+                                        <span class="i18n" data-i18n="tabs.data.themespanel.import">Importer</span>
                                     </button>
                                 </div>
                             </div>
@@ -200,7 +208,7 @@
                                 <div class="checkbox">
                                     <label for="opt-mini">
                                         <input type="checkbox" name="checkboxes" id="opt-mini">
-                                        Option d'affichage : réduire le panneau des thématiques au démarrage
+                                        <span class="i18n" data-i18n="tabs.data.themespanel.options">Option d'affichage : réduire le panneau des thématiques au démarrage</span>
                                     </label>
                                 </div>
                             </div>
@@ -209,25 +217,27 @@
                     <div class="col-md-6">
                         <div id="panel-theme" class="panel panel-info" style="display: none;">
                             <div class="panel-heading">
-                                <h3 class="panel-title">Paramétrage de la Thématique sélectionnée</h3>
+                                <h3 class="panel-title i18n" data-i18n="tabs.data.paramspanel.title">Paramétrage de la Thématique sélectionnée</h3>
                             </div>
                             <div class="panel-body" id="theme-edit" data-themeid="">
                                 <div class="input-group">
-                                    <span class="input-group-addon">Nom</span>
+                                    <span class="input-group-addon i18n" data-i18n="tabs.data.paramspanel.name">Nom</span>
                                     <input type="text" id="theme-edit-title" class="form-control" placeholder="Titre"
                                            aria-describedby="basic-addon1">
                                 </div>
                                 <div class="checkbox">
                                     <label for="theme-edit-collapsed">
                                         <input type="checkbox" name="checkboxes" id="theme-edit-collapsed" value="0">
-                                        Déroulée par défaut
+                                        <span class="i18n" data-i18n="tabs.data.paramspanel.opt_unfolded">Déroulée par défaut</span>
                                     </label>
                                 </div>
                                 <div class="form-group">
-                                    <label class="settinglabel">Icône</label>
+                                    <label class="settinglabel i18n" data-i18n="tabs.data.paramspanel.icon">Icône</label>
                                     <span class="selected-icon"></span>
                                     <input type="text" class="icon-class-input" id="theme-pick-icon" />
-                                    <button type="button" class="btn btn-primary picker-button">Choisir une icône</button>
+                                    <button type="button" class="btn btn-primary picker-button">
+                                      <span class="i18n" data-i18n="tabs.data.paramspanel.icon_pick">Choisir une icône</span>
+                                    </button>
                                 </div>
                                 <!-- List with handle -->
                                 <div id="themeLayers" class="list-group"></div>
@@ -237,7 +247,7 @@
                                             <button id="btn-addLayer" class="btn btn btn-primary"
                                                     onclick="addLayer('Nouvelle couche');">
                                                 <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-                                                Ajouter des données
+                                                <span class="i18n" data-i18n="tabs.data.paramspanel.add_data">Ajouter des données</span>
                                             </button>
                                         </div>
                                     </div>
@@ -249,11 +259,13 @@
                                         <div class="pull-right">
                                             <button id="btn-saveTheme" class="btn btn btn-success"
                                                     onclick="saveTheme();">
-                                                <span class="glyphicon glyphicon-ok" aria-hidden="true"></span> Ok
+                                                <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+                                                <span class="i18n" data-i18n="ok"> Ok</span>
                                             </button>
                                             &nbsp;&nbsp;
                                             <button class="btn btn btn-default" onclick="$('#panel-theme').hide();">
-                                                <span class="glyphicon glyphicon-remove"></span> Annuler
+                                                <span class="glyphicon glyphicon-remove"></span>
+                                                <span class="i18n" data-i18n="cancel"> Annuler</span>
                                             </button>
                                         </div>
                                     </div>
@@ -269,16 +281,20 @@
                     </div>
                     <div class="col-sm-3 col-md-3">
                         <div class="form-group">
-                            <label class="control-label" for="frm-bl-mode">Mode d'affichage</label>
+                            <label class="control-label" for="frm-bl-mode">
+                              <span class="i18n" data-i18n="tabs.bg.displaymode"> Mode d'affichage</span>
+                            </label>
                             <select id="frm-bl-mode" name="bl-mode" class="form-control">
-                                <option value="default">normal</option>
-                                <option value="gallery">gallerie</option>
+                                <option value="default"  class="i18n" data-i18n="tabs.bg.display_normal">normal</option>
+                                <option value="gallery" class="i18n" data-i18n="tabs.bg.display_gallery">gallerie</option>
                             </select>
                         </div>
                     </div>
                     <div class="col-sm-3 col-md-3">
                         <div class="form-group">
-                            <label class="control-label" for="frm-bl-mode">Fond affiché au démarrage</label>
+                            <label class="control-label" for="frm-bl-mode">
+                              <span class="i18n" data-i18n="tabs.bg.startup_bg">Fond affiché au démarrage</span>
+                            </label>
                             <select id="frm-bl-visible" name="bl-visible" class="form-control"
                                     onchange="mv.changeVisibleBaseLayer(this.value)"></select>
                         </div>
@@ -289,21 +305,21 @@
 
             <div class="tab-pane" id="search-config">
                 <div class="panel panel-default">
-                    <div class="panel-heading"><h3 class="panel-title">Recherche d'entités</h3></div>
+                    <div class="panel-heading"><h3 class="panel-title i18n" data-i18n="tabs.search.entity_search.title">Recherche d'entités</h3></div>
                     <div class="panel-body">
                         <div class="form-group">
 
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" value="" id="opt-searchfeatures" required>
-                                <label class="form-check-label" for="opt-searchfeatures">
+                                <label class="form-check-label i18n" data-i18n="tabs.search.entity_search.activate" for="opt-searchfeatures">
                                 Activer la recherche d'entités
                                 </label>
                             </div>
                         </div>
-                        <p>
+                        <p class="i18n" data-i18n="tabs.search.entity_search.p1">
                             La recherche d'entités peut être activée sur les couches de type geojson.
                         </p>
-                        <p>
+                        <p class="i18n" data-i18n="tabs.search.entity_search.p2">
                             Cette fonctionnalité est également activable pour les couches de type WMS à la condition que les
                             entités qui composent cette couche soient également indexées par Elasticsearch.
                         </p>
@@ -311,21 +327,21 @@
                 </div>
 
                 <div class="panel panel-default">
-                    <div class="panel-heading"><h3 class="panel-title">Recherche d'adresses</h3></div>
+                    <div class="panel-heading"><h3 class="panel-title i18n" data-i18n="tabs.search.address_search.title">Recherche d'adresses</h3></div>
                     <div class="panel-body">
                         <div class="form-group">
-                            <label class="control-label col-md-4" for="frm-searchlocalities">Service utilisé</label>
+                            <label class="control-label col-md-4" for="frm-searchlocalities" data-i18n="tabs.search.address_search.service">Service utilisé</label>
                             <select id="frm-searchlocalities" name="searchlocalities" class="form-control"
                                     onchange="mv.changeSearchLocalities(this.value)" style="width:auto;">
-                                <option value="false">Non utilisé</option>
-                                <option value="ban">Base adresse Nationale</option>
-                                <option value="geoportail">Géoportail</option>
+                                <option value="false" class="i18n" data-i18n="tabs.search.address_search.none">Non utilisé</option>
+                                <option value="ban" class="i18n" data-i18n="tabs.search.address_search.ban">Base adresse Nationale</option>
+                                <option value="geoportail" class="i18n" data-i18n="tabs.search.address_search.geoportal">Géoportail</option>
                             </select>
                         </div>
 
                         <form id="searchlocalities_options" class="form-horizontal">
                             <div class="form-group">
-                                <label class="col-md-4 control-label" for="opt-searchlocalities-url">URL</label>
+                                <label class="col-md-4 control-label" for="opt-searchlocalities-url" data-i18n="tabs.search.address_search.url">URL</label>
                                 <div class="col-md-4">
                                     <input id="opt-searchlocalities-url" type="text" placeholder="Url"
                                            class="form-control input-md">
@@ -333,7 +349,7 @@
                             </div>
                             <div class="form-group">
                                 <label class="col-md-4 control-label"
-                                       for="opt-searchlocalities-attribution">Attribution</label>
+                                       for="opt-searchlocalities-attribution" data-i18n="tabs.search.address_search.attribution">Attribution</label>
                                 <div class="col-md-4">
                                     <input id="opt-searchlocalities-attribution" type="text"
                                            placeholder="Attribution du service" class="form-control input-md">
@@ -345,21 +361,21 @@
 
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <h3 class="panel-title">Elasticsearch</h3>
+                        <h3 class="panel-title i18n" data-i18n="tabs.search.elastic_search.title">Elasticsearch</h3>
                     </div>
                     <div class="panel-body">
                         <div class="form-group">
-                            <label class="control-label col-md-4" for="frm-globalsearch">Options</label>
+                            <label class="control-label col-md-4" for="frm-globalsearch" data-i18n="tabs.search.elastic_search.options">Options</label>
                             <select id="frm-globalsearch" name="globalsearch" class="form-control"
                                     onchange="mv.changeGlobalSearch(this.value)" style="width:auto;">
-                                <option value="false">Non utilisé</option>
-                                <option value="elasticsearch">Activé</option>
+                                <option value="false" class="i18n" data-i18n="tabs.search.elastic_search.disabled">Non utilisé</option>
+                                <option value="elasticsearch" class="i18n" data-i18n="tabs.search.elastic_search.enabled">Activé</option>
                             </select>
                         </div>
 
                         <form id="searchelasticsearch_options" class="form-horizontal">
                             <div class="form-group">
-                                <label class="col-md-4 control-label" for="opt-elasticsearch-url">URL
+                                <label class="col-md-4 control-label" for="opt-elasticsearch-url"  data-i18n="tabs.search.elastic_search.es_url">URL
                                     Elasticsearch</label>
                                 <div class="col-md-4">
                                     <input id="opt-elasticsearch-url" type="text" placeholder="Url Elasticsearch"
@@ -368,7 +384,7 @@
                             </div>
 
                             <div class="form-group">
-                                <label class="col-md-4 control-label" for="opt-elasticsearch-geometryfield">geometryfield</label>
+                                <label class="col-md-4 control-label" for="opt-elasticsearch-geometryfield" data-i18n="tabs.search.elastic_search.geom_field">geometryfield</label>
                                 <div class="col-md-4">
                                     <input id="opt-elasticsearch-geometryfield" type="text" placeholder="geometryfield"
                                            class="form-control input-md">
@@ -376,7 +392,7 @@
                             </div>
 
                             <div class="form-group">
-                                <label class="col-md-4 control-label" for="opt-elasticsearch-linkid">linkid</label>
+                                <label class="col-md-4 control-label" for="opt-elasticsearch-linkid" data-i18n="tabs.search.elastic_search.linkid">linkid</label>
                                 <div class="col-md-4">
                                     <input id="opt-elasticsearch-linkid" type="text" placeholder="linkid"
                                            class="form-control input-md">
@@ -384,7 +400,7 @@
                             </div>
 
                             <div class="form-group">
-                                <label class="col-md-4 control-label" for="opt-elasticsearch-doctypes">doctypes</label>
+                                <label class="col-md-4 control-label" for="opt-elasticsearch-doctypes" data-i18n="tabs.search.elastic_search.doctypes">doctypes</label>
                                 <div class="col-md-4">
                                     <input id="opt-elasticsearch-doctypes" type="text" placeholder="doctypes"
                                            class="form-control input-md">
@@ -392,28 +408,28 @@
                             </div>
 
                             <div class="form-group">
-                                <label class="control-label col-md-4" for="opt-elasticsearch-querymode">Mode</label>
+                                <label class="control-label col-md-4" for="opt-elasticsearch-querymode" data-i18n="tabs.search.elastic_search.qmode">Mode</label>
                                 <select id="opt-elasticsearch-querymode" class="form-control" style="width:auto;"
                                         onchange="">
-                                    <option value="match">match</option>
-                                    <option value="term">term</option>
-                                    <option value="phrase">phrase</option>
+                                    <option value="match" class="i18n" data-i18n="tabs.search.elastic_search.qmode_match">match</option>
+                                    <option value="term" class="i18n" data-i18n="tabs.search.elastic_search.qmode_term">term</option>
+                                    <option value="phrase" class="i18n" data-i18n="tabs.search.elastic_search.qmode_phrase">phrase</option>
                                 </select>
                             </div>
 
                             <div class="checkbox">
                                 <label for="opt-elasticsearch-bbox">
                                     <input type="checkbox" id="opt-elasticsearch-bbox" value="0">
-                                    Rechercher dans l'emprise de la carte
+                                    <span class="i18n" data-i18n="tabs.search.elastic_search.search_in_map_extent">Rechercher dans l'emprise de la carte</span>
                                 </label>
                             </div>
 
                             <div class="form-group">
-                                <label class="control-label col-md-4" for="opt-elasticsearch-version">Version</label>
+                                <label class="control-label col-md-4" for="opt-elasticsearch-version" data-i18n="tabs.search.elastic_search.version">Version</label>
                                 <select id="opt-elasticsearch-version" class="form-control" style="width:auto;"
                                         onchange="">
-                                    <option value="current">current</option>
-                                    <option value="1.4">1.4</option>
+                                    <option value="current" class="i18n" data-i18n="tabs.search.elastic_search.v_current">current</option>
+                                    <option value="1.4" class="i18n" data-i18n="tabs.search.elastic_search.v_1_4">1.4</option>
                                 </select>
                             </div>
                         </form>

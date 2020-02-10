@@ -1,0 +1,94 @@
+{
+  "head" : {
+    "title": "App title"
+  },
+  "banner" : {
+    "not_connected": "Not connected",
+    "load": "Load",
+    "save": "Save",
+    "download": "Download",
+    "preview": "Preview",
+    "logout": "Log out"
+  },
+  "tabs" : {
+    "app": {
+      "title": "Application",
+      "url": "Logo URL",
+      "help_link": "Help page (html)",
+      "style": "Style",
+      "options": "Options",
+      "opt_measure": "Measure tools",
+      "opt_export": "Map export (png format)",
+      "opt_help": "Show help on startup",
+      "opt_coords": "Show coordinates on click",
+      "opt_data": "Show/hide all data from a theme on one click"
+    },
+    "data": {
+      "title": "Themes & data",
+      "help_title": "Selection, configuration and organization of the data",
+      "help_text": "Create several themes (folders) then put some data in them, coming from several platforms. You can also add some external themes",
+      "themespanel": {
+        "title": "Themes panel",
+        "create": "Create",
+        "import": "Import",
+        "options": "Display option: shrink the themes panel on startup"
+      },
+      "paramspanel": {
+        "title": "Configure the selected Theme",
+        "name": "Name",
+        "opt_unfolded": "Unfolded by default",
+        "icon": "Icon",
+        "icon_pick": "Pick an icon",
+        "add_data": "Add some data"
+      }
+    },
+    "bg": {
+      "title": "Background layers",
+      "displaymode": "Display mode",
+      "display_normal": "Normal",
+      "display_gallery": "Gallery",
+      "startup_bg": "Background shown on startup"
+    },
+    "search": {
+      "title": "Search",
+      "entity_search": {
+        "title": "Entities search",
+        "activate": "Activate entities search",
+        "p1": "Entities search can be activates on layers of geojson type.",
+        "p2": "This functionality can also be activated for WMS layers, providing that the entities constituting this layer are also indexed by ElasticSearch."
+      },
+      "address_search": {
+         "title": "Address search",
+         "service": "Service to use",
+         "none": "None",
+         "ban": "National Address Registry",
+         "geoportal": "Geoportal",
+         "url": "URL",
+         "attribution": "Attribution"
+      },
+      "elastic_search": {
+         "title": "Elasticsearch",
+         "options": "Options",
+         "disabled": "Not used",
+         "enabled": "Enabled",
+         "es_url": "Elasticsearch URL",
+         "geom_field": "Geometry field",
+         "linkid": "Link id",
+         "doctype": "doctypes",
+         "qmode": "Query mode",
+         "qmode_match": "match",
+         "qmode_term": "term",
+         "qmode_phrase": "phrase",
+         "search_in_map_extent": "Search in the map's extent",
+         "version" : "Version",
+         "v_current" : "Current",
+         "v_1_4" : "1.4"
+      }
+    }
+  },
+  "ok": "OK",
+  "cancel": "Cancel",
+  "msg": {
+    "give_title_before_save": "Beware: you must give a title to your app before saving it."
+  }
+}
