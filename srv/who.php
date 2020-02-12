@@ -1,5 +1,4 @@
 <?php
-header('Content-type: application/json; charset=utf-8',true);
 function getUser() {
     $user = "anonymous";
     foreach (getallheaders() as $name => $value) {
@@ -27,5 +26,3 @@ function getUserInfos() {
     }
     return array( $firstname, $lastname );
 }
-?>
-
