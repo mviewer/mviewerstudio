@@ -19,7 +19,7 @@ $(document).ready(function(){
        .use(i18nextXHRBackend)
        .init({
        lng: lang, // evtl. use language-detector https://github.com/i18next/i18next-browser-languageDetector
-       fallbackLng: 'en',
+       fallbackLng: 'fr',
        backend: {
          loadPath: 'i18n/{{lng}}-{{ns}}.json'
        }
