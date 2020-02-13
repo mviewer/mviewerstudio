@@ -1,5 +1,5 @@
 from flask import Blueprint, jsonify, Response, request, current_app
-from .login_utils import login_required, current_user
+from .login_utils import current_user
 import hashlib
 import os.path
 from pathlib import Path
@@ -18,14 +18,12 @@ def basic_store_init(state: BlueprintSetupState):
         p.mkdir()
 
 
-@basic_store.route("/user_infos.php", methods=["GET"])
-@login_required
+@basic_store.route("/user_infos", methods=["GET"])
 def user() -> Response:
     return jsonify(current_user.as_dict())
 
 
-@basic_store.route("/store.php", methods=["POST"])
-@login_required
+@basic_store.route("/store", methods=["POST"])
 def store_mviewer_config() -> Response:
     raw_xml = request.data.decode("utf-8")
     xml_with_replaced_user = raw_xml.replace("anonymous", current_user.username)
@@ -38,8 +36,7 @@ def store_mviewer_config() -> Response:
     return jsonify({"success": True, "filepath": filename})
 
 
-@basic_store.route("/list.php", methods=["GET"])
-@login_required
+@basic_store.route("/list", methods=["GET"])
 def list_stored_mviewer_config() -> Response:
     """
     Return all mviewer config created by the current user
@@ -71,8 +68,7 @@ def list_stored_mviewer_config() -> Response:
     return jsonify(metadatas)
 
 
-@basic_store.route("/delete.php", methods=["GET"])
-@login_required
+@basic_store.route("/delete", methods=["GET"])
 def delete_mviewer_config() -> Response:
     """
     Delete all the mviewer config of the user logged

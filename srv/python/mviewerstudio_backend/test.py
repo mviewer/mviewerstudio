@@ -115,16 +115,19 @@ class TestAuthenticationUser:
 
 class TestUserInfos:
     def test_anonymous(self, client):
-        r = client.get("/user_infos.php")
-        assert r.status_code == 403
+        r = client.get("/user_infos")
+        assert r.status_code == 200
         assert isinstance(r.json, dict)
         assert r.json == {
-            "name": "Forbidden",
-            "description": "You don't have the permission to access the requested resource. It is either read-protected or not readable by the server.",
+            "firstname": "anonymous",
+            "lastname": "anonymous",
+            "org": None,
+            "role": [''],
+            "username": "anonymous"
         }
 
     def test_client1(self, client, header_client1):
-        r = client.get("/user_infos.php", headers=header_client1)
+        r = client.get("/user_infos", headers=header_client1)
         assert r.status_code == 200
         assert isinstance(r.json, dict)
         assert r.json == {
@@ -145,7 +148,7 @@ class TestStoreMviewerConfig:
         filehash = hashlib.md5()
         filehash.update(client_data.encode("utf-8"))
         filehash = filehash.hexdigest()
-        p = client.post("/store.php", data=client_data, headers=header_client1)
+        p = client.post("/store", data=client_data, headers=header_client1)
         assert p.status_code == 200
         assert p.json == {"filepath": f"{filehash}.xml", "success": True}
         assert len(os.listdir("./store")) == 1
@@ -161,8 +164,8 @@ class TestListStoredMviewerConfig:
         client_data = test_xml.format(
             title="test_store2", creator="foo", publisher="test_publisher"
         )
-        client.post("/store.php", data=client_data, headers=header_client1)
-        r = client.get("/list.php", headers=header_client1)
+        client.post("/store", data=client_data, headers=header_client1)
+        r = client.get("/list", headers=header_client1)
         assert r.status_code == 200
         assert r.json == [
             {
@@ -182,8 +185,8 @@ class TestListStoredMviewerConfig:
         client_data = test_xml.format(
             title="test_store3", creator="test_user", publisher="test_publisher"
         )
-        client.post("/store.php", data=client_data, headers=header_client1)
-        r = client.get("/list.php", headers=header_client2)
+        client.post("/store", data=client_data, headers=header_client1)
+        r = client.get("/list", headers=header_client2)
         assert r.status_code == 200
         assert r.json == []
 
@@ -198,12 +201,12 @@ class TestDeleteMviewerConfig:
         client1_data = test_xml.format(
             title="test_store4", creator="foo", publisher="test_publisher"
         )
-        client.post("/store.php", data=client1_data, headers=header_client1)
+        client.post("/store", data=client1_data, headers=header_client1)
         client2_data = test_xml.format(
             title="test_store5", creator="toto", publisher="test_publisher"
         )
-        client.post("/store.php", data=client2_data, headers=header_client2)
-        r = client.get("/delete.php", headers=header_client1)
+        client.post("/store", data=client2_data, headers=header_client2)
+        r = client.get("/delete", headers=header_client1)
         assert r.status_code == 200
         assert r.json == {"deleted_files": 1}
         # file of user2 should remain.
