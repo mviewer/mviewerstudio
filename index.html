@@ -288,20 +288,25 @@
             </div>
 
             <div class="tab-pane" id="search-config">
+                <div class="panel panel-default">
+                    <div class="panel-heading"><h3 class="panel-title">Recherche d'entités</h3></div>
+                    <div class="panel-body">
+                        <div class="form-group">
 
-                <div class="well well-lg">
-                    <p>
-                        La recherche peut être activée si la couche est de type geojson.
-                        Cette fonctionnalité est également activable pour les couches de type WMS à la condition que les
-                        entités qui composent cette couche soient également indexées dans Elasticsearch.
-                    </p>
-                </div>
-                <div class="well well-lg">
-                    <div class="checkbox lg">
-                        <label for="opt-searchfeatures">
-                            <input type="checkbox" id="opt-searchfeatures" value="0">
-                            Activer la recherche d'entités
-                        </label>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="" id="opt-searchfeatures" required>
+                                <label class="form-check-label" for="opt-searchfeatures">
+                                Activer la recherche d'entités
+                                </label>
+                            </div>
+                        </div>
+                        <p>
+                            La recherche d'entités peut être activée sur les couches de type geojson.
+                        </p>
+                        <p>
+                            Cette fonctionnalité est également activable pour les couches de type WMS à la condition que les
+                            entités qui composent cette couche soient également indexées par Elasticsearch.
+                        </p>
                     </div>
                 </div>
 
