@@ -90,8 +90,8 @@ class TestAuthenticationUser:
             assert c.username == "anonymous"
             assert c.firstname == "anonymous"
             assert c.lastname == "anonymous"
-            assert c.org is None
-            assert c.role == [""]
+            assert c.organisation is None
+            assert c.roles == [""]
 
     def test_headers(self):
         app = create_app()
@@ -106,8 +106,8 @@ class TestAuthenticationUser:
             c = _get_current_user()
             assert isinstance(c, User)
             assert c.username == "foo"
-            assert c.org == "bar"
-            assert c.role == ["USER", "SUPERUSER"]
+            assert c.organisation == "bar"
+            assert c.roles == ["USER", "SUPERUSER"]
             assert c.firstname == "baz"
             # this should not happened IRL.
             assert c.lastname == "anonymous"
@@ -119,11 +119,11 @@ class TestUserInfos:
         assert r.status_code == 200
         assert isinstance(r.json, dict)
         assert r.json == {
-            "firstname": "anonymous",
-            "lastname": "anonymous",
-            "org": None,
-            "role": [''],
-            "username": "anonymous"
+            "first_name": "anonymous",
+            "last_name": "anonymous",
+            "organisation": {"legal_name": None},
+            "roles": [""],
+            "user_name": "anonymous",
         }
 
     def test_client1(self, client, header_client1):
@@ -131,11 +131,11 @@ class TestUserInfos:
         assert r.status_code == 200
         assert isinstance(r.json, dict)
         assert r.json == {
-            "firstname": "baz",
-            "lastname": "baf",
-            "org": "bar",
-            "role": ["USER", "SUPERUSER"],
-            "username": "foo",
+            "first_name": "baz",
+            "last_name": "baf",
+            "organisation": {"legal_name": "bar"},
+            "roles": ["USER", "SUPERUSER"],
+            "user_name": "foo",
         }
 
 

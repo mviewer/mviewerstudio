@@ -1,16 +1,21 @@
 version: '3'
+volumes:
+  apps:
+
 services:
   studio-frontend:
     build: .
-    image: mviewer/studio-frontend
+    image: mviewer/mviewer-studio-frontend
     ports:
       - 8080:80
   studio-backend:
     build: srv/python/
-    image: mviewer/studio-backend
+    image: mviewer/mviewer-studio-backend
+    volumes:
+      - "apps:/home/apprunner/store/apps"
   mviewer:
-    image: mviewer
-    ports: 
+    image: mviewer/mviewer
+    ports:
       - 8081:80
-
-  
+    volumes:
+      - "apps:/usr/share/nginx/html/apps"

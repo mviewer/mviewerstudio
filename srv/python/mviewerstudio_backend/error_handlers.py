@@ -1,12 +1,19 @@
 from werkzeug.exceptions import HTTPException
-from werkzeug.wrappers import Response
+from werkzeug import Response
 import json
+import logging
+
+
+logger = logging.getLogger(__name__)
 
 
 def _jsonify_exception(error: HTTPException) -> Response:
     response = error.get_response()
     response.data = json.dumps({"name": error.name, "description": error.description})
     response.content_type = "application/json"
+    logger.warning(
+        f"An error occured. Error code {response.status_code}, name: {error.name}"
+    )
     return response
 
 
