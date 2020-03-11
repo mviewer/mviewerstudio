@@ -8,6 +8,6 @@ server {
   }
 
   location /srv {
-      proxy_pass http://mviewer-studio-backend:8000/;
+      proxy_pass http://$PROXY_PASS:8000/;
   }
 }

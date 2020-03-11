@@ -13,9 +13,9 @@ services:
     image: mviewer/mviewer-studio-backend
     volumes:
       - "apps:/home/apprunner/store/apps"
-  mviewer:
-    image: mviewer/mviewer
-    ports:
-      - 8081:80
-    volumes:
-      - "apps:/usr/share/nginx/html/apps"
+#  mviewer:
+#    image: mviewer/mviewer
+#    ports:
+#      - 8081:80
+#    volumes:
+#      - "apps:/usr/share/nginx/html/apps"
