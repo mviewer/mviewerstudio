@@ -5,17 +5,18 @@ volumes:
 services:
   studio-frontend:
     build: .
-    image: mviewer/mviewer-studio-frontend
+    image: geobretagne/mviewer-studio-frontend
     ports:
       - 8080:80
-  studio-backend:
+  studio-backend-python:
     build: srv/python/
-    image: mviewer/mviewer-studio-backend
+    image: geobretagne/mviewer-studio-backend-python
     volumes:
       - "apps:/home/apprunner/store/apps"
-#  mviewer:
-#    image: mviewer/mviewer
-#    ports:
-#      - 8081:80
-#    volumes:
-#      - "apps:/usr/share/nginx/html/apps"
+  mviewer:
+    image: nginx:1.17
+    ports:
+      - 8081:80
+    volumes:
+      - "apps:/usr/share/nginx/html/apps"
+      - "../mviewer:/usr/share/nginx/html"
