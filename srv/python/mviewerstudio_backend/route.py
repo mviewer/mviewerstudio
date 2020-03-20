@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify, Response, request, current_app
+from flask import Blueprint, jsonify, Response, request, current_app, redirect
 from .login_utils import current_user
 import hashlib
 import os.path
@@ -8,7 +8,7 @@ import lxml.etree as ET
 from pathlib import Path
 from flask.blueprints import BlueprintSetupState
 
-basic_store = Blueprint("basic-store", __name__)
+basic_store = Blueprint("basic-store", __name__, static_folder='static', static_url_path="/")
 
 
 @basic_store.record_once
@@ -16,6 +16,11 @@ def basic_store_init(state: BlueprintSetupState):
     p = Path(state.app.config["EXPORT_CONF_FOLDER"])
     if not p.exists():
         p.mkdir()
+
+
+@basic_store.route("/")
+def default_doc():
+    return redirect("index.html")
 
 
 @basic_store.route("/user_infos", methods=["GET"])
