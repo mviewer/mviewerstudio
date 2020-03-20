@@ -12,9 +12,9 @@ Ce service retourne les informations liées à l'utilisateur connecté. Il sert 
 Selon mviewerstudio.js, on devrait avoir :
     
     {
-        "firstName": "",
-        "lastName":"",
-        "userGroups": [{"fullName":""}]
+        "first_name": "",
+        "last_name":"",
+        "user_groups": [{"full_name":""}]
     }
     
   A la place, nous avons : 
