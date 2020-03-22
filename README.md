@@ -5,7 +5,7 @@ Mviewer Studio permet de générer une configuration pour [mviewer](https://gith
 Application écrite en javascript et php
 
 Configuration
---------------
+-------------
 
 La configuration s'effectue dans le fichier config.json (à créer à partir d'une copie de config-sample.json).
 
@@ -52,3 +52,17 @@ Valeur par défaut si ce paramètre est absent ``../proxy/?url=``.
 * **baselayers** : Cette section concerne le paramétrage des fonds de plan.
 
 * **data_providers** : Cette section concerne le paramétrage des différents fournisseurs de données.
+
+Paramètres d'URL
+----------------
+
+Il est possible d'instancier un mviewerstudio avec l'un des 2 paramètres suivants dans l'URL :
+
+* **xml**: URL absolue ou relative (par rapport au fichier index.html de mviewerstudio) d'un fichier XML de 
+configuration de mviewer à charger dans mviewerstudio.
+* **wmc**: URL absolue ou relative (par rapport au fichier index.html de mviewerstudio) d'un fichier Web Map Context 
+(WMC) pour OpenLayers à charger dans mviewerstudio.
+
+mviewerstudio initialise son interface depuis le fichier transmis : thématiques, couches de données en particulier.
+Le chargement d'un fichier WMC renseigne moins d'information dans mviewerstudio : le titre de la carte, son emprise 
+géographique et ses thématiques/couches.
