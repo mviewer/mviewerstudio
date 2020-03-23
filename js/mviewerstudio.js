@@ -18,6 +18,7 @@ $(document).ready(function(){
         dataType: "json",
         contentType: "application/json",
         success: function (data) {
+            console.groupCollapsed("init app from config");
             _conf = data.app_conf;
             if (_conf.proxy === undefined) {
                 _conf.proxy = "../proxy/?url=";
@@ -173,12 +174,18 @@ $(document).ready(function(){
                         }
                     },
                     error: function (xhr, ajaxOptions, thrownError) {
-                        alert("Problème avec la récupération de la configuration");
+                        console.error("user info retrieval failed", {
+                            xhr: xhr,
+                            ajaxOptions: ajaxOptions,
+                            thrownError: thrownError
+                        });
+                        alert("Echec de la récupération de l'identité de l'utilisateur.\nVeuillez consulter votre administrateur.");
                     }
                 });
             } else {
                 mv.hideUserInfo();
             }
+            console.groupEnd("init app from config");
         }
     });
     $('#tabs').tab();
@@ -341,13 +348,15 @@ var editLayer = function (item) {
 };
 
 var importThemes = function () {
-    console.log( _conf.external_themes.data );
+    console.groupCollapsed("importThemes");
+    console.log("external theme to import", _conf.external_themes.data);
     $("#importedThemes input:checked").each(function (id, item) {
         var url = $(item).attr("data-url");
         var id  = $(item).attr("data-theme-id");
         var label  = $(item).attr("data-theme-label");
         addTheme(label, true, id, false, url);
     });
+    console.groupEnd("importThemes");
 };
 
 var addTheme = function (title, collapsed, themeid, icon, url) {
@@ -501,7 +510,7 @@ var saveApplicationParameters = function (option) {
 
     savedParameters.application.forEach(function(parameter, id){
         $.each(parameter,function(prop,val) {
-            console.log(prop,val)
+            console.log(prop, val)
             application.push(prop+'="'+val+'"');
         });
     });
@@ -601,6 +610,8 @@ var saveApplicationParameters = function (option) {
             contentType: 'text/xml',
             success: function( data ) {
 
+                console.log("saved map file: %s", data.filepath);
+
                 if (option == 0) {
                     // Ok it's been saved and that's it
                     alert("Fichier sauvegardé sur le serveur (" + data.filepath + ").");
@@ -619,7 +630,6 @@ var saveApplicationParameters = function (option) {
                     // Preview the map
                     var url = "";
                     if (data.success && data.filepath) {
-                        console.log(data.filepath);
                         // Build a short and readable URL for the map
                         if (_conf.mviewer_short_url && _conf.mviewer_short_url.used) {
                             var filePathWithNoXmlExtension = "";
@@ -643,10 +653,12 @@ var saveApplicationParameters = function (option) {
 
             },
             error: function(xhr, status, error) {
-                console.log('error xhr:' + xhr.responseText);
-                console.log('error status:' + status);
-                console.log('error:' + error);
-                alert("Echec de la sauvegarde du fichier.\nVeuillez consulter votre administrateur.")
+                console.error("map file save failed", {
+                    xhr: xhr,
+                    status: status,
+                    error: error
+                });
+                alert("Echec de la sauvegarde du fichier.\nVeuillez consulter votre administrateur.");
             }
         });
     } else {
@@ -707,7 +719,12 @@ var deleteMyApplications = function () {
             mv.getListeApplications();
         },
         error: function (xhr, ajaxOptions, thrownError) {
-            alert("Problème avec la requête de suppression " +  thrownError);
+            console.error("map files deletion failed", {
+                xhr: xhr,
+                ajaxOptions: ajaxOptions,
+                thrownError: thrownError
+            });
+            alert("Echec de la requête de suppression.\nVeuillez consulter votre administrateur.");
         }
     });
 };
@@ -723,7 +740,12 @@ var  loadApplicationParametersFromRemoteFile = function (url) {
             mv.parseApplication(data);
         },
         error: function (xhr, ajaxOptions, thrownError) {
-            alert("Problème avec la requête de récupération de l'application " +  thrownError);
+            console.error("map file retrieval failed", {
+                xhr: xhr,
+                ajaxOptions: ajaxOptions,
+                thrownError: thrownError
+            });
+            alert("Echec de la requête de récupération de l'application.\nVeuillez consulter votre administrateur.");
         }
     });
 
@@ -737,14 +759,18 @@ var loadApplicationParametersFromWMC = function (url) {
             mv.parseWMC(data);
         },
         error: function (xhr, ajaxOptions, thrownError) {
-            alert("Problème avec la requête de récupération de l'application " +  thrownError);
+            console.error("web map context (WMC) file retrieval failed", {
+                xhr: xhr,
+                ajaxOptions: ajaxOptions,
+                thrownError: thrownError
+            });
+            alert("Echec de la récupération du fichier Web Map Context (WMC).\nVeuillez consulter votre administrateur.");
         }
     });
 
 };
 
 var updateTheme = function (el) {
-    console.log(el);
     var cls = $("#"+el.id+" option[value='"+el.value+"']").text();
     $(el).removeClass().addClass("form-control " + cls);
 };
