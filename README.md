@@ -66,3 +66,35 @@ configuration de mviewer à charger dans mviewerstudio.
 mviewerstudio initialise son interface depuis le fichier transmis : thématiques, couches de données en particulier.
 Le chargement d'un fichier WMC renseigne moins d'information dans mviewerstudio : le titre de la carte, son emprise 
 géographique et ses thématiques/couches.
+
+Limitations
+-----------
+
+###Couches WMS
+
+La version actuelle de Mviewer Studio n'est pas encore capable de gérer l'intégralité des types de couches supportés 
+par Mviewer. Seules les couches de type WMS peuvent être configurées avec Mviewer Studio. Les autres types de couches 
+pourrront être supportés à l'avenir si des contributeurs enrichissent le code source de l'application. 
+
+
+###Spécificités de GeoServer
+
+Mviewer et Mviewer Studio ont été initialement développés dans un contexte où les couches WMS utilisées étaient 
+essentiellement servies par des instances de GeoServer. Certaines de leurs fonctionnalités s'appuient sur des 
+spécificités de GeoServer. Même si Mviewer et Mviewer Studio sont capables d'interopérer avec des services WMS 
+provenant d'autres logiciels (MapServer, QGIS Server, ESRI par exemple) certaines de leurs fonctions ne pourront être
+activées qu'avec GeoServer.
+
+####Filtre CQL
+
+L'une de ces spécificités est le support d'un filtre CQL dans les requêtes GetMap de WMS pour n'afficher que les objets 
+vectoriels répondant à filtre atributaire. Il ne s'agit pas d'une fonction standard de WMS. Cette capacité est activée 
+dans les options suivantes de Mviewer :
+- filter
+- attributefilter
+- attributefield
+- attributevalues
+- attributeoperator
+
+Ces options sont manipulées dans les onglets "Filtre" et "Liste de choix" du formulaire d'édition d'une couche de 
+Mviewer Studio.
