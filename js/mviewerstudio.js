@@ -685,7 +685,7 @@ var loadApplicationParametersFromFile = function () {
 var deleteMyApplications = function () {
     $.ajax({
         type: "GET",
-        url: "srv/delete.php",
+        url: _conf.delete_service,
         success: function( data ) {
             alert(data.deleted_files + " application(s) supprimée(s)");
             mv.getListeApplications();

@@ -2,6 +2,8 @@
 	"app_conf": {
         "studio_title": "GéoBretagne mviewer studio",
         "upload_service": "srv/store",
+        "delete_service": "srv/delete",
+        "list_service": "srv/list",
         "mviewer_instance": "./mviewer/",
         "conf_path_from_mviewer" :"apps/store/",
         "mviewer_short_url": {

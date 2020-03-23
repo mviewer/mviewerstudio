@@ -23,12 +23,12 @@ def default_doc():
     return redirect("index.html")
 
 
-@basic_store.route("/user_infos", methods=["GET"])
+@basic_store.route("/srv/user_info", methods=["GET"])
 def user() -> Response:
     return jsonify(current_user.as_dict())
 
 
-@basic_store.route("/store", methods=["POST"])
+@basic_store.route("/srv/store", methods=["POST"])
 def store_mviewer_config() -> Response:
     raw_xml = request.data.decode("utf-8")
     xml_with_replaced_user = raw_xml.replace("anonymous", current_user.username)
@@ -41,7 +41,7 @@ def store_mviewer_config() -> Response:
     return jsonify({"success": True, "filepath": filename})
 
 
-@basic_store.route("/list", methods=["GET"])
+@basic_store.route("/srv/list", methods=["GET"])
 def list_stored_mviewer_config() -> Response:
     """
     Return all mviewer config created by the current user
@@ -73,7 +73,7 @@ def list_stored_mviewer_config() -> Response:
     return jsonify(metadatas)
 
 
-@basic_store.route("/delete", methods=["GET"])
+@basic_store.route("/srv/delete", methods=["GET"])
 def delete_mviewer_config() -> Response:
     """
     Delete all the mviewer config of the user logged
