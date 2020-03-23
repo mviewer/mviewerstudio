@@ -1,7 +1,0 @@
-#!/bin/bash
-set -e
-
-if [[ $MVIEWER_BACKEND == "python" ]]; then
-    sed -i 's/\.php//' /usr/share/nginx/html/js/mviewerstudio.js
-    sed -i 's/\.php//' /usr/share/nginx/html/lib/mv.js
-fi

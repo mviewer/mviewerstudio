@@ -3,7 +3,7 @@ FROM php:7.4-apache-buster
 
 # Inits the apps/ volume
 COPY   apps/       ./apps
-COPY   config-docker-php.json ./apps/config.json
+COPY   docker/config-docker-php.json ./apps/config.json
 RUN    chown -R www-data:www-data /var/www/html/apps
 
 # Note: this is the admin's responsability to

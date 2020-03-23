@@ -6,7 +6,7 @@ services:
   studiobackend-php:
     build:
       context: ./
-      dockerfile: Dockerfile-php-backend
+      dockerfile: docker/Dockerfile-php-backend
     image: mviewer/studio-backend:php-latest
     volumes:
       - "apps:/var/www/html/apps"
@@ -17,7 +17,7 @@ services:
   studiobackend-python:
     build:
       context: .
-      dockerfile: Dockerfile-python-backend
+      dockerfile: docker/Dockerfile-python-backend
     image: mviewer/studio-backend:python-latest
     volumes:
       - "apps:/home/apprunner/store/apps"
