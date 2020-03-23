@@ -7,7 +7,7 @@ Application écrite en javascript et php
 Configuration
 --------------
 
-La configuration s'effectue dans le fichier config.json (à créer à partir d'une copie de config-sample.json).
+La configuration s'effectue dans le fichier `apps/config.json` (à créer à partir d'une copie de config-sample.json).
 
 * **studio_title** : Nom de l'application tel qu'il apparaîtra dans la navbar de l'application et dans le titre de la
 page dans votre navigateur internet.

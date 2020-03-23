@@ -16,3 +16,6 @@ __pycache__/
 .idea
 .vscode
 *.iml
+
+# venv
+**/venv

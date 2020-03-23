@@ -14,7 +14,7 @@ $(document).ready(function(){
     }
     $.ajax({
         type: "GET",
-        url: "config.json",
+        url: "apps/config.json",
         dataType: "json",
         contentType: "application/json",
         success: function (data) {

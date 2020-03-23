@@ -3,16 +3,17 @@ volumes:
   apps:
 
 services:
-    # Left as an exercize to the reader :-)
-    #  studiobackend-php:
-    #    build:
-    #        context: ./
-    #        dockerfile: Dockerfile-php-backend
-    #    image: mviewer/studio-backend:php-latest
-    #    volumes:
-    #      - "apps:/home/apprunner/store/apps"
-    #    ports:
-    #      - "5000:5000"
+  studiobackend-php:
+    build:
+      context: ./
+      dockerfile: Dockerfile-php-backend
+    image: mviewer/studio-backend:php-latest
+    volumes:
+      - "apps:/var/www/html/apps"
+    # Uncomment here and comment the one from python
+    # to use the php backend on the host port 8000.
+    #  ports:
+    #    - "8000:80"
   studiobackend-python:
     build:
       context: .
@@ -21,8 +22,10 @@ services:
     volumes:
       - "apps:/home/apprunner/store/apps"
     ports:
-        - "8000:8000"
+      - "8000:8000"
   mviewer:
+    # this image is automatically built in
+    # the geobretagne/mviewer github repository
     image: mviewer/mviewer
     ports:
       - "8081:80"
