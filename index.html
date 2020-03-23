@@ -538,10 +538,10 @@
                                         <label class="control-label" for="frm-type">Type</label>
                                         <select id="frm-type" name="type" class="form-control"
                                                 onchange="mv.changeLayerType(this.value);">
-                                            <option value="wms">wms</option>
-                                            <option value="geojson">geojson</option>
-                                            <option value="kml">kml</option>
-                                            <option value="customlayer">customlayer</option>
+                                            <option value="wms">WMS</option>
+                                            <option value="geojson" disabled>GeoJSON</option>
+                                            <option value="kml" disabled>KML</option>
+                                            <option value="customlayer" disabled>Customlayer</option>
                                         </select>
                                     </div>
                                     <div class="form-group">
@@ -818,8 +818,8 @@
                                         <label class="control-label" for="frm-searchengine">Moteur de recherche</label>
                                         <select id="frm-searchengine" class="form-control"
                                                 onchange="mv.changeSearchEngine(this.value)">
-                                            <option value="elasticsearch">elasticsearch</option>
-                                            <option value="fuse">fuse</option>
+                                            <option value="elasticsearch">Elasticsearch</option>
+                                            <option value="fuse" disabled>Fuse.js</option>
                                         </select>
                                     </div>
                                     <div id="fuse_options">
