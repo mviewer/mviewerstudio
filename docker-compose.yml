@@ -4,34 +4,35 @@ volumes:
 
 services:
 
-  # Select between the next 2 services the backend you want to use, and adapt
-  # the docker/nginx-default.conf configuration accordingly.
-
+  # Select between the next 2 services the backend you want to use by
+  # commenting / uncommenting the 'volume' section &  modify the links alias
+  # on the mviewer-studio service.
+  #
   # You cannot use both backends at the same time, and you have to be wary if
-  # you switch from one to another, as each come with a custom config.json
+  # you switch from one to another, as each comes with a custom config.json
   # file.
-
+  #
   # If you want to switch, make sure either you modify the config.json, or
   # reinitialize the docker volume.
 
- #  studiobackend-php:
- #    build:
- #      context: ./
- #      dockerfile: docker/Dockerfile-php-backend
- #    image: mviewer/studio-backend:php-latest
- #    volumes:
- #      - "apps:/var/www/html/apps"
- #    ports:
- #      - "8081:80"
-  studiobackend-python:
+  #  PHP version
+  mviewerstudio-php:
+    build:
+      context: ./
+      dockerfile: docker/Dockerfile-php-backend
+    image: mviewer/mviewerstudio:php-latest
+#    volumes:
+#      - "apps:/var/www/html/apps"
+
+  # Python version
+  mviewerstudio-python:
     build:
       context: .
       dockerfile: docker/Dockerfile-python-backend
-    image: mviewer/studio-backend:python-latest
+    image: mviewer/mviewerstudio:python-latest
     volumes:
       - "apps:/home/apprunner/apps"
-    ports:
-      - "8082:8000"
+
   mviewer:
     # this image is automatically built in
     # the geobretagne/mviewer github repository
@@ -40,8 +41,9 @@ services:
     volumes:
         - "apps:/usr/share/nginx/html/apps"
     links:
-        - studiobackend-python
-#       - studiobackend-php
+        - mviewerstudio-php
+        - mviewerstudio-python
+
   mviewer-studio:
       image: nginx:1.17.9
       volumes:
@@ -50,6 +52,8 @@ services:
         - "8080:8080"
       links:
           - mviewer
-          - studiobackend-python
-#         - studiobackend-php
+          # use the correct link entry below, depending on the selected
+          # backend
+          #- mviewerstudio-php:mviewerstudio
+          - mviewerstudio-python:mviewerstudio
 
