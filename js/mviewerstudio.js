@@ -1,6 +1,6 @@
 var _conf;
 var API = {};
-var VERSION="3.1";
+var VERSION = "3.1-snapshot";
 
 $(document).ready(function(){
    
