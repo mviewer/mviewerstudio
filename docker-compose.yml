@@ -29,7 +29,7 @@ services:
       dockerfile: docker/Dockerfile-python-backend
     image: mviewer/studio-backend:python-latest
     volumes:
-      - "apps:/home/apprunner/store/apps"
+      - "apps:/home/apprunner/apps"
     ports:
       - "8082:8000"
   mviewer:
@@ -38,7 +38,10 @@ services:
     # See https://github.com/geobretagne/mviewer/pull/236
     image: mviewer/mviewer
     volumes:
-      - "apps:/usr/share/nginx/html/apps"
+        - "apps:/usr/share/nginx/html/apps"
+    links:
+        - studiobackend-python
+#       - studiobackend-php
   mviewer-studio:
       image: nginx:1.17.9
       volumes:
@@ -47,6 +50,6 @@ services:
         - "8080:8080"
       links:
           - mviewer
-#          - studiobackend-php
           - studiobackend-python
+#         - studiobackend-php
 

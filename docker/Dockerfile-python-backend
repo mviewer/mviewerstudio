@@ -6,10 +6,11 @@ USER apprunner
 
 ENV HOME=/home/apprunner
 ENV PATH=$HOME/.local/bin:$PATH
-ENV EXPORT_CONF_FOLDER=/home/apprunner/store
+ENV EXPORT_CONF_FOLDER=/home/apprunner/apps/store
 
-RUN chown -R apprunner:apprunner /home/apprunner/store
-VOLUME [ "/home/apprunner/store" ]
+RUN mkdir -p /home/apprunner/apps/store
+RUN chown -R apprunner:apprunner /home/apprunner/apps
+VOLUME [ "/home/apprunner/apps" ]
 
 WORKDIR /home/apprunner
 

@@ -5,7 +5,7 @@
         "delete_service": "srv/delete",
         "list_service": "srv/list",
         "mviewer_instance": "./mviewer/",
-        "conf_path_from_mviewer" :"apps/store/",
+        "conf_path_from_mviewer" :"apps/store",
         "mviewer_short_url": {
             "used": true,
             "apps_folder": "store"
