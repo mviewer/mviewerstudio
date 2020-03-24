@@ -1,7 +1,7 @@
 on:
   push:
-    branches:
-      - master
+  release:
+    types: [published]
 
 jobs:
   build_images:
@@ -9,15 +9,50 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: build containers
+
+      - name: "Set up Python"
+        uses: actions/setup-python@v1
+        with:
+          python-version: '3.8'
+
+      - name: "python backend - Running unit tests"
+        working-directory: srv/python
+        run: |
+          pip install -r requirements.txt -r dev-requirements.txt
+          pip install -e .
+          pytest mviewerstudio_backend/test.py
+
+      - name: "python backend - Typechecking"
+        working-directory: srv/python
+        run: |
+          mypy --ignore-missing mviewerstudio_backend
+
+      - name: "Calculating docker image tag"
+        id: version
+        run: echo ::set-output name=VERSION::$(echo $GITHUB_REF | cut -d / -f 3)
+
+      - name: "build the docker containers"
         run: |
           docker-compose build
-      - name: Logging in docker hub
+
+      - name: "Logging in docker hub"
         uses: azure/docker-login@v1
+        if: github.repository == 'mviewer/mviewerstudio'
         with:
           username: '${{ secrets.DOCKER_HUB_USERNAME }}'
           password: '${{ secrets.DOCKER_HUB_PASSWORD }}'
+
+      - name: "Retag / push the docker images (not latest)"
+        if: github.ref != 'refs/heads/master' && github.repository == 'mviewer/mviewerstudio'
+        run: |
+            docker tag mviewer/mviewerstudio:python-latest mviewer/mviewerstudio:python-${VERSION}
+            docker tag mviewer/mviewerstudio:php-latest    mviewer/mviewerstudio:php-${VERSION}
+            docker push mviewer/mviewerstudio:python-${VERSION}
+            docker push mviewer/mviewerstudio:php-${VERSION}
+
       - name: push containers
+        if: github.ref == 'refs/heads/master' && github.repository == 'mviewer/mviewerstudio'
         run: |
           docker-compose push
+
 

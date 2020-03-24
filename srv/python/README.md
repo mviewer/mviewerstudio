@@ -24,7 +24,7 @@ flask run
 ### tests
 
 * Lancer les tests unitaires : `pytest mviewerstudio_backend/test.py`
-* Vérifier les types : `mypy --ignore-missing mviewerstudio-backend`
+* Vérifier les types : `mypy --ignore-missing mviewerstudio_backend`
 
 
 ## Production
