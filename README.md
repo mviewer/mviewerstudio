@@ -17,6 +17,10 @@ Valeur par défaut : ``srv/store.php``. Ne pas oublier d'autoriser l'utilisateur
 (par exemple ``../mapfishapp/ws/mviewer/``). Dans ce dernier cas, les fichiers de configuration sont stockés dans la
 base de données de geOrchestra.
 
+* **delete_service** : Service web utilisé pour supprimer les configurations mviewer créées via le générateur
+
+* **list_service** : Service web permettant de lister les configurations mviewer créées par l'utilisateur courant
+
 * **export_conf_folder** : Dossier utilisé pour le stockage des fichiers de configuration mviewer générés. Ce paramètre
 est utilisé si le paramètre précédent est ``srv/store.php``.
 
