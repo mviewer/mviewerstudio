@@ -136,7 +136,7 @@ $(document).ready(function () {
         $("#btn-importTheme").remove();
       }
 
-      nb_providers = 0;
+      let nb_providers = 0;
 
       if (_conf.data_providers && _conf.data_providers.csw) {
         _conf.data_providers.csw.forEach(function (provider, id) {
@@ -144,7 +144,7 @@ $(document).ready(function () {
           if (nb_providers > 0) {
             cls = "";
           }
-          csw_provider_html = '<li class="' + cls + '">';
+          let csw_provider_html = '<li class="' + cls + '">';
           csw_provider_html +=
             '<a onclick="setActiveProvider(this);" href="#" class="dropdown-toggle"';
           csw_provider_html +=
@@ -1015,6 +1015,8 @@ var updateTheme = function (el) {
     .removeClass()
     .addClass("form-control " + cls);
 };
+
+document.querySelector('#opt-style').addEventListener('change', updateTheme)
 
 var setActiveProvider = function (el) {
   $(el).parent().parent().find(".active").removeClass("active");
