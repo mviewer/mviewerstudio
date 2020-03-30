@@ -881,8 +881,7 @@ var _elementTranslate = function (element) {
             }
         });
         if(!find && $(el).text().indexOf("{{")=== -1) {
-            // don't change the value => fallback is the language used in the html file
-            //$(el).text(tr);
+            $(el).text(tr);
         }
     });
     var ret = (element === "body")?true:_element[0].outerHTML;
