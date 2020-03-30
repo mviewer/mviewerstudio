@@ -185,7 +185,7 @@ $(document).ready(function(){
                             ajaxOptions: ajaxOptions,
                             thrownError: thrownError
                         });
-                        alert("Echec de la récupération de l'identité de l'utilisateur.\nVeuillez consulter votre administrateur.");
+                        alert(mviewer.tr('msg.config_retrieval_error'));
                     }
                 });
             } else {
@@ -367,7 +367,7 @@ var importThemes = function () {
 
 var addTheme = function (title, collapsed, themeid, icon, url) {
     if ($("#panel-theme").is(":visible")) {
-        alert("Enregistrez d'abord votre thématique.");
+        alert(mviewer.tr('msg.save_theme_first'));
         return;
     }
     if (url) {
@@ -510,7 +510,7 @@ var saveApplicationParameters = function (option) {
     config.title = $("#opt-title").val();
 
     if(config.title == ''){
-        alert(mviewer.lang[lang]('msg.give_title_before_save'));
+        alert(mviewer.tr('msg.give_title_before_save'));
         return;
     }
 
@@ -620,7 +620,7 @@ var saveApplicationParameters = function (option) {
 
                 if (option == 0) {
                     // Ok it's been saved and that's it
-                    alert(mviewer.lang[lang]('msg.file_saved_on_server') + " (" + data.filepath + ").");
+                    alert(mviewer.tr('msg.file_saved_on_server') + " (" + data.filepath + ").");
 
                 } else if (option == 1) {
                     // Download map config file
@@ -711,7 +711,7 @@ var loadApplicationParametersFromFile = function () {
             mv.parseApplication(xml);
         }
         reader.onerror = function (evt) {
-            alert("error reading file");
+            alert(mviewer.tr('file_read_error'));
         }
     }
 };
@@ -721,7 +721,7 @@ var deleteMyApplications = function () {
         type: "GET",
         url: "srv/delete.php",
         success: function( data ) {
-            alert(data.deleted_files + " application(s) supprimée(s)");
+            alert(data.deleted_files + mviewer.tr('deleted_apps'));
             mv.getListeApplications();
         },
         error: function (xhr, ajaxOptions, thrownError) {
@@ -730,7 +730,7 @@ var deleteMyApplications = function () {
                 ajaxOptions: ajaxOptions,
                 thrownError: thrownError
             });
-            alert("Echec de la requête de suppression.\nVeuillez consulter votre administrateur.");
+            alert(mviewer.tr('msg.delete_req_error'));
         }
     });
 };
@@ -751,7 +751,7 @@ var  loadApplicationParametersFromRemoteFile = function (url) {
                 ajaxOptions: ajaxOptions,
                 thrownError: thrownError
             });
-            alert("Echec de la requête de récupération de l'application.\nVeuillez consulter votre administrateur.");
+            alert(mviewer.tr('msg.retrieval_req_error'));
         }
     });
 
@@ -770,7 +770,7 @@ var loadApplicationParametersFromWMC = function (url) {
                 ajaxOptions: ajaxOptions,
                 thrownError: thrownError
             });
-            alert("Echec de la récupération du fichier Web Map Context (WMC).\nVeuillez consulter votre administrateur.");
+            alert(mviewer.tr('psg.retrieval_req_error'));
         }
     });
 

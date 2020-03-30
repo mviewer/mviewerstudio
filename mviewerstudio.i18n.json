@@ -151,9 +151,15 @@
         "view": "Voir",
         "import": "Importer",
         "select": "Sélectionner",
+        "msg.config_retrieval_error": "Problème avec la récupération de la configuration",
+        "msg.save_theme_first": "Enregistrez d'abord votre thématique.",
         "msg.give_title_before_save": "Attention, vous devez obligatoirement indiquer un titre à votre application avant de sauvegarder.",
         "msg.file_saved_on_server": "Fichier sauvegardé sur le serveur",
         "msg.save_failure": "Echec de la sauvegarde du fichier.\nVeuillez consulter votre administrateur.",
+        "msg.file_read_error": "erreur de lecture de fichier",
+        "msg.deleted_apps": " application(s) supprimée(s)",
+        "msg.delete_req_error": "Problème avec la requête de suppression ",
+        "msg.retrieval_req_error": "Problème avec la requête de récupération de l'application ",
         "msg.xml_doc_invalid": "Document xml invalide"
     },
     "en": {
@@ -308,9 +314,15 @@
         "view": "View",
         "import": "Import",
         "select": "Select",
+        "msg.config_retrieval_error": "Problem encountered while retrieving configuration",
+        "msg.save_theme_first": "Please first save your theme",
         "msg.give_title_before_save": "Beware: you must give a title to your app before saving it.",
         "msg.file_saved_on_server": "File saved in the server",
         "msg.save_failure": "Failed to save the file.\n Please contact your administrator.",
+        "msg.file_read_error": "error reading file",
+        "msg.deleted_apps": " application(s) removed(s)",
+        "msg.delete_req_error": "Deletion request failed: ",
+        "msg.retrieval_req_error": "Application retrieval request failed: ",
         "msg.xml_doc_invalid": "XML document invalid"
     }
 }
