@@ -21,7 +21,7 @@
     <script src="lib/ogc.js"></script>
     <script src="lib/mv.js"></script>
     <script src="lib/slug.js"></script>
-    <script src="lib/i18njs/i18n.js" type="text/javascript"></script>
+    <script src="lib/i18njs/i18n.min.js" type="text/javascript"></script>
 </head>
 
 <body>
@@ -221,7 +221,7 @@
                             <div class="panel-body" id="theme-edit" data-themeid="">
                                 <div class="input-group">
                                     <span class="input-group-addon" i18n="tabs.data.paramspanel.name">Nom</span>
-                                    <input type="text" id="theme-edit-title" class="form-control" placeholder="Titre"
+                                    <input type="text" id="theme-edit-title" class="form-control" tabs.search.elastic_search.disabled="Titre"
                                            aria-describedby="basic-addon1">
                                 </div>
                                 <div class="checkbox">
@@ -979,11 +979,11 @@
                                     <input class="form-control custom-url" type="text"
                                            placeholder="URL du fournisseur..." oninput="updateAddProviderButtonState(this);"> </input>
                                     <select class="form-control">
-                                        <option value="csw" i18n="modal.layer.new.csw">CSW</option>
-                                        <option value="wms" i18n="modal.layer.new.wms">WMS</option>
+                                        <option value="csw" i18n="modal.layer.new.provider.csw">CSW</option>
+                                        <option value="wms" i18n="modal.layer.new.provider.wms">WMS</option>
                                     </select>
                                     <input class="form-control custom-title" type="text" placeholder="Nom..." oninput="updateAddProviderButtonState(this);"> </input>
-                                    <button id="add_provider_btn" type="button" class="btn btn-primary" disabled onclick="addNewProvider(this);" i18n="modal.layer.new.addprovider">
+                                    <button id="add_provider_btn" type="button" class="btn btn-primary" disabled onclick="addNewProvider(this);" i18n="modal.layer.new.provider.add">
                                         Ajouter un fournisseur
                                     </button>
                                 </div>
@@ -1018,7 +1018,7 @@
                     <div class="modal-footer">
                         <button type="button" id="change-icon" class="btn btn-success">
                             <span class="fa fa-check-circle-o"></span>
-                            <span i18n="modal.icon.use">  Utiliser l'icône sélectionnée</span>
+                            <span i18n="modal.icon.list">  Utiliser l'icône sélectionnée</span>
                         </button>
                         <button type="button" class="btn btn-default" data-dismiss="modal" i18n="cancel">Annuler</button>
                     </div>

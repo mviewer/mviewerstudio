@@ -869,7 +869,9 @@ var updateAddProviderButtonState = function (el) {
 
 var _elementTranslate = function (element) {
     // translate each html elements with i18n as attribute
-    var htmlType = ["placeholder", "title", "accesskey", "alt", "value", "data-original-title"];
+    //var htmlType = ["placeholder", "title", "accesskey", "alt", "value", "data-original-title"];
+    // Removed "value", because if prevents you from translating drop-down select boxes
+    var htmlType = ["placeholder", "title", "accesskey", "alt", "data-original-title"];
     var _element = $(element);
     _element.find("[i18n]").each((i, el) => {
         let find = false;
