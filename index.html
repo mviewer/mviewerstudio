@@ -442,8 +442,8 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h4 class="modal-title">Sélectionner un groupe</h4>
-                        <p>Vous appartenez à plusieurs groupes. Vous devez en sélectionner un pour créer ou enregistrer une carte associée à celui-ci.
+                        <h4 class="modal-title" i18n="modal.group.select">Sélectionner un groupe</h4>
+                        <p i18n="modal.group.description">Vous appartenez à plusieurs groupes. Vous devez en sélectionner un pour créer ou enregistrer une carte associée à celui-ci.
                     </div>
                     <div class="modal-body">
                         <div class="list-group" id="user_group_list"></div>
@@ -458,13 +458,13 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        <h4 class="modal-title">Charger un fichier de configuration</h4>
+                        <h4 class="modal-title" i18n="modal.file.import">Charger un fichier de configuration</h4>
                     </div>
                     <div class="modal-body">
 
                         <ul class="nav nav-tabs" role="tablist">
-                            <li role="presentation" class="active"><a href="#serverside" aria-controls="serverside" role="tab" data-toggle="tab">Localisé sur le serveur</a></li>
-                            <li role="presentation"><a href="#local" aria-controls="local" role="tab" data-toggle="tab">Sur votre ordinateur</a></li>
+                            <li role="presentation" class="active"><a href="#serverside" aria-controls="serverside" role="tab" data-toggle="tab" i18n="modal.file.serverside">Localisé sur le serveur</a></li>
+                            <li role="presentation"><a href="#local" aria-controls="local" role="tab" data-toggle="tab" i18n="modal.file.local">Sur votre ordinateur</a></li>
                         </ul>
 
                         <br>
@@ -472,13 +472,13 @@
                         <div class="tab-content">
                             <div role="tabpanel" class="tab-pane" id="local">
                                 <div class="alert alert-info">
-                                    <label>Choisissez un fichier</label>
+                                    <label i18n="modal.file.select">Choisissez un fichier</label>
                                     <div class="input-group">
                                         <input type="text" id="subfile" class="form-control">
                                         <span class="input-group-btn">
                                             <button class="btn btn-primary" type="button"
                                                     onclick="$('#filebutton').click();">
-                                                <span class="glyphicon glyphicon-folder-open"></span>
+                                                <span class="glyphicon glyphicon-folder-open"></span i18n="modal.file.browse">
                                                 &nbsp;Parcourir...
                                             </button>
                                         </span>
@@ -489,11 +489,11 @@
                             <div role="tabpanel" class="tab-pane active" id="serverside">
                                 <form class="form-inline">
                                     <div class="form-group" style="display: none;">
-                                        <label for="apps_group_list">Groupe</label>
+                                        <label for="apps_group_list" i18n="modal.file.group">Groupe</label>
                                         <select class="form-control" id="apps_group_list" onchange="mv.filterApplications()"></select>
                                     </div>
                                     <div class="form-group" style="display: none;">
-                                        <label for="apps_creator_list">Auteur</label>
+                                        <label for="apps_creator_list" i18n="modal.file.author">Auteur</label>
                                         <select class="form-control" id="apps_creator_list" onchange="mv.filterApplications()"></select>
                                     </div>
                                 </form>
@@ -501,7 +501,7 @@
                                 <div class="list-group" id="liste_applications"></div>
                                 <div class="text-right">
                                     <button type="button" class="btn btn-danger" onclick="deleteMyApplications();">
-                                        <span class="glyphicon glyphicon-trash"></span>
+                                        <span class="glyphicon glyphicon-trash"></span i18n="modal.file.deleteallmyapps">
                                         &nbsp;Supprimer toutes mes applications
                                     </button>
                                 </div>
@@ -509,7 +509,7 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal" i18n="close">Fermer</button>
                     </div>
                 </div>
             </div>
@@ -521,26 +521,26 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        <h4 class="modal-title">Edition de couche</h4>
+                        <h4 class="modal-title" i18n="modal.layer.edit">Edition de couche</h4>
                     </div>
                     <div class="modal-body">
                         <ul class="nav nav-tabs" role="tablist" id="layer_sections_menu">
-                            <li role="presentation" class="active"><a href="#layer_conf1" role="tab" data-toggle="tab">Base</a>
+                            <li role="presentation" class="active"><a href="#layer_conf1" role="tab" data-toggle="tab" i18n="modal.layer.edit.base">Base</a>
                             </li>
-                            <li role="presentation"><a href="#layer_conf2" role="tab" data-toggle="tab">Fiche</a></li>
-                            <li role="presentation"><a href="#layer_conf3" role="tab" data-toggle="tab">Affichage</a>
+                            <li role="presentation"><a href="#layer_conf2" role="tab" data-toggle="tab" i18n="modal.layer.edit.sheet">Fiche</a></li>
+                            <li role="presentation"><a href="#layer_conf3" role="tab" data-toggle="tab" i18n="modal.layer.edit.display">Affichage</a>
                             </li>
-                            <li role="presentation"><a href="#layer_conf4" role="tab" data-toggle="tab">Filtre</a></li>
-                            <li role="presentation"><a href="#layer_conf5" role="tab" data-toggle="tab">Liste de
+                            <li role="presentation"><a href="#layer_conf4" role="tab" data-toggle="tab" i18n="modal.layer.edit.filter">Filtre</a></li>
+                            <li role="presentation"><a href="#layer_conf5" role="tab" data-toggle="tab" i18n="modal.layer.edit.choices">Liste de
                                 choix</a></li>
-                            <li role="presentation"><a href="#layer_conf6" role="tab" data-toggle="tab">Recherche</a>
+                            <li role="presentation"><a href="#layer_conf6" role="tab" data-toggle="tab" i18n="modal.layer.edit.search">Recherche</a>
                             </li>
                         </ul>
                         <div class="tab-content" id="layer_sections">
                             <div role="tabpanel" class="tab-pane active" id="layer_conf1">
                                 <form>
                                     <div class="form-group">
-                                        <label for="frm-layer-title">Nom</label>
+                                        <label for="frm-layer-title" i18n="modal.layer.name">Nom</label>
                                         <input type="text" class="form-control" id="frm-name"
                                                placeholder="nom de la couche">
                                     </div>
@@ -549,51 +549,51 @@
                                         <input type="text" class="form-control" id="frm-type" placeholder="type">
                                     </div>-->
                                     <div class="form-group">
-                                        <label class="control-label" for="frm-type">Type</label>
+                                        <label class="control-label" for="frm-type" i18n="modal.layer.type">Type</label>
                                         <select id="frm-type" name="type" class="form-control"
                                                 onchange="mv.changeLayerType(this.value);">
-                                            <option value="wms">WMS</option>
-                                            <option value="geojson" disabled>GeoJSON</option>
-                                            <option value="kml" disabled>KML</option>
-                                            <option value="customlayer" disabled>Customlayer</option>
+                                            <option value="wms" i18n="modal.layer.type.wms">WMS</option>
+                                            <option value="geojson" i18n="modal.layer.type.geojson" disabled>GeoJSON</option>
+                                            <option value="kml" i18n="modal.layer.type.kml" disabled>KML</option>
+                                            <option value="customlayer" i18n="modal.layer.type.custom" disabled>Customlayer</option>
                                         </select>
                                     </div>
                                     <div class="form-group">
-                                        <label for="frm-layerid">id</label>
+                                        <label for="frm-layerid" i18n="modal.layer.id">id</label>
                                         <input type="text" class="form-control" id="frm-layerid" placeholder="id">
                                     </div>
                                     <div class="form-group">
-                                        <label for="frm-url">url</label>
+                                        <label for="frm-url" i18n="modal.layer.url">url</label>
                                         <input type="text" class="form-control checkedurl" id="frm-url"
                                                placeholder="url">
                                     </div>
                                     <div class="form-group">
-                                        <label for="frm-attribution">Attributions</label>
+                                        <label for="frm-attribution" i18n="modal.layer.attr">Attributions</label>
                                         <input type="text" class="form-control" id="frm-attribution"
                                                placeholder="Attribution">
                                     </div>
                                     <div class="form-group">
-                                        <label for="frm-metadata">URL fiche de métadonnées (html)</label>
+                                        <label for="frm-metadata" i18n="modal.layer.htmlmetadataurl">URL fiche de métadonnées (html)</label>
                                         <input type="text" class="form-control checkedurl" id="frm-metadata"
                                                placeholder="metadata">
                                     </div>
                                     <div class="form-group">
-                                        <label for="frm-metadata-csw">URL fiche de métadonnées (xml)</label>
+                                        <label for="frm-metadata-csw" i18n="modal.layer.xmlmetadataurl">URL fiche de métadonnées (xml)</label>
                                         <input type="text" class="form-control checkedurl" id="frm-metadata-csw"
                                                placeholder="metadata-csw">
                                     </div>
                                     <div class="form-group">
-                                        <label class="control-label" for="frm-type">Contraintes d'accès</label>
+                                        <label class="control-label" for="frm-type" i18n="modal.layer.ac">Contraintes d'accès</label>
                                         <select id="frm-secure" name="type" class="form-control">
-                                            <option value="public">Accès public</option>
-                                            <option value="global">Accès soumis à authentification globale (CAS georchestra)</option>
-                                            <option value="layer">Accès soumis à authentification au niveau du service (Basic Authent)</option>
+                                            <option value="public" i18n="modal.layer.ac.public">Accès public</option>
+                                            <option value="global" i18n="modal.layer.ac.auth.global">Accès soumis à authentification globale (CAS georchestra)</option>
+                                            <option value="layer" i18n="modal.layer.ac.auth.service">Accès soumis à authentification au niveau du service (Basic Authent)</option>
                                         </select>
                                     </div>
                                     <div class="form-group">
                                         <div class="checkbox">
                                             <label>
-                                                <input id="frm-useproxy" type="checkbox"> Utiliser le proxy du viewer (nécessaire si HTTPS non disponible pour la couche)
+                                                <input id="frm-useproxy" type="checkbox" i18n="modal.layer.proxy"> Utiliser le proxy du viewer (nécessaire si HTTPS non disponible pour la couche)
                                             </label>
                                         </div>
                                     </div>
@@ -606,18 +606,18 @@
                                             <div class="form-group">
                                                 <div class="checkbox">
                                                     <label>
-                                                        <input id="frm-queryable" type="checkbox">interrogeable
+                                                        <input id="frm-queryable" type="checkbox" i18n="modal.layer.queryable">interrogeable
                                                     </label>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label class="control-label" for="frm-infopanel">Position fiche
+                                                <label class="control-label" for="frm-infopanel" i18n="modal.layer.info.position">Position fiche
                                                     info</label>
                                                 <select id="frm-infopanel" name="infoformat" class="form-control">
-                                                    <option value="right-panel">Panneau de droite</option>
-                                                    <option value="bottom-panel">Panneau du bas</option>
+                                                    <option value="right-panel" i18n="modal.layer.info.right">Panneau de droite</option>
+                                                    <option value="bottom-panel" i18n="modal.layer.info.down">Panneau du bas</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -625,18 +625,18 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label class="control-label" for="frm-infoformat">Format de la fiche
+                                                <label class="control-label" for="frm-infoformat" i18n="modal.layer.infoformat">Format de la fiche
                                                     d'information</label>
                                                 <select id="frm-infoformat" name="infoformat" class="form-control"
                                                         onchange="mv.showHideQueryParameters(this.value);">
-                                                    <option value="text/html">standard</option>
-                                                    <option value="application/vnd.ogc.gml">personnalisé</option>
+                                                    <option value="text/html" i18n="modal.layer.infoformat.html">standard</option>
+                                                    <option value="application/vnd.ogc.gml" i18n="modal.layer.infoformat.gml">personnalisé</option>
                                                 </select>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="frm-featurecount">Limitation du nombre de réponses</label>
+                                                <label for="frm-featurecount" i18n="modal.layer.featurecount">Limitation du nombre de réponses</label>
                                                 <input type="number" class="form-control" id="frm-featurecount"
                                                        placeholder="Nombre max d'entités retournées" step="1" min="1"
                                                        max="50" value="5">
@@ -647,15 +647,15 @@
                                         <div class="form-group">
                                             <div class="checkbox">
                                                 <label>
-                                                    <input id="frm-template" type="checkbox">Utliser un template
+                                                    <input id="frm-template" type="checkbox" i18n="modal.layer.query.usetemplate">Utiliser un template
                                                 </label>
                                             </div>
-                                            <label for="frm-template-url">URL template</label>
+                                            <label for="frm-template-url" i18n="modal.layer.query.templateurl">URL template</label>
                                             <input type="text" class="form-control checkedurl" id="frm-template-url"
                                                    placeholder="URL template"/>
                                         </div>
                                         <div class="form-group">
-                                            <label class="control-label" for="frm-fields">Champs</label>
+                                            <label class="control-label" for="frm-fields" i18n="modal.layer.query.fields">Champs</label>
                                             <div id="frm-lis-fields"></div>
                                         </div>
                                     </div>
@@ -670,7 +670,7 @@
                                                 <div class="form-group">
                                                     <div class="checkbox">
                                                         <label>
-                                                            <input id="frm-tiled" type="checkbox"> Couche tuilée
+                                                            <input id="frm-tiled" type="checkbox" i18n="modal.layer.tiled"> Couche tuilée
                                                         </label>
                                                     </div>
                                                 </div>
@@ -679,42 +679,42 @@
                                                 <div class="form-group">
                                                     <div class="checkbox">
                                                         <label>
-                                                            <input id="frm-visible" type="checkbox"> Visible au
+                                                            <input id="frm-visible" type="checkbox" i18n="modal.layer.visibleonstart"> Visible au
                                                             démarrage
                                                         </label>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                        <label for="frm-sld">SLD externe</label>
+                                        <label for="frm-sld" i18n="modal.layer.sld.external">SLD externe</label>
                                         <input type="text" class="form-control checkedurl" id="frm-sld"
                                                placeholder="URL SLD externe"/>
 
-                                        <label for="frm-legendurl">Légende statique</label>
+                                        <label for="frm-legendurl" i18n="modal.layer.legendurl">Légende statique</label>
                                         <input type="text" class="form-control checkedurl" id="frm-legendurl"
                                                placeholder="URL vers Image légende"/>
                                         <div class="row">
                                             <div class="col-md-4">
                                                 <div class="form-group" lang="en-US">
-                                                    <label for="frm-opacity">Opacité</label>
+                                                    <label for="frm-opacity" i18n="modal.layer.opacity">Opacité</label>
                                                     <input type="number" class="form-control" id="frm-opacity"
                                                            placeholder="Opacité (0 à 1)" step="0.1" min="0.1" max="1.0"
                                                            value="1">
                                                 </div>
                                             </div>
                                             <div class="col-md-4">
-                                                <label for="frm-scalemin">Echelle mini</label>
+                                                <label for="frm-scalemin" i18n="modal.layer.scale.min">Echelle mini</label>
                                                 <input type="number" class="form-control" id="frm-scalemin"
                                                        placeholder="Echelle mini"/>
                                             </div>
                                             <div class="col-md-4">
-                                                <label for="frm-scalemax">Echelle maxi</label>
+                                                <label for="frm-scalemax" i18n="modal.layer.scale.max">Echelle maxi</label>
                                                 <input type="number" class="form-control" id="frm-scalemax"
                                                        placeholder="Echelle maxi"/>
                                             </div>
                                         </div>
 
-                                        <label class="control-label" for="frm-styles">Styles</label>
+                                        <label class="control-label" for="frm-styles" i18n="modal.layer.styles">Styles</label>
                                         <div class="row" id="frm-lis-styles"></div>
                                     </div>
                                 </form>
@@ -731,7 +731,7 @@
                                 <form>
                                     <div class="row">
                                         <div class="col-md-12">
-                                            <label for="frm-filter">filtre actif</label>
+                                            <label for="frm-filter" i18n="modal.layer.filter.serverside.active">filtre actif</label>
                                         </div>
                                     </div>
                                     <div class="row">
@@ -743,7 +743,7 @@
                                         </div>
                                         <div class="col-md-4">
                                             <button type="button" onclick="$('#filter_wizard').toggle();"
-                                                    class="btn btn-primary">Créer un filtre
+                                                    class="btn btn-primary" i18n="modal.layer.filter.serverside.create">Créer un filtre
                                             </button>
                                         </div>
                                     </div>
@@ -752,24 +752,26 @@
                                         <ul class="nav nav-tabs" role="tablist">
                                             <li role="presentation" class="active"><a href="#attribute_filter"
                                                                                       aria-controls="attribute_filter"
-                                                                                      role="tab" data-toggle="tab">Filtre
+                                                                                      role="tab" data-toggle="tab"
+                                                                                      i18n="modal.layer.filter.serverside.filter.attributes">Filtre
                                                 attributaire</a></li>
                                             <li role="presentation"><a href="#geo_filter" aria-controls="geo_filter"
-                                                                       role="tab" data-toggle="tab">Filtre
+                                                                       role="tab" data-toggle="tab"
+                                                                       i18n="modal.layer.filter.serverside.filter.geo">Filtre
                                                 géographique</a></li>
                                         </ul>
                                         <!-- Tab panes -->
                                         <div class="tab-content">
                                             <div role="tabpanel" class="tab-pane active" id="attribute_filter">
                                                 <div class="form-group">
-                                                    <label class="control-label">Champs</label>
+                                                    <label class="control-label" i18n="modal.layer.filter.fields">Champs</label>
                                                     <select id="attribute_filter_fields" name="fields"
                                                             class="form-control"
                                                             onchange="extractFeatures(this.value, 'source')">
                                                     </select>
                                                 </div>
                                                 <div class="form-group">
-                                                    <label class="control-label">Opérateur</label>
+                                                    <label class="control-label" i18n="modal.layer.filter.serverside.filter.operator">Opérateur</label>
                                                     <select id="attribute_filter_operators" name="operators"
                                                             class="form-control">
                                                         <option value="=">=</option>
@@ -779,7 +781,7 @@
                                                 </div>
                                                 <div class="row">
                                                     <div class="col-md-8">
-                                                        <label class="control-label">valeurs sélectionnées</label>
+                                                        <label class="control-label" i18n="modal.layer.filter.selected">valeurs sélectionnées</label>
                                                         <div class="form-group">
                                                             <input type="text" value="" data-role="tagsinput"
                                                                    id="source_fields_tags" class="form-control"/>
@@ -787,7 +789,7 @@
                                                     </div>
                                                     <div class="col-md-4" style="padding-top: 25px;">
                                                         <button type="button" onclick="mv.saveSourceAttributeFilter()"
-                                                                class="btn btn-success">Appliquer le filtre
+                                                                class="btn btn-success" i18n="modal.layer.filter.serverside.filter.apply">Appliquer le filtre
                                                         </button>
                                                     </div>
                                                 </div>
@@ -811,16 +813,16 @@
                                 <form>
                                     <div class="form-group">
                                         <div class="form-group">
-                                            <label for="frm-attributelabel">Label</label>
+                                            <label for="frm-attributelabel" i18n="modal.layer.filter.clientside.label">Label</label>
                                             <input type="textarea" class="form-control" id="frm-attributelabel"
                                                    placeholder="Texte à afficher">
                                         </div>
                                         <div class="form-group">
-                                            <label class="control-label">Champs</label>
+                                            <label class="control-label" i18n="modal.layer.filter.fields">Champs</label>
                                             <select id="opt-attributefield" name="fields" class="form-control"
                                                     onchange="extractFeatures(this.value,'control')">
                                             </select>
-                                            <label class="control-label">valeurs sélectionnées</label>
+                                            <label class="control-label" i18n="modal.layer.filter.selected">valeurs sélectionnées</label>
                                             <div class="form-group">
                                                 <input type="text" value="" data-role="tagsinput"
                                                        id="control_fields_tags" class="form-control"/>
@@ -835,27 +837,27 @@
                                     <div class="form-group">
                                         <div class="checkbox">
                                             <label>
-                                                <input id="frm-searchable" type="checkbox"> Activer la recherche pour
+                                                <input id="frm-searchable" type="checkbox" i18n="modal.layer.search.enable"> Activer la recherche pour
                                                 cette donnée
                                             </label>
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label class="control-label" for="frm-searchengine">Moteur de recherche</label>
+                                        <label class="control-label" for="frm-searchengine" i18n="modal.layer.search.engine">Moteur de recherche</label>
                                         <select id="frm-searchengine" class="form-control"
                                                 onchange="mv.changeSearchEngine(this.value)">
-                                            <option value="elasticsearch">Elasticsearch</option>
-                                            <option value="fuse" disabled>Fuse.js</option>
+                                            <option value="elasticsearch" i18n="modal.layer.search.engine.es">Elasticsearch</option>
+                                            <option value="fuse" i18n="modal.layer.search.engine.fuse" disabled>Fuse.js</option>
                                         </select>
                                     </div>
                                     <div id="fuse_options">
                                         <div class="form-group">
-                                            <label for="frm-fusesearchkeys">fusesearchkeys</label>
+                                            <label for="frm-fusesearchkeys" i18n="modal.layer.search.fuse.fusesearchkeys">fusesearchkeys</label>
                                             <input type="text" class="form-control" id="frm-fusesearchkeys"
                                                    placeholder="fusesearchkeys">
                                         </div>
                                         <div class="form-group">
-                                            <label for="frm-fusesearchkeys">fusesearchresult</label>
+                                            <label for="frm-fusesearchkeys" i18n="modal.layer.search.fuse.fusesearchresult">fusesearchresult</label>
                                             <input type="text" class="form-control" id="frm-fusesearchresult"
                                                    placeholder="fusesearchresult">
                                         </div>
@@ -865,10 +867,10 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" onclick="mv.saveLayerOptions()" class="btn btn-success">Enregistrer
+                        <button type="button" onclick="mv.saveLayerOptions()" class="btn btn-success" i18n="save">Enregistrer
                         </button>
-                        <button type="button" onclick="mv.form2xml()" class="btn btn-info">Voir</button>
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
+                        <button type="button" onclick="mv.form2xml()" class="btn btn-info" i18n="view">Voir</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal" i18n="close">Fermer</button>
                     </div>
                 </div>
             </div>
@@ -880,7 +882,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        <h4 class="modal-title">Configuration XML</h4>
+                        <h4 class="modal-title" i18n="modal.code.xml">Configuration XML</h4>
                     </div>
                     <div class="modal-body">
                         <div class="row">
@@ -888,7 +890,7 @@
                         </div><!-- /.row -->
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal" i18n="close">Fermer</button>
                     </div>
                 </div>
             </div>
@@ -900,12 +902,12 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        <h4 class="modal-title">Sélection de données</h4>
+                        <h4 class="modal-title" i18n="modal.features.select">Sélection de données</h4>
                     </div>
                     <div class="modal-body">
                         <div class="row">
                             <div class="col-md-6">
-                                <label class="control-label">Valeurs</label>
+                                <label class="control-label" i18n="modal.features.values">Valeurs</label>
                                 <div id="distinct_values" class="list-group"></div>
                             </div>
                         </div><!-- /.row -->
@@ -920,7 +922,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        <h4 class="modal-title">Sélection de Thématiques</h4>
+                        <h4 class="modal-title" i18n="modal.themes.select">Sélection de Thématiques</h4>
                     </div>
                     <div class="modal-body">
                         <div class="row">
@@ -931,7 +933,7 @@
                         </div><!-- /.row -->
                     </div>
                       <div class="modal-footer">
-                        <button type="button" class="btn btn-success" data-dismiss="modal" onclick="importThemes()">Importer</button>
+                        <button type="button" class="btn btn-success" data-dismiss="modal" onclick="importThemes()" i18n="import">Importer</button>
                     </div>
                 </div>
             </div>
@@ -943,7 +945,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        <h4 class="modal-title">Rechercher des données</h4>
+                        <h4 class="modal-title" i18n="modal.layer.new.searchdata">Rechercher des données</h4>
                     </div>
                     <div class="modal-body">
                         <div class="row">
@@ -953,7 +955,7 @@
                                            placeholder="Rechercher...">
                                     <div class="input-group-btn">
                                         <button id="providers_dropdown" type="button" class="btn btn-warning dropdown-toggle"
-                                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" i18n="modal.layer.new.provider">
                                             Fournisseurs de données<span class="caret"/></button>
                                         <ul class="dropdown-menu dropdown-menu-right" id="providers_list">
                                         </ul>
@@ -963,7 +965,7 @@
                                 </div><!-- /input-group -->
                             </div><!-- /.col-md-12 -->
                         </div><!-- /.row -->
-                        <div class="row text-center text-warning" style="padding: 1rem;" id="search-message">
+                        <div class="row text-center text-warning" style="padding: 1rem;" id="search-message" i18n="modal.layer.new.provider.noneselected">
                             Aucun fournisseur sélectionné. Veuillez en choisir un.
                         </div>
                         <div class="row ogc-results" id="csw-results" style="display: none;"></div>
@@ -977,18 +979,18 @@
                                     <input class="form-control custom-url" type="text"
                                            placeholder="URL du fournisseur..." oninput="updateAddProviderButtonState(this);"> </input>
                                     <select class="form-control">
-                                        <option value="csw">CSW</option>
-                                        <option value="wms">WMS</option>
+                                        <option value="csw" i18n="modal.layer.new.csw">CSW</option>
+                                        <option value="wms" i18n="modal.layer.new.wms">WMS</option>
                                     </select>
                                     <input class="form-control custom-title" type="text" placeholder="Nom..." oninput="updateAddProviderButtonState(this);"> </input>
-                                    <button id="add_provider_btn" type="button" class="btn btn-primary" disabled onclick="addNewProvider(this);">
+                                    <button id="add_provider_btn" type="button" class="btn btn-primary" disabled onclick="addNewProvider(this);" i18n="modal.layer.new.addprovider">
                                         Ajouter un fournisseur
                                     </button>
                                 </div>
                             </div>
                         </div>
-                        <button type="button" class="btn btn-success" onclick="mv.getConfLayers();">Sélectionner</button>
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
+                        <button type="button" class="btn btn-success" onclick="mv.getConfLayers();" i18n="select">Sélectionner</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal" i18n="close">Fermer</button>
                     </div>
                 </div>
             </div>
@@ -999,7 +1001,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title">Liste des icônes</h4>
+                        <h4 class="modal-title" i18n="modal.icon.list">Liste des icônes</h4>
                     </div>
                     <div class="modal-body" style="max-height: calc(100vh - 200px);overflow-y: auto;">
                         <div>
@@ -1016,9 +1018,9 @@
                     <div class="modal-footer">
                         <button type="button" id="change-icon" class="btn btn-success">
                             <span class="fa fa-check-circle-o"></span>
-                            Utiliser l'icône sélectionnée
+                            <span i18n="modal.icon.use">  Utiliser l'icône sélectionnée</span>
                         </button>
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal" i18n="cancel">Annuler</button>
                     </div>
                 </div>
             </div>
