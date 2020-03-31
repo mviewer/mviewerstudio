@@ -351,7 +351,7 @@
                                        for="opt-searchlocalities-attribution" i18n="tabs.search.address_search.attribution">Attribution</label>
                                 <div class="col-md-4">
                                     <input id="opt-searchlocalities-attribution" type="text"
-                                           placeholder="Attribution du service" class="form-control input-md">
+                                           placeholder="Attribution du service"  i18n="tabs.search.address_search.attribution.ph" class="form-control input-md">
                                 </div>
                             </div>
                         </form>
@@ -378,7 +378,7 @@
                                     Elasticsearch</label>
                                 <div class="col-md-4">
                                     <input id="opt-elasticsearch-url" type="text" placeholder="Url Elasticsearch"
-                                           class="form-control input-md">
+                                            i18n="tabs.search.elastic_search.es_url.ph" class="form-control input-md">
                                 </div>
                             </div>
 
@@ -542,7 +542,7 @@
                                     <div class="form-group">
                                         <label for="frm-layer-title" i18n="modal.layer.name">Nom</label>
                                         <input type="text" class="form-control" id="frm-name"
-                                               placeholder="nom de la couche">
+                                               placeholder="nom de la couche" i18n="modal.layer.name.ph">
                                     </div>
                                     <!--<div class="form-group">
                                         <label for="frm-type">Type</label>
@@ -639,7 +639,7 @@
                                                 <label for="frm-featurecount" i18n="modal.layer.featurecount">Limitation du nombre de réponses</label>
                                                 <input type="number" class="form-control" id="frm-featurecount"
                                                        placeholder="Nombre max d'entités retournées" step="1" min="1"
-                                                       max="50" value="5">
+                                                        i18n="modal.layer.featurecount.ph" max="50" value="5">
                                             </div>
                                         </div>
                                     </div>
@@ -688,29 +688,29 @@
                                         </div>
                                         <label for="frm-sld" i18n="modal.layer.sld.external">SLD externe</label>
                                         <input type="text" class="form-control checkedurl" id="frm-sld"
-                                               placeholder="URL SLD externe"/>
+                                               placeholder="URL SLD externe" i18n="modal.layer.display.external_sld"/>
 
                                         <label for="frm-legendurl" i18n="modal.layer.legendurl">Légende statique</label>
                                         <input type="text" class="form-control checkedurl" id="frm-legendurl"
-                                               placeholder="URL vers Image légende"/>
+                                               placeholder="URL vers Image légende" i18n="modal.layer.display.ph.legend_image_url"/>
                                         <div class="row">
                                             <div class="col-md-4">
                                                 <div class="form-group" lang="en-US">
                                                     <label for="frm-opacity" i18n="modal.layer.opacity">Opacité</label>
                                                     <input type="number" class="form-control" id="frm-opacity"
                                                            placeholder="Opacité (0 à 1)" step="0.1" min="0.1" max="1.0"
-                                                           value="1">
+                                                           value="1" i18n="modal.layer.display.ph.opacity">
                                                 </div>
                                             </div>
                                             <div class="col-md-4">
                                                 <label for="frm-scalemin" i18n="modal.layer.scale.min">Echelle mini</label>
                                                 <input type="number" class="form-control" id="frm-scalemin"
-                                                       placeholder="Echelle mini"/>
+                                                       placeholder="Echelle mini" i18n="modal.layer.display.ph.minscale"/>
                                             </div>
                                             <div class="col-md-4">
                                                 <label for="frm-scalemax" i18n="modal.layer.scale.max">Echelle maxi</label>
                                                 <input type="number" class="form-control" id="frm-scalemax"
-                                                       placeholder="Echelle maxi"/>
+                                                       placeholder="Echelle maxi" i18n="modal.layer.display.ph.maxscale"/>
                                             </div>
                                         </div>
 
@@ -738,7 +738,7 @@
                                         <div class="col-md-8">
                                             <div class="form-group">
                                                 <input type="textarea" class="form-control" id="frm-filter"
-                                                       placeholder="filtre cql">
+                                                       placeholder="filtre cql"  i18n="modal.layer.filter.cql.ph">
                                             </div>
                                         </div>
                                         <div class="col-md-4">
@@ -815,7 +815,7 @@
                                         <div class="form-group">
                                             <label for="frm-attributelabel" i18n="modal.layer.filter.clientside.label">Label</label>
                                             <input type="textarea" class="form-control" id="frm-attributelabel"
-                                                   placeholder="Texte à afficher">
+                                                   placeholder="Texte à afficher" i18n="modal.layer.filter.clientside.label.ph">
                                         </div>
                                         <div class="form-group">
                                             <label class="control-label" i18n="modal.layer.filter.fields">Champs</label>
@@ -952,7 +952,7 @@
                             <div class="col-md-12">
                                 <div class="input-group">
                                     <input type="text" id="input-ogc-filter" class="form-control" aria-label="..."
-                                           placeholder="Rechercher...">
+                                           placeholder="Rechercher..." i18n="modal.layer.new.searchdata.ph">
                                     <div class="input-group-btn">
                                         <button id="providers_dropdown" type="button" class="btn btn-warning dropdown-toggle"
                                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" i18n="modal.layer.new.provider">
@@ -976,7 +976,7 @@
                         <div class="pull-left">
                             <div class="form form-inline">
                                 <div class="form-group">
-                                    <input class="form-control custom-url" type="text"
+                                    <input class="form-control custom-url" type="text"  i18n="modal.layer.new.provider.ph"
                                            placeholder="URL du fournisseur..." oninput="updateAddProviderButtonState(this);"> </input>
                                     <select class="form-control">
                                         <option value="csw" i18n="modal.layer.new.provider.csw">CSW</option>
