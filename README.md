@@ -31,7 +31,20 @@ Le chemin peut être relatif (par exemple ``../mviewer/conf/``).
   
 * **external_themes** : Utilisation du mécanisme d'import de thématiques externes (présentes dans d'autres mviewers):
   * **used** : true | false.
-  * **url** : chemin d'accès vers liste format json.  
+  * **url** : chemin d'accès vers liste format csv.
+
+**Le fichier csv** doit contenir les champs suivants (title, id, xml). **title** est le titre de la thématique, **id** est l'identifiant de la thématique et **xml** est l'URL du fichier de configuration xml qui contient la thématique.
+  Exemple :
+
+| title  | id  |  xml |
+|---|---|---|
+|Education et formation   | education  | https://kartenn.region-bretagne.fr/territoires/config.xml |
+
+**Attention,** les applications mviewer dont les thématiques ont vocation à être importées dans d'autres applications doivent respecter 2 conditions :
+* toutes les ressources utilisées doivent être paramétrées en URL absolues (customLayers, templates, images...)
+* Les ressources de l'application disposent des entêtes **CORS**
+
+
   
 * **user_info** : url vers service retournant l'identidé de la personne connectée.
   
