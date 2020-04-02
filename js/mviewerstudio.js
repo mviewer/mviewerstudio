@@ -185,7 +185,7 @@ $(document).ready(function(){
                             ajaxOptions: ajaxOptions,
                             thrownError: thrownError
                         });
-                        alert(mviewer.tr('msg.config_retrieval_error'));
+                        alert(mviewer.tr('msg.user_info_retrieval_error'));
                     }
                 });
             } else {
@@ -711,7 +711,7 @@ var loadApplicationParametersFromFile = function () {
             mv.parseApplication(xml);
         }
         reader.onerror = function (evt) {
-            alert(mviewer.tr('file_read_error'));
+            alert(mviewer.tr('msg.file_read_error'));
         }
     }
 };
@@ -721,7 +721,7 @@ var deleteMyApplications = function () {
         type: "GET",
         url: "srv/delete.php",
         success: function( data ) {
-            alert(data.deleted_files + mviewer.tr('deleted_apps'));
+            alert(data.deleted_files + mviewer.tr('msg.deleted_apps'));
             mv.getListeApplications();
         },
         error: function (xhr, ajaxOptions, thrownError) {
@@ -770,7 +770,7 @@ var loadApplicationParametersFromWMC = function (url) {
                 ajaxOptions: ajaxOptions,
                 thrownError: thrownError
             });
-            alert(mviewer.tr('psg.retrieval_req_error'));
+            alert(mviewer.tr('msg.retrieval_req_error'));
         }
     });
 
