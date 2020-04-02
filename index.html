@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
     <script src="lib/Sortable.min.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/4.6.3/papaparse.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/4.6.3/papaparse.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-tagsinput/0.8.0/bootstrap-tagsinput.min.js"></script>
     <link rel="stylesheet"
@@ -21,6 +21,7 @@
     <script src="lib/ogc.js"></script>
     <script src="lib/mv.js"></script>
     <script src="lib/slug.js"></script>
+    <script src="lib/i18njs/i18n.min.js" type="text/javascript"></script>
 </head>
 
 <body>
@@ -30,17 +31,17 @@
             <a id="studio-title" class="navbar-brand" href="#">mviewer studio</a>
         </div>
         <ul class="nav navbar-nav navbar-right">
-            <p class="navbar-text" id="user_connected">Non connecté</p>
+            <p class="navbar-text" id="user_connected"><span i18n="banner.not_connected">Non connecté</span></p>
             <li><a role="button" data-toggle="modal" data-target="#mod-importfile" href="#">
-                <span role="button" class="glyphicon glyphicon-import"></span> Charger</a></li>
+                <span role="button" class="glyphicon glyphicon-import"></span> <span i18n="banner.load">Charger</span></a></li>
             <li><a role="button" onclick="saveApplicationParameters(0);" href="#"><span
-                    class="glyphicon glyphicon-floppy-disk"></span> Sauvegarder</a></li>
+                    class="glyphicon glyphicon-floppy-disk"></span> <span i18n="banner.save">Sauvegarder</span></a></li>
             <li><a role="button" onclick="saveApplicationParameters(1);" href="#"><span
-                    class="glyphicon glyphicon-download"></span> Télécharger</a></li>
+                    class="glyphicon glyphicon-download"></span> <span i18n="banner.download">Télécharger</span></a></li>
             <li><a role="button" onclick="saveApplicationParameters(2);" href="#"><span
-                    class="glyphicon glyphicon-globe"></span> Prévisualiser</a></li>
+                    class="glyphicon glyphicon-globe"></span> <span i18n="banner.preview">Prévisualiser</span></a></li>
             <li id="menu_user_logout"><a role="button" href="./logout"><span
-                    class="glyphicon glyphicon-off"></span> Déconnexion</a></li>
+                    class="glyphicon glyphicon-off"></span> <span i18n="banner.logout">Déconnexion</span></a></li>
         </ul>
     </div>
 </nav>
@@ -50,7 +51,7 @@
         <form class="form-horizontal">
             <fieldset>
                 <div class="form-group">
-                    <label class="col-md-5 control-label" for="opt-title">Titre de l'application</label>
+                    <label class="col-md-5 control-label" for="opt-title" i18n="head.title">Titre</label>
                     <div class="col-md-5">
                         <input id="opt-title" name="textinput" type="text" placeholder="Kartenn"
                                class="form-control input-md">
@@ -60,10 +61,10 @@
         </form>
 
         <ul id="tabs" class="nav nav-tabs" data-tabs="tabs">
-            <li class="active"><a href="#application-config" data-toggle="tab">Application</a></li>
-            <li><a href="#themes-config" data-toggle="tab">Thématiques & données</a></li>
-            <li><a href="#backgroundlayers-config" data-toggle="tab">Couches de fond</a></li>
-            <li><a href="#search-config" data-toggle="tab">Recherche</a></li>
+            <li class="active"><a href="#application-config" data-toggle="tab" i18n="tabs.app.title">Application</a></li>
+            <li><a href="#themes-config" data-toggle="tab" i18n="tabs.data.title">Thématiques & données</a></li>
+            <li><a href="#backgroundlayers-config" data-toggle="tab" i18n="tabs.bg.title">Couches de fond</a></li>
+            <li><a href="#search-config" data-toggle="tab" i18n="tabs.search.title">Recherche</a></li>
         </ul>
         <div class="tab-content">
             <div class="tab-pane active" id="application-config">
@@ -75,7 +76,7 @@
                             <fieldset>
                                 <!-- logo-->
                                 <div class="form-group">
-                                    <label class="col-md-4 control-label" for="opt-logo">URL du logo</label>
+                                    <label class="col-md-4 control-label" for="opt-logo" i18n="tabs.app.url">URL du logo</label>
                                     <div class="col-md-8">
                                         <input id="opt-logo" name="textinput" type="text"
                                                class="form-control input-md checkedurl"
@@ -85,7 +86,7 @@
 
                                 <!-- help-->
                                 <div class="form-group">
-                                    <label class="col-md-4 control-label" for="opt-help">Page d'aide (html)</label>
+                                    <label class="col-md-4 control-label" for="opt-help" i18n="tabs.app.help_link">Page d'aide (html)</label>
                                     <div class="col-md-8">
                                         <input id="opt-help" name="textinput" type="text"
                                                class="form-control input-md checkedurl" placeholder="Ex: mviewer_help.html">
@@ -94,7 +95,7 @@
 
                                 <!--style-->
                                 <div class="form-group">
-                                    <label class="control-label col-md-4" for="frm-style">Style</label>
+                                    <label class="control-label col-md-4" for="frm-style" i18n="tabs.app.style">Style</label>
                                     <div class="col-md-8">
                                         <select id="opt-style" name="style" class="form-control default"
                                                 onchange="updateTheme(this);">
@@ -117,39 +118,42 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label class="col-md-4 control-label" for="checkboxes">Options</label>
+                                    <label class="col-md-4 control-label" for="checkboxes" i18n="tabs.app.options">Options</label>
                                     <div class="col-md-8">
                                         <div class="checkbox">
                                             <label for="opt-measuretools">
                                                 <input type="checkbox" name="checkboxes" id="opt-measuretools">
-                                                Outils de mesures
+                                                <span i18n="tabs.app.opt_measure">Outils de mesures</span>
                                             </label>
                                         </div>
 
                                         <div class="checkbox">
                                             <label for="opt-exportpng">
                                                 <input type="checkbox" name="checkboxes" id="opt-exportpng">
-                                                Export de la carte au format png
+                                                <span i18n="tabs.app.opt_export">Export de la carte au format png</span>
                                             </label>
                                         </div>
 
                                         <div class="checkbox">
                                             <label for="opt-showhelp">
                                                 <input type="checkbox" name="checkboxes" id="opt-showhelp">
-                                                Afficher l'aide au démarrage
+
+                                                <span i18n="tabs.app.opt_help">Afficher l'aide au démarrage</span>
                                             </label>
                                         </div>
 
                                         <div class="checkbox">
                                             <label for="opt-coordinates">
                                                 <input type="checkbox" name="checkboxes" id="opt-coordinates">
-                                                Affichage des coordonnées au click
+
+                                                <span i18n="tabs.app.opt_coords">Affichage des coordonnées au click</span>
                                             </label>
                                         </div>
                                         <div class="checkbox">
                                             <label for="opt-togglealllayersfromtheme">
                                                 <input type="checkbox" name="checkboxes" id="opt-togglealllayersfromtheme">
-                                                Afficher/masquer toutes les données d'une thématique en un clic
+
+                                                <span i18n="tabs.app.opt_data">Afficher/masquer toutes les données d'une thématique en un clic</span>
                                             </label>
                                         </div>
                                     </div>
@@ -175,8 +179,8 @@
 
             <div class="tab-pane" id="themes-config">
                 <div class="well">
-                    <h4>Sélection, paramétrage et organisation des données</h4>
-                    <p>Dans cette section, créer une ou plusieurs thématiques que vous peuplerez avec des données
+                    <h4 i18n="tabs.data.help_title">Sélection, paramétrage et organisation des données</h4>
+                    <p i18n="tabs.data.help_text">Dans cette section, créer une ou plusieurs thématiques que vous peuplerez avec des données
                         provenant de différentes plateformes. Il également est possible d'importer des thématiques externes</p>
                 </div>
 
@@ -184,16 +188,18 @@
                     <div class="col-md-6">
                         <!-- List with handle -->
                         <div class="panel panel-default">
-                            <div class="panel-heading">Panneau des thématiques</div>
+                            <div class="panel-heading" i18n="tabs.data.themespanel.title">Panneau des thématiques</div>
                             <div class="panel-body">
                                 <div id="themes-list" class="list-group"></div>
                                 <div class="btn-group">
                                     <button id="btn-addTheme" title="Créer une nouvelle thématique" class="btn btn-primary"
                                             onclick="addTheme('Nouvelle thématique', true, createId('theme'));">
-                                        <span class="glyphicon glyphicon-plus" aria-hidden="true"> </span> Créer
+                                        <span class="glyphicon glyphicon-plus" aria-hidden="true"> </span>
+                                        <span i18n="tabs.data.themespanel.create">Créer</span>
                                     </button>
                                     <button id="btn-importTheme" title="Importer une thématique depuis un autre mviewer" class="btn btn-success" onclick="$('#mod-themesview input').prop('checked', false);" data-toggle="modal" data-target="#mod-themesview">
-                                        <span class="glyphicon glyphicon-plus" aria-hidden="true"> </span> Importer
+                                        <span class="glyphicon glyphicon-plus" aria-hidden="true"> </span>
+                                        <span i18n="tabs.data.themespanel.import">Importer</span>
                                     </button>
                                 </div>
                             </div>
@@ -201,7 +207,7 @@
                                 <div class="checkbox">
                                     <label for="opt-mini">
                                         <input type="checkbox" name="checkboxes" id="opt-mini">
-                                        Option d'affichage : réduire le panneau des thématiques au démarrage
+                                        <span i18n="tabs.data.themespanel.options">Option d'affichage : réduire le panneau des thématiques au démarrage</span>
                                     </label>
                                 </div>
                             </div>
@@ -210,25 +216,27 @@
                     <div class="col-md-6">
                         <div id="panel-theme" class="panel panel-info" style="display: none;">
                             <div class="panel-heading">
-                                <h3 class="panel-title">Paramétrage de la Thématique sélectionnée</h3>
+                                <h3 class="panel-title" i18n="tabs.data.paramspanel.title">Paramétrage de la Thématique sélectionnée</h3>
                             </div>
                             <div class="panel-body" id="theme-edit" data-themeid="">
                                 <div class="input-group">
-                                    <span class="input-group-addon">Nom</span>
-                                    <input type="text" id="theme-edit-title" class="form-control" placeholder="Titre"
+                                    <span class="input-group-addon" i18n="tabs.data.paramspanel.name">Nom</span>
+                                    <input type="text" id="theme-edit-title" class="form-control" tabs.search.elastic_search.disabled="Titre"
                                            aria-describedby="basic-addon1">
                                 </div>
                                 <div class="checkbox">
                                     <label for="theme-edit-collapsed">
                                         <input type="checkbox" name="checkboxes" id="theme-edit-collapsed" value="0">
-                                        Déroulée par défaut
+                                        <span i18n="tabs.data.paramspanel.opt_unfolded">Déroulée par défaut</span>
                                     </label>
                                 </div>
                                 <div class="form-group">
-                                    <label class="settinglabel">Icône</label>
+                                    <label class="settinglabel" i18n="tabs.data.paramspanel.icon">Icône</label>
                                     <span class="selected-icon"></span>
                                     <input type="text" class="icon-class-input" id="theme-pick-icon" />
-                                    <button type="button" class="btn btn-primary picker-button">Choisir une icône</button>
+                                    <button type="button" class="btn btn-primary picker-button">
+                                      <span i18n="tabs.data.paramspanel.icon_pick">Choisir une icône</span>
+                                    </button>
                                 </div>
                                 <!-- List with handle -->
                                 <div id="themeLayers" class="list-group"></div>
@@ -238,7 +246,7 @@
                                             <button id="btn-addLayer" class="btn btn btn-primary"
                                                     onclick="addLayer('Nouvelle couche');">
                                                 <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-                                                Ajouter des données
+                                                <span i18n="tabs.data.paramspanel.add_data">Ajouter des données</span>
                                             </button>
                                         </div>
                                     </div>
@@ -250,11 +258,13 @@
                                         <div class="pull-right">
                                             <button id="btn-saveTheme" class="btn btn btn-success"
                                                     onclick="saveTheme();">
-                                                <span class="glyphicon glyphicon-ok" aria-hidden="true"></span> Ok
+                                                <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+                                                <span i18n="ok"> Ok</span>
                                             </button>
                                             &nbsp;&nbsp;
                                             <button class="btn btn btn-default" onclick="$('#panel-theme').hide();">
-                                                <span class="glyphicon glyphicon-remove"></span> Annuler
+                                                <span class="glyphicon glyphicon-remove"></span>
+                                                <span i18n="cancel"> Annuler</span>
                                             </button>
                                         </div>
                                     </div>
@@ -270,16 +280,20 @@
                     </div>
                     <div class="col-sm-3 col-md-3">
                         <div class="form-group">
-                            <label class="control-label" for="frm-bl-mode">Mode d'affichage</label>
+                            <label class="control-label" for="frm-bl-mode">
+                              <span i18n="tabs.bg.displaymode"> Mode d'affichage</span>
+                            </label>
                             <select id="frm-bl-mode" name="bl-mode" class="form-control">
-                                <option value="default">normal</option>
-                                <option value="gallery">gallerie</option>
+                                <option value="default"  i18n="tabs.bg.display_normal">normal</option>
+                                <option value="gallery" i18n="tabs.bg.display_gallery">gallerie</option>
                             </select>
                         </div>
                     </div>
                     <div class="col-sm-3 col-md-3">
                         <div class="form-group">
-                            <label class="control-label" for="frm-bl-mode">Fond affiché au démarrage</label>
+                            <label class="control-label" for="frm-bl-mode">
+                              <span i18n="tabs.bg.startup_bg">Fond affiché au démarrage</span>
+                            </label>
                             <select id="frm-bl-visible" name="bl-visible" class="form-control"
                                     onchange="mv.changeVisibleBaseLayer(this.value)"></select>
                         </div>
@@ -290,21 +304,21 @@
 
             <div class="tab-pane" id="search-config">
                 <div class="panel panel-default">
-                    <div class="panel-heading"><h3 class="panel-title">Recherche d'entités</h3></div>
+                    <div class="panel-heading"><h3 class="panel-title" i18n="tabs.search.entity_search.title">Recherche d'entités</h3></div>
                     <div class="panel-body">
                         <div class="form-group">
 
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" value="" id="opt-searchfeatures" required>
-                                <label class="form-check-label" for="opt-searchfeatures">
+                                <label class="form-check-label" i18n="tabs.search.entity_search.activate" for="opt-searchfeatures">
                                 Activer la recherche d'entités
                                 </label>
                             </div>
                         </div>
-                        <p>
+                        <p i18n="tabs.search.entity_search.p1">
                             La recherche d'entités peut être activée sur les couches de type GeoJSON.
                         </p>
-                        <p>
+                        <p i18n="tabs.search.entity_search.p2">
                             Cette fonctionnalité est également activable pour les couches de type WMS à la condition que les
                             entités qui composent cette couche soient également indexées par Elasticsearch.
                         </p>
@@ -312,21 +326,21 @@
                 </div>
 
                 <div class="panel panel-default">
-                    <div class="panel-heading"><h3 class="panel-title">Recherche d'adresses</h3></div>
+                    <div class="panel-heading"><h3 class="panel-title" i18n="tabs.search.address_search.title">Recherche d'adresses</h3></div>
                     <div class="panel-body">
                         <div class="form-group">
-                            <label class="control-label col-md-4" for="frm-searchlocalities">Service utilisé</label>
+                            <label class="control-label col-md-4" for="frm-searchlocalities" i18n="tabs.search.address_search.service">Service utilisé</label>
                             <select id="frm-searchlocalities" name="searchlocalities" class="form-control"
                                     onchange="mv.changeSearchLocalities(this.value)" style="width:auto;">
-                                <option value="false">Non utilisé</option>
-                                <option value="ban">Base adresse Nationale</option>
-                                <option value="geoportail">Géoportail</option>
+                                <option value="false" i18n="tabs.search.address_search.none">Non utilisé</option>
+                                <option value="ban" i18n="tabs.search.address_search.ban">Base adresse Nationale</option>
+                                <option value="geoportail" i18n="tabs.search.address_search.geoportal">Géoportail</option>
                             </select>
                         </div>
 
                         <form id="searchlocalities_options" class="form-horizontal">
                             <div class="form-group">
-                                <label class="col-md-4 control-label" for="opt-searchlocalities-url">URL</label>
+                                <label class="col-md-4 control-label" for="opt-searchlocalities-url" i18n="tabs.search.address_search.url">URL</label>
                                 <div class="col-md-4">
                                     <input id="opt-searchlocalities-url" type="text" placeholder="Url"
                                            class="form-control input-md">
@@ -334,10 +348,10 @@
                             </div>
                             <div class="form-group">
                                 <label class="col-md-4 control-label"
-                                       for="opt-searchlocalities-attribution">Attribution</label>
+                                       for="opt-searchlocalities-attribution" i18n="tabs.search.address_search.attribution">Attribution</label>
                                 <div class="col-md-4">
                                     <input id="opt-searchlocalities-attribution" type="text"
-                                           placeholder="Attribution du service" class="form-control input-md">
+                                           placeholder="Attribution du service"  i18n="tabs.search.address_search.attribution.ph" class="form-control input-md">
                                 </div>
                             </div>
                         </form>
@@ -346,30 +360,30 @@
 
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <h3 class="panel-title">Elasticsearch</h3>
+                        <h3 class="panel-title" i18n="tabs.search.elastic_search.title">Elasticsearch</h3>
                     </div>
                     <div class="panel-body">
                         <div class="form-group">
-                            <label class="control-label col-md-4" for="frm-globalsearch">Options</label>
+                            <label class="control-label col-md-4" for="frm-globalsearch" i18n="tabs.search.elastic_search.options">Options</label>
                             <select id="frm-globalsearch" name="globalsearch" class="form-control"
                                     onchange="mv.changeGlobalSearch(this.value)" style="width:auto;">
-                                <option value="false">Non utilisé</option>
-                                <option value="elasticsearch">Activé</option>
+                                <option value="false" i18n="tabs.search.elastic_search.disabled">Non utilisé</option>
+                                <option value="elasticsearch" i18n="tabs.search.elastic_search.enabled">Activé</option>
                             </select>
                         </div>
 
                         <form id="searchelasticsearch_options" class="form-horizontal">
                             <div class="form-group">
-                                <label class="col-md-4 control-label" for="opt-elasticsearch-url">URL
+                                <label class="col-md-4 control-label" for="opt-elasticsearch-url"  i18n="tabs.search.elastic_search.es_url">URL
                                     Elasticsearch</label>
                                 <div class="col-md-4">
                                     <input id="opt-elasticsearch-url" type="text" placeholder="Url Elasticsearch"
-                                           class="form-control input-md">
+                                            i18n="tabs.search.elastic_search.es_url.ph" class="form-control input-md">
                                 </div>
                             </div>
 
                             <div class="form-group">
-                                <label class="col-md-4 control-label" for="opt-elasticsearch-geometryfield">geometryfield</label>
+                                <label class="col-md-4 control-label" for="opt-elasticsearch-geometryfield" i18n="tabs.search.elastic_search.geom_field">geometryfield</label>
                                 <div class="col-md-4">
                                     <input id="opt-elasticsearch-geometryfield" type="text" placeholder="geometryfield"
                                            class="form-control input-md">
@@ -377,7 +391,7 @@
                             </div>
 
                             <div class="form-group">
-                                <label class="col-md-4 control-label" for="opt-elasticsearch-linkid">linkid</label>
+                                <label class="col-md-4 control-label" for="opt-elasticsearch-linkid" i18n="tabs.search.elastic_search.linkid">linkid</label>
                                 <div class="col-md-4">
                                     <input id="opt-elasticsearch-linkid" type="text" placeholder="linkid"
                                            class="form-control input-md">
@@ -385,7 +399,7 @@
                             </div>
 
                             <div class="form-group">
-                                <label class="col-md-4 control-label" for="opt-elasticsearch-doctypes">doctypes</label>
+                                <label class="col-md-4 control-label" for="opt-elasticsearch-doctypes" i18n="tabs.search.elastic_search.doctypes">doctypes</label>
                                 <div class="col-md-4">
                                     <input id="opt-elasticsearch-doctypes" type="text" placeholder="doctypes"
                                            class="form-control input-md">
@@ -393,28 +407,28 @@
                             </div>
 
                             <div class="form-group">
-                                <label class="control-label col-md-4" for="opt-elasticsearch-querymode">Mode</label>
+                                <label class="control-label col-md-4" for="opt-elasticsearch-querymode" i18n="tabs.search.elastic_search.qmode">Mode</label>
                                 <select id="opt-elasticsearch-querymode" class="form-control" style="width:auto;"
                                         onchange="">
-                                    <option value="match">match</option>
-                                    <option value="term">term</option>
-                                    <option value="phrase">phrase</option>
+                                    <option value="match" i18n="tabs.search.elastic_search.qmode_match">match</option>
+                                    <option value="term" i18n="tabs.search.elastic_search.qmode_term">term</option>
+                                    <option value="phrase" i18n="tabs.search.elastic_search.qmode_phrase">phrase</option>
                                 </select>
                             </div>
 
                             <div class="checkbox">
                                 <label for="opt-elasticsearch-bbox">
                                     <input type="checkbox" id="opt-elasticsearch-bbox" value="0">
-                                    Rechercher dans l'emprise de la carte
+                                    <span i18n="tabs.search.elastic_search.search_in_map_extent">Rechercher dans l'emprise de la carte</span>
                                 </label>
                             </div>
 
                             <div class="form-group">
-                                <label class="control-label col-md-4" for="opt-elasticsearch-version">Version</label>
+                                <label class="control-label col-md-4" for="opt-elasticsearch-version" i18n="tabs.search.elastic_search.version">Version</label>
                                 <select id="opt-elasticsearch-version" class="form-control" style="width:auto;"
                                         onchange="">
-                                    <option value="current">current</option>
-                                    <option value="1.4">1.4</option>
+                                    <option value="current" i18n="tabs.search.elastic_search.v_current">current</option>
+                                    <option value="1.4" i18n="tabs.search.elastic_search.v_1_4">1.4</option>
                                 </select>
                             </div>
                         </form>
@@ -428,8 +442,8 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h4 class="modal-title">Sélectionner un groupe</h4>
-                        <p>Vous appartenez à plusieurs groupes. Vous devez en sélectionner un pour créer ou enregistrer une carte associée à celui-ci.
+                        <h4 class="modal-title" i18n="modal.group.select">Sélectionner un groupe</h4>
+                        <p i18n="modal.group.description">Vous appartenez à plusieurs groupes. Vous devez en sélectionner un pour créer ou enregistrer une carte associée à celui-ci.
                     </div>
                     <div class="modal-body">
                         <div class="list-group" id="user_group_list"></div>
@@ -444,13 +458,13 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        <h4 class="modal-title">Charger un fichier de configuration</h4>
+                        <h4 class="modal-title" i18n="modal.file.import">Charger un fichier de configuration</h4>
                     </div>
                     <div class="modal-body">
 
                         <ul class="nav nav-tabs" role="tablist">
-                            <li role="presentation" class="active"><a href="#serverside" aria-controls="serverside" role="tab" data-toggle="tab">Localisé sur le serveur</a></li>
-                            <li role="presentation"><a href="#local" aria-controls="local" role="tab" data-toggle="tab">Sur votre ordinateur</a></li>
+                            <li role="presentation" class="active"><a href="#serverside" aria-controls="serverside" role="tab" data-toggle="tab" i18n="modal.file.serverside">Localisé sur le serveur</a></li>
+                            <li role="presentation"><a href="#local" aria-controls="local" role="tab" data-toggle="tab" i18n="modal.file.local">Sur votre ordinateur</a></li>
                         </ul>
 
                         <br>
@@ -458,14 +472,14 @@
                         <div class="tab-content">
                             <div role="tabpanel" class="tab-pane" id="local">
                                 <div class="alert alert-info">
-                                    <label>Choisissez un fichier</label>
+                                    <label i18n="modal.file.select">Choisissez un fichier</label>
                                     <div class="input-group">
                                         <input type="text" id="subfile" class="form-control">
                                         <span class="input-group-btn">
                                             <button class="btn btn-primary" type="button"
                                                     onclick="$('#filebutton').click();">
                                                 <span class="glyphicon glyphicon-folder-open"></span>
-                                                &nbsp;Parcourir...
+                                                &nbsp;<span i18n="modal.file.browse">Parcourir...</span>
                                             </button>
                                         </span>
                                     </div>
@@ -475,11 +489,11 @@
                             <div role="tabpanel" class="tab-pane active" id="serverside">
                                 <form class="form-inline">
                                     <div class="form-group" style="display: none;">
-                                        <label for="apps_group_list">Groupe</label>
+                                        <label for="apps_group_list" i18n="modal.file.group">Groupe</label>
                                         <select class="form-control" id="apps_group_list" onchange="mv.filterApplications()"></select>
                                     </div>
                                     <div class="form-group" style="display: none;">
-                                        <label for="apps_creator_list">Auteur</label>
+                                        <label for="apps_creator_list" i18n="modal.file.author">Auteur</label>
                                         <select class="form-control" id="apps_creator_list" onchange="mv.filterApplications()"></select>
                                     </div>
                                 </form>
@@ -488,14 +502,14 @@
                                 <div class="text-right">
                                     <button type="button" class="btn btn-danger" onclick="deleteMyApplications();">
                                         <span class="glyphicon glyphicon-trash"></span>
-                                        &nbsp;Supprimer toutes mes applications
+                                        &nbsp;<span i18n="modal.file.deleteallmyapps">Supprimer toutes mes applications</span>
                                     </button>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal" i18n="close">Fermer</button>
                     </div>
                 </div>
             </div>
@@ -507,79 +521,79 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        <h4 class="modal-title">Edition de couche</h4>
+                        <h4 class="modal-title" i18n="modal.layer.edit">Edition de couche</h4>
                     </div>
                     <div class="modal-body">
                         <ul class="nav nav-tabs" role="tablist" id="layer_sections_menu">
-                            <li role="presentation" class="active"><a href="#layer_conf1" role="tab" data-toggle="tab">Base</a>
+                            <li role="presentation" class="active"><a href="#layer_conf1" role="tab" data-toggle="tab" i18n="modal.layer.edit.base">Base</a>
                             </li>
-                            <li role="presentation"><a href="#layer_conf2" role="tab" data-toggle="tab">Fiche</a></li>
-                            <li role="presentation"><a href="#layer_conf3" role="tab" data-toggle="tab">Affichage</a>
+                            <li role="presentation"><a href="#layer_conf2" role="tab" data-toggle="tab" i18n="modal.layer.edit.sheet">Fiche</a></li>
+                            <li role="presentation"><a href="#layer_conf3" role="tab" data-toggle="tab" i18n="modal.layer.edit.display">Affichage</a>
                             </li>
-                            <li role="presentation"><a href="#layer_conf4" role="tab" data-toggle="tab">Filtre</a></li>
-                            <li role="presentation"><a href="#layer_conf5" role="tab" data-toggle="tab">Liste de
+                            <li role="presentation"><a href="#layer_conf4" role="tab" data-toggle="tab" i18n="modal.layer.edit.filter">Filtre</a></li>
+                            <li role="presentation"><a href="#layer_conf5" role="tab" data-toggle="tab" i18n="modal.layer.edit.choices">Liste de
                                 choix</a></li>
-                            <li role="presentation"><a href="#layer_conf6" role="tab" data-toggle="tab">Recherche</a>
+                            <li role="presentation"><a href="#layer_conf6" role="tab" data-toggle="tab" i18n="modal.layer.edit.search">Recherche</a>
                             </li>
                         </ul>
                         <div class="tab-content" id="layer_sections">
                             <div role="tabpanel" class="tab-pane active" id="layer_conf1">
                                 <form>
                                     <div class="form-group">
-                                        <label for="frm-layer-title">Nom</label>
+                                        <label for="frm-layer-title" i18n="modal.layer.name">Nom</label>
                                         <input type="text" class="form-control" id="frm-name"
-                                               placeholder="nom de la couche">
+                                               placeholder="nom de la couche" i18n="modal.layer.name.ph">
                                     </div>
                                     <!--<div class="form-group">
                                         <label for="frm-type">Type</label>
                                         <input type="text" class="form-control" id="frm-type" placeholder="type">
                                     </div>-->
                                     <div class="form-group">
-                                        <label class="control-label" for="frm-type">Type</label>
+                                        <label class="control-label" for="frm-type" i18n="modal.layer.type">Type</label>
                                         <select id="frm-type" name="type" class="form-control"
                                                 onchange="mv.changeLayerType(this.value);">
-                                            <option value="wms">WMS</option>
-                                            <option value="geojson" disabled>GeoJSON</option>
-                                            <option value="kml" disabled>KML</option>
-                                            <option value="customlayer" disabled>Customlayer</option>
+                                            <option value="wms" i18n="modal.layer.type.wms">WMS</option>
+                                            <option value="geojson" i18n="modal.layer.type.geojson" disabled>GeoJSON</option>
+                                            <option value="kml" i18n="modal.layer.type.kml" disabled>KML</option>
+                                            <option value="customlayer" i18n="modal.layer.type.custom" disabled>Customlayer</option>
                                         </select>
                                     </div>
                                     <div class="form-group">
-                                        <label for="frm-layerid">id</label>
+                                        <label for="frm-layerid" i18n="modal.layer.id">id</label>
                                         <input type="text" class="form-control" id="frm-layerid" placeholder="id">
                                     </div>
                                     <div class="form-group">
-                                        <label for="frm-url">url</label>
+                                        <label for="frm-url" i18n="modal.layer.url">url</label>
                                         <input type="text" class="form-control checkedurl" id="frm-url"
                                                placeholder="url">
                                     </div>
                                     <div class="form-group">
-                                        <label for="frm-attribution">Attributions</label>
+                                        <label for="frm-attribution" i18n="modal.layer.attr">Attributions</label>
                                         <input type="text" class="form-control" id="frm-attribution"
                                                placeholder="Attribution">
                                     </div>
                                     <div class="form-group">
-                                        <label for="frm-metadata">URL fiche de métadonnées (html)</label>
+                                        <label for="frm-metadata" i18n="modal.layer.htmlmetadataurl">URL fiche de métadonnées (html)</label>
                                         <input type="text" class="form-control checkedurl" id="frm-metadata"
                                                placeholder="metadata">
                                     </div>
                                     <div class="form-group">
-                                        <label for="frm-metadata-csw">URL fiche de métadonnées (xml)</label>
+                                        <label for="frm-metadata-csw" i18n="modal.layer.xmlmetadataurl">URL fiche de métadonnées (xml)</label>
                                         <input type="text" class="form-control checkedurl" id="frm-metadata-csw"
                                                placeholder="metadata-csw">
                                     </div>
                                     <div class="form-group">
-                                        <label class="control-label" for="frm-type">Contraintes d'accès</label>
+                                        <label class="control-label" for="frm-type" i18n="modal.layer.ac">Contraintes d'accès</label>
                                         <select id="frm-secure" name="type" class="form-control">
-                                            <option value="public">Accès public</option>
-                                            <option value="global">Accès soumis à authentification globale (CAS georchestra)</option>
-                                            <option value="layer">Accès soumis à authentification au niveau du service (Basic Authent)</option>
+                                            <option value="public" i18n="modal.layer.ac.public">Accès public</option>
+                                            <option value="global" i18n="modal.layer.ac.auth.global">Accès soumis à authentification globale (CAS georchestra)</option>
+                                            <option value="layer" i18n="modal.layer.ac.auth.service">Accès soumis à authentification au niveau du service (Basic Authent)</option>
                                         </select>
                                     </div>
                                     <div class="form-group">
                                         <div class="checkbox">
                                             <label>
-                                                <input id="frm-useproxy" type="checkbox"> Utiliser le proxy du viewer (nécessaire si HTTPS non disponible pour la couche)
+                                                <input id="frm-useproxy" type="checkbox"><span i18n="modal.layer.proxy"> Utiliser le proxy du viewer (nécessaire si HTTPS non disponible pour la couche)</span>
                                             </label>
                                         </div>
                                     </div>
@@ -592,18 +606,18 @@
                                             <div class="form-group">
                                                 <div class="checkbox">
                                                     <label>
-                                                        <input id="frm-queryable" type="checkbox">interrogeable
+                                                        <input id="frm-queryable" type="checkbox"><span i18n="modal.layer.queryable">interrogeable</span>
                                                     </label>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label class="control-label" for="frm-infopanel">Position fiche
+                                                <label class="control-label" for="frm-infopanel" i18n="modal.layer.info.position">Position fiche
                                                     info</label>
                                                 <select id="frm-infopanel" name="infoformat" class="form-control">
-                                                    <option value="right-panel">Panneau de droite</option>
-                                                    <option value="bottom-panel">Panneau du bas</option>
+                                                    <option value="right-panel" i18n="modal.layer.info.right">Panneau de droite</option>
+                                                    <option value="bottom-panel" i18n="modal.layer.info.down">Panneau du bas</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -611,21 +625,21 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label class="control-label" for="frm-infoformat">Format de la fiche
+                                                <label class="control-label" for="frm-infoformat" i18n="modal.layer.infoformat">Format de la fiche
                                                     d'information</label>
                                                 <select id="frm-infoformat" name="infoformat" class="form-control"
                                                         onchange="mv.showHideQueryParameters(this.value);">
-                                                    <option value="text/html">standard</option>
-                                                    <option value="application/vnd.ogc.gml">personnalisé</option>
+                                                    <option value="text/html" i18n="modal.layer.infoformat.html">standard</option>
+                                                    <option value="application/vnd.ogc.gml" i18n="modal.layer.infoformat.gml">personnalisé</option>
                                                 </select>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="frm-featurecount">Limitation du nombre de réponses</label>
+                                                <label for="frm-featurecount" i18n="modal.layer.featurecount">Limitation du nombre de réponses</label>
                                                 <input type="number" class="form-control" id="frm-featurecount"
                                                        placeholder="Nombre max d'entités retournées" step="1" min="1"
-                                                       max="50" value="5">
+                                                        i18n="modal.layer.featurecount.ph" max="50" value="5">
                                             </div>
                                         </div>
                                     </div>
@@ -633,15 +647,15 @@
                                         <div class="form-group">
                                             <div class="checkbox">
                                                 <label>
-                                                    <input id="frm-template" type="checkbox">Utliser un template
+                                                    <input id="frm-template" type="checkbox"><span i18n="modal.layer.query.usetemplate">Utiliser un template</span>
                                                 </label>
                                             </div>
-                                            <label for="frm-template-url">URL template</label>
+                                            <label for="frm-template-url" i18n="modal.layer.query.templateurl">URL template</label>
                                             <input type="text" class="form-control checkedurl" id="frm-template-url"
                                                    placeholder="URL template"/>
                                         </div>
                                         <div class="form-group">
-                                            <label class="control-label" for="frm-fields">Champs</label>
+                                            <label class="control-label" for="frm-fields" i18n="modal.layer.query.fields">Champs</label>
                                             <div id="frm-lis-fields"></div>
                                         </div>
                                     </div>
@@ -656,7 +670,7 @@
                                                 <div class="form-group">
                                                     <div class="checkbox">
                                                         <label>
-                                                            <input id="frm-tiled" type="checkbox"> Couche tuilée
+                                                            <input id="frm-tiled" type="checkbox"><span i18n="modal.layer.tiled"> Couche tuilée</span>
                                                         </label>
                                                     </div>
                                                 </div>
@@ -665,42 +679,42 @@
                                                 <div class="form-group">
                                                     <div class="checkbox">
                                                         <label>
-                                                            <input id="frm-visible" type="checkbox"> Visible au
-                                                            démarrage
+                                                            <input id="frm-visible" type="checkbox"><span i18n="modal.layer.visibleonstart"> Visible au
+                                                            démarrage</span>
                                                         </label>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                        <label for="frm-sld">SLD externe</label>
+                                        <label for="frm-sld" i18n="modal.layer.sld.external">SLD externe</label>
                                         <input type="text" class="form-control checkedurl" id="frm-sld"
-                                               placeholder="URL SLD externe"/>
+                                               placeholder="URL SLD externe" i18n="modal.layer.display.ph.external_sld"/>
 
-                                        <label for="frm-legendurl">Légende statique</label>
+                                        <label for="frm-legendurl" i18n="modal.layer.legendurl">Légende statique</label>
                                         <input type="text" class="form-control checkedurl" id="frm-legendurl"
-                                               placeholder="URL vers Image légende"/>
+                                               placeholder="URL vers Image légende" i18n="modal.layer.display.ph.legend_image_url"/>
                                         <div class="row">
                                             <div class="col-md-4">
                                                 <div class="form-group" lang="en-US">
-                                                    <label for="frm-opacity">Opacité</label>
+                                                    <label for="frm-opacity" i18n="modal.layer.opacity">Opacité</label>
                                                     <input type="number" class="form-control" id="frm-opacity"
                                                            placeholder="Opacité (0 à 1)" step="0.1" min="0.1" max="1.0"
-                                                           value="1">
+                                                           value="1" i18n="modal.layer.display.ph.opacity">
                                                 </div>
                                             </div>
                                             <div class="col-md-4">
-                                                <label for="frm-scalemin">Echelle mini</label>
+                                                <label for="frm-scalemin" i18n="modal.layer.scale.min">Echelle mini</label>
                                                 <input type="number" class="form-control" id="frm-scalemin"
-                                                       placeholder="Echelle mini"/>
+                                                       placeholder="Echelle mini" i18n="modal.layer.display.ph.minscale"/>
                                             </div>
                                             <div class="col-md-4">
-                                                <label for="frm-scalemax">Echelle maxi</label>
+                                                <label for="frm-scalemax" i18n="modal.layer.scale.max">Echelle maxi</label>
                                                 <input type="number" class="form-control" id="frm-scalemax"
-                                                       placeholder="Echelle maxi"/>
+                                                       placeholder="Echelle maxi" i18n="modal.layer.display.ph.maxscale"/>
                                             </div>
                                         </div>
 
-                                        <label class="control-label" for="frm-styles">Styles</label>
+                                        <label class="control-label" for="frm-styles" i18n="modal.layer.styles">Styles</label>
                                         <div class="row" id="frm-lis-styles"></div>
                                     </div>
                                 </form>
@@ -708,28 +722,28 @@
 
                             <div role="tabpanel" class="tab-pane" id="layer_conf4">
                                 <div class="well well-sm">
-                                    <p>Filtre CQL prédéfini : filtrage attributaire statique des objets affichés dans
+                                    <p i18n="modal.layer.filter.serverside">Filtre CQL prédéfini : filtrage attributaire statique des objets affichés dans
                                         la couche.</p>
-                                    <p><small><strong>Activable uniquement avec GeoServer.</strong>
-                                    Les filtres CQL ne peuvent activés qu'avec des couches de données issues
-                                    de GeoServer. Il ne s'agit pas d'une fonction standard de WMS.</small></p>
+                                    <p><small><strong><span i18n="modal.layer.filter.geoserver-only-warning.h"> Activable uniquement avec GeoServer.</span></strong>
+                                    <span i18n="modal.layer.filter.geoserver-only-warning.txt">Les filtres CQL ne peuvent activés qu'avec des couches de données issues
+                                    de GeoServer. Il ne s'agit pas d'une fonction standard de WMS.</span></small></p>
                                 </div>
                                 <form>
                                     <div class="row">
                                         <div class="col-md-12">
-                                            <label for="frm-filter">filtre actif</label>
+                                            <label for="frm-filter" i18n="modal.layer.filter.serverside.active">filtre actif</label>
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="col-md-8">
                                             <div class="form-group">
                                                 <input type="textarea" class="form-control" id="frm-filter"
-                                                       placeholder="filtre cql">
+                                                       placeholder="filtre cql"  i18n="modal.layer.filter.cql.ph">
                                             </div>
                                         </div>
                                         <div class="col-md-4">
                                             <button type="button" onclick="$('#filter_wizard').toggle();"
-                                                    class="btn btn-primary">Créer un filtre
+                                                    class="btn btn-primary" i18n="modal.layer.filter.serverside.create">Créer un filtre
                                             </button>
                                         </div>
                                     </div>
@@ -738,24 +752,26 @@
                                         <ul class="nav nav-tabs" role="tablist">
                                             <li role="presentation" class="active"><a href="#attribute_filter"
                                                                                       aria-controls="attribute_filter"
-                                                                                      role="tab" data-toggle="tab">Filtre
+                                                                                      role="tab" data-toggle="tab"
+                                                                                      i18n="modal.layer.filter.serverside.filter.attributes">Filtre
                                                 attributaire</a></li>
                                             <li role="presentation"><a href="#geo_filter" aria-controls="geo_filter"
-                                                                       role="tab" data-toggle="tab">Filtre
+                                                                       role="tab" data-toggle="tab"
+                                                                       i18n="modal.layer.filter.serverside.filter.geo">Filtre
                                                 géographique</a></li>
                                         </ul>
                                         <!-- Tab panes -->
                                         <div class="tab-content">
                                             <div role="tabpanel" class="tab-pane active" id="attribute_filter">
                                                 <div class="form-group">
-                                                    <label class="control-label">Champs</label>
+                                                    <label class="control-label" i18n="modal.layer.filter.fields">Champs</label>
                                                     <select id="attribute_filter_fields" name="fields"
                                                             class="form-control"
                                                             onchange="extractFeatures(this.value, 'source')">
                                                     </select>
                                                 </div>
                                                 <div class="form-group">
-                                                    <label class="control-label">Opérateur</label>
+                                                    <label class="control-label" i18n="modal.layer.filter.serverside.filter.operator">Opérateur</label>
                                                     <select id="attribute_filter_operators" name="operators"
                                                             class="form-control">
                                                         <option value="=">=</option>
@@ -765,7 +781,7 @@
                                                 </div>
                                                 <div class="row">
                                                     <div class="col-md-8">
-                                                        <label class="control-label">valeurs sélectionnées</label>
+                                                        <label class="control-label" i18n="modal.layer.filter.selected">valeurs sélectionnées</label>
                                                         <div class="form-group">
                                                             <input type="text" value="" data-role="tagsinput"
                                                                    id="source_fields_tags" class="form-control"/>
@@ -773,7 +789,7 @@
                                                     </div>
                                                     <div class="col-md-4" style="padding-top: 25px;">
                                                         <button type="button" onclick="mv.saveSourceAttributeFilter()"
-                                                                class="btn btn-success">Appliquer le filtre
+                                                                class="btn btn-success" i18n="modal.layer.filter.serverside.filter.apply">Appliquer le filtre
                                                         </button>
                                                     </div>
                                                 </div>
@@ -788,25 +804,25 @@
 
                             <div role="tabpanel" class="tab-pane" id="layer_conf5">
                                 <div class="well well-sm">
-                                    <p>Filtre CQL dynamique : filtrage attributaire des objets affichés dans la couche
+                                    <p i18n="modal.layer.filter.clientside">Filtre CQL dynamique : filtrage attributaire des objets affichés dans la couche
                                         à l'aide de listes déroulantes présentes dans la légende de la couche.</p>
-                                    <p><small><strong>Activable uniquement avec GeoServer.</strong>
-                                    Les filtres CQL ne peuvent activés qu'avec des couches de données issues
-                                    de GeoServer. Il ne s'agit pas d'une fonction standard de WMS.</small></p>
+                                    <p><small><strong><span i18n="modal.layer.filter.geoserver-only-warning.h"> Activable uniquement avec GeoServer.</span></strong>
+                                    <span i18n="modal.layer.filter.geoserver-only-warning.txt">Les filtres CQL ne peuvent activés qu'avec des couches de données issues
+                                    de GeoServer. Il ne s'agit pas d'une fonction standard de WMS.</span></small></p>
                                 </div>
                                 <form>
                                     <div class="form-group">
                                         <div class="form-group">
-                                            <label for="frm-attributelabel">Label</label>
+                                            <label for="frm-attributelabel" i18n="modal.layer.filter.clientside.label">Label</label>
                                             <input type="textarea" class="form-control" id="frm-attributelabel"
-                                                   placeholder="Texte à afficher">
+                                                   placeholder="Texte à afficher" i18n="modal.layer.filter.clientside.label.ph">
                                         </div>
                                         <div class="form-group">
-                                            <label class="control-label">Champs</label>
+                                            <label class="control-label" i18n="modal.layer.filter.fields">Champs</label>
                                             <select id="opt-attributefield" name="fields" class="form-control"
                                                     onchange="extractFeatures(this.value,'control')">
                                             </select>
-                                            <label class="control-label">valeurs sélectionnées</label>
+                                            <label class="control-label" i18n="modal.layer.filter.selected">valeurs sélectionnées</label>
                                             <div class="form-group">
                                                 <input type="text" value="" data-role="tagsinput"
                                                        id="control_fields_tags" class="form-control"/>
@@ -821,27 +837,27 @@
                                     <div class="form-group">
                                         <div class="checkbox">
                                             <label>
-                                                <input id="frm-searchable" type="checkbox"> Activer la recherche pour
-                                                cette donnée
+                                                <input id="frm-searchable" type="checkbox"><span i18n="modal.layer.search.enable"> Activer la recherche pour
+                                                cette donnée</span>
                                             </label>
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label class="control-label" for="frm-searchengine">Moteur de recherche</label>
+                                        <label class="control-label" for="frm-searchengine" i18n="modal.layer.search.engine">Moteur de recherche</label>
                                         <select id="frm-searchengine" class="form-control"
                                                 onchange="mv.changeSearchEngine(this.value)">
-                                            <option value="elasticsearch">Elasticsearch</option>
-                                            <option value="fuse" disabled>Fuse.js</option>
+                                            <option value="elasticsearch" i18n="modal.layer.search.engine.es">Elasticsearch</option>
+                                            <option value="fuse" i18n="modal.layer.search.engine.fuse" disabled>Fuse.js</option>
                                         </select>
                                     </div>
                                     <div id="fuse_options">
                                         <div class="form-group">
-                                            <label for="frm-fusesearchkeys">fusesearchkeys</label>
+                                            <label for="frm-fusesearchkeys" i18n="modal.layer.search.fuse.fusesearchkeys">fusesearchkeys</label>
                                             <input type="text" class="form-control" id="frm-fusesearchkeys"
                                                    placeholder="fusesearchkeys">
                                         </div>
                                         <div class="form-group">
-                                            <label for="frm-fusesearchkeys">fusesearchresult</label>
+                                            <label for="frm-fusesearchkeys" i18n="modal.layer.search.fuse.fusesearchresult">fusesearchresult</label>
                                             <input type="text" class="form-control" id="frm-fusesearchresult"
                                                    placeholder="fusesearchresult">
                                         </div>
@@ -851,10 +867,10 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" onclick="mv.saveLayerOptions()" class="btn btn-success">Enregistrer
+                        <button type="button" onclick="mv.saveLayerOptions()" class="btn btn-success" i18n="save">Enregistrer
                         </button>
-                        <button type="button" onclick="mv.form2xml()" class="btn btn-info">Voir</button>
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
+                        <button type="button" onclick="mv.form2xml()" class="btn btn-info" i18n="view">Voir</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal" i18n="close">Fermer</button>
                     </div>
                 </div>
             </div>
@@ -866,7 +882,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        <h4 class="modal-title">Configuration XML</h4>
+                        <h4 class="modal-title" i18n="modal.code.xml">Configuration XML</h4>
                     </div>
                     <div class="modal-body">
                         <div class="row">
@@ -874,7 +890,7 @@
                         </div><!-- /.row -->
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal" i18n="close">Fermer</button>
                     </div>
                 </div>
             </div>
@@ -886,12 +902,12 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        <h4 class="modal-title">Sélection de données</h4>
+                        <h4 class="modal-title" i18n="modal.features.select">Sélection de données</h4>
                     </div>
                     <div class="modal-body">
                         <div class="row">
                             <div class="col-md-6">
-                                <label class="control-label">Valeurs</label>
+                                <label class="control-label" i18n="modal.features.values">Valeurs</label>
                                 <div id="distinct_values" class="list-group"></div>
                             </div>
                         </div><!-- /.row -->
@@ -906,7 +922,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        <h4 class="modal-title">Sélection de Thématiques</h4>
+                        <h4 class="modal-title" i18n="modal.themes.select">Sélection de Thématiques</h4>
                     </div>
                     <div class="modal-body">
                         <div class="row">
@@ -917,7 +933,7 @@
                         </div><!-- /.row -->
                     </div>
                       <div class="modal-footer">
-                        <button type="button" class="btn btn-success" data-dismiss="modal" onclick="importThemes()">Importer</button>
+                        <button type="button" class="btn btn-success" data-dismiss="modal" onclick="importThemes()" i18n="import">Importer</button>
                     </div>
                 </div>
             </div>
@@ -929,17 +945,17 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        <h4 class="modal-title">Rechercher des données</h4>
+                        <h4 class="modal-title" i18n="modal.layer.new.searchdata">Rechercher des données</h4>
                     </div>
                     <div class="modal-body">
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="input-group">
                                     <input type="text" id="input-ogc-filter" class="form-control" aria-label="..."
-                                           placeholder="Rechercher...">
+                                           placeholder="Rechercher..." i18n="modal.layer.new.searchdata.ph">
                                     <div class="input-group-btn">
                                         <button id="providers_dropdown" type="button" class="btn btn-warning dropdown-toggle"
-                                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" i18n="modal.layer.new.provider">
                                             Fournisseurs de données<span class="caret"/></button>
                                         <ul class="dropdown-menu dropdown-menu-right" id="providers_list">
                                         </ul>
@@ -949,7 +965,7 @@
                                 </div><!-- /input-group -->
                             </div><!-- /.col-md-12 -->
                         </div><!-- /.row -->
-                        <div class="row text-center text-warning" style="padding: 1rem;" id="search-message">
+                        <div class="row text-center text-warning" style="padding: 1rem;" id="search-message" i18n="modal.layer.new.provider.noneselected">
                             Aucun fournisseur sélectionné. Veuillez en choisir un.
                         </div>
                         <div class="row ogc-results" id="csw-results" style="display: none;"></div>
@@ -960,21 +976,21 @@
                         <div class="pull-left">
                             <div class="form form-inline">
                                 <div class="form-group">
-                                    <input class="form-control custom-url" type="text"
+                                    <input class="form-control custom-url" type="text"  i18n="modal.layer.new.provider.ph"
                                            placeholder="URL du fournisseur..." oninput="updateAddProviderButtonState(this);"> </input>
                                     <select class="form-control">
-                                        <option value="csw">CSW</option>
-                                        <option value="wms">WMS</option>
+                                        <option value="csw" i18n="modal.layer.new.provider.csw">CSW</option>
+                                        <option value="wms" i18n="modal.layer.new.provider.wms">WMS</option>
                                     </select>
                                     <input class="form-control custom-title" type="text" placeholder="Nom..." oninput="updateAddProviderButtonState(this);"> </input>
-                                    <button id="add_provider_btn" type="button" class="btn btn-primary" disabled onclick="addNewProvider(this);">
+                                    <button id="add_provider_btn" type="button" class="btn btn-primary" disabled onclick="addNewProvider(this);" i18n="modal.layer.new.provider.add">
                                         Ajouter un fournisseur
                                     </button>
                                 </div>
                             </div>
                         </div>
-                        <button type="button" class="btn btn-success" onclick="mv.getConfLayers();">Sélectionner</button>
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
+                        <button type="button" class="btn btn-success" onclick="mv.getConfLayers();" i18n="select">Sélectionner</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal" i18n="close">Fermer</button>
                     </div>
                 </div>
             </div>
@@ -985,7 +1001,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title">Liste des icônes</h4>
+                        <h4 class="modal-title" i18n="modal.icon.list">Liste des icônes</h4>
                     </div>
                     <div class="modal-body" style="max-height: calc(100vh - 200px);overflow-y: auto;">
                         <div>
@@ -1002,9 +1018,9 @@
                     <div class="modal-footer">
                         <button type="button" id="change-icon" class="btn btn-success">
                             <span class="fa fa-check-circle-o"></span>
-                            Utiliser l'icône sélectionnée
+                            <span i18n="modal.icon.list">  Utiliser l'icône sélectionnée</span>
                         </button>
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal" i18n="cancel">Annuler</button>
                     </div>
                 </div>
             </div>
