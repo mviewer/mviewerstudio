@@ -35,7 +35,7 @@ jobs:
         run: |
           docker-compose build
 
-      - name: "Logging in docker hub"
+      - name: "Log in to docker hub"
         uses: azure/docker-login@v1
         if: github.repository == 'mviewer/mviewerstudio'
         with:

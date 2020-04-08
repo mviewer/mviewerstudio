@@ -18,7 +18,7 @@ services:
   #  PHP version
   mviewerstudio-php:
     build:
-      context: ./
+      context: .
       dockerfile: docker/Dockerfile-php-backend
     image: mviewer/mviewerstudio:php-latest
 #    volumes:
@@ -56,4 +56,3 @@ services:
           # backend
           #- mviewerstudio-php:mviewerstudio
           - mviewerstudio-python:mviewerstudio
-
