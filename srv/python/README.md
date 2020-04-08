@@ -14,6 +14,23 @@ Vous pouvez utiliser la composition docker présente à la racine du dépot. Le
 
 ## Développement
 
+Vous devrez d'abord copier les ressources statiques de la partie cliente de `mviewerstudio`:
+
+
+```bash
+mkdir -p mviewerstudio_backend/static/apps
+cp -r ../../css ../../img ../../index.html ../../js ../../lib mviewerstudio_backend/static/
+```
+
+Et également fournir une configuration JSON. Une configuration d'exemple est disponible
+à la racine du dépot:
+
+```bash
+cp ../../config-sample.json mviewerstudio_backend/static/apps/config.json
+
+```
+
+
 ```bash
 # mettez vous dans un .venv, ex: python -m venv .venv && source .venv/bin/activate, ou via pew ou pyenv, par exemple:
 pip install -r requirements.txt -r dev-requirements.txt
