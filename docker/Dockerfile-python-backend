@@ -10,7 +10,6 @@ ENV EXPORT_CONF_FOLDER=/home/apprunner/apps/store
 
 RUN mkdir -p /home/apprunner/apps/store
 RUN chown -R apprunner:apprunner /home/apprunner/apps
-VOLUME [ "/home/apprunner/apps" ]
 
 WORKDIR /home/apprunner
 
@@ -21,6 +20,8 @@ COPY --chown=apprunner:apprunner srv/python .
 RUN pip install --user . && pip install --user gunicorn
 
 RUN rm -rf mviewerstudio_backend/static/*
+
+VOLUME [ "/home/apprunner/apps", "/home/apprunner/mviewerstudio_backend/static/apps" ]
 
 COPY css/        mviewerstudio_backend/static/css
 COPY img/        mviewerstudio_backend/static/img
