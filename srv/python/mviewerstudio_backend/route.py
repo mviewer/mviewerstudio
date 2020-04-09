@@ -8,7 +8,9 @@ import lxml.etree as ET
 from pathlib import Path
 from flask.blueprints import BlueprintSetupState
 
-basic_store = Blueprint("basic-store", __name__, static_folder='static', static_url_path="/")
+basic_store = Blueprint(
+    "basic-store", __name__, static_folder="static", static_url_path="/"
+)
 
 
 @basic_store.record_once

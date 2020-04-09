@@ -36,9 +36,9 @@ def _get_current_user() -> Optional["User"]:
             request.headers.get("sec-org"),
             roles,
         )
-        logging.info(f'logged user: {user}')
+        logging.info(f"logged user: {user}")
         return user
-    logging.debug(f'No app context. Returning no user')
+    logging.debug(f"No app context. Returning no user")
     return None
 
 
