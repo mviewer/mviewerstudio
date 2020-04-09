@@ -27,6 +27,11 @@ jobs:
         run: |
           mypy --ignore-missing mviewerstudio_backend
 
+      - name: "python backend - Checking format"
+        working-directory: srv/python
+        run: |
+          black . --check
+
       - name: "Calculating docker image tag"
         id: version
         run: echo ::set-output name=VERSION::$(echo $GITHUB_REF | cut -d / -f 3)
