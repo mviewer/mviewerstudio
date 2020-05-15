@@ -1,11 +1,11 @@
 {
 	"app_conf": {
         "studio_title": "GéoBretagne mviewer studio",
-        "upload_service": "srv/store.php",
-        "delete_service": "srv/delete.php",
-        "list_service": "srv/list.php",
-        "mviewer_instance": "http://172.16.10.30/mviewer/",
-        "conf_path_from_mviewer" :"apps/store/",
+        "upload_service": "srv/store",
+        "delete_service": "srv/delete",
+        "list_service": "srv/list",
+        "mviewer_instance": "./mviewer/",
+        "conf_path_from_mviewer" :"apps/store",
         "mviewer_short_url": {
             "used": true,
             "apps_folder": "store"
@@ -14,8 +14,7 @@
             "used": false,
             "url": "https://geobretagne.fr/minicatalog/csv"
         },
-        "user_info": "srv/user_info.php",
-        "export_conf_folder" : "/var/www/htdocs/mviewer/apps/store/",
+        "user_info": "srv/user_info",
         "proxy" : "../proxy/?url=",
         "user_info_visible": false,
         "app_form_placeholders": {

@@ -1,0 +1,60 @@
+version: '3'
+volumes:
+  apps:
+  mviewerstudio_config:
+
+services:
+
+  # Select between the next 2 services the backend you want to use by
+  # commenting / uncommenting the 'volume' section &  modify the links alias
+  # on the mviewer-studio service.
+  #
+  # You cannot use both backends at the same time, and you have to be wary if
+  # you switch from one to another, as each comes with a custom config.json
+  # file.
+  #
+  # If you want to switch, make sure either you modify the config.json, or
+  # reinitialize the docker volume.
+
+  #  PHP version
+  mviewerstudio-php:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile-php-backend
+    image: mviewer/mviewerstudio:php-latest
+#    volumes:
+#      - "apps:/var/www/html/apps"
+
+  # Python version
+  mviewerstudio-python:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile-python-backend
+    image: mviewer/mviewerstudio:python-latest
+    volumes:
+      - "apps:/home/apprunner/apps"
+      - "mviewerstudio_config:/home/apprunner/mviewerstudio_backend/static/apps"
+
+  mviewer:
+    # this image is automatically built in
+    # the geobretagne/mviewer github repository
+    # See https://github.com/geobretagne/mviewer/pull/236
+    image: mviewer/mviewer
+    volumes:
+        - "apps:/usr/share/nginx/html/apps"
+    links:
+        - mviewerstudio-php
+        - mviewerstudio-python
+
+  mviewer-studio:
+      image: nginx:1.17.9
+      volumes:
+        - "./docker/nginx-default.conf:/etc/nginx/conf.d/default.conf"
+      ports:
+        - "8080:8080"
+      links:
+          - mviewer
+          # use the correct link entry below, depending on the selected
+          # backend
+          #- mviewerstudio-php:mviewerstudio
+          - mviewerstudio-python:mviewerstudio

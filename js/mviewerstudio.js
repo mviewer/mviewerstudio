@@ -17,7 +17,7 @@ $(document).ready(function(){
     }
     $.ajax({
         type: "GET",
-        url: "config.json",
+        url: "apps/config.json",
         dataType: "json",
         contentType: "application/json",
         success: function (data) {
@@ -719,7 +719,7 @@ var loadApplicationParametersFromFile = function () {
 var deleteMyApplications = function () {
     $.ajax({
         type: "GET",
-        url: "srv/delete.php",
+        url: _conf.delete_service,
         success: function( data ) {
             alert(data.deleted_files + mviewer.tr('msg.deleted_apps'));
             mv.getListeApplications();

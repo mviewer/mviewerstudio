@@ -7,7 +7,7 @@ Application écrite en javascript et php
 Configuration
 -------------
 
-La configuration s'effectue dans le fichier config.json (à créer à partir d'une copie de config-sample.json).
+La configuration s'effectue dans le fichier `apps/config.json` (à créer à partir d'une copie de config-sample.json).
 
 * **studio_title** : Nom de l'application tel qu'il apparaîtra dans la navbar de l'application et dans le titre de la
 page dans votre navigateur internet.
@@ -16,6 +16,10 @@ page dans votre navigateur internet.
 Valeur par défaut : ``srv/store.php``. Ne pas oublier d'autoriser l'utilisateur apache à accéder en écriture au répertoire. Il est également possible d'utiliser le service "Doc service" de geOrchestra
 (par exemple ``../mapfishapp/ws/mviewer/``). Dans ce dernier cas, les fichiers de configuration sont stockés dans la
 base de données de geOrchestra.
+
+* **delete_service** : Service web utilisé pour supprimer les configurations mviewer créées via le générateur
+
+* **list_service** : Service web permettant de lister les configurations mviewer créées par l'utilisateur courant
 
 * **export_conf_folder** : Dossier utilisé pour le stockage des fichiers de configuration mviewer générés. Ce paramètre
 est utilisé si le paramètre précédent est ``srv/store.php``.
