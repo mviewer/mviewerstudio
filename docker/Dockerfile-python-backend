@@ -21,13 +21,14 @@ RUN pip install --user . && pip install --user gunicorn
 
 RUN rm -rf mviewerstudio_backend/static/*
 
-VOLUME [ "/home/apprunner/apps", "/home/apprunner/mviewerstudio_backend/static/apps" ]
+VOLUME [ "/home/apprunner/apps"]
 
 COPY css/        mviewerstudio_backend/static/css
 COPY img/        mviewerstudio_backend/static/img
 COPY index.html  mviewerstudio_backend/static/index.html
 COPY js/         mviewerstudio_backend/static/js
 COPY lib/        mviewerstudio_backend/static/lib
+COPY *.json      mviewerstudio_backend/static/
 COPY docker/config-docker-python.json mviewerstudio_backend/static/apps/config.json
 
 CMD ["gunicorn", "-w 4", "-b 0.0.0.0:8000", "mviewerstudio_backend.app:app"]
