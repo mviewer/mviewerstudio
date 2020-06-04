@@ -2,7 +2,6 @@ from flask import Blueprint, jsonify, Response, request, current_app, redirect
 from .login_utils import current_user
 import hashlib
 import os.path
-from pathlib import Path
 from glob import glob
 import lxml.etree as ET
 from pathlib import Path
@@ -18,6 +17,8 @@ def basic_store_init(state: BlueprintSetupState):
     p = Path(state.app.config["EXPORT_CONF_FOLDER"])
     if not p.exists():
         p.mkdir()
+    if not (p / 'styles').exists():
+        (p / "styles").mkdir()
 
 
 @basic_store.route("/")
@@ -90,3 +91,18 @@ def delete_mviewer_config() -> Response:
             Path(f).unlink()
             nb_file_deleted += 1
     return jsonify({"deleted_files": nb_file_deleted})
+
+
+@basic_store.route('/srv/store/style', methods=['POST'])
+def store_style() -> Response:
+    """
+    This endpoint stores SLD style locally. it does not verify the content.
+    """
+    raw_style = request.data.decode("utf-8")
+    filehash = hashlib.sha256()
+    filehash.update(raw_style.encode("utf-8"))
+    filename = f"{filehash.hexdigest()}.sld"
+    absolute_path = os.path.join(current_app.config["EXPORT_CONF_FOLDER"], 'styles', filename)
+    with open(absolute_path, "w") as f:
+        f.write(raw_style)
+    return jsonify({"success": True, "filepath": os.path.join(current_app.config['CONF_PATH_FROM_MVIEWER'], 'styles', filename)})

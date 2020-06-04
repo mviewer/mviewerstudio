@@ -3,7 +3,7 @@ __pycache__/
 *.py[cod]
 *$py.class
 
-#test
+# test
 .pytest_cache/
 .mypy_cache/
 
@@ -12,7 +12,7 @@ __pycache__/
 
 
 
-#IDE stuff
+# IDE stuff
 .idea
 .vscode
 *.iml
@@ -22,3 +22,6 @@ __pycache__/
 
 # static (python backend)
 srv/python/mviewerstudio_backend/static
+
+# pyenv
+.python-version

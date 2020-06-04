@@ -909,3 +909,20 @@ $(".checkedurl").change(mv.checkURL);
 $("#mod-importfile").on('shown.bs.modal', function () {
     mv.getListeApplications();
 });
+
+
+var uploadSldFileToBackend = function(e) {
+    var sldFile = e.files[0];
+    $.ajax('/srv/store/style', {
+        data: sldFile,
+        method: 'POST',
+        processData: false,
+        success: function(data) {
+            $("#frm-sld").val(data.filepath)
+        },
+        error: function() {
+            alert("Le fichier n'a pas pu être chargé")
+        }
+    })
+
+}
