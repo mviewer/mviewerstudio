@@ -4,6 +4,7 @@
         "upload_service": "srv/store.php",
         "delete_service": "srv/delete.php",
         "list_service": "srv/list.php",
+		"store_style_service": "srv/store/style.php",
         "mviewer_instance": "http://172.16.10.30/mviewer/",
         "conf_path_from_mviewer" :"apps/store/",
         "mviewer_short_url": {

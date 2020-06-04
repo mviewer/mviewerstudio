@@ -913,7 +913,7 @@ $("#mod-importfile").on('shown.bs.modal', function () {
 
 var uploadSldFileToBackend = function(e) {
     var sldFile = e.files[0];
-    $.ajax('/srv/store/style', {
+    $.ajax(_conf.store_style_service, {
         data: sldFile,
         method: 'POST',
         processData: false,
@@ -921,7 +921,7 @@ var uploadSldFileToBackend = function(e) {
             $("#frm-sld").val(data.filepath)
         },
         error: function() {
-            alert("Le fichier n'a pas pu être chargé")
+             alert(mviewer.tr('msg.retrieval_req_error'));
         }
     })
 
