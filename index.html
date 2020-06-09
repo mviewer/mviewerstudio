@@ -686,29 +686,6 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <label for="frm-sld" i18n="modal.layer.sld.external">SLD externe</label>
-                                        <div class="input-group">
-                                            <input type="text" class="form-control checkedurl" id="frm-sld"
-                                               placeholder="URL SLD externe" i18n="modal.layer.display.ph.external_sld"/>
-                                            <span class="input-group-btn">
-                                                <input type="file" id="frm-upload-sld-file" style="display: none;" onchange="uploadSldFileToBackend(this)">
-                                                <button class="btn btn-default"
-                                                        type="button"
-                                                        i18n="modal.layer.uploadsldfile"
-                                                        onclick="document.getElementById('frm-upload-sld-file').click()"
-                                                >
-                                                    Téléverser un SLD
-                                                </button>
-                                                <button class="btn btn-default" type="button">
-                                                    <span class="glyphicon glyphicon-info-sign"
-                                                          data-toggle="tooltip"
-                                                          data-placement="top"
-                                                          title="Vous pouvez insérer une URL vers un SLD. Si votre couche provient d'un geoserver, vous pouvez specifier uniquement le nom du SLD dans geoserver (ex: un_entrepot:mon_sld)"
-                                                    ></span>
-                                                </button>
-                                            </span>
-
-                                        </div>
                                         <label for="frm-legendurl" i18n="modal.layer.legendurl">Légende statique</label>
                                         <input type="text" class="form-control checkedurl" id="frm-legendurl"
                                                placeholder="URL vers Image légende" i18n="modal.layer.display.ph.legend_image_url"/>
@@ -735,6 +712,29 @@
 
                                         <label class="control-label" for="frm-styles" i18n="modal.layer.styles">Styles</label>
                                         <div class="row" id="frm-lis-styles"></div>
+                                        <hr>
+                                        <label for="frm-sld" i18n="modal.layer.sld.external">Style externe</label>
+                                        <div class="input-group">
+                                            <input type="text" class="form-control checkedurl" id="frm-sld"
+                                               placeholder="URL SLD externe" i18n="modal.layer.display.ph.external_sld"/>
+                                            <span class="input-group-btn">
+                                                <input type="file" id="frm-upload-sld-file" style="display: none;" onchange="uploadSldFileToBackend(this)">
+                                                <button class="btn btn-default"
+                                                        type="button"
+                                                        i18n="modal.layer.uploadsldfile"
+                                                        onclick="document.getElementById('frm-upload-sld-file').click()"
+                                                >
+                                                    Téléverser un SLD
+                                                </button>
+                                                <button class="btn btn-default" type="button">
+                                                    <span class="glyphicon glyphicon-info-sign"
+                                                          data-toggle="tooltip"
+                                                          data-placement="top"
+                                                          title="Vous pouvez insérer une URL vers un SLD. Si votre couche provient d'un geoserver, vous pouvez specifier uniquement le nom du SLD dans geoserver (ex: un_entrepot:mon_sld)"
+                                                    ></span>
+                                                </button>
+                                            </span>
+                                        </div>
                                     </div>
                                 </form>
                             </div>
