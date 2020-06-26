@@ -18,9 +18,9 @@ VOLUME [ "/var/www/html/apps" ]
 COPY css/        ./css
 COPY img/        ./img
 COPY index.html  ./index.html
+COPY mviewerstudio.i18n.json  mviewerstudio.i18n.json
 COPY js/         ./js
 COPY lib/        ./lib
 
 # Copies the PHP backend
 COPY srv/php ./srv
-
