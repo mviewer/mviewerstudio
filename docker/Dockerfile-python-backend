@@ -26,7 +26,7 @@ VOLUME [ "/home/apprunner/apps" ]
 COPY css/        mviewerstudio_backend/static/css
 COPY img/        mviewerstudio_backend/static/img
 COPY index.html  mviewerstudio_backend/static/index.html
-COPY mviewerstudio.i18n.json mviewerstudio_backend/static/
+COPY mviewerstudio.i18n.json mviewerstudio_backend/static/mviewerstudio.i18n.json
 COPY js/         mviewerstudio_backend/static/js
 COPY lib/        mviewerstudio_backend/static/lib
 COPY docker/config-docker-python.json mviewerstudio_backend/static/apps/config.json
