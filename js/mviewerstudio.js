@@ -551,9 +551,14 @@ var saveApplicationParameters = function (option) {
 
     searchparameters = padding(0) + '<searchparameters bbox="'+search_params.bbox+'" localities="'+search_params.localities+'" features="'+search_params.features+'" static="'+search_params.static+'"/>';
 
+    var maxextentStr = '';
+    if ( $("#opt-maxextent").prop("checked") ) {
+        maxextent = map.getView().calculateExtent();
+        maxextentStr = `maxextent="${maxextent}"`;
+    }
     var center = map.getView().getCenter().join(",");
     var zoom = map.getView().getZoom();
-    var mapoptions = padding(0) + '<mapoptions maxzoom="20" projection="EPSG:3857" center="'+center+'" zoom="'+zoom+'" />';
+    var mapoptions = padding(0) + '<mapoptions maxzoom="20" projection="EPSG:3857" center="'+center+'" zoom="'+zoom+'" '+maxextentStr+'/>';
 
     var baseLayersMode = $("#frm-bl-mode").val();
     var visibleBaselayer = $("#frm-bl-visible").val();
