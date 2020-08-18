@@ -21,6 +21,7 @@ COPY index.html  ./index.html
 COPY mviewerstudio.i18n.json  mviewerstudio.i18n.json
 COPY js/         ./js
 COPY lib/        ./lib
+COPY mviewerstudio.i18n.json ./
 
 # Copies the PHP backend
 COPY srv/php ./srv

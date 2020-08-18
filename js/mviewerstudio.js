@@ -909,3 +909,29 @@ $(".checkedurl").change(mv.checkURL);
 $("#mod-importfile").on('shown.bs.modal', function () {
     mv.getListeApplications();
 });
+
+
+var uploadSldFileToBackend = function(e) {
+    var reader = new FileReader()
+    e.files[0].text().then(function(sldFile){
+        $.ajax(_conf.store_style_service, {
+            data: sldFile,
+            method: 'POST',
+            processData: false,
+            contentType: 'text/plain',
+            success: function(data) {
+                // this final URL need to be reachable via geoserver which will fetch the SLD and apply it to the layer.
+                var finalUrl = "";
+                if (_conf.mviewer_instance.startsWith('http')) {
+                    finalUrl = _conf.mviewer_instance + data.filepath
+                } else {
+                    finalUrl = window.location.origin + _conf.mviewer_instance + data.filepath
+                }
+                $("#frm-sld").val(finalUrl)
+            },
+            error: function() {
+                 alert(mviewer.tr('msg.retrieval_req_error'));
+            }
+        })
+    });
+}
