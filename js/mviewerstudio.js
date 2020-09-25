@@ -314,6 +314,12 @@ sortLayers = function (fromIndex, toIndex) {
     arr.splice(toIndex, 0, element);
 };
 
+var sortableAttributeList = Sortable.create(document.getElementById('frm-lis-fields'), {
+    handle: '.glyphicon-move',
+    animation: 150,
+    ghostClass: 'ghost',
+});
+
 $('input[type=file]').change(function () {
     loadApplicationParametersFromFile();
 });
