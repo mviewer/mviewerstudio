@@ -47,7 +47,7 @@ test_xml = """<?xml version="1.0" encoding="UTF-8"?>
 @pytest.fixture
 def cleandir():
     yield
-    shutil.rmtree(Path('./store'))
+    shutil.rmtree(Path("./store"))
 
 
 @pytest.fixture
@@ -195,7 +195,7 @@ class TestListStoredMviewerConfig:
         """
         Wrong configuration can sometime lead to wrongly formated xml file.
         """
-        with open('./store/wrongfile', 'w') as f:
+        with open("./store/wrongfile", "w") as f:
             f.write("this is wrong content")
         client_data = test_xml.format(
             title="test_store3", creator="foo", publisher="test_publisher"
@@ -203,17 +203,16 @@ class TestListStoredMviewerConfig:
         client.post("/srv/store", data=client_data, headers=header_client1)
         r = client.get("/srv/list", headers=header_client1)
         assert r.status_code == 200
-        assert len(os.listdir('./store')) == 3
-        assert r.json == [{
-            "creator": "foo",
-            "date": "2020-01-03T14:23:51.018Z",
-            "subjects": None,
-            "title": "test_store3",
-            "url": "apps/store//771b7365e54bb9bb29ee129ff8198188.xml",
-        }]
-
-
-
+        assert len(os.listdir("./store")) == 3
+        assert r.json == [
+            {
+                "creator": "foo",
+                "date": "2020-01-03T14:23:51.018Z",
+                "subjects": None,
+                "title": "test_store3",
+                "url": "apps/store//771b7365e54bb9bb29ee129ff8198188.xml",
+            }
+        ]
 
 
 @pytest.mark.usefixtures("cleandir")
