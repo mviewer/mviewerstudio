@@ -5,6 +5,7 @@ from .app_factory import create_app
 import hashlib
 import os
 from pathlib import Path
+import shutil
 
 test_xml = """<?xml version="1.0" encoding="UTF-8"?>
 <config mviewerstudioversion="3.1">
@@ -46,7 +47,7 @@ test_xml = """<?xml version="1.0" encoding="UTF-8"?>
 @pytest.fixture
 def cleandir():
     yield
-    [Path(f"./store/{f}").unlink() for f in os.listdir("./store")]
+    shutil.rmtree(Path('./store'))
 
 
 @pytest.fixture
@@ -151,7 +152,7 @@ class TestStoreMviewerConfig:
         p = client.post("/srv/store", data=client_data, headers=header_client1)
         assert p.status_code == 200
         assert p.json == {"filepath": f"{filehash}.xml", "success": True}
-        assert len(os.listdir("./store")) == 1
+        assert len(os.listdir("./store")) == 2
         assert os.listdir("./store")[0] == f"{filehash}.xml"
 
 
@@ -190,6 +191,30 @@ class TestListStoredMviewerConfig:
         assert r.status_code == 200
         assert r.json == []
 
+    def test_wrong_file_type(self, client, header_client1):
+        """
+        Wrong configuration can sometime lead to wrongly formated xml file.
+        """
+        with open('./store/wrongfile', 'w') as f:
+            f.write("this is wrong content")
+        client_data = test_xml.format(
+            title="test_store3", creator="foo", publisher="test_publisher"
+        )
+        client.post("/srv/store", data=client_data, headers=header_client1)
+        r = client.get("/srv/list", headers=header_client1)
+        assert r.status_code == 200
+        assert len(os.listdir('./store')) == 3
+        assert r.json == [{
+            "creator": "foo",
+            "date": "2020-01-03T14:23:51.018Z",
+            "subjects": None,
+            "title": "test_store3",
+            "url": "apps/store//771b7365e54bb9bb29ee129ff8198188.xml",
+        }]
+
+
+
+
 
 @pytest.mark.usefixtures("cleandir")
 class TestDeleteMviewerConfig:
@@ -210,4 +235,4 @@ class TestDeleteMviewerConfig:
         assert r.status_code == 200
         assert r.json == {"deleted_files": 1}
         # file of user2 should remain.
-        assert len(os.listdir("./store")) == 1
+        assert len(os.listdir("./store")) == 2
