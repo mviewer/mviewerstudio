@@ -18,5 +18,5 @@ Prerequis
 clone du projet
 ---------------
 
-    * `cd /home/studio`
-    * `git clone https://github.com/geobretagne/mviewerstudio`
+* `cd /home/studio`
+* `git clone https://github.com/geobretagne/mviewerstudio`
