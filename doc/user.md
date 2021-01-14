@@ -2,4 +2,4 @@
 
 mviewerstudio est une application qui permet de générer et de déployer des applications [mviewer](https://github.com/geobretagne/mviewer)
 
-![Interface studio](doc/img/studio.png)
+![Interface studio](img/studio.png)
