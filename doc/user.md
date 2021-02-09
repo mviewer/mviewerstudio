@@ -29,9 +29,12 @@ N.B : pour plus de confort et d’autonomie, il est fortement conseillé d’êt
 
 **3.** Renseigner l'URL du logo de l'entité productrice de l'application** _**(les logos des partenaires sont stockés ici**_ [**https://geobretagne.fr/pub/logo/**](https://geobretagne.fr/pub/logo/)_**. Il apparaîtra dans le bandeau de l'application)**_
 
-**4.** Cocher les options d'outils que vous souhaitez voir dans la carte  _(ex. des outils de mesures et un export au format image_ _)_
+**4.** Cocher les options d'outils que vous souhaitez voir dans la carte  _(ex. des outils de mesures et un export au format image_ _)
+
+À ce stade, vous pouvez déjà **sauvegarder votre application** et explorer le menu du haut :
+
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMTc1NDc5MjUzNywtNjYwOTk3NzI2LC0xNz
-QwOTYwMjgxLDk5Mjk3MzgwNCwxODQ4ODQzODEwLDIzMjYzMTQy
-LC0yMTM5NzI0NjU1XX0=
+eyJoaXN0b3J5IjpbMTkxNTQ4MjA2LC02NjA5OTc3MjYsLTE3ND
+A5NjAyODEsOTkyOTczODA0LDE4NDg4NDM4MTAsMjMyNjMxNDIs
+LTIxMzk3MjQ2NTVdfQ==
 -->
