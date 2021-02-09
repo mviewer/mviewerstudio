@@ -20,17 +20,18 @@ N.B : pour plus de confort et d’autonomie, il est fortement conseillé d’êt
 
 ## Paramétrer son application
 ![Paramétrage application](img/studio01.png)
-<![endif]-->
 
-1. Renseigner le titre de votre application cartographique _(ex. "Le plan vélo de la Communauté de communes de Châteaugiron")_**
 
-2. Régler l'emprise de votre carte en utilisant les zoom +/- et le déplacement en cliquant à la souris sur la carte _(ex. ici on zoome sur le territoire de la Communauté de communes de Châteaugiron, ce sera le cadrage "par défaut" sur lequel arrivera l'utilisation sur l'application cartographique)_**
 
-3. Renseigner l'URL du logo de l'entité productrice de l'application** _**(les logos des partenaires sont stockés ici**_ [**https://geobretagne.fr/pub/logo/**](https://geobretagne.fr/pub/logo/)_**. Il apparaîtra dans le bandeau de l'application)**_
+ **1.** Renseigner le titre de votre application cartographique _(ex. "Le plan vélo de la Communauté de communes de Châteaugiron")_**
 
-4. Cocher les options d'outils que vous souhaitez voir dans la carte  _(ex. des outils de mesures et un export au format image_ _)_
+**2.** Régler l'emprise de votre carte en utilisant les zoom +/- et le déplacement en cliquant à la souris sur la carte _(ex. ici on zoome sur le territoire de la Communauté de communes de Châteaugiron, ce sera le cadrage "par défaut" sur lequel arrivera l'utilisation sur l'application cartographique)_**
+
+**3.** Renseigner l'URL du logo de l'entité productrice de l'application** _**(les logos des partenaires sont stockés ici**_ [**https://geobretagne.fr/pub/logo/**](https://geobretagne.fr/pub/logo/)_**. Il apparaîtra dans le bandeau de l'application)**_
+
+**4.** Cocher les options d'outils que vous souhaitez voir dans la carte  _(ex. des outils de mesures et un export au format image_ _)_
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMTgxMDA0NDg3MiwtNjYwOTk3NzI2LC0xNz
+eyJoaXN0b3J5IjpbMTc1NDc5MjUzNywtNjYwOTk3NzI2LC0xNz
 QwOTYwMjgxLDk5Mjk3MzgwNCwxODQ4ODQzODEwLDIzMjYzMTQy
 LC0yMTM5NzI0NjU1XX0=
 -->
