@@ -6,7 +6,6 @@ mviewerstudio est une application qui permet de générer et de déployer des ap
 
 ![Interface studio](img/studio.png)
 
-<![endif]-->
 
 ## Prérequis
 
@@ -25,6 +24,6 @@ Tous les prérequis sont validés  ?
 
 Alors, on y va ...
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTY2NjU5MjExNCw5OTI5NzM4MDQsMTg0OD
+eyJoaXN0b3J5IjpbLTI4Mzc1NzYzOSw5OTI5NzM4MDQsMTg0OD
 g0MzgxMCwyMzI2MzE0MiwtMjEzOTcyNDY1NV19
 -->
