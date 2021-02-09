@@ -18,12 +18,9 @@ Avant de vous lancer dans la belle aventure du mviewer studio de GéoBretagne et
 
 N.B : pour plus de confort et d’autonomie, il est fortement conseillé d’être [administrateur délégué](https://cms.geobretagne.fr/content/administration-deleguee-sur-geoserver) de ses données sur GéoBretagne.
 
-Vous êtes prêts ?  
+## Paramétrer son application
 
-Tous les prérequis sont validés  ?  
-
-Alors, on y va ...
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTI4Mzc1NzYzOSw5OTI5NzM4MDQsMTg0OD
-g0MzgxMCwyMzI2MzE0MiwtMjEzOTcyNDY1NV19
+eyJoaXN0b3J5IjpbLTE3NDA5NjAyODEsOTkyOTczODA0LDE4ND
+g4NDM4MTAsMjMyNjMxNDIsLTIxMzk3MjQ2NTVdfQ==
 -->
