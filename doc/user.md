@@ -18,10 +18,10 @@ Avant de vous lancer dans la belle aventure du mviewer studio de GéoBretagne et
 
 N.B : pour plus de confort et d’autonomie, il est fortement conseillé d’être [administrateur délégué](https://cms.geobretagne.fr/content/administration-deleguee-sur-geoserver) de ses données sur GéoBretagne.
 
+
+
 ## Paramétrer son application
 ![Paramétrage application](img/studio01.png)
-
-
 
  **1.** Renseigner le titre de votre application cartographique _(ex. "Le plan vélo de la Communauté de communes de Châteaugiron")_**
 
@@ -44,7 +44,7 @@ N.B : pour plus de confort et d’autonomie, il est fortement conseillé d’êt
 
 **4. Charger :** pour charger sur GéoBretagne un fichier xml existant en local
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMTU1MTYyODA1MCwtNjYwOTk3NzI2LC0xNz
+eyJoaXN0b3J5IjpbLTYzMzk2MDExOCwtNjYwOTk3NzI2LC0xNz
 QwOTYwMjgxLDk5Mjk3MzgwNCwxODQ4ODQzODEwLDIzMjYzMTQy
 LC0yMTM5NzI0NjU1XX0=
 -->
