@@ -42,7 +42,7 @@
 				"label": "Esri world imagery",
 				"type": "OSM",
 				"url": "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
-				"attribution": "<a href=\"https://www.arcgis.com/home/item.html?id=10df2279f9684e4a9f6a7f08febac2a9" target=\"_blank\" >Esri world imagery</a>"
+				"attribution": "<a href=\"https://www.arcgis.com/home/item.html?id=10df2279f9684e4a9f6a7f08febac2a9\" target=\"_blank\" >Esri world imagery</a>"
 			},
             "darkmatter": {
 				"id": "darkmatter",
@@ -66,7 +66,7 @@
                 "style": "_null",
                 "matrixset": "EPSG:3857",
                 "fromcapacity": "false",
-				"attribution": "<a href=\"https://geobretagne.fr/geonetwork/srv/fre/catalog.search#/metadata/3a0ac2e3-7af1-4dec-9f36-dae6b5a8c731" target=\"_blank\" >partenaires GéoBretagne - Megalis Bretagne - IGN - PlanetObserver</a>"
+				"attribution": "<a href=\"https://geobretagne.fr/geonetwork/srv/fre/catalog.search#/metadata/3a0ac2e3-7af1-4dec-9f36-dae6b5a8c731\" target=\"_blank\" >partenaires GéoBretagne - Megalis Bretagne - IGN - PlanetObserver</a>"
 			},
              "ortho_ir": {
 				"id": "ortho_ir",
@@ -80,7 +80,7 @@
                 "style": "_null",
                 "matrixset": "EPSG:3857",
                 "fromcapacity": "false",
-				"attribution": "<a href=\"https://geobretagne.fr/geonetwork/srv/fre/catalog.search#/metadata/434b82a8-8d3c-4d9f-9eb3-0485f1a63eb6" target=\"_blank\" >partenaires GéoBretagne - Megalis Bretagne - IGN</a>"
+				"attribution": "<a href=\"https://geobretagne.fr/geonetwork/srv/fre/catalog.search#/metadata/434b82a8-8d3c-4d9f-9eb3-0485f1a63eb6\" target=\"_blank\" >partenaires GéoBretagne - Megalis Bretagne - IGN</a>"
 			},
             "osm_google": {
 				"id": "osm_google",
