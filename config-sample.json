@@ -39,24 +39,24 @@
                 "attribution": "Map tiles by  <a href=\"https://cartodb.com/attributions\">CartoDb</a>, under  <a href=\"https://creativecommons.org/licenses/by/3.0/\">CC BY 3.0 </a>"
             },
             "esriworldimagery": {
-                "id": "esriworldimagery",
-                "thumbgallery": "img/basemap/esriworldwide.jpg",
-                "title": "Esri",
-                "label": "Esri world imagery",
-                "type": "OSM",
-                "url": "http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
-                "attribution": "Esri world imagery"
-            },
+				"id": "esriworldimagery",
+				"thumbgallery": "img/basemap/esriworldwide.jpg",
+				"title": "Esri",
+				"label": "Esri world imagery",
+				"type": "OSM",
+				"url": "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+				"attribution": "<a href=\"https://www.arcgis.com/home/item.html?id=10df2279f9684e4a9f6a7f08febac2a9" target=\"_blank\" >Esri world imagery</a>"
+			},
             "stamen1": {
-                "id": "stamen1",
-                "thumbgallery": "img/basemap/toner-lite.png",
-                "title": "Stamen Design",
-                "label": "Toner-lite",
-                "type": "OSM",
-                "url": "http://{a-d}.tile.stamen.com/toner-lite/{z}/{x}/{y}.png",
-                "maxzoom": "20",
-                "attribution": "Map tiles by  <a href=\"http://stamen.com/\">Stamen Design </a>, under  <a href=\"http://creativecommons.org/licenses/by/3.0/\">CC BY 3.0 </a>"
-            },
+				"id": "stamen1",
+				"thumbgallery": "img/basemap/toner-lite.png",
+				"title": "Stamen Design",
+				"label": "Toner-lite",
+				"type": "OSM",
+				"url": "http://{a-d}.tile.stamen.com/toner-lite/{z}/{x}/{y}.png",
+				"maxzoom": "20",
+				"attribution": "Map tiles by  <a href=\"https://stamen.com/\">Stamen Design </a>, under  <a href=\"https://creativecommons.org/licenses/by/3.0/\">CC BY 3.0 </a>"
+			},
             "stamen2": {
                 "id": "stamen2",
                 "thumbgallery": "img/basemap/watercolor.jpg",
@@ -89,22 +89,22 @@
                 "style": "_null",
                 "matrixset": "EPSG:3857",
                 "fromcapacity": "false",
-                "attribution": "<a href=\"https://applications.region-bretagne.fr/geonetwork/?uuid=3a0ac2e3-7af1-4dec-9f36-dae6b5a8c731\" target=\"_blank\" >partenaires GéoBretagne - IGN RGE BD ORTHO - PlanetObserver</a>"
-            },
-            "ortho_ir": {
-                "id": "ortho_ir",
-                "thumbgallery": "img/basemap/ir.jpg",
-                "title": "GéoBretagne",
-                "label": "Photo aérienne infra rouge",
-                "type": "WMTS",
-                "url": "https://geobretagne.fr/geoserver/gwc/service/wmts",
+				"attribution": "<a href=\"https://geobretagne.fr/geonetwork/srv/fre/catalog.search#/metadata/3a0ac2e3-7af1-4dec-9f36-dae6b5a8c731" target=\"_blank\" >partenaires GéoBretagne - Megalis Bretagne - IGN - PlanetObserver</a>"
+			},
+             "ortho_ir": {
+				"id": "ortho_ir",
+				"thumbgallery": "img/basemap/ir.jpg",
+				"title": "GéoBretagne",
+				"label": "Photo aérienne infra rouge",
+				"type": "WMTS",
+				"url": "https://geobretagne.fr/geoserver/gwc/service/wmts",
                 "layers": "photo:ir-composite",
                 "format": "image/jpeg",
                 "style": "_null",
                 "matrixset": "EPSG:3857",
                 "fromcapacity": "false",
-                "attribution": "<a href=\"https://applications.region-bretagne.fr/geonetwork/?uuid=434b82a8-8d3c-4d9f-9eb3-0485f1a63eb6\" target=\"_blank\" >partenaires GéoBretagne - IGN RGE BD ORTHO - PlanetObserver</a>"
-            },
+				"attribution": "<a href=\"https://geobretagne.fr/geonetwork/srv/fre/catalog.search#/metadata/434b82a8-8d3c-4d9f-9eb3-0485f1a63eb6" target=\"_blank\" >partenaires GéoBretagne - Megalis Bretagne - IGN</a>"
+			},
             "osm_google": {
                 "id": "osm_google",
                 "thumbgallery": "img/basemap/osm_google.png",
