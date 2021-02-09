@@ -35,7 +35,6 @@ N.B : pour plus de confort et d’autonomie, il est fortement conseillé d’êt
 À ce stade, vous pouvez déjà **sauvegarder votre application** et explorer le menu du haut :
 
 ![Sauvegarde application](img/studio02.png)
-<![endif]-->
 
 **1. Sauvegarder** : pour enregistrer votre fichier de configuration (xml) sur GéoBretagne
 
@@ -43,9 +42,9 @@ N.B : pour plus de confort et d’autonomie, il est fortement conseillé d’êt
 
 **3. Télécharger :** pour télécharger votre fichier xml de configuration en local
 
-**4.**Charger :** _**pour charger sur GéoBretagne un fichier xml existant en local**_
+**4. Charger :** pour charger sur GéoBretagne un fichier xml existant en local
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMTA1NjIzNzE5MywtNjYwOTk3NzI2LC0xNz
-QwOTYwMjgxLDk5Mjk3MzgwNCwxODQ4ODQzODEwLDIzMjYzMTQy
-LC0yMTM5NzI0NjU1XX0=
+eyJoaXN0b3J5IjpbLTIwODQ5MjUwMzgsLTY2MDk5NzcyNiwtMT
+c0MDk2MDI4MSw5OTI5NzM4MDQsMTg0ODg0MzgxMCwyMzI2MzE0
+MiwtMjEzOTcyNDY1NV19
 -->
