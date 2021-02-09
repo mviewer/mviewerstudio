@@ -38,13 +38,13 @@ N.B : pour plus de confort et d’autonomie, il est fortement conseillé d’êt
 
 **1. Sauvegarder** : pour enregistrer votre fichier de configuration (xml) sur GéoBretagne
 
-**2. Prévisualiser **: pour pouvoir visualiser le résultat de votre application à tout moment
+**2. Prévisualiser** : pour pouvoir visualiser le résultat de votre application à tout moment
 
 **3. Télécharger :** pour télécharger votre fichier xml de configuration en local
 
 **4. Charger :** pour charger sur GéoBretagne un fichier xml existant en local
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTIwODQ5MjUwMzgsLTY2MDk5NzcyNiwtMT
-c0MDk2MDI4MSw5OTI5NzM4MDQsMTg0ODg0MzgxMCwyMzI2MzE0
-MiwtMjEzOTcyNDY1NV19
+eyJoaXN0b3J5IjpbMTU1MTYyODA1MCwtNjYwOTk3NzI2LC0xNz
+QwOTYwMjgxLDk5Mjk3MzgwNCwxODQ4ODQzODEwLDIzMjYzMTQy
+LC0yMTM5NzI0NjU1XX0=
 -->
