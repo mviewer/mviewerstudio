@@ -32,9 +32,9 @@ N.B : pour plus de confort et d’autonomie, il est fortement conseillé d’êt
 **4.** Cocher les options d'outils que vous souhaitez voir dans la carte  _(ex. des outils de mesures et un export au format image_ _)
 
 À ce stade, vous pouvez déjà **sauvegarder votre application** et explorer le menu du haut :
-
+![Sauvegarde application](img/studio02.png)
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMTkxNTQ4MjA2LC02NjA5OTc3MjYsLTE3ND
-A5NjAyODEsOTkyOTczODA0LDE4NDg4NDM4MTAsMjMyNjMxNDIs
-LTIxMzk3MjQ2NTVdfQ==
+eyJoaXN0b3J5IjpbLTEwODQzMDc4MjAsLTY2MDk5NzcyNiwtMT
+c0MDk2MDI4MSw5OTI5NzM4MDQsMTg0ODg0MzgxMCwyMzI2MzE0
+MiwtMjEzOTcyNDY1NV19
 -->
