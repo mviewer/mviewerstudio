@@ -83,10 +83,24 @@ Aller dans les différents onglets faire les paramétrages.
 
 La plupart des informations sont récupérées des flux. Si c’est bien renseigné, il n’y a rien à changer à part éventuellement le titre de la donnée qui apparaîtra dans votre application mviewer.
 ![Onglet-base](img/onglet-base.png)
+
+
+### Onglet Fiche
+
+Exemple sur l'onglet FICHE dans format de la fiche d’information, on clique sur "*personnalisé*" pour paramétrer ce qui apparaitra dans la fiche info quand on cliquera sur une portion du linéaire :
+![Onglet-fiche](img/onglet-fiche.png)
+
+On choisit les champs que l’on veut afficher dans la fiche d’information et le type (titre, texte, lien, image…).
+
+
+### Onglet Affichage
+
+On peut aussi y paramétrer la légende (fichier SLD) dans l’onglet **Affichage**. Si le SLD n'a pas été créé et stocké sur GéoBretagne, on peut entrer une URL externe (et un png pour l'affichage de la légende) :
+![Onglet-affichage](img/onglet-fiche.png)
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTEzNzA4NDM5OTAsLTE3MzQ0MDg1NDMsLT
-EzMDQ2MzMyNzQsMzQyMDM2ODgsLTIwNjY0MTYyNTIsODkwOTM3
-NTkzLDEzNzI1ODExNDMsLTYzMzk2MDExOCwtNjYwOTk3NzI2LC
-0xNzQwOTYwMjgxLDk5Mjk3MzgwNCwxODQ4ODQzODEwLDIzMjYz
-MTQyLC0yMTM5NzI0NjU1XX0=
+eyJoaXN0b3J5IjpbMjQ5NjQ0NzUwLC0xNzM0NDA4NTQzLC0xMz
+A0NjMzMjc0LDM0MjAzNjg4LC0yMDY2NDE2MjUyLDg5MDkzNzU5
+MywxMzcyNTgxMTQzLC02MzM5NjAxMTgsLTY2MDk5NzcyNiwtMT
+c0MDk2MDI4MSw5OTI5NzM4MDQsMTg0ODg0MzgxMCwyMzI2MzE0
+MiwtMjEzOTcyNDY1NV19
 -->
