@@ -21,7 +21,7 @@ N.B : pour plus de confort et d’autonomie, il est fortement conseillé d’êt
 
 
 ## Paramétrer son application
-![Paramétrage application](img/studio01.png)
+![Paramétrage application](img/interface-studio.png)
 
  **1.** Renseigner le titre de votre application cartographique _(ex. "Le plan vélo de la Communauté de communes de Châteaugiron")_**
 
@@ -52,7 +52,8 @@ Exemple après avoir sauvegardé, je clique sur "**Prévisualiser**" et je visua
 
 ![Thematique-Donnees application](img/thematique-donnes.png)
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbODkwOTM3NTkzLDEzNzI1ODExNDMsLTYzMz
-k2MDExOCwtNjYwOTk3NzI2LC0xNzQwOTYwMjgxLDk5Mjk3Mzgw
-NCwxODQ4ODQzODEwLDIzMjYzMTQyLC0yMTM5NzI0NjU1XX0=
+eyJoaXN0b3J5IjpbOTk5Mzc4Njk0LDg5MDkzNzU5MywxMzcyNT
+gxMTQzLC02MzM5NjAxMTgsLTY2MDk5NzcyNiwtMTc0MDk2MDI4
+MSw5OTI5NzM4MDQsMTg0ODg0MzgxMCwyMzI2MzE0MiwtMjEzOT
+cyNDY1NV19
 -->
