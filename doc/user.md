@@ -19,7 +19,7 @@ Avant de vous lancer dans la belle aventure du mviewer studio et de goûter les 
  - Avoir créé la ou les **fiches de métadonnées** nécessaires sur le catalogue partenaire (ou sur son propre catalogue CSW).
   -   Disposer des **fichiers de styles SLD** nécessaires.
 
-    N.B sur GéoBretagne : pour plus de confort et d’autonomie, il est fortement conseillé d’être [administrateur délégué](https://cms.geobretagne.fr/content/administration-deleguee-sur-geoserver) de ses données sur GéoBretagne.
+*N.B sur GéoBretagne : pour plus de confort et d’autonomie, il est fortement conseillé d’être [administrateur délégué](https://cms.geobretagne.fr/content/administration-deleguee-sur-geoserver) de ses données sur GéoBretagne.*
 
 
 
@@ -55,8 +55,8 @@ Exemple après avoir sauvegardé, je clique sur "**Prévisualiser**" et je visua
 
 ![Thematique-Donnees application](img/thematique-donnes.png)
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTEzMDA3NDkzOTgsODkwOTM3NTkzLDEzNz
-I1ODExNDMsLTYzMzk2MDExOCwtNjYwOTk3NzI2LC0xNzQwOTYw
-MjgxLDk5Mjk3MzgwNCwxODQ4ODQzODEwLDIzMjYzMTQyLC0yMT
-M5NzI0NjU1XX0=
+eyJoaXN0b3J5IjpbMTA0ODY3NTM0MCw4OTA5Mzc1OTMsMTM3Mj
+U4MTE0MywtNjMzOTYwMTE4LC02NjA5OTc3MjYsLTE3NDA5NjAy
+ODEsOTkyOTczODA0LDE4NDg4NDM4MTAsMjMyNjMxNDIsLTIxMz
+k3MjQ2NTVdfQ==
 -->
