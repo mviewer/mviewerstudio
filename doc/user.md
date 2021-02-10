@@ -71,12 +71,15 @@ En cliquant sur "**Ajouter des données**", vous pouvez chercher un jeu de donn�
 
 Les données nécessaires ont été ajoutées à la thématique, vous cliquez sur **OK** (pensez à sauvegarder et télécharger votre fichier de configuration !) :
 
-![Rechercher-donnees](img/ajout-donnee-thematique.png)
+![Ajout-donnees](img/ajout-donnee-thematique.png)
 
+
+Pour modifier la façon de **visualiser/interroger** un jeu de données, cliquez ici :
+![Rechercher-donnees](img/parametrage-donnees.png)
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTE3MzQ0MDg1NDMsLTEzMDQ2MzMyNzQsMz
-QyMDM2ODgsLTIwNjY0MTYyNTIsODkwOTM3NTkzLDEzNzI1ODEx
-NDMsLTYzMzk2MDExOCwtNjYwOTk3NzI2LC0xNzQwOTYwMjgxLD
-k5Mjk3MzgwNCwxODQ4ODQzODEwLDIzMjYzMTQyLC0yMTM5NzI0
-NjU1XX0=
+eyJoaXN0b3J5IjpbMTkwOTY1ODA1LC0xNzM0NDA4NTQzLC0xMz
+A0NjMzMjc0LDM0MjAzNjg4LC0yMDY2NDE2MjUyLDg5MDkzNzU5
+MywxMzcyNTgxMTQzLC02MzM5NjAxMTgsLTY2MDk5NzcyNiwtMT
+c0MDk2MDI4MSw5OTI5NzM4MDQsMTg0ODg0MzgxMCwyMzI2MzE0
+MiwtMjEzOTcyNDY1NV19
 -->
