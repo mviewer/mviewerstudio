@@ -65,10 +65,11 @@ Le mot "**données**" correspond à un ou des jeu(x) de données que vous souhai
 ## Option - Créer une thématique
 ![Créer-thématique application](img/creer-thematique.png)
 
-En cliquant sur "**Ajouter des données**", vous pouvez chercher un jeu de données dans le catalogue (ex. GéoBretagne), soit par mot-clé (cas le plus courant), soit en renseignant l'adresse du catalogue fournisseur (ou du service WMS):
+En cliquant sur "**Ajouter des données**", vous pouvez chercher un jeu de données dans le catalogue (ex. GéoBretagne), soit (1) par mot-clé (cas le plus courant), soit (2) en renseignant l'adresse du catalogue fournisseur (ou du service WMS) :
+![Reche-thématique application](img/rechercher-donnees.png)
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbNzQxMjQ1MzQxLDM0MjAzNjg4LC0yMDY2ND
-E2MjUyLDg5MDkzNzU5MywxMzcyNTgxMTQzLC02MzM5NjAxMTgs
-LTY2MDk5NzcyNiwtMTc0MDk2MDI4MSw5OTI5NzM4MDQsMTg0OD
-g0MzgxMCwyMzI2MzE0MiwtMjEzOTcyNDY1NV19
+eyJoaXN0b3J5IjpbLTk4OTk3NDU1MCwzNDIwMzY4OCwtMjA2Nj
+QxNjI1Miw4OTA5Mzc1OTMsMTM3MjU4MTE0MywtNjMzOTYwMTE4
+LC02NjA5OTc3MjYsLTE3NDA5NjAyODEsOTkyOTczODA0LDE4ND
+g4NDM4MTAsMjMyNjMxNDIsLTIxMzk3MjQ2NTVdfQ==
 -->
