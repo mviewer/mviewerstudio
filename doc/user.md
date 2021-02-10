@@ -96,9 +96,23 @@ On choisit les champs que l’on veut afficher dans la fiche d’information et 
 ### Onglet Affichage
 
 On peut aussi y paramétrer la légende (fichier SLD) dans l’onglet **Affichage**. Si le SLD n'a pas été créé et stocké sur GéoBretagne, on peut entrer une URL externe (et un png pour l'affichage de la légende) :
-![Onglet-affichage](img/onglet-fiche.png)
+![Onglet-affichage](img/onglet-affichage.png)
+
+
+
+### Onglet Filtre
+
+L’onglet **Filtre** permet de filtrer la donnée. On peut avoir un filtre géographique ou attributaire. Exemple ici avec un filtre sur un code SIREN :
+![Onglet-filtre](img/onglet-filtre.png)
+
+<![endif]-->
+
+### Onglet Liste de choix
+
+L’onglet **Liste de choix** permet d’avoir dans son application la possibilité de faire un filtre sur la valeur à afficher. Exemple ici on pourra filtrer les structures qui ont un multi accueil ou pas :
+![Onglet-liste-de-choix](img/onglet-filtre.png)
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMjQ5NjQ0NzUwLC0xNzM0NDA4NTQzLC0xMz
+eyJoaXN0b3J5IjpbMzEyNzk1MjUyLC0xNzM0NDA4NTQzLC0xMz
 A0NjMzMjc0LDM0MjAzNjg4LC0yMDY2NDE2MjUyLDg5MDkzNzU5
 MywxMzcyNTgxMTQzLC02MzM5NjAxMTgsLTY2MDk5NzcyNiwtMT
 c0MDk2MDI4MSw5OTI5NzM4MDQsMTg0ODg0MzgxMCwyMzI2MzE0
