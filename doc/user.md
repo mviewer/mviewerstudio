@@ -44,9 +44,10 @@ N.B : pour plus de confort et d’autonomie, il est fortement conseillé d’êt
 
 **4. Charger :** pour charger sur GéoBretagne un fichier xml existant en local
 
-Exemple après avoir sauvegardé, je clique sur "**Prévisualiser**" et je visualise déjà le résultat de mon application à ce stade
+Exemple après avoir sauvegardé, je clique sur "**Prévisualiser**" et je visualise déjà le résultat de mon application à ce stade :
+![Prévisualiser application](img/studio03.png)
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMjU1MTY2NDczLC02MzM5NjAxMTgsLTY2MD
-k5NzcyNiwtMTc0MDk2MDI4MSw5OTI5NzM4MDQsMTg0ODg0Mzgx
-MCwyMzI2MzE0MiwtMjEzOTcyNDY1NV19
+eyJoaXN0b3J5IjpbLTEyOTMzNzI5MDksLTYzMzk2MDExOCwtNj
+YwOTk3NzI2LC0xNzQwOTYwMjgxLDk5Mjk3MzgwNCwxODQ4ODQz
+ODEwLDIzMjYzMTQyLC0yMTM5NzI0NjU1XX0=
 -->
