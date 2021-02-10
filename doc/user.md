@@ -128,13 +128,18 @@ A ce stade, vous avez vos deux thématiques :
 ![Previsualiser-thematique](img/previsualiser-thematique.png)
 
 En cliquant sur **Prévisualiser**, vous accédez à votre applicatif cartographique en ligne :
-![Previsualiser-thematique](img/previsualiser-thematique.png)
+![Visu-resultat-thematique](img/visu-resultat-thematique.png)
+*N.B : la liste des thématiques est en cours d’élaboration, il est possible qu’il y ait des erreurs.*
+
+
+
+# Paramétrer les couches de fond
 
 
 
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTc4NTU2NTgyMCwtMTczNDQwODU0MywtMT
+eyJoaXN0b3J5IjpbLTY0NTMxNzAwNSwtMTczNDQwODU0MywtMT
 MwNDYzMzI3NCwzNDIwMzY4OCwtMjA2NjQxNjI1Miw4OTA5Mzc1
 OTMsMTM3MjU4MTE0MywtNjMzOTYwMTE4LC02NjA5OTc3MjYsLT
 E3NDA5NjAyODEsOTkyOTczODA0LDE4NDg4NDM4MTAsMjMyNjMx
