@@ -143,10 +143,19 @@ Choix des couches de fonds disponibles dans notre application. Pensez aussi à c
 # Paramétrer la recherche d'entités
 
 ![Recherche-entites](img/recherche-entites.png)
+
+Activer la recherche d’entités par adresse en utilisant l’API de la base adresse nationale.
+
+
+# Enregistrer et mettre à disposition
+
+Ne pas oublier de Sauvegarder, de Télécharger son fichier xml et d'enregistrer l'URL qui apparaît quand vous prévisualiser.
+
+![Enregistrer](img/enregistrer.png)
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTIwNTgwNjA5NzEsLTY0NTMxNzAwNSwtMT
-czNDQwODU0MywtMTMwNDYzMzI3NCwzNDIwMzY4OCwtMjA2NjQx
-NjI1Miw4OTA5Mzc1OTMsMTM3MjU4MTE0MywtNjMzOTYwMTE4LC
-02NjA5OTc3MjYsLTE3NDA5NjAyODEsOTkyOTczODA0LDE4NDg4
-NDM4MTAsMjMyNjMxNDIsLTIxMzk3MjQ2NTVdfQ==
+eyJoaXN0b3J5IjpbNDg0MTcxMjQ0LC02NDUzMTcwMDUsLTE3Mz
+Q0MDg1NDMsLTEzMDQ2MzMyNzQsMzQyMDM2ODgsLTIwNjY0MTYy
+NTIsODkwOTM3NTkzLDEzNzI1ODExNDMsLTYzMzk2MDExOCwtNj
+YwOTk3NzI2LC0xNzQwOTYwMjgxLDk5Mjk3MzgwNCwxODQ4ODQz
+ODEwLDIzMjYzMTQyLC0yMTM5NzI0NjU1XX0=
 -->
