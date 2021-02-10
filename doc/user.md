@@ -71,15 +71,22 @@ En cliquant sur "**Ajouter des données**", vous pouvez chercher un jeu de donn�
 
 Les données nécessaires ont été ajoutées à la thématique, vous cliquez sur **OK** (pensez à sauvegarder et télécharger votre fichier de configuration !) :
 
-![Ajout-donnees](img/ajout-donnee-thematique.png)
+![Ajout-donnees-thematique](img/ajout-donnee-thematique.png)
 
 
 Pour modifier la façon de **visualiser/interroger** un jeu de données, cliquez ici :
-![Rechercher-donnees](img/parametrage-donnees.png)
+![Visualiser-interroger-donnees](img/parametrage-donnees.png)
+
+Aller dans les différents onglets faire les paramétrages.
+
+### Onglet Base
+
+La plupart des informations sont récupérées des flux. Si c’est bien renseigné, il n’y a rien à changer à part éventuellement le titre de la donnée qui apparaîtra dans votre application mviewer.
+![Onglet-base](img/onglet-base.png)
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMTkwOTY1ODA1LC0xNzM0NDA4NTQzLC0xMz
-A0NjMzMjc0LDM0MjAzNjg4LC0yMDY2NDE2MjUyLDg5MDkzNzU5
-MywxMzcyNTgxMTQzLC02MzM5NjAxMTgsLTY2MDk5NzcyNiwtMT
-c0MDk2MDI4MSw5OTI5NzM4MDQsMTg0ODg0MzgxMCwyMzI2MzE0
-MiwtMjEzOTcyNDY1NV19
+eyJoaXN0b3J5IjpbLTEzNzA4NDM5OTAsLTE3MzQ0MDg1NDMsLT
+EzMDQ2MzMyNzQsMzQyMDM2ODgsLTIwNjY0MTYyNTIsODkwOTM3
+NTkzLDEzNzI1ODExNDMsLTYzMzk2MDExOCwtNjYwOTk3NzI2LC
+0xNzQwOTYwMjgxLDk5Mjk3MzgwNCwxODQ4ODQzODEwLDIzMjYz
+MTQyLC0yMTM5NzI0NjU1XX0=
 -->
