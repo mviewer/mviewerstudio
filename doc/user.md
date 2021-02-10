@@ -53,9 +53,11 @@ Exemple après avoir sauvegardé, je clique sur "**Prévisualiser**" et je visua
 ## Organiser ses données et thématiques
 
 ![Thematique-Donnees application](img/thematique-donnes.png)
+
+Le mot "**données**" correspond à un ou des jeu(x) de données que vous souhaitez ajouter à votre application. Vous avez la possibilité de regrouper un ou plusieurs jeux de données sous une "**thématique**". Exemple, je veux ajouter les deux couches de données (linéaire du plan vélo et des abris vélo) sous une thématique "Plan Vélo".
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTIwNjY0MTYyNTIsODkwOTM3NTkzLDEzNz
-I1ODExNDMsLTYzMzk2MDExOCwtNjYwOTk3NzI2LC0xNzQwOTYw
-MjgxLDk5Mjk3MzgwNCwxODQ4ODQzODEwLDIzMjYzMTQyLC0yMT
-M5NzI0NjU1XX0=
+eyJoaXN0b3J5IjpbMzEwNzc5OTAxLC0yMDY2NDE2MjUyLDg5MD
+kzNzU5MywxMzcyNTgxMTQzLC02MzM5NjAxMTgsLTY2MDk5Nzcy
+NiwtMTc0MDk2MDI4MSw5OTI5NzM4MDQsMTg0ODg0MzgxMCwyMz
+I2MzE0MiwtMjEzOTcyNDY1NV19
 -->
