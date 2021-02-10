@@ -52,24 +52,24 @@ Exemple après avoir sauvegardé, je clique sur "**Prévisualiser**" et je visua
 
 # Organiser ses données et thématiques
 
-![Thematique-Donnees application](img/thematique-donnes.png)
+![Thematique-Donnees](img/thematique-donnes.png)
 
 Le mot "**données**" correspond à un ou des jeu(x) de données que vous souhaitez ajouter à votre application. Vous avez la possibilité de regrouper un ou plusieurs jeux de données sous une "**thématique**". Exemple, je veux ajouter les deux couches de données (linéaire du plan vélo et des abris vélo) sous une thématique "Plan Vélo".
 
-![Selection-Donnees application](img/selection-donnees.png)
+![Selection-Donnees](img/selection-donnees.png)
 
 **1.Créer **: pour créer votre thématique et y associer vos jeux de données "métier"
 
 **2. Importer **: pour réutiliser une thématique déjà créée au sein de la communauté mviewer (ex. la thématique des découpages territoriaux qui contient les limites de communes, EPCI et départements
 
 ## Option - Créer une thématique
-![Créer-thématique application](img/creer-thematique.png)
+![Créer-thématique](img/creer-thematique.png)
 
 En cliquant sur "**Ajouter des données**", vous pouvez chercher un jeu de données dans le catalogue (ex. GéoBretagne), soit (1) par mot-clé (cas le plus courant), soit (2) en renseignant l'adresse du catalogue fournisseur (ou du service WMS) :
-![Reche-thématique application](img/rechercher-donnees.png)
+![Rechercher-donnees](img/rechercher-donnees.png)
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTk4OTk3NDU1MCwzNDIwMzY4OCwtMjA2Nj
-QxNjI1Miw4OTA5Mzc1OTMsMTM3MjU4MTE0MywtNjMzOTYwMTE4
-LC02NjA5OTc3MjYsLTE3NDA5NjAyODEsOTkyOTczODA0LDE4ND
-g4NDM4MTAsMjMyNjMxNDIsLTIxMzk3MjQ2NTVdfQ==
+eyJoaXN0b3J5IjpbNDkyMDEwMjMzLDM0MjAzNjg4LC0yMDY2ND
+E2MjUyLDg5MDkzNzU5MywxMzcyNTgxMTQzLC02MzM5NjAxMTgs
+LTY2MDk5NzcyNiwtMTc0MDk2MDI4MSw5OTI5NzM4MDQsMTg0OD
+g0MzgxMCwyMzI2MzE0MiwtMjEzOTcyNDY1NV19
 -->
