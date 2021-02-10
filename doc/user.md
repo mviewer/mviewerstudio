@@ -105,7 +105,7 @@ On peut aussi y paramétrer la légende (fichier SLD) dans l’onglet **Affichag
 L’onglet **Filtre** permet de filtrer la donnée. On peut avoir un filtre géographique ou attributaire. Exemple ici avec un filtre sur un code SIREN :
 ![Onglet-filtre](img/onglet-filtre.png)
 
-<![endif]-->
+
 
 ### Onglet Liste de choix
 
@@ -116,7 +116,7 @@ L’onglet **Liste de choix** permet d’avoir dans son application la possibili
 ## Option - Récupérer une thématique existante
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMTY1ODMwNTA0OSwtMTczNDQwODU0MywtMT
+eyJoaXN0b3J5IjpbMTY4MjUzNDgwNiwtMTczNDQwODU0MywtMT
 MwNDYzMzI3NCwzNDIwMzY4OCwtMjA2NjQxNjI1Miw4OTA5Mzc1
 OTMsMTM3MjU4MTE0MywtNjMzOTYwMTE4LC02NjA5OTc3MjYsLT
 E3NDA5NjAyODEsOTkyOTczODA0LDE4NDg4NDM4MTAsMjMyNjMx
