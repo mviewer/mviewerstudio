@@ -9,10 +9,10 @@ mviewerstudio est une application qui permet de générer et de déployer des ap
 
 ## Prérequis
 
-Avant de vous lancer dans la belle aventure du mviewer studio de GéoBretagne et de goûter les joies de monter sa propre application cartographique, vous devrez malgré tout vous être assuré d'avoir rempli les prérequis suivants :
+Avant de vous lancer dans la belle aventure du mviewer studio et de goûter les joies de monter sa propre application cartographique, vous devrez malgré tout vous être assuré.e d'avoir rempli les prérequis suivants :
 
--   Avoir demandé **les droits** aux administrateurs de GéoBretagne pour vous connecter à l’application mviewerstudio.
--   Avoir déposé le ou les jeux de données "métier" nécessaires sur GéoBretagne (ou création d'un **flux OGC** sur son propre serveur) en respectant les [recommandations](https://cms.geobretagne.fr/content/deposer-des-donnees-shapefile-sur-geobretagne-grace-pydio).
+-   Le cas échéant, avoir demandé **les droits** aux administrateurs pour vous connecter à l’application mviewerstudio.
+-   Avoir déposé le ou les jeux de données "métier" nécessaires sur un catalogue (ou création d'un **flux OGC** sur son propre serveur) en respectant les [recommandations](https://cms.geobretagne.fr/content/deposer-des-donnees-shapefile-sur-geobretagne-grace-pydio).
 -   Avoir créé la ou les **fiches de métadonnées** nécessaires sur le catalogue de GéoBretagne (ou sur son propre catalogue CSW).
 -   Disposer si nécessaire de **fichiers de styles SLD** déposés sur GéoBretagne.
 
@@ -52,8 +52,8 @@ Exemple après avoir sauvegardé, je clique sur "**Prévisualiser**" et je visua
 
 ![Thematique-Donnees application](img/thematique-donnes.png)
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbOTU1NDExMjYsODkwOTM3NTkzLDEzNzI1OD
-ExNDMsLTYzMzk2MDExOCwtNjYwOTk3NzI2LC0xNzQwOTYwMjgx
-LDk5Mjk3MzgwNCwxODQ4ODQzODEwLDIzMjYzMTQyLC0yMTM5Nz
-I0NjU1XX0=
+eyJoaXN0b3J5IjpbLTEyMzA4ODU4OCw4OTA5Mzc1OTMsMTM3Mj
+U4MTE0MywtNjMzOTYwMTE4LC02NjA5OTc3MjYsLTE3NDA5NjAy
+ODEsOTkyOTczODA0LDE4NDg4NDM4MTAsMjMyNjMxNDIsLTIxMz
+k3MjQ2NTVdfQ==
 -->
