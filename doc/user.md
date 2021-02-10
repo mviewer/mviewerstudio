@@ -14,8 +14,7 @@ Avant de vous lancer dans la belle aventure du mviewer studio et de goûter les 
  - Le cas échéant, avoir demandé **les droits** aux administrateurs   
    pour vous connecter à l’application mviewerstudio.
   -  Avoir déposé le ou les jeux de données "métier" nécessaires sur un catalogue en **flux OGC** en respectant les    recommandations
-   ([exemple sur   
-   GéoBretagne](https://cms.geobretagne.fr/content/deposer-des-donnees-shapefile-sur-geobretagne-grace-pydio).
+   ([exemple sur GéoBretagne](https://cms.geobretagne.fr/content/deposer-des-donnees-shapefile-sur-geobretagne-grace-pydio).
  - Avoir créé la ou les **fiches de métadonnées** nécessaires sur le catalogue partenaire (ou sur son propre catalogue CSW).
   -   Disposer des **fichiers de styles SLD** nécessaires.
 
@@ -55,8 +54,8 @@ Exemple après avoir sauvegardé, je clique sur "**Prévisualiser**" et je visua
 
 ![Thematique-Donnees application](img/thematique-donnes.png)
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMTA0ODY3NTM0MCw4OTA5Mzc1OTMsMTM3Mj
-U4MTE0MywtNjMzOTYwMTE4LC02NjA5OTc3MjYsLTE3NDA5NjAy
-ODEsOTkyOTczODA0LDE4NDg4NDM4MTAsMjMyNjMxNDIsLTIxMz
-k3MjQ2NTVdfQ==
+eyJoaXN0b3J5IjpbMTcwOTkzOTg0LDg5MDkzNzU5MywxMzcyNT
+gxMTQzLC02MzM5NjAxMTgsLTY2MDk5NzcyNiwtMTc0MDk2MDI4
+MSw5OTI5NzM4MDQsMTg0ODg0MzgxMCwyMzI2MzE0MiwtMjEzOT
+cyNDY1NV19
 -->
