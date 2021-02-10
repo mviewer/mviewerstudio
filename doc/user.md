@@ -196,7 +196,6 @@ Vous pouvez intégrer ce code (iframe) dans votre page html.
 
 Vous pourrez travailler le fichier.xml sous un éditeur dédié (ex. Notepad++ [https://notepad-plus-plus.org/](https://notepad-plus-plus.org/)) en vous appuyant sur la documentation plus avancée du mviewer : [https://mviewerdoc.readthedocs.io/fr/latest/index.html](https://mviewerdoc.readthedocs.io/fr/latest/index.html)
 ![Doc-mviewer](img/doc-mviewer.png)
-<![endif]-->
 
 Vous y apprendrez par exemple :
 
@@ -205,10 +204,10 @@ Vous y apprendrez par exemple :
  - Et plein d'autres choses encore, si vous avez la motivation pour rentrer un peu dans du code !
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMTQ3MDMxNTAwMCwtNDk2NzkzMjg1LDUzMD
-gyMDYyNCwtNjQ1MzE3MDA1LC0xNzM0NDA4NTQzLC0xMzA0NjMz
-Mjc0LDM0MjAzNjg4LC0yMDY2NDE2MjUyLDg5MDkzNzU5MywxMz
-cyNTgxMTQzLC02MzM5NjAxMTgsLTY2MDk5NzcyNiwtMTc0MDk2
-MDI4MSw5OTI5NzM4MDQsMTg0ODg0MzgxMCwyMzI2MzE0MiwtMj
-EzOTcyNDY1NV19
+eyJoaXN0b3J5IjpbNzkyOTIyNDc3LC00OTY3OTMyODUsNTMwOD
+IwNjI0LC02NDUzMTcwMDUsLTE3MzQ0MDg1NDMsLTEzMDQ2MzMy
+NzQsMzQyMDM2ODgsLTIwNjY0MTYyNTIsODkwOTM3NTkzLDEzNz
+I1ODExNDMsLTYzMzk2MDExOCwtNjYwOTk3NzI2LC0xNzQwOTYw
+MjgxLDk5Mjk3MzgwNCwxODQ4ODQzODEwLDIzMjYzMTQyLC0yMT
+M5NzI0NjU1XX0=
 -->
