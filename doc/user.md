@@ -152,9 +152,9 @@ Activer la recherche d’entités par adresse en utilisant l’API de la base ad
 Ne pas oublier de Sauvegarder, de Télécharger son fichier xml et d'enregistrer l'URL qui apparaît quand vous prévisualiser.
 
 ![Enregistrer](img/enregistrer.png)
-<![endif]-->
 
-## Mise en production
+
+# Mise en production
 
 L’url fournie par mviewer studio évolue à chaque enregistrement. Pour une mise en production de votre application, merci de contacter votre administrateur de donnée GéoBretagne qui vous créera un espace de stockage accessible depuis explorer où déposer votre fichier XML.
 
@@ -174,7 +174,7 @@ Vous souhaitez intégrer l’application produite sur votre site web ? Ci-dessou
 ![Partager-details](img/partager2.png)
 
 
-**4. url** : insérer le code suivant en modifiant l’url en**_ _**bleu**_ _**par celle de l’étape 3 :**_
+**4. url** : insérer le code suivant en **modifiant l’url par celle de l’étape 3** :
 
     <iframe frameborder="1" height="670px" scrolling="no" src="http://lyzen.fr/mviewer/?x=-166138&y=6120203&z=12&l=PCC_PLAN_VELO*%252CPCC_ABRIS_VELO*%252Cepci%252Ccommune&lb=positron&config=apps%2Fplan-velo.xml&mode=u" style="width: 100%;"></iframe>
 
@@ -200,9 +200,9 @@ Vous pourrez travailler le fichier.xml sous un éditeur dédié (ex. Notepad++ [
 ![Doc-mviewer](img/doc-mviewer.png)
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTE0MjAwNDY1MTYsLTY0NTMxNzAwNSwtMT
-czNDQwODU0MywtMTMwNDYzMzI3NCwzNDIwMzY4OCwtMjA2NjQx
-NjI1Miw4OTA5Mzc1OTMsMTM3MjU4MTE0MywtNjMzOTYwMTE4LC
-02NjA5OTc3MjYsLTE3NDA5NjAyODEsOTkyOTczODA0LDE4NDg4
-NDM4MTAsMjMyNjMxNDIsLTIxMzk3MjQ2NTVdfQ==
+eyJoaXN0b3J5IjpbNzAwMDMwMTg2LC02NDUzMTcwMDUsLTE3Mz
+Q0MDg1NDMsLTEzMDQ2MzMyNzQsMzQyMDM2ODgsLTIwNjY0MTYy
+NTIsODkwOTM3NTkzLDEzNzI1ODExNDMsLTYzMzk2MDExOCwtNj
+YwOTk3NzI2LC0xNzQwOTYwMjgxLDk5Mjk3MzgwNCwxODQ4ODQz
+ODEwLDIzMjYzMTQyLC0yMTM5NzI0NjU1XX0=
 -->
