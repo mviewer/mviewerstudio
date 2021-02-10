@@ -110,11 +110,15 @@ L’onglet **Filtre** permet de filtrer la donnée. On peut avoir un filtre géo
 ### Onglet Liste de choix
 
 L’onglet **Liste de choix** permet d’avoir dans son application la possibilité de faire un filtre sur la valeur à afficher. Exemple ici on pourra filtrer les structures qui ont un multi accueil ou pas :
-![Onglet-liste-de-choix](img/onglet-filtre.png)
+![Onglet-liste-de-choix](img/onglet-liste-de-choix.png)
+![Onglet-liste-de-choix-visu](img/onglet-liste-de-choix_visu.png)
+
+## Option - Récupérer une thématique existante
+
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMzEyNzk1MjUyLC0xNzM0NDA4NTQzLC0xMz
-A0NjMzMjc0LDM0MjAzNjg4LC0yMDY2NDE2MjUyLDg5MDkzNzU5
-MywxMzcyNTgxMTQzLC02MzM5NjAxMTgsLTY2MDk5NzcyNiwtMT
-c0MDk2MDI4MSw5OTI5NzM4MDQsMTg0ODg0MzgxMCwyMzI2MzE0
-MiwtMjEzOTcyNDY1NV19
+eyJoaXN0b3J5IjpbMTY1ODMwNTA0OSwtMTczNDQwODU0MywtMT
+MwNDYzMzI3NCwzNDIwMzY4OCwtMjA2NjQxNjI1Miw4OTA5Mzc1
+OTMsMTM3MjU4MTE0MywtNjMzOTYwMTE4LC02NjA5OTc3MjYsLT
+E3NDA5NjAyODEsOTkyOTczODA0LDE4NDg4NDM4MTAsMjMyNjMx
+NDIsLTIxMzk3MjQ2NTVdfQ==
 -->
