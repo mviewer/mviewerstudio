@@ -121,16 +121,20 @@ L’onglet **Liste de choix** permet d’avoir dans son application la possibili
 ![Previsualiser-thematique](img/previsualiser-thematique.png)
 
 Choisir dans la liste la ou les thématiques que vous souhaitez récupérer et cliquer sur "**Importer**" en bas de page :
+![Importer-thematique](img/importer-thematique.png)
 
 A ce stade, vous avez vos deux thématiques :
-![Previsualiser-thematique](img/previsualiser-thematique.png)
+![Importer-thematique](img/importer-thematique.png)
+
+En cliquant sur **Prévisualiser**, vous accédez à votre applicatif cartographique en ligne :
+
 
 
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMTk5NzY0NTM0NywtMTczNDQwODU0MywtMT
-MwNDYzMzI3NCwzNDIwMzY4OCwtMjA2NjQxNjI1Miw4OTA5Mzc1
-OTMsMTM3MjU4MTE0MywtNjMzOTYwMTE4LC02NjA5OTc3MjYsLT
-E3NDA5NjAyODEsOTkyOTczODA0LDE4NDg4NDM4MTAsMjMyNjMx
-NDIsLTIxMzk3MjQ2NTVdfQ==
+eyJoaXN0b3J5IjpbNTg4NzQ3NTAsLTE3MzQ0MDg1NDMsLTEzMD
+Q2MzMyNzQsMzQyMDM2ODgsLTIwNjY0MTYyNTIsODkwOTM3NTkz
+LDEzNzI1ODExNDMsLTYzMzk2MDExOCwtNjYwOTk3NzI2LC0xNz
+QwOTYwMjgxLDk5Mjk3MzgwNCwxODQ4ODQzODEwLDIzMjYzMTQy
+LC0yMTM5NzI0NjU1XX0=
 -->
