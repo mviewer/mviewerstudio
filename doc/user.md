@@ -50,6 +50,8 @@ Exemple après avoir sauvegardé, je clique sur "**Prévisualiser**" et je visua
 
 ![Prévisualiser application](img/previsualiser-application.png)
 
+
+
 # Organiser ses données et thématiques
 
 ![Thematique-Donnees](img/thematique-donnes.png)
@@ -116,9 +118,9 @@ L’onglet **Liste de choix** permet d’avoir dans son application la possibili
 ## Option - Récupérer une thématique existante
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMTY4MjUzNDgwNiwtMTczNDQwODU0MywtMT
-MwNDYzMzI3NCwzNDIwMzY4OCwtMjA2NjQxNjI1Miw4OTA5Mzc1
-OTMsMTM3MjU4MTE0MywtNjMzOTYwMTE4LC02NjA5OTc3MjYsLT
-E3NDA5NjAyODEsOTkyOTczODA0LDE4NDg4NDM4MTAsMjMyNjMx
-NDIsLTIxMzk3MjQ2NTVdfQ==
+eyJoaXN0b3J5IjpbMzQzMjQyODIsLTE3MzQ0MDg1NDMsLTEzMD
+Q2MzMyNzQsMzQyMDM2ODgsLTIwNjY0MTYyNTIsODkwOTM3NTkz
+LDEzNzI1ODExNDMsLTYzMzk2MDExOCwtNjYwOTk3NzI2LC0xNz
+QwOTYwMjgxLDk5Mjk3MzgwNCwxODQ4ODQzODEwLDIzMjYzMTQy
+LC0yMTM5NzI0NjU1XX0=
 -->
