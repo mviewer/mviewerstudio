@@ -43,8 +43,10 @@ N.B : pour plus de confort et d’autonomie, il est fortement conseillé d’êt
 **3. Télécharger :** pour télécharger votre fichier xml de configuration en local
 
 **4. Charger :** pour charger sur GéoBretagne un fichier xml existant en local
+
+Exemple après avoir sauvegardé, je clique sur "Prévisualiser" et je visualise déjà le résultat de mon application à ce stade
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTYzMzk2MDExOCwtNjYwOTk3NzI2LC0xNz
-QwOTYwMjgxLDk5Mjk3MzgwNCwxODQ4ODQzODEwLDIzMjYzMTQy
-LC0yMTM5NzI0NjU1XX0=
+eyJoaXN0b3J5IjpbLTE5OTU5OTExNTksLTYzMzk2MDExOCwtNj
+YwOTk3NzI2LC0xNzQwOTYwMjgxLDk5Mjk3MzgwNCwxODQ4ODQz
+ODEwLDIzMjYzMTQyLC0yMTM5NzI0NjU1XX0=
 -->
