@@ -65,11 +65,17 @@ Le mot "**données**" correspond à un ou des jeu(x) de données que vous souhai
 ## Option - Créer une thématique
 ![Créer-thématique](img/creer-thematique.png)
 
-En cliquant sur "**Ajouter des données**", vous pouvez chercher un jeu de données dans le catalogue (ex. GéoBretagne), soit (1) par mot-clé (cas le plus courant), soit (2) en renseignant l'adresse du catalogue fournisseur (ou du service WMS) :
+En cliquant sur "**Ajouter des données**", vous pouvez chercher un jeu de données dans le catalogue (ex. GéoBretagne), soit **(1)** par mot-clé (cas le plus courant), soit **(2)** en renseignant l'adresse du catalogue fournisseur (ou du service WMS) :
+
 ![Rechercher-donnees](img/rechercher-donnees.png)
+
+Les données nécessaires ont été ajoutées à la thématique, vous cliquez sur **OK** (pensez à sauvegarder et télécharger votre fichier de configuration !) :
+
+![Rechercher-donnees](img/rechercher-donnees.png)
+
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbNDkyMDEwMjMzLDM0MjAzNjg4LC0yMDY2ND
-E2MjUyLDg5MDkzNzU5MywxMzcyNTgxMTQzLC02MzM5NjAxMTgs
-LTY2MDk5NzcyNiwtMTc0MDk2MDI4MSw5OTI5NzM4MDQsMTg0OD
-g0MzgxMCwyMzI2MzE0MiwtMjEzOTcyNDY1NV19
+eyJoaXN0b3J5IjpbLTEzMDQ2MzMyNzQsMzQyMDM2ODgsLTIwNj
+Y0MTYyNTIsODkwOTM3NTkzLDEzNzI1ODExNDMsLTYzMzk2MDEx
+OCwtNjYwOTk3NzI2LC0xNzQwOTYwMjgxLDk5Mjk3MzgwNCwxOD
+Q4ODQzODEwLDIzMjYzMTQyLC0yMTM5NzI0NjU1XX0=
 -->
