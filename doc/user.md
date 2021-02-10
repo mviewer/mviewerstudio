@@ -115,12 +115,15 @@ L’onglet **Liste de choix** permet d’avoir dans son application la possibili
 ![Onglet-liste-de-choix](img/onglet-liste-de-choix.png)
 ![Onglet-liste-de-choix-visu](img/onglet-liste-de-choix_visu.png)
 
+
 ## Option - Récupérer une thématique existante
+![Onglet-liste-de-choix](img/onglet-liste-de-choix.png)
+
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMzQzMjQyODIsLTE3MzQ0MDg1NDMsLTEzMD
-Q2MzMyNzQsMzQyMDM2ODgsLTIwNjY0MTYyNTIsODkwOTM3NTkz
-LDEzNzI1ODExNDMsLTYzMzk2MDExOCwtNjYwOTk3NzI2LC0xNz
-QwOTYwMjgxLDk5Mjk3MzgwNCwxODQ4ODQzODEwLDIzMjYzMTQy
-LC0yMTM5NzI0NjU1XX0=
+eyJoaXN0b3J5IjpbLTEzNzUzMDY4MTksLTE3MzQ0MDg1NDMsLT
+EzMDQ2MzMyNzQsMzQyMDM2ODgsLTIwNjY0MTYyNTIsODkwOTM3
+NTkzLDEzNzI1ODExNDMsLTYzMzk2MDExOCwtNjYwOTk3NzI2LC
+0xNzQwOTYwMjgxLDk5Mjk3MzgwNCwxODQ4ODQzODEwLDIzMjYz
+MTQyLC0yMTM5NzI0NjU1XX0=
 -->
