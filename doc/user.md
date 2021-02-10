@@ -117,13 +117,20 @@ L’onglet **Liste de choix** permet d’avoir dans son application la possibili
 
 
 ## Option - Récupérer une thématique existante
-![Onglet-liste-de-choix](img/onglet-liste-de-choix.png)
+
+![Previsualiser-thematique](img/previsualiser-thematique.png)
+
+Choisir dans la liste la ou les thématiques que vous souhaitez récupérer et cliquer sur "**Importer**" en bas de page :
+
+A ce stade, vous avez vos deux thématiques :
+![Previsualiser-thematique](img/previsualiser-thematique.png)
+
 
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTEzNzUzMDY4MTksLTE3MzQ0MDg1NDMsLT
-EzMDQ2MzMyNzQsMzQyMDM2ODgsLTIwNjY0MTYyNTIsODkwOTM3
-NTkzLDEzNzI1ODExNDMsLTYzMzk2MDExOCwtNjYwOTk3NzI2LC
-0xNzQwOTYwMjgxLDk5Mjk3MzgwNCwxODQ4ODQzODEwLDIzMjYz
-MTQyLC0yMTM5NzI0NjU1XX0=
+eyJoaXN0b3J5IjpbMTk5NzY0NTM0NywtMTczNDQwODU0MywtMT
+MwNDYzMzI3NCwzNDIwMzY4OCwtMjA2NjQxNjI1Miw4OTA5Mzc1
+OTMsMTM3MjU4MTE0MywtNjMzOTYwMTE4LC02NjA5OTc3MjYsLT
+E3NDA5NjAyODEsOTkyOTczODA0LDE4NDg4NDM4MTAsMjMyNjMx
+NDIsLTIxMzk3MjQ2NTVdfQ==
 -->
