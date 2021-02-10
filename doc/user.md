@@ -186,7 +186,9 @@ Les paramètres suivants sont modifiables :
 
  + **lb** : fond de carte au choix :
 
-**positron** : fond Carto  + **photographie satellitaire et aérienne** (zoom grande échelle)  + **osm1** : fond OpenStreetMap
+	 + **positron** : fond Carto  
+	 + **photographie satellitaire et aérienne** (zoom grande échelle)
+	 + **osm1** : fond OpenStreetMap
 
 Vous pouvez intégrer ce code (iframe) dans votre page html.
 
@@ -196,10 +198,10 @@ Vous pourrez travailler le fichier.xml sous un éditeur dédié (ex. Notepad++ [
 ![Doc-mviewer](img/doc-mviewer.png)
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTExODMxODk4NDQsNTMwODIwNjI0LC02ND
-UzMTcwMDUsLTE3MzQ0MDg1NDMsLTEzMDQ2MzMyNzQsMzQyMDM2
-ODgsLTIwNjY0MTYyNTIsODkwOTM3NTkzLDEzNzI1ODExNDMsLT
-YzMzk2MDExOCwtNjYwOTk3NzI2LC0xNzQwOTYwMjgxLDk5Mjk3
-MzgwNCwxODQ4ODQzODEwLDIzMjYzMTQyLC0yMTM5NzI0NjU1XX
-0=
+eyJoaXN0b3J5IjpbLTQ5Njc5MzI4NSw1MzA4MjA2MjQsLTY0NT
+MxNzAwNSwtMTczNDQwODU0MywtMTMwNDYzMzI3NCwzNDIwMzY4
+OCwtMjA2NjQxNjI1Miw4OTA5Mzc1OTMsMTM3MjU4MTE0MywtNj
+MzOTYwMTE4LC02NjA5OTc3MjYsLTE3NDA5NjAyODEsOTkyOTcz
+ODA0LDE4NDg4NDM4MTAsMjMyNjMxNDIsLTIxMzk3MjQ2NTVdfQ
+==
 -->
