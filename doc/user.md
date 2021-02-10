@@ -63,10 +63,12 @@ Le mot "**données**" correspond à un ou des jeu(x) de données que vous souhai
 **2. Importer **: pour réutiliser une thématique déjà créée au sein de la communauté mviewer (ex. la thématique des découpages territoriaux qui contient les limites de communes, EPCI et départements
 
 ## Option - Créer une thématique
+![Créer-thématique application](img/creer-thematique.png)
 
+En cliquant sur "**Ajouter des données**", vous pouvez chercher un jeu de données dans le catalogue (ex. GéoBretagne), soit par mot-clé (cas le plus courant), soit en renseignant l'adresse du catalogue fournisseur (ou du service WMS):
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMzQyMDM2ODgsLTIwNjY0MTYyNTIsODkwOT
-M3NTkzLDEzNzI1ODExNDMsLTYzMzk2MDExOCwtNjYwOTk3NzI2
-LC0xNzQwOTYwMjgxLDk5Mjk3MzgwNCwxODQ4ODQzODEwLDIzMj
-YzMTQyLC0yMTM5NzI0NjU1XX0=
+eyJoaXN0b3J5IjpbNzQxMjQ1MzQxLDM0MjAzNjg4LC0yMDY2ND
+E2MjUyLDg5MDkzNzU5MywxMzcyNTgxMTQzLC02MzM5NjAxMTgs
+LTY2MDk5NzcyNiwtMTc0MDk2MDI4MSw5OTI5NzM4MDQsMTg0OD
+g0MzgxMCwyMzI2MzE0MiwtMjEzOTcyNDY1NV19
 -->
