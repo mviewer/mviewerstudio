@@ -152,10 +152,28 @@ Activer la recherche d’entités par adresse en utilisant l’API de la base ad
 Ne pas oublier de Sauvegarder, de Télécharger son fichier xml et d'enregistrer l'URL qui apparaît quand vous prévisualiser.
 
 ![Enregistrer](img/enregistrer.png)
+<![endif]-->
+
+## Mise en production
+
+L’url fournie par mviewer studio évolue à chaque enregistrement. Pour une mise en production de votre application, merci de contacter votre administrateur de donnée GéoBretagne qui vous créera un espace de stockage accessible depuis explorer où déposer votre fichier XML.
+
+
+# Intégration dans votre site web
+
+Vous souhaitez intégrer l’application produite sur votre site web ? Ci-dessous la marche à suivre :
+
+**1. Partager** : cliquer sur le bouton partager de votre application mise en production sur GéoBretagne
+
+**2. Mode d’affichage** : sélectionner le mode d’affichage ultra simplifié
+
+**3. Lien :** clic droit sur l’icône de gauche puis copier l’adresse du lien
+
+![Partager](img/partager1.png)
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbNDg0MTcxMjQ0LC02NDUzMTcwMDUsLTE3Mz
-Q0MDg1NDMsLTEzMDQ2MzMyNzQsMzQyMDM2ODgsLTIwNjY0MTYy
-NTIsODkwOTM3NTkzLDEzNzI1ODExNDMsLTYzMzk2MDExOCwtNj
-YwOTk3NzI2LC0xNzQwOTYwMjgxLDk5Mjk3MzgwNCwxODQ4ODQz
-ODEwLDIzMjYzMTQyLC0yMTM5NzI0NjU1XX0=
+eyJoaXN0b3J5IjpbMjEzMzEwMzQzNCwtNjQ1MzE3MDA1LC0xNz
+M0NDA4NTQzLC0xMzA0NjMzMjc0LDM0MjAzNjg4LC0yMDY2NDE2
+MjUyLDg5MDkzNzU5MywxMzcyNTgxMTQzLC02MzM5NjAxMTgsLT
+Y2MDk5NzcyNiwtMTc0MDk2MDI4MSw5OTI5NzM4MDQsMTg0ODg0
+MzgxMCwyMzI2MzE0MiwtMjEzOTcyNDY1NV19
 -->
