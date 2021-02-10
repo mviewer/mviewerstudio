@@ -47,8 +47,11 @@ N.B : pour plus de confort et d’autonomie, il est fortement conseillé d’êt
 Exemple après avoir sauvegardé, je clique sur "**Prévisualiser**" et je visualise déjà le résultat de mon application à ce stade :
 
 ![Prévisualiser application](img/studio03.png)
+
+## Organiser ses données et thématiques
+
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMTQwMTEzMDExMywtNjMzOTYwMTE4LC02Nj
-A5OTc3MjYsLTE3NDA5NjAyODEsOTkyOTczODA0LDE4NDg4NDM4
-MTAsMjMyNjMxNDIsLTIxMzk3MjQ2NTVdfQ==
+eyJoaXN0b3J5IjpbLTcxOTY4MDY5LC02MzM5NjAxMTgsLTY2MD
+k5NzcyNiwtMTc0MDk2MDI4MSw5OTI5NzM4MDQsMTg0ODg0Mzgx
+MCwyMzI2MzE0MiwtMjEzOTcyNDY1NV19
 -->
