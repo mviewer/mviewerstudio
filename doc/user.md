@@ -137,12 +137,16 @@ En cliquant sur **Prévisualiser**, vous accédez à votre applicatif cartograph
 
 ![Couches-fond](img/fonds.png)
 
+Choix des couches de fonds disponibles dans notre application. Pensez aussi à choisir le fond affiché au démarrage.
 
 
+# Paramétrer la recherche d'entités
+
+![Recherche-entites](img/recherche-entites.png)
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMTc3NTU2MTYwNiwtNjQ1MzE3MDA1LC0xNz
-M0NDA4NTQzLC0xMzA0NjMzMjc0LDM0MjAzNjg4LC0yMDY2NDE2
-MjUyLDg5MDkzNzU5MywxMzcyNTgxMTQzLC02MzM5NjAxMTgsLT
-Y2MDk5NzcyNiwtMTc0MDk2MDI4MSw5OTI5NzM4MDQsMTg0ODg0
-MzgxMCwyMzI2MzE0MiwtMjEzOTcyNDY1NV19
+eyJoaXN0b3J5IjpbLTIwNTgwNjA5NzEsLTY0NTMxNzAwNSwtMT
+czNDQwODU0MywtMTMwNDYzMzI3NCwzNDIwMzY4OCwtMjA2NjQx
+NjI1Miw4OTA5Mzc1OTMsMTM3MjU4MTE0MywtNjMzOTYwMTE4LC
+02NjA5OTc3MjYsLTE3NDA5NjAyODEsOTkyOTczODA0LDE4NDg4
+NDM4MTAsMjMyNjMxNDIsLTIxMzk3MjQ2NTVdfQ==
 -->
