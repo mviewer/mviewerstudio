@@ -178,29 +178,31 @@ Vous souhaitez intégrer l’application produite sur votre site web ? Ci-dessou
 
     <iframe frameborder="1" height="670px" scrolling="no" src="http://lyzen.fr/mviewer/?x=-166138&y=6120203&z=12&l=PCC_PLAN_VELO*%252CPCC_ABRIS_VELO*%252Cepci%252Ccommune&lb=positron&config=apps%2Fplan-velo.xml&mode=u" style="width: 100%;"></iframe>
 
-Les paramètres en rouge sont modifiables :
+Les paramètres suivants sont modifiables :
 
 + **height** : hauteur de la carte en pixel
 
-+ z : niveau de zoom
++ **z** : niveau de zoom
 
-+ lb : fond de carte au choix
++ **lb** : fond de carte au choix
 
-<![if !supportLists]>· <![endif]>positron : fond Carto
+positron : fond Carto
 
-<![if !supportLists]>· <![endif]>ortho1 : photographie satellitaire et aérienne (zoom grande échelle)
+photographie satellitaire et aérienne (zoom grande échelle)
 
-<![if !supportLists]>· <![endif]>osm1 : fond OpenStreetMap
+osm1 : fond OpenStreetMap
 
 Vous pouvez intégrer ce code (iframe) dans votre page html.
 
-## Pour aller plus loin...
+# Pour aller plus loin...
 
 Vous pourrez travailler le fichier.xml sous un éditeur dédié (ex. Notepad++ [https://notepad-plus-plus.org/](https://notepad-plus-plus.org/)) en vous appuyant sur la documentation plus avancée du mviewer : [https://mviewerdoc.readthedocs.io/fr/latest/index.html](https://mviewerdoc.readthedocs.io/fr/latest/index.html)
+![Doc-mviewer](img/doc-mviewer.png)
+
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMTYzNzcxOTAxNiwtNjQ1MzE3MDA1LC0xNz
-M0NDA4NTQzLC0xMzA0NjMzMjc0LDM0MjAzNjg4LC0yMDY2NDE2
-MjUyLDg5MDkzNzU5MywxMzcyNTgxMTQzLC02MzM5NjAxMTgsLT
-Y2MDk5NzcyNiwtMTc0MDk2MDI4MSw5OTI5NzM4MDQsMTg0ODg0
-MzgxMCwyMzI2MzE0MiwtMjEzOTcyNDY1NV19
+eyJoaXN0b3J5IjpbLTE0MjAwNDY1MTYsLTY0NTMxNzAwNSwtMT
+czNDQwODU0MywtMTMwNDYzMzI3NCwzNDIwMzY4OCwtMjA2NjQx
+NjI1Miw4OTA5Mzc1OTMsMTM3MjU4MTE0MywtNjMzOTYwMTE4LC
+02NjA5OTc3MjYsLTE3NDA5NjAyODEsOTkyOTczODA0LDE4NDg4
+NDM4MTAsMjMyNjMxNDIsLTIxMzk3MjQ2NTVdfQ==
 -->
