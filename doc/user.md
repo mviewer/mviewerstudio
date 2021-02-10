@@ -7,7 +7,7 @@ mviewerstudio est une application qui permet de générer et de déployer des ap
 ![Interface studio](img/studio.png)
 
 
-## Prérequis
+# Prérequis
 
 Avant de vous lancer dans la belle aventure du mviewer studio et de goûter les joies de monter sa propre application cartographique, vous devrez malgré tout vous être assuré.e d'avoir rempli les prérequis suivants :
 
@@ -21,8 +21,8 @@ Avant de vous lancer dans la belle aventure du mviewer studio et de goûter les 
 *N.B sur GéoBretagne : pour plus de confort et d’autonomie, il est fortement conseillé d’être [administrateur délégué](https://cms.geobretagne.fr/content/administration-deleguee-sur-geoserver) de ses données sur GéoBretagne.*
 
 
+# Paramétrer son application
 
-## Paramétrer son application
 ![Paramétrage application](img/interface-studio.png)
 
  **1.** Renseigner le titre de votre application cartographique _(ex. "Le plan vélo de la Communauté de communes de Châteaugiron")_
@@ -50,7 +50,7 @@ Exemple après avoir sauvegardé, je clique sur "**Prévisualiser**" et je visua
 
 ![Prévisualiser application](img/previsualiser-application.png)
 
-## Organiser ses données et thématiques
+# Organiser ses données et thématiques
 
 ![Thematique-Donnees application](img/thematique-donnes.png)
 
@@ -62,9 +62,12 @@ Le mot "**données**" correspond à un ou des jeu(x) de données que vous souhai
 **1.Créer **: pour créer votre thématique et y associer vos jeux de données "métier"
 
 **2. Importer **: pour réutiliser une thématique déjà créée au sein de la communauté mviewer (ex. la thématique des découpages territoriaux qui contient les limites de communes, EPCI et départements
+
+## Option - Créer une thématique
+
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMTAwNTY1Njk2NCwtMjA2NjQxNjI1Miw4OT
-A5Mzc1OTMsMTM3MjU4MTE0MywtNjMzOTYwMTE4LC02NjA5OTc3
-MjYsLTE3NDA5NjAyODEsOTkyOTczODA0LDE4NDg4NDM4MTAsMj
-MyNjMxNDIsLTIxMzk3MjQ2NTVdfQ==
+eyJoaXN0b3J5IjpbLTIwMTY1OTM0ODUsLTIwNjY0MTYyNTIsOD
+kwOTM3NTkzLDEzNzI1ODExNDMsLTYzMzk2MDExOCwtNjYwOTk3
+NzI2LC0xNzQwOTYwMjgxLDk5Mjk3MzgwNCwxODQ4ODQzODEwLD
+IzMjYzMTQyLC0yMTM5NzI0NjU1XX0=
 -->
