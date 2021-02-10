@@ -57,7 +57,6 @@ Exemple après avoir sauvegardé, je clique sur "**Prévisualiser**" et je visua
 Le mot "**données**" correspond à un ou des jeu(x) de données que vous souhaitez ajouter à votre application. Vous avez la possibilité de regrouper un ou plusieurs jeux de données sous une "**thématique**". Exemple, je veux ajouter les deux couches de données (linéaire du plan vélo et des abris vélo) sous une thématique "Plan Vélo".
 
 ![Selection-Donnees application](img/selection-donnees.png)
-<![endif]-->
 
 **1.Créer **: pour créer votre thématique et y associer vos jeux de données "métier"
 
@@ -66,8 +65,8 @@ Le mot "**données**" correspond à un ou des jeu(x) de données que vous souhai
 ## Option - Créer une thématique
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTIwMTY1OTM0ODUsLTIwNjY0MTYyNTIsOD
-kwOTM3NTkzLDEzNzI1ODExNDMsLTYzMzk2MDExOCwtNjYwOTk3
-NzI2LC0xNzQwOTYwMjgxLDk5Mjk3MzgwNCwxODQ4ODQzODEwLD
-IzMjYzMTQyLC0yMTM5NzI0NjU1XX0=
+eyJoaXN0b3J5IjpbMzQyMDM2ODgsLTIwNjY0MTYyNTIsODkwOT
+M3NTkzLDEzNzI1ODExNDMsLTYzMzk2MDExOCwtNjYwOTk3NzI2
+LC0xNzQwOTYwMjgxLDk5Mjk3MzgwNCwxODQ4ODQzODEwLDIzMj
+YzMTQyLC0yMTM5NzI0NjU1XX0=
 -->
