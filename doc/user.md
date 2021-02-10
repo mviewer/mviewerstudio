@@ -11,13 +11,13 @@ mviewerstudio est une application qui permet de générer et de déployer des ap
 
 Avant de vous lancer dans la belle aventure du mviewer studio et de goûter les joies de monter sa propre application cartographique, vous devrez malgré tout vous être assuré.e d'avoir rempli les prérequis suivants :
 
- - Le cas échéant, avoir demandé **les droits** aux administrateurs
-       pour vous connecter à l’application mviewerstudio.
- -  Avoir déposé le ou les jeux de données "métier" nécessaires sur un catalogue en **flux OGC** en respectant les
-       recommandations ([exemple sur
-       GéoBretagne](https://cms.geobretagne.fr/content/deposer-des-donnees-shapefile-sur-geobretagne-grace-pydio).
-       -   Avoir créé la ou les **fiches de métadonnées** nécessaires sur le catalogue partenaire (ou sur son propre catalogue CSW).
-       -   Disposer des **fichiers de styles SLD** nécessaires.
+ - Le cas échéant, avoir demandé **les droits** aux administrateurs   
+   pour vous connecter à l’application mviewerstudio.
+  -  Avoir déposé le ou les jeux de données "métier" nécessaires sur un catalogue en **flux OGC** en respectant les    recommandations
+   ([exemple sur   
+   GéoBretagne](https://cms.geobretagne.fr/content/deposer-des-donnees-shapefile-sur-geobretagne-grace-pydio).
+ - Avoir créé la ou les **fiches de métadonnées** nécessaires sur le catalogue partenaire (ou sur son propre catalogue CSW).
+  -   Disposer des **fichiers de styles SLD** nécessaires.
 
 N.B sur GéoBretagne : pour plus de confort et d’autonomie, il est fortement conseillé d’être [administrateur délégué](https://cms.geobretagne.fr/content/administration-deleguee-sur-geoserver) de ses données sur GéoBretagne.
 
@@ -55,7 +55,7 @@ Exemple après avoir sauvegardé, je clique sur "**Prévisualiser**" et je visua
 
 ![Thematique-Donnees application](img/thematique-donnes.png)
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTc0NzU3NTE5OCw4OTA5Mzc1OTMsMTM3Mj
+eyJoaXN0b3J5IjpbLTkwMTgyMDExOCw4OTA5Mzc1OTMsMTM3Mj
 U4MTE0MywtNjMzOTYwMTE4LC02NjA5OTc3MjYsLTE3NDA5NjAy
 ODEsOTkyOTczODA0LDE4NDg4NDM4MTAsMjMyNjMxNDIsLTIxMz
 k3MjQ2NTVdfQ==
