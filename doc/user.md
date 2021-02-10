@@ -135,14 +135,14 @@ En cliquant sur **Prévisualiser**, vous accédez à votre applicatif cartograph
 
 # Paramétrer les couches de fond
 
-![Couches-fond](img/fond.png)
+![Couches-fond](img/fonds.png)
 
 
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMzUwOTk0OTA1LC02NDUzMTcwMDUsLTE3Mz
-Q0MDg1NDMsLTEzMDQ2MzMyNzQsMzQyMDM2ODgsLTIwNjY0MTYy
-NTIsODkwOTM3NTkzLDEzNzI1ODExNDMsLTYzMzk2MDExOCwtNj
-YwOTk3NzI2LC0xNzQwOTYwMjgxLDk5Mjk3MzgwNCwxODQ4ODQz
-ODEwLDIzMjYzMTQyLC0yMTM5NzI0NjU1XX0=
+eyJoaXN0b3J5IjpbMTc3NTU2MTYwNiwtNjQ1MzE3MDA1LC0xNz
+M0NDA4NTQzLC0xMzA0NjMzMjc0LDM0MjAzNjg4LC0yMDY2NDE2
+MjUyLDg5MDkzNzU5MywxMzcyNTgxMTQzLC02MzM5NjAxMTgsLT
+Y2MDk5NzcyNiwtMTc0MDk2MDI4MSw5OTI5NzM4MDQsMTg0ODg0
+MzgxMCwyMzI2MzE0MiwtMjEzOTcyNDY1NV19
 -->
