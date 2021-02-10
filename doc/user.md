@@ -29,7 +29,7 @@ Avant de vous lancer dans la belle aventure du mviewer studio et de goûter les 
 
 **2.** Régler l'emprise de votre carte en utilisant les zoom +/- et le déplacement en cliquant à la souris sur la carte _(ex. ici on zoome sur le territoire de la Communauté de communes de Châteaugiron, ce sera le cadrage "par défaut" sur lequel arrivera l'utilisation sur l'application cartographique)_
 
-**3.** Renseigner l'URL du logo de l'entité productrice de l'application** _**(les logos des partenaires sont stockés ici**_ [**https://geobretagne.fr/pub/logo/**](https://geobretagne.fr/pub/logo/)_**. Il apparaîtra dans le bandeau de l'application)**_
+**3.** Renseigner l'URL du logo de l'entité productrice de l'application** _**(info : sur GéoBretagne, les logos des partenaires sont stockés ici**_ [**https://geobretagne.fr/pub/logo/**](https://geobretagne.fr/pub/logo/)_**. Il apparaîtra dans le bandeau de l'application)**_
 
 **4.** Cocher les options d'outils que vous souhaitez voir dans la carte  _(ex. des outils de mesures et un export au format image_)
 
@@ -38,13 +38,13 @@ Avant de vous lancer dans la belle aventure du mviewer studio et de goûter les 
 
 ![Sauvegarde application](img/sauvegarde-application.png)
 
-**1. Sauvegarder** : pour enregistrer votre fichier de configuration (xml) sur GéoBretagne
+**1. Sauvegarder** : pour enregistrer votre fichier de configuration (xml) sur l'espace du mviewer studio
 
 **2. Prévisualiser** : pour pouvoir visualiser le résultat de votre application à tout moment
 
 **3. Télécharger :** pour télécharger votre fichier xml de configuration en local
 
-**4. Charger :** pour charger sur GéoBretagne un fichier xml existant en local
+**4. Charger :** pour charger sur le mviewer studio un fichier xml existant en local
 
 Exemple après avoir sauvegardé, je clique sur "**Prévisualiser**" et je visualise déjà le résultat de mon application à ce stade :
 
@@ -54,8 +54,8 @@ Exemple après avoir sauvegardé, je clique sur "**Prévisualiser**" et je visua
 
 ![Thematique-Donnees application](img/thematique-donnes.png)
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMTU2MjU1ODc4Myw4OTA5Mzc1OTMsMTM3Mj
-U4MTE0MywtNjMzOTYwMTE4LC02NjA5OTc3MjYsLTE3NDA5NjAy
-ODEsOTkyOTczODA0LDE4NDg4NDM4MTAsMjMyNjMxNDIsLTIxMz
-k3MjQ2NTVdfQ==
+eyJoaXN0b3J5IjpbLTIwNjY0MTYyNTIsODkwOTM3NTkzLDEzNz
+I1ODExNDMsLTYzMzk2MDExOCwtNjYwOTk3NzI2LC0xNzQwOTYw
+MjgxLDk5Mjk3MzgwNCwxODQ4ODQzODEwLDIzMjYzMTQyLC0yMT
+M5NzI0NjU1XX0=
 -->
