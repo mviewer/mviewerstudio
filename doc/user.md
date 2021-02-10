@@ -196,12 +196,19 @@ Vous pouvez intégrer ce code (iframe) dans votre page html.
 
 Vous pourrez travailler le fichier.xml sous un éditeur dédié (ex. Notepad++ [https://notepad-plus-plus.org/](https://notepad-plus-plus.org/)) en vous appuyant sur la documentation plus avancée du mviewer : [https://mviewerdoc.readthedocs.io/fr/latest/index.html](https://mviewerdoc.readthedocs.io/fr/latest/index.html)
 ![Doc-mviewer](img/doc-mviewer.png)
+<![endif]-->
+
+Vous y apprendrez par exemple :
+
+ - Comment ajouter un lien vers votre site internet à partir du logo dans le bandeau,
+ - Comment paramétrer plus finement la fiche d'information,
+ - Et plein d'autres choses encore, si vous avez la motivation pour rentrer un peu dans du code !
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTQ5Njc5MzI4NSw1MzA4MjA2MjQsLTY0NT
-MxNzAwNSwtMTczNDQwODU0MywtMTMwNDYzMzI3NCwzNDIwMzY4
-OCwtMjA2NjQxNjI1Miw4OTA5Mzc1OTMsMTM3MjU4MTE0MywtNj
-MzOTYwMTE4LC02NjA5OTc3MjYsLTE3NDA5NjAyODEsOTkyOTcz
-ODA0LDE4NDg4NDM4MTAsMjMyNjMxNDIsLTIxMzk3MjQ2NTVdfQ
-==
+eyJoaXN0b3J5IjpbMTQ3MDMxNTAwMCwtNDk2NzkzMjg1LDUzMD
+gyMDYyNCwtNjQ1MzE3MDA1LC0xNzM0NDA4NTQzLC0xMzA0NjMz
+Mjc0LDM0MjAzNjg4LC0yMDY2NDE2MjUyLDg5MDkzNzU5MywxMz
+cyNTgxMTQzLC02MzM5NjAxMTgsLTY2MDk5NzcyNiwtMTc0MDk2
+MDI4MSw5OTI5NzM4MDQsMTg0ODg0MzgxMCwyMzI2MzE0MiwtMj
+EzOTcyNDY1NV19
 -->
