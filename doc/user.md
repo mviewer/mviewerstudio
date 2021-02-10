@@ -23,9 +23,9 @@ N.B : pour plus de confort et d’autonomie, il est fortement conseillé d’êt
 ## Paramétrer son application
 ![Paramétrage application](img/interface-studio.png)
 
- **1.** Renseigner le titre de votre application cartographique _(ex. "Le plan vélo de la Communauté de communes de Châteaugiron")_**
+ **1.** Renseigner le titre de votre application cartographique _(ex. "Le plan vélo de la Communauté de communes de Châteaugiron")_
 
-**2.** Régler l'emprise de votre carte en utilisant les zoom +/- et le déplacement en cliquant à la souris sur la carte _(ex. ici on zoome sur le territoire de la Communauté de communes de Châteaugiron, ce sera le cadrage "par défaut" sur lequel arrivera l'utilisation sur l'application cartographique)_**
+**2.** Régler l'emprise de votre carte en utilisant les zoom +/- et le déplacement en cliquant à la souris sur la carte _(ex. ici on zoome sur le territoire de la Communauté de communes de Châteaugiron, ce sera le cadrage "par défaut" sur lequel arrivera l'utilisation sur l'application cartographique)_
 
 **3.** Renseigner l'URL du logo de l'entité productrice de l'application** _**(les logos des partenaires sont stockés ici**_ [**https://geobretagne.fr/pub/logo/**](https://geobretagne.fr/pub/logo/)_**. Il apparaîtra dans le bandeau de l'application)**_
 
@@ -52,8 +52,8 @@ Exemple après avoir sauvegardé, je clique sur "**Prévisualiser**" et je visua
 
 ![Thematique-Donnees application](img/thematique-donnes.png)
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbOTk5Mzc4Njk0LDg5MDkzNzU5MywxMzcyNT
-gxMTQzLC02MzM5NjAxMTgsLTY2MDk5NzcyNiwtMTc0MDk2MDI4
-MSw5OTI5NzM4MDQsMTg0ODg0MzgxMCwyMzI2MzE0MiwtMjEzOT
-cyNDY1NV19
+eyJoaXN0b3J5IjpbOTU1NDExMjYsODkwOTM3NTkzLDEzNzI1OD
+ExNDMsLTYzMzk2MDExOCwtNjYwOTk3NzI2LC0xNzQwOTYwMjgx
+LDk5Mjk3MzgwNCwxODQ4ODQzODEwLDIzMjYzMTQyLC0yMTM5Nz
+I0NjU1XX0=
 -->
