@@ -50,9 +50,9 @@ Exemple après avoir sauvegardé, je clique sur "**Prévisualiser**" et je visua
 
 ## Organiser ses données et thématiques
 
-![Thematique-Donnees application](img/studio03.png)
+![Thematique-Donnees application](img/thematique-donnes.png)
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMTEwNTk3MzQzMywtNjMzOTYwMTE4LC02Nj
+eyJoaXN0b3J5IjpbMTM3MjU4MTE0MywtNjMzOTYwMTE4LC02Nj
 A5OTc3MjYsLTE3NDA5NjAyODEsOTkyOTczODA0LDE4NDg4NDM4
 MTAsMjMyNjMxNDIsLTIxMzk3MjQ2NTVdfQ==
 -->
