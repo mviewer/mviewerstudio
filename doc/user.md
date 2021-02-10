@@ -55,10 +55,16 @@ Exemple après avoir sauvegardé, je clique sur "**Prévisualiser**" et je visua
 ![Thematique-Donnees application](img/thematique-donnes.png)
 
 Le mot "**données**" correspond à un ou des jeu(x) de données que vous souhaitez ajouter à votre application. Vous avez la possibilité de regrouper un ou plusieurs jeux de données sous une "**thématique**". Exemple, je veux ajouter les deux couches de données (linéaire du plan vélo et des abris vélo) sous une thématique "Plan Vélo".
+
 ![Selection-Donnees application](img/selection-donnees.png)
+<![endif]-->
+
+**1.Créer **: pour créer votre thématique et y associer vos jeux de données "métier"
+
+**2. Importer **: pour réutiliser une thématique déjà créée au sein de la communauté mviewer (ex. la thématique des découpages territoriaux qui contient les limites de communes, EPCI et départements
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbNjI4NDc2OTEwLC0yMDY2NDE2MjUyLDg5MD
-kzNzU5MywxMzcyNTgxMTQzLC02MzM5NjAxMTgsLTY2MDk5Nzcy
-NiwtMTc0MDk2MDI4MSw5OTI5NzM4MDQsMTg0ODg0MzgxMCwyMz
-I2MzE0MiwtMjEzOTcyNDY1NV19
+eyJoaXN0b3J5IjpbMTAwNTY1Njk2NCwtMjA2NjQxNjI1Miw4OT
+A5Mzc1OTMsMTM3MjU4MTE0MywtNjMzOTYwMTE4LC02NjA5OTc3
+MjYsLTE3NDA5NjAyODEsOTkyOTczODA0LDE4NDg4NDM4MTAsMj
+MyNjMxNDIsLTIxMzk3MjQ2NTVdfQ==
 -->
