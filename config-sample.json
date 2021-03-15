@@ -111,6 +111,36 @@
 				"maxzoom": "20",
 				"url": "https://tile.openstreetmap.bzh/br/{z}/{x}/{y}.png",
 				"attribution": "Kendaolerien <a href=\"https://www.openstreetmap.org/copyright\" target=\"_blank\">OpenStreetMap</a>"
+			},
+			"plan_ign": {
+				"id":"plan_ign",
+				"thumbgallery":"img/basemap/scan-express.jpg",
+				"title":"IGN",
+				"label":"Plan IGN v2",
+				"type":"WMTS",
+				"url":"https://wxs.ign.fr/choisirgeoportail/geoportail/wmts?",
+				"layers":"GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2",
+				"format":"image/png",
+				"fromcapacity":"false",
+				"attribution":"<a href='https://geoservices.ign.fr' target='_blank'><img src='https://geoservices.ign.fr/images/logoIGN.png'></a>",
+				"style":"normal",
+				"matrixset":"PM",
+				"maxzoom":"22"
+			},
+			"ortho_ign": {
+				"id":"ortho_ign",
+				"thumbgallery":"img/basemap/ortho.jpg",
+				"title":"IGN",
+				"label":"Photographies aériennes IGN",
+				"type":"WMTS",
+				"url":"https://wxs.ign.fr/choisirgeoportail/geoportail/wmts?",
+				"layers":"ORTHOIMAGERY.ORTHOPHOTOS",
+				"format":"image/jpeg",
+				"fromcapacity":"false",
+				"attribution":"<a href='https://geoservices.ign.fr' target='_blank'><img src='https://geoservices.ign.fr/images/logoIGN.png'></a>",
+				"style":"normal",
+				"matrixset":"PM",
+				"maxzoom":"22"
 			}
 		},
         "data_providers" : {
