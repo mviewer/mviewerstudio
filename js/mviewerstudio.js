@@ -28,7 +28,7 @@ $(document).ready(function(){
             }
 
             if (_conf.logout_url) {
-                $("#menu_user_logout").attr("href", _conf.logout_url);
+                $("#menu_user_logout a").attr("href", _conf.logout_url);
             }
 
             // Update web page title and title in the brand navbar
