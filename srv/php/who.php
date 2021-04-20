@@ -27,15 +27,20 @@ function getUser() {
 function getUserInfos() {
     $firstname = "";
     $lastname = "";
+    $orgname = "";
     foreach (getallheaders() as $name => $value) {
         if (substr( $name, 0, 4 ) === "sec-") {
             if ($name ===  "sec-firstname") {
-                    $firstname=$value;
+                    $firstname=utf8_encode($value);
             }
             if ($name ===  "sec-lastname") {
-                    $lastname=$value;
+                    $lastname=utf8_encode($value);
             }
+            if ($name ===  "sec-orgname") {
+                    $orgname=utf8_encode($value);
+            }
+
         }
     }
-    return array( $firstname, $lastname );
+    return array( $firstname, $lastname, $orgname );
 }
