@@ -194,7 +194,7 @@ select#opt-style {
 }
 
 .navbar-dark{
-    background-color:rgba(18,18,18,1);
+    background-color:#efc400;
     min-height:70px;
 }
 
@@ -203,7 +203,7 @@ select#opt-style {
 }
 
  .ApplicationTitle{
-    background-color:rgba(18,18,18,0.7);
+    background-color:rgba(46, 83, 103);
     padding:15px 0;
  }
 
@@ -215,7 +215,8 @@ select#opt-style {
  }
 
 #studio-title{
-    color:#eee;
+    color:#2e5367;
+    font-weight:700;
 }
 
 .navbar-inverse{
@@ -224,7 +225,7 @@ select#opt-style {
 }
 
 .navbar ul li a{
-    color:#f5f5f5;
+    color:#2e5367;
 }
 
 .navbar-text{
@@ -256,7 +257,7 @@ select#opt-style {
 
 #options-menu{
     width:250px;
-    background-color:rgba(18,18,18,0.3);
+    background-color:rgba(46, 83, 103,0.5);
     height:100%;
     position:fixed;
     overflow-x: hidden;
@@ -278,7 +279,7 @@ select#opt-style {
 }
 
 #options-menu i.icon-cog-alt{
-    color: #181818;
+    color: #2e5367;
     font-size:23px;
     position:absolute;
     top:10px;
@@ -286,7 +287,7 @@ select#opt-style {
 }
 #options-menu i.icon-cog-alt:hover{
     cursor:pointer;
-    color:#f1f1f1;
+    color:#efc400;
 }
 
 #options-menu .closebtn {
@@ -296,11 +297,11 @@ select#opt-style {
     font-size: 36px;
     margin-left: 50px;
     text-decoration:none;
-    color:#181818;
+    color:#2e5367;
 }
 
 #options-menu .closebtn:hover{
-    color:#f1f1f1;
+    color:#efc400;
 }
 
 #options-menu ul{
@@ -316,9 +317,7 @@ select#opt-style {
 
 #tabs li{
     list-style: none;
-    line-height:25px;
     margin:0 auto;
-    padding:0px 17px;
     white-space: nowrap;
     width:100%;
 }
@@ -326,27 +325,28 @@ select#opt-style {
 #tabs li a{
     text-decoration: none;
     font-size: 15px;
-    color: #333;
+    color: #244252;
     display: block;
-    margin:10px;
-    padding:0;
     display:inline-block;
     margin-left:0;
+    line-height:25px;
+    padding:10px 17px;
+    width:100%;
 }
 
 #tabs li:hover {
-    background-color:black;
-    color:#f1f1f1;
+    background-color:#2e5367;
+    color:#efc400;
 }
 
 #tabs li:hover a,
 #tabs li:hover i{
-    color:#f1f1f1;
+    color:#efc400;
 }
 
 #tabs li i{
     display:inline-block;
-    color:#181818;
+    color:#2e5367;
     margin-right:15px;
 }
 
@@ -383,6 +383,7 @@ select#opt-style {
 
 label{
     font-size:14px;
+margin-bottom:0;
 }
 
 .nav-tabs>li>a:hover{
@@ -425,11 +426,11 @@ label{
     margin: auto 0;
 }
 
-.list-group-item {
+.checkbox-cards {
     margin:10px 0;
-    background-color:#eee;
     border-radius:5px;
     border:none;
+    display:inline-block;
 }
 
 .modalParemétrage {
@@ -466,6 +467,73 @@ label{
 #search-config p {
     margin:0;
 }
+
+.input-group-addon{
+padding-top:5px;
+}
+
+.modal-dialog{
+  max-width:90%!important;
+}
+
+input[type=checkbox], input[type=radio]{
+  margin-right:5px;
+}
+
+#importedThemes.list-group{
+display:block;
+}
+
+.btn-primary,
+.btn-primary:hover,
+.btn-primary:active,
+.btn-primary:focus{
+  background-color:rgba(239, 196, 0)!important;
+  color:black!important;
+  border:0;
+}
+
+.btn-success,
+.btn-success:hover,
+.btn-success:active,
+.btn-success:focus{
+  background-color:rgba(239, 196, 0, 0.5)!important;
+  color:black!important;
+  border:0;
+}
+
+.btn-danger,
+.btn-danger:hover,
+.btn-danger:active,
+.btn-danger:focus{
+  background-color:#8c1d24!important;
+  border:0;
+}
+
+.btn:hover,
+.btn-primary:hover,
+.btn-success:hover,
+.btn-danger:hover{
+  box-shadow:0 0 5px #ddd;
+text-decoration:underline;
+}
+
+.btn-primary:focus,
+.btn-success:focus{
+  box-shadow:0 0 0 0.2rem #ffea8d!important;
+}
+
+.btn-danger:focus{
+  box-shadow:rgba(140, 29, 36,0.2);
+}
+
+.btn.disabled,
+.btn:disabled{
+  background-color:#aaa!important
+}
+
+
+
 
 /*--------*/
 

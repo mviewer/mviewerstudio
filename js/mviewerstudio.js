@@ -63,11 +63,11 @@ $(document).ready(function(){
 								var url = mv.xml;
 								var themeid = mv.id;
 								if (url && themeid) {
-									html.push(['<div class="checkbox list-group-item">',
-										'<label for="import-theme-'+themeid+id+'">',
+									html.push(['<div class="card checkbox-cards mx-2 px-3 py-1">',
+										'<div class=""><label for="import-theme-'+themeid+id+'">',
 											'<input type="checkbox" data-url="'+url+'" data-theme-label="'+mv.title+'" data-theme-id="'+themeid+'" name="checkboxes" id="import-theme-'+themeid+id+'">',
 											mv.title,
-										'</label></div>'].join(""));
+										'</label></div></div>'].join(""));
 								}
 							}
 						});
