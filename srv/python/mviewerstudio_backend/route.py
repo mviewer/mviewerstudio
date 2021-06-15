@@ -7,9 +7,13 @@ import lxml.etree as ET
 from pathlib import Path
 from flask.blueprints import BlueprintSetupState
 
+import logging
+
 basic_store = Blueprint(
     "basic-store", __name__, static_folder="static", static_url_path="/"
 )
+
+logger = logging.getLogger(__name__)
 
 
 @basic_store.record_once
@@ -54,25 +58,27 @@ def list_stored_mviewer_config() -> Response:
     files.sort(key=os.path.getmtime, reverse=True)
     metadatas = list()
     for f in files:
-        xml = ET.parse(f)
-        description = xml.find(".//metadata/{*}RDF/{*}Description")
-        if description.find(".//{*}creator").text == current_user.username:
-            url = f.replace(
-                current_app.config["EXPORT_CONF_FOLDER"],
-                current_app.config["CONF_PATH_FROM_MVIEWER"],
-            )
-            subject = description.find("{*}subject")
-            if subject is not None:
-                subject = subject.text
-            print(subject)
-            metadata = {
-                "url": url,
-                "creator": description.find("{*}creator").text,
-                "date": description.find("{*}date").text,
-                "title": description.find("{*}title").text,
-                "subjects": subject,
-            }
-            metadatas.append(metadata)
+        try:
+            xml = ET.parse(f)
+            description = xml.find(".//metadata/{*}RDF/{*}Description")
+            if description.find(".//{*}creator").text == current_user.username:
+                url = f.replace(
+                    current_app.config["EXPORT_CONF_FOLDER"],
+                    current_app.config["CONF_PATH_FROM_MVIEWER"],
+                )
+                subject = description.find("{*}subject")
+                if subject is not None:
+                    subject = subject.text
+                metadata = {
+                    "url": url,
+                    "creator": description.find("{*}creator").text,
+                    "date": description.find("{*}date").text,
+                    "title": description.find("{*}title").text,
+                    "subjects": subject,
+                }
+                metadatas.append(metadata)
+        except:
+            logger.error(f"Cannot parse file {f}")
     return jsonify(metadatas)
 
 
