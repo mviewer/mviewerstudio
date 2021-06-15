@@ -21,11 +21,11 @@ if (is_array($files)) {
             if ($description["creator"] == $geob_user) {
                 $url = str_replace($_conf['export_conf_folder'], $_conf['conf_path_from_mviewer'], "$filename");
                 $metadata = array(
-                    "url" => $url,
-                    "creator" => $description["creator"],
-                    "date" => $description["date"],
-                    "title" => $description["title"],
-                    "subjects" => $description["subject"],
+                    "url" => !empty($url) ? $url : '',
+                    "creator" => !empty($description["creator"]) ? $description["creator"] : '',
+                    "date" => !empty($description["date"]) ? $description["date"] : '',
+                    "title" => !empty($description["title"]) ? $description["title"] : '',
+                    "subjects" => !empty($description["subject"]) ?  $description["subject"] : '',
                 );
                 array_push( $data , $metadata);
             }
