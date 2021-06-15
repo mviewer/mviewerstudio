@@ -9,7 +9,7 @@ $files = array_reverse($the_files);
 $data = array();
 if (is_array($files)) {
 
-     foreach($files as $filename) {        
+     foreach($files as $filename) {
         $xml = simplexml_load_file("$filename");
         if ($xml !== false) {
             $content = file_get_contents("$filename");
@@ -26,15 +26,15 @@ if (is_array($files)) {
                     "date" => $description["date"],
                     "title" => $description["title"],
                     "subjects" => $description["subject"],
-                );        
+                );
                 array_push( $data , $metadata);
             }
-         }       
+         }
         
      }
      
-     header('Content-type: application/json',true);   
-     echo json_encode($data);  
+     header('Content-type: application/json',true);
+     echo json_encode($data);
 
 }
 ?>
