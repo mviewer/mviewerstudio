@@ -1,3 +1,6 @@
 black
 pytest
 mypy
+types-Werkzeug # mypy
+types-Flask
+
