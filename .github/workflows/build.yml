@@ -37,6 +37,8 @@ jobs:
         run: echo ::set-output name=VERSION::$(echo $GITHUB_REF | cut -d / -f 3)
 
       - name: "build the docker containers"
+        env:
+          DOCKER_BUILDKIT: 1
         run: |
           docker-compose build
 
