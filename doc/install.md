@@ -1,22 +1,25 @@
 # Installation de mviewerstudio
 
-mviewer studio peut fonctionner avec 3 backends différents
- * apache2 + php7 activé
- * python flask
- * Docker
+mviewer studio peut fonctionner avec 2 backends différents
+ * PHP
+ * Python
 
 En fonction du backend retenu, l'installation diffère.
 
-## Cas 1 apache2 + php7
+## Backend PHP
 
-Prerequis
-----------
+Prérequis : Apache 2, PHP 7
 
-    apache2 + php7
-
-
-clone du projet
----------------
+Clone du projet :
 
 * `cd /home/studio`
 * `git clone https://github.com/geobretagne/mviewerstudio`
+
+## Backend Python
+
+à compléter...
+
+
+## Docker
+
+à compléter...
