@@ -34,6 +34,7 @@ services:
     volumes:
       - "apps:/home/apprunner/apps"
       - "mviewerstudio_config:/home/apprunner/mviewerstudio_backend/static/apps"
+      - "./docker/config-docker-python.json:/home/apprunner/mviewerstudio_backend/static/apps/config.json"
 
   mviewer:
     # this image is automatically built in
