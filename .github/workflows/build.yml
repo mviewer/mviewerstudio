@@ -34,7 +34,7 @@ jobs:
           black . --check    
         
       - name: "Calculating image tag"
-        if: github.repository == 'geobretagne/mviewer'
+        if: github.repository == 'geobretagne/mviewerstudio'
         id: version
         run: |
           if [[ $GITHUB_REF == 'refs/heads/master' ]]; then
