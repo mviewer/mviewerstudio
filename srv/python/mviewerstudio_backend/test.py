@@ -153,7 +153,7 @@ class TestStoreMviewerConfig:
         assert p.status_code == 200
         assert p.json == {"filepath": f"{filehash}.xml", "success": True}
         assert len(os.listdir("./store")) == 2
-        assert os.listdir("./store")[0] == f"{filehash}.xml"
+        assert f"{filehash}.xml" in os.listdir("./store")
 
 
 @pytest.mark.usefixtures("cleandir")
