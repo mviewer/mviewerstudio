@@ -59,7 +59,7 @@ jobs:
           username: '${{ secrets.DOCKER_HUB_USERNAME }}'
           password: '${{ secrets.DOCKER_HUB_PASSWORD }}'
 
-      - name: "Retag / push the docker images (not latest)"
+      - name: "Retag / push the docker images (not stable)"
         if: github.ref != 'refs/heads/master' && github.repository == 'geobretagne/mviewerstudio'
         run: |
             docker tag mviewer/mviewerstudio:python-latest mviewer/mviewerstudio:python-${{ steps.version.outputs.VERSION }}
@@ -67,7 +67,7 @@ jobs:
             docker push mviewer/mviewerstudio:python-${{ steps.version.outputs.VERSION }}
             docker push mviewer/mviewerstudio:php-${{ steps.version.outputs.VERSION }}
 
-      - name: push containers
+      - name: push containers (stable)
         if: github.ref == 'refs/heads/master' && github.repository == 'geobretagne/mviewerstudio'
         run: |
           docker-compose push
