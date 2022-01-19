@@ -1,7 +1,8 @@
 on:
   push:
-  release:
-    types: [published]
+    branches:
+    - master
+    - develop
 
 jobs:
   build_images:
@@ -30,11 +31,20 @@ jobs:
       - name: "python backend - Checking format"
         working-directory: srv/python
         run: |
-          black . --check
-
-      - name: "Calculating docker image tag"
+          black . --check    
+        
+      - name: "Calculating image tag"
+        if: github.repository == 'geobretagne/mviewer'
         id: version
-        run: echo ::set-output name=VERSION::$(echo $GITHUB_REF | cut -d / -f 3)
+        run: |
+          if [[ $GITHUB_REF == 'refs/heads/master' ]]; then
+            echo ::set-output name=VERSION::stable
+          elif [[ $GITHUB_REF == 'refs/heads/develop' ]]; then
+            echo ::set-output name=VERSION::latest
+          else
+            echo "This action only works with master or develop branch"
+            exit 1
+          fi
 
       - name: "build the docker containers"
         env:
@@ -52,10 +62,10 @@ jobs:
       - name: "Retag / push the docker images (not latest)"
         if: github.ref != 'refs/heads/master' && github.repository == 'geobretagne/mviewerstudio'
         run: |
-            docker tag mviewer/mviewerstudio:python-latest mviewer/mviewerstudio:python-${VERSION}
-            docker tag mviewer/mviewerstudio:php-latest    mviewer/mviewerstudio:php-${VERSION}
-            docker push mviewer/mviewerstudio:python-${VERSION}
-            docker push mviewer/mviewerstudio:php-${VERSION}
+            docker tag mviewer/mviewerstudio:python-latest mviewer/mviewerstudio:python-${{ steps.version.outputs.VERSION }}
+            docker tag mviewer/mviewerstudio:php-latest    mviewer/mviewerstudio:php-${{ steps.version.outputs.VERSION }}
+            docker push mviewer/mviewerstudio:python-${{ steps.version.outputs.VERSION }}
+            docker push mviewer/mviewerstudio:php-${{ steps.version.outputs.VERSION }}
 
       - name: push containers
         if: github.ref == 'refs/heads/master' && github.repository == 'geobretagne/mviewerstudio'
