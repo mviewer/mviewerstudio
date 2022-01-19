@@ -44,13 +44,13 @@ jobs:
 
       - name: "Log in to docker hub"
         uses: azure/docker-login@v1
-        if: github.repository == 'mviewer/mviewerstudio'
+        if: github.repository == 'geobretagne/mviewerstudio'
         with:
           username: '${{ secrets.DOCKER_HUB_USERNAME }}'
           password: '${{ secrets.DOCKER_HUB_PASSWORD }}'
 
       - name: "Retag / push the docker images (not latest)"
-        if: github.ref != 'refs/heads/master' && github.repository == 'mviewer/mviewerstudio'
+        if: github.ref != 'refs/heads/master' && github.repository == 'geobretagne/mviewerstudio'
         run: |
             docker tag mviewer/mviewerstudio:python-latest mviewer/mviewerstudio:python-${VERSION}
             docker tag mviewer/mviewerstudio:php-latest    mviewer/mviewerstudio:php-${VERSION}
@@ -58,7 +58,7 @@ jobs:
             docker push mviewer/mviewerstudio:php-${VERSION}
 
       - name: push containers
-        if: github.ref == 'refs/heads/master' && github.repository == 'mviewer/mviewerstudio'
+        if: github.ref == 'refs/heads/master' && github.repository == 'geobretagne/mviewerstudio'
         run: |
           docker-compose push
 
