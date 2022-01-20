@@ -2,7 +2,7 @@
 //include 'who.php';
 require_once('who.php');
 $geob_user = getUser();
-$_conf = json_decode(file_get_contents("../config.json"), true)["app_conf"];
+$_conf = json_decode(file_get_contents("../../apps/config.json"), true)["app_conf"];
 $xml_0 = file_get_contents('php://input');
 $xml = str_replace('anonymous', $geob_user, $xml_0);
 $fichier = hash('md5', $xml) . '.xml';

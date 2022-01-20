@@ -1,1 +1,27 @@
-conf/*
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# test
+.pytest_cache/
+.mypy_cache/
+
+*.egg-info/
+*.egg
+
+
+
+# IDE stuff
+.idea
+.vscode
+*.iml
+
+# venv
+**/venv
+
+# static (python backend)
+srv/python/mviewerstudio_backend/static
+
+# pyenv
+.python-version

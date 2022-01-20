@@ -1,0 +1,27 @@
+FROM php:7.4-apache-buster
+
+
+# Inits the apps/ volume
+COPY   apps/       ./apps
+COPY   docker/config-docker-php.json ./apps/config.json
+RUN    chown -R www-data:www-data /var/www/html/apps
+
+# Reconfigure apache to use the same port as the python backend
+RUN sed -i 's/\*:80/*:8000/' /etc/apache2/sites-enabled/000-default.conf
+RUN sed -i 's/Listen 80/Listen 8000/' /etc/apache2/ports.conf
+
+# Note: this is the admin's responsability to
+# make sure the following directory will be write-readable
+VOLUME [ "/var/www/html/apps" ]
+
+# Copies the static resources
+COPY css/        ./css
+COPY img/        ./img
+COPY index.html  ./index.html
+COPY mviewerstudio.i18n.json  mviewerstudio.i18n.json
+COPY js/         ./js
+COPY lib/        ./lib
+COPY mviewerstudio.i18n.json ./
+
+# Copies the PHP backend
+COPY srv/php ./srv

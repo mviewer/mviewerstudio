@@ -1,12 +1,15 @@
 var _conf;
 var API = {};
-var VERSION="3.1";
+var VERSION = "3.1-snapshot";
+
+var mviewer = {};
 
 $(document).ready(function(){
-   
+
     //Mviewer Studio version
     console.log("MviewerStudio version " + VERSION);
-    
+
+
     //Get URL Parameters
     if (window.location.search) {
         $.extend(API, $.parseJSON('{"' + decodeURIComponent(window.location.search.substring(1)
@@ -14,17 +17,18 @@ $(document).ready(function(){
     }
     $.ajax({
         type: "GET",
-        url: "config.json",
+        url: "apps/config.json",
         dataType: "json",
         contentType: "application/json",
         success: function (data) {
+            console.groupCollapsed("init app from config");
             _conf = data.app_conf;
             if (_conf.proxy === undefined) {
                 _conf.proxy = "../proxy/?url=";
             }
 
             if (_conf.logout_url) {
-                $("#menu_user_logout").attr("href", _conf.logout_url);
+                $("#menu_user_logout a").attr("href", _conf.logout_url);
             }
 
             // Update web page title and title in the brand navbar
@@ -45,6 +49,9 @@ $(document).ready(function(){
             $("#opt-title").attr("placeholder", _conf.app_form_placeholders.app_title);
             $("#opt-logo").attr("placeholder", _conf.app_form_placeholders.logo_url);
             $("#opt-help").attr("placeholder", _conf.app_form_placeholders.help_file);
+
+            // translate
+            _initTranslate();
 
             // Thematic layers providers
             var csw_providers = [];
@@ -144,25 +151,47 @@ $(document).ready(function(){
                     dataType: "json",
                     contentType: "application/json",
                     success: function (data) {
+                        var userGroupFullName;
+                        var userGroupSlugName;
+                        var selectGroupPopup = false;
                         if (data) {
-                            if (data.userGroups.length > 1) {
+                            if (data.organisation && data.organisation.legal_name) {
+                                userGroupFullName = data.organisation.legal_name;
+                            } else if (data && data.user_groups ) {
+                                if (data.user_groups.length > 1) {
+                                    selectGroupPopup = true;
+                                } else {
+                                    userGroupFullName = data.user_groups[0].full_name;
+                                    userGroupSlugName = data.user_groups[0].slug_name;
+                                }
+                            }
+
+                            if (selectGroupPopup) {
                                 mv.updateUserGroupList(data);
-                                $("#mod-groupselection").modal({
+                                $("#mod-groupselection").modal( {
                                     backdrop: 'static',
                                     keyboard: false});
                             } else {
-                                var userGroup = data.userGroups[0];
-                                mv.updateUserInfo(data.firstName + ' ' + data.lastName, userGroup.slugName, userGroup.fullName);
+                                if (!userGroupSlugName) {
+                                    userGroupSlugName = slugify(userGroupFullName);
+                                }
+                                mv.updateUserInfo(data.first_name + ' ' + data.last_name, userGroupSlugName, userGroupFullName);
                             }
                         }
                     },
                     error: function (xhr, ajaxOptions, thrownError) {
-                        alert("Problème avec la récupération de la configuration");
+                        console.error("user info retrieval failed", {
+                            xhr: xhr,
+                            ajaxOptions: ajaxOptions,
+                            thrownError: thrownError
+                        });
+                        alert(mviewer.tr('msg.user_info_retrieval_error'));
                     }
                 });
             } else {
                 mv.hideUserInfo();
             }
+            console.groupEnd("init app from config");
         }
     });
     $('#tabs').tab();
@@ -285,6 +314,12 @@ sortLayers = function (fromIndex, toIndex) {
     arr.splice(toIndex, 0, element);
 };
 
+var sortableAttributeList = Sortable.create(document.getElementById('frm-lis-fields'), {
+    handle: '.glyphicon-move',
+    animation: 150,
+    ghostClass: 'ghost',
+});
+
 $('input[type=file]').change(function () {
     loadApplicationParametersFromFile();
 });
@@ -325,18 +360,20 @@ var editLayer = function (item) {
 };
 
 var importThemes = function () {
-    console.log( _conf.external_themes.data );
+    console.groupCollapsed("importThemes");
+    console.log("external theme to import", _conf.external_themes.data);
     $("#importedThemes input:checked").each(function (id, item) {
         var url = $(item).attr("data-url");
         var id  = $(item).attr("data-theme-id");
         var label  = $(item).attr("data-theme-label");
         addTheme(label, true, id, false, url);
     });
+    console.groupEnd("importThemes");
 };
 
 var addTheme = function (title, collapsed, themeid, icon, url) {
     if ($("#panel-theme").is(":visible")) {
-        alert("Enregistrez d'abord votre thématique.");
+        alert(mviewer.tr('msg.save_theme_first'));
         return;
     }
     if (url) {
@@ -479,13 +516,13 @@ var saveApplicationParameters = function (option) {
     config.title = $("#opt-title").val();
 
     if(config.title == ''){
-        alert('Attention, vous devez obligatoirement indiquer un titre à votre application avant de sauvegarder.');
+        alert(mviewer.tr('msg.give_title_before_save'));
         return;
     }
 
     savedParameters.application.forEach(function(parameter, id){
         $.each(parameter,function(prop,val) {
-            console.log(prop,val)
+            console.log(prop, val)
             application.push(prop+'="'+val+'"');
         });
     });
@@ -520,9 +557,14 @@ var saveApplicationParameters = function (option) {
 
     searchparameters = padding(0) + '<searchparameters bbox="'+search_params.bbox+'" localities="'+search_params.localities+'" features="'+search_params.features+'" static="'+search_params.static+'"/>';
 
+    var maxextentStr = '';
+    if ( $("#opt-maxextent").prop("checked") ) {
+        maxextent = map.getView().calculateExtent();
+        maxextentStr = `maxextent="${maxextent}"`;
+    }
     var center = map.getView().getCenter().join(",");
     var zoom = map.getView().getZoom();
-    var mapoptions = padding(0) + '<mapoptions maxzoom="20" projection="EPSG:3857" center="'+center+'" zoom="'+zoom+'" />';
+    var mapoptions = padding(0) + '<mapoptions maxzoom="20" projection="EPSG:3857" center="'+center+'" zoom="'+zoom+'" '+maxextentStr+'/>';
 
     var baseLayersMode = $("#frm-bl-mode").val();
     var visibleBaselayer = $("#frm-bl-visible").val();
@@ -585,9 +627,11 @@ var saveApplicationParameters = function (option) {
             contentType: 'text/xml',
             success: function( data ) {
 
+                console.log("saved map file: %s", data.filepath);
+
                 if (option == 0) {
                     // Ok it's been saved and that's it
-                    alert("Fichier sauvegardé sur le serveur (" + data.filepath + ").");
+                    alert(mviewer.tr('msg.file_saved_on_server') + " (" + data.filepath + ").");
 
                 } else if (option == 1) {
                     // Download map config file
@@ -603,7 +647,6 @@ var saveApplicationParameters = function (option) {
                     // Preview the map
                     var url = "";
                     if (data.success && data.filepath) {
-                        console.log(data.filepath);
                         // Build a short and readable URL for the map
                         if (_conf.mviewer_short_url && _conf.mviewer_short_url.used) {
                             var filePathWithNoXmlExtension = "";
@@ -627,14 +670,16 @@ var saveApplicationParameters = function (option) {
 
             },
             error: function(xhr, status, error) {
-                console.log('error xhr:' + xhr.responseText);
-                console.log('error status:' + status);
-                console.log('error:' + error);
-                alert("Echec de la sauvegarde du fichier.\nVeuillez consulter votre administrateur.")
+                console.error("map file save failed", {
+                    xhr: xhr,
+                    status: status,
+                    error: error
+                });
+                alert(mviewer.tr('msg.save_failure'));
             }
         });
     } else {
-        alert("Document xml invalide");
+        alert(mviewer.tr('msg.xml_doc_invalid'));
     }
 };
 
@@ -677,7 +722,7 @@ var loadApplicationParametersFromFile = function () {
             mv.parseApplication(xml);
         }
         reader.onerror = function (evt) {
-            alert("error reading file");
+            alert(mviewer.tr('msg.file_read_error'));
         }
     }
 };
@@ -685,13 +730,18 @@ var loadApplicationParametersFromFile = function () {
 var deleteMyApplications = function () {
     $.ajax({
         type: "GET",
-        url: "srv/delete.php",
+        url: _conf.delete_service,
         success: function( data ) {
-            alert(data.deleted_files + " application(s) supprimée(s)");
+            alert(data.deleted_files + mviewer.tr('msg.deleted_apps'));
             mv.getListeApplications();
         },
         error: function (xhr, ajaxOptions, thrownError) {
-            alert("Problème avec la requête de suppression " +  thrownError);
+            console.error("map files deletion failed", {
+                xhr: xhr,
+                ajaxOptions: ajaxOptions,
+                thrownError: thrownError
+            });
+            alert(mviewer.tr('msg.delete_req_error'));
         }
     });
 };
@@ -707,7 +757,12 @@ var  loadApplicationParametersFromRemoteFile = function (url) {
             mv.parseApplication(data);
         },
         error: function (xhr, ajaxOptions, thrownError) {
-            alert("Problème avec la requête de récupération de l'application " +  thrownError);
+            console.error("map file retrieval failed", {
+                xhr: xhr,
+                ajaxOptions: ajaxOptions,
+                thrownError: thrownError
+            });
+            alert(mviewer.tr('msg.retrieval_req_error'));
         }
     });
 
@@ -721,14 +776,18 @@ var loadApplicationParametersFromWMC = function (url) {
             mv.parseWMC(data);
         },
         error: function (xhr, ajaxOptions, thrownError) {
-            alert("Problème avec la requête de récupération de l'application " +  thrownError);
+            console.error("web map context (WMC) file retrieval failed", {
+                xhr: xhr,
+                ajaxOptions: ajaxOptions,
+                thrownError: thrownError
+            });
+            alert(mviewer.tr('msg.retrieval_req_error'));
         }
     });
 
 };
 
 var updateTheme = function (el) {
-    console.log(el);
     var cls = $("#"+el.id+" option[value='"+el.value+"']").text();
     $(el).removeClass().addClass("form-control " + cls);
 };
@@ -775,6 +834,73 @@ var updateAddProviderButtonState = function (el) {
     $("#add_provider_btn").prop('disabled', !(url && title));
 };
 
+
+ // Set translation tool, using i18next
+ // see http://i18next.com/docs/
+ // the ?lang parameter is used to set the locale
+ var url = new URL(location.href);
+ var lang = url.searchParams.get("lang");
+ if (lang == null) {
+    lang = "fr";
+ }
+ var _configureTranslate = function (dic) {
+    mviewer.lang = {};
+    //load i18n for all languages availables
+    Object.entries(dic).forEach(function (l) {
+        mviewer.lang[l[0]] = i18n.create({"values": l[1]});
+    });
+    if (mviewer.lang[lang]) {
+        mviewer.tr = mviewer.lang[lang];
+        _elementTranslate("body");
+        mviewer.lang.lang = lang;
+    } else {
+         console.log("langue non disponible " + lang);
+    }
+};
+
+ var _initTranslate = function() {
+    mviewer.tr = function (s) { return s; };
+    if (lang) {
+        var defaultFile = "mviewerstudio.i18n.json";
+        $.ajax({
+            url: defaultFile,
+            dataType: "json",
+            success: _configureTranslate,
+            error: function () {
+                console.log("Error: can't load JSON lang file!")
+            }
+        });
+    }
+  };
+
+/**
+ * Translate DOM elements
+ * @param element String - tag to identify DOM elements to translate
+ */
+
+var _elementTranslate = function (element) {
+    // translate each html elements with i18n as attribute
+    //var htmlType = ["placeholder", "title", "accesskey", "alt", "value", "data-original-title"];
+    // Removed "value", because if prevents you from translating drop-down select boxes
+    var htmlType = ["placeholder", "title", "accesskey", "alt", "data-original-title"];
+    var _element = $(element);
+    _element.find("[i18n]").each((i, el) => {
+        let find = false;
+        let tr = mviewer.lang[lang]($(el).attr("i18n"));
+        htmlType.forEach((att) => {
+            if ($(el).attr(att) && tr) {
+                $(el).attr(att, tr);
+                find = true;
+            }
+        });
+        if(!find && $(el).text().indexOf("{{")=== -1) {
+            $(el).text(tr);
+        }
+    });
+    var ret = (element === "body")?true:_element[0].outerHTML;
+    return ret;
+};
+
 $('#mod-featuresview').on('hidden.bs.modal', function () {
     var option = $(this).attr("data-target");
     var target = "";
@@ -794,3 +920,29 @@ $(".checkedurl").change(mv.checkURL);
 $("#mod-importfile").on('shown.bs.modal', function () {
     mv.getListeApplications();
 });
+
+
+var uploadSldFileToBackend = function(e) {
+    var reader = new FileReader()
+    e.files[0].text().then(function(sldFile){
+        $.ajax(_conf.store_style_service, {
+            data: sldFile,
+            method: 'POST',
+            processData: false,
+            contentType: 'text/plain',
+            success: function(data) {
+                // this final URL need to be reachable via geoserver which will fetch the SLD and apply it to the layer.
+                var finalUrl = "";
+                if (_conf.mviewer_instance.startsWith('http')) {
+                    finalUrl = _conf.mviewer_instance + data.filepath
+                } else {
+                    finalUrl = window.location.origin + _conf.mviewer_instance + data.filepath
+                }
+                $("#frm-sld").val(finalUrl)
+            },
+            error: function() {
+                 alert(mviewer.tr('msg.retrieval_req_error'));
+            }
+        })
+    });
+}

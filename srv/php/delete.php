@@ -2,7 +2,7 @@
 //include 'who.php';
 require_once('who.php');
 $geob_user = getUser();
-$_conf = json_decode(file_get_contents("../config.json"), true)["app_conf"];
+$_conf = json_decode(file_get_contents("../../apps/config.json"), true)["app_conf"];
 $files = glob($_conf['export_conf_folder'] . "*.xml");
 $counter = 0;
 if (is_array($files)) {
