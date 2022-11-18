@@ -194,7 +194,7 @@ $(document).ready(function(){
             console.groupEnd("init app from config");
         }
     });
-    $('#tabs').tab();
+    //$('#tabs').tab();
 });
 
 //EPSG:2154

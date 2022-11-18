@@ -1,0 +1,150 @@
+/* 
+--
+STYLE FOR WIZARD
+--
+*/
+
+#stepStudioContent .tab-pane {
+	margin: 0;
+	padding: 0;
+}
+
+/* 
+-- STEP
+*/
+
+/* Default */
+
+#stepStudio .nav-link {
+	display: flex;
+	color: #777777;
+	align-items: center;
+	margin: 0.7em 0;
+}
+
+#stepStudio .nav-link i {
+	font-size: 21px;
+	color: var(--warning);
+	background-color: #f3e6d4;
+	padding: 12px 17px;
+	margin-right: 20px;
+	border-radius: 0.8em;
+	z-index: 3 !important;
+}
+
+#stepStudio .title-wizard {
+	margin-bottom: 0px !important;
+	font-size: large;
+	font-weight: 500;
+}
+
+#stepStudio .subtitle-wizard {
+	line-height: 1.1;
+}
+
+#stepStudio .nav-link span {
+	font-size: 13px;
+}
+
+/* Step active */
+
+#stepStudio .nav-link.active {
+	background-color: #f0f8ff00;
+}
+
+#stepStudio .nav-link.active .title-wizard {
+	color: var(--warning);
+}
+
+#stepStudio .nav-link.active i {
+	background-color: var(--warning);
+	color: white !important;
+}
+
+/* Step hover */
+
+#stepStudio .nav-link:hover .title-wizard {
+	color: var(--warning);
+}
+
+#stepStudio .nav-link:hover i {
+	background-color: var(--warning) !important;
+	color: white !important;
+}
+
+/* Step line */
+
+#stepStudio .nav-link i:after {
+	content: ' ';
+	position: absolute;
+	display: block;
+	height: 4em;
+	transform: translate(10px, 15px);
+	border-left: 2px dotted var(--warning);
+	z-index: 1;
+}
+
+#stepStudio .nav-item:last-child i:after {
+	display: none;
+}
+
+/* 
+-- BTN STEP
+*/
+
+/* Btn Next and Prev */
+
+.btnNext {
+	color: white !important;
+	font-weight: 500;
+}
+
+.btnPrev {
+	color: var(--warning) !important;
+	font-weight: 500;
+}
+
+.btnPrev:hover {
+	color: white !important;
+}
+
+.btnNext i,
+.btnPrev i {
+	font-size: 20px;
+	vertical-align: inherit;
+}
+
+/* Step advanced */
+
+.tab-pane.advanced {
+	display: none !important;
+}
+
+.tab-pane.advanced.active.show {
+	display: block !important;
+}
+
+
+/*
+-- WIZARD MOBILE (max-weight: 800px)
+*/
+
+#blockWizardMobile .nav-link i {
+	color: var(--warning);
+	font-size: large;
+	background-color: #f5ae5400;
+	padding: 15px;
+}
+
+#blockWizardMobile .nav-link.active i {
+	color: white !important;
+	background-color: #f5ae54;
+	border-radius: 15px;
+}
+
+
+#blockWizardMobile .nav-link i:hover {
+	color: white !important;
+	background-color: #f5ae54;
+	border-radius: 15px;
+}
