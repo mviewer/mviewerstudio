@@ -459,6 +459,38 @@ a {
 	background-color: var(--light);
 }
 
+/* Modal */
+
+.modal-title {
+    color: var(--primary);
+    font-weight: 600;
+}
+
+/* Nav in modal */
+
+.modal-body .nav .nav-item {
+    padding: 0px 2em 0 0;
+}
+
+.modal-body .nav .nav-link {
+    padding: 8px 0px;
+}
+
+
+.modal-body .nav .nav-link.active {
+    color: var(--info);
+    background: none;
+    font-weight:500;
+    border-radius: 0;
+    -webkit-box-shadow: 0px 2px 0px 0px #934ae4;
+    box-shadow: 0px 3px 0px 0px #934ae4;
+}
+
+.modal-body .nav .nav-link:hover {
+    color: var(--info);
+    background: none;
+}
+
 
 /*
     -- NAVBAR

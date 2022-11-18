@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="fr" class="h-100">
 <head>
     <title>Mviewer Studio</title>
     <meta charset="utf-8">
@@ -44,13 +44,7 @@
             -->
         </a>
         <div class="d-flex align-items-center" id="navBarStudioMenu">
-            <p class="navbar-text px-4" id="user_connected"><span i18n="banner.not_connected">Non connecté</span></p>
-            <a class="px-4" role="button" data-bs-toggle="modal" data-bs-target="#mod-importfile" href="#">
-                <span role="button" class="glyphicon glyphicon-import"></span> <span i18n="banner.load">Charger</span>
-            </a>
-            <a class="px-4" role="button" onclick="saveApplicationParameters(1);" href="#">
-                <span class="glyphicon glyphicon-download"></span> 
-            </a>
+            <p class="navbar-text px-4" id="user_connected"><span i18n="banner.not_connected">Non connecté</span></p>            
             <li class="px-4" id="menu_user_logout"><a role="button" href="./logout"><span
                 class="glyphicon glyphicon-off"></span> <span i18n="banner.logout">Déconnexion</span></a></li>
             <a class="zoom" onclick="showHome()"><i class="ri-home-6-line" style="font-size: 30px;"></i></a>
@@ -58,9 +52,62 @@
         </div>
     </nav>
     <!--/NAVBAR-->
-    <main class="h-100">        
+    <main class="h-100">
+        <!--HOME-->
+        <div class="container-fluid h-100" id="containerHome">
+            <div class="row justify-content-around align-items-center h-100">
+                <div class="col-md-4">
+                    <img src="img/homeMstudio.svg" alt="Logo" width="80%" class="d-inline-block mx-right-4">
+                    <div class="">
+                        <span class="subtitle-home">MVIEWER STUDIO</span><br>
+                        <span class="title-home">Bienvenue</span>                        
+                    </div>
+                    <h4 class="text-primary">Suivez les étapes pour créer votre application cartographique mviewer en quelques clics à l'aide du générateur</h4>               
+                </div>
+                <div class="col-md-6">
+                    <h3 class="text-primary m-2 mb-4"><strong>Que voulez-vous faire ?</strong> </h3>
+                    <div id="cardsHome">
+                        <!--Open config-->
+                        <a data-bs-toggle="modal" data-bs-target="#mod-importfile" href="#">
+                            <div class="card text-white bg-warning p-3 m-2 zoomCard h-100 noborder" style="max-width: 18rem;">
+                                <div class="card-body mb-5">
+                                <span class="iconCard-home">
+                                    <i class="bi bi-upload" style="font-size: 20px;vertical-align: revert;"></i>
+                                </span>                            
+                                <h5 class="card-title mt-4"><span i18n="banner.load">Ouvrir un projet existant</span></h5>
+                                <p class="card-text">Importer un fichier de configuration .XML depuis votre ordinateur ou un serveur</p>                              
+                                </div>
+                            </div>
+                        </a> 
+                        <!--Open config-->
+                        <!--New config-->
+                        <a onclick="showStudio()">
+                            <div class="card text-white bg-info p-3 m-2 zoomCard h-100 noborder" style="max-width: 18rem;">
+                                <div class="card-body mb-5">
+                                <span class="iconCard-home">
+                                    <i class="bi bi-file-earmark-plus" style="font-size: 20px;vertical-align: revert;"></i>
+                                </span>                            
+                                <h5 class="card-title mt-4">Créer un nouveau projet</h5>
+                                <p class="card-text">Débuter la configuration d'une nouvelle application mviewer</p>                              
+                                </div>
+                            </div>
+                        </a> 
+                        <!--New config-->
+                    </div>                    
+                </div>
+            </div>
+            <nav class="navbar fixed-bottom">
+                <div class="container-fluid justify-content-end">
+                  <a class="nav-item m-3" href="https://github.com/geobretagne/mviewerstudio" target="_blank">Github</a>
+                  <a class="nav-item m-3" href="https://github.com/geobretagne/mviewerstudio/blob/master/doc/user.md" target="_blank">Documentation</a>
+                  <a class="nav-item m-3" data-bs-toggle="modal" data-bs-target="#modalCredits">Crédits</a>
+                </div>
+            </nav> 
+        </div>    
+        <!--/HOME--> 
+                
         <!-- MODULES STUDIO-->   
-        <div class="container-fluid h-100" id="containerStudio">
+        <div class="container-fluid h-100" id="containerStudio" hidden>
             <div class="row justify-content-around" style="padding-top: 100px;">
                 <!-- WIZARD BLOC -->
                 <div class="col-xl-3 col-md-12" id="blockWizard">
@@ -592,24 +639,24 @@
     <!-- Modal Credits-->
     <div class="modal fade" id="modalCredits" tabindex="-1" role="dialog" aria-labelledby="modalCredits" aria-hidden="true">
         <div class="modal-dialog ">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Crédits</h5>
-                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Crédits</h5>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body">
+                    <p>MviewerStudio | Licence GPL-3.0 | Version 3.1</p>
+                    <div class="alert alert-info text-info my-2" role="alert">
+                        <i class="ri-information-line" style="font-size: 20px;vertical-align: middle;"></i>  Compatible à partir de la version 3.8 du mviewer
+                    </div>
+                    <p><span class="strong">Librairies</span><br>Bootstrap 5.2.0 | OpenLayers 7.1</p>
+                    <p><span class="strong">Icônes</span><br>Remix Icon | Bootstrap Icons </p>
+                    <p><span class="strong">Illustrations</span><br>VectorJuice sur Freepik.com</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Fermer</button>
+                </div>
             </div>
-            <div class="modal-body">
-                <p>MviewerStudio | Licence GPL-3.0 | Version 3.1</p>
-                <div class="alert alert-info text-info my-2" role="alert">
-                    <i class="ri-information-line" style="font-size: 20px;vertical-align: middle;"></i>  Compatible à partir de la version 3.8 du mviewer
-                  </div>
-                <p><span class="strong">Librairies</span><br>Bootstrap 5.2.0 | OpenLayers 7.1</p>
-                <p><span class="strong">Icônes</span><br>Remix Icon | Bootstrap Icons </p>
-                <p><span class="strong">Illustrations</span><br>VectorJuice sur Freepik.com</p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Fermer</button>
-            </div>
-        </div>
         </div>
     </div>
 
@@ -629,46 +676,34 @@
     </div>
 
     <!-- Modal file import-->
-    <div class="modal fade" id="mod-importfile" role="dialog">
-        <div class="modal-dialog">
+    <div class="modal fade" id="mod-importfile" tabindex="-1" role="dialog" aria-labelledby="mod-importfile" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title" i18n="modal.file.import">Charger un fichier de configuration</h4>
+                    <h5 class="modal-title" i18n="modal.file.import">Ouvrir un projet existant</h5>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 </div>
                 <div class="modal-body">
-
-                    <ul class="nav nav-tabs" role="tablist">
-                        <li role="presentation" class="active"><a href="#serverside" aria-controls="serverside" role="tab" data-toggle="tab" i18n="modal.file.serverside">Localisé sur le serveur</a></li>
-                        <li role="presentation"><a href="#local" aria-controls="local" role="tab" data-toggle="tab" i18n="modal.file.local">Sur votre ordinateur</a></li>
-                    </ul>
-
-                    <br>
-
-                    <div class="tab-content">
-                        <div role="tabpanel" class="tab-pane" id="local">
-                            <div class="alert alert-info">
-                                <label i18n="modal.file.select">Choisissez un fichier</label>
-                                <div class="input-group">
-                                    <input type="text" id="subfile" class="form-control">
-                                    <span class="input-group-btn">
-                                        <button class="btn btn-primary" type="button"
-                                                onclick="$('#filebutton').click();">
-                                            <span class="glyphicon glyphicon-folder-open"></span>
-                                            &nbsp;<span i18n="modal.file.browse">Parcourir...</span>
-                                        </button>
-                                    </span>
-                                </div>
-                                <input type="file" name="filebutton" style="display: none;" id="filebutton">
-                            </div>
-                        </div>
-                        <div role="tabpanel" class="tab-pane active" id="serverside">
-                            <form class="form-inline">
-                                <div class="form-group" style="display: none;">
+                    <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+                        <li class="nav-item" role="presentation">
+                          <a class="nav-link active" data-bs-toggle="pill" data-bs-target="#serverside" type="button" role="tab" aria-controls="pills-serverside" aria-selected="true">
+                                Sur le serveur
+                          </a>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                          <a class="nav-link" data-bs-toggle="pill" data-bs-target="#local" type="button" role="tab" aria-controls="pills-local" aria-selected="false">
+                                Depuis votre ordinateur
+                          </a>
+                        </li>
+                      </ul>
+                      <div class="tab-content mb-4">
+                        <div class="tab-pane fade show active" id="serverside" role="tabpanel" tabindex="0">
+                            <form class="row ">
+                                <div class="col-md-6" style="display: none;">
                                     <label for="apps_group_list" i18n="modal.file.group">Groupe</label>
                                     <select class="form-control" id="apps_group_list" onchange="mv.filterApplications()"></select>
                                 </div>
-                                <div class="form-group" style="display: none;">
+                                <div class="col-md-6" style="display: none;">
                                     <label for="apps_creator_list" i18n="modal.file.author">Auteur</label>
                                     <select class="form-control" id="apps_creator_list" onchange="mv.filterApplications()"></select>
                                 </div>
@@ -676,16 +711,28 @@
                             <br>
                             <div class="list-group" id="liste_applications"></div>
                             <div class="text-right">
-                                <button type="button" class="btn btn-danger" onclick="deleteMyApplications();">
-                                    <span class="glyphicon glyphicon-trash"></span>
-                                    &nbsp;<span i18n="modal.file.deleteallmyapps">Supprimer toutes mes applications</span>
+                                <button type="button" class="btn btn btn-outline-info" onclick="deleteMyApplications();">
+                                    <span i18n="modal.file.deleteallmyapps">Supprimer toutes mes applications</span>
                                 </button>
                             </div>
                         </div>
-                    </div>
+                        <div class="tab-pane fade" id="local" role="tabpanel" tabindex="0">
+                            <label i18n="modal.file.select">Sélectionnez un fichier de configuration .XML</label>
+                            <div class="input-group mb-3">
+                                <input type="text" class="form-control" placeholder="monapplication.xml" aria-describedby="button-addon2">
+                                <div class="input-group-append">
+                                    <button class="btn btn-info" type="button" onclick="$('#filebutton').click();">
+                                        <i class="bi bi-folder2-open"></i>
+                                        <span i18n="modal.file.browse">Parcourir</span>
+                                    </button>
+                                </div>                                
+                            </div>
+                            <input type="file" name="filebutton" style="display: none;" id="filebutton">
+                        </div>
+                      </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal" i18n="close">Fermer</button>
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Fermer</button>
                 </div>
             </div>
         </div>
@@ -1224,8 +1271,9 @@
 </div>
 </div>
     
-<script src="js/mviewerstudio.js"></script>
 <script src="js/wizard.js"></script>
+<script src="js/manageDisplayContainer.js"></script>
+<script src="js/mviewerstudio.js"></script>
 <script src="lib/icon-picker/icon-picker.js"></script>
 </body>
 </html>

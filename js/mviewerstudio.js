@@ -724,6 +724,7 @@ var loadApplicationParametersFromFile = function () {
         reader.onerror = function (evt) {
             alert(mviewer.tr('msg.file_read_error'));
         }
+        showStudio();
     }
 };
 

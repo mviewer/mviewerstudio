@@ -1759,7 +1759,7 @@ textarea.form-control {
   padding: 0.5rem 0.75rem;
   font-size: 0.9rem;
   line-height: 1.5;
-  border-radius: 0.6rem;
+  border-radius: 0.8rem;
   transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out; }
   @media (prefers-reduced-motion: reduce) {
     .btn {
@@ -2653,18 +2653,18 @@ input[type="button"].btn-block {
   position: relative;
   display: block;
   min-height: 1.35rem;
-  padding-left: 1.5rem; }
+  padding-left: 2rem; }
 
 .custom-control-inline {
   display: inline-flex;
-  margin-right: 1rem; }
+  margin-right: 1.2rem; }
 
 .custom-control-input {
   position: absolute;
   left: 0;
   z-index: -1;
-  width: 1rem;
-  height: 1.175rem;
+  width: 1.5rem;
+  height: 1.425rem;
   opacity: 0; }
   .custom-control-input:checked ~ .custom-control-label::before {
     color: #fff;
@@ -2689,22 +2689,22 @@ input[type="button"].btn-block {
   vertical-align: top; }
   .custom-control-label::before {
     position: absolute;
-    top: 0.175rem;
-    left: -1.5rem;
+    top: -0.075rem;
+    left: -2rem;
     display: block;
-    width: 1rem;
-    height: 1rem;
+    width: 1.5rem;
+    height: 1.5rem;
     pointer-events: none;
     content: "";
     background-color: #fff;
     border: #BDBDBD solid 1px; }
   .custom-control-label::after {
     position: absolute;
-    top: 0.175rem;
-    left: -1.5rem;
+    top: -0.075rem;
+    left: -2rem;
     display: block;
-    width: 1rem;
-    height: 1rem;
+    width: 1.5rem;
+    height: 1.5rem;
     content: "";
     background: no-repeat 50% / 50% 50%; }
 
@@ -2737,26 +2737,26 @@ input[type="button"].btn-block {
   background-color: rgba(44, 44, 82, 0.5); }
 
 .custom-switch {
-  padding-left: 2.25rem; }
+  padding-left: 3.125rem; }
   .custom-switch .custom-control-label::before {
-    left: -2.25rem;
-    width: 1.75rem;
+    left: -3.125rem;
+    width: 2.625rem;
     pointer-events: all;
-    border-radius: 0.5rem; }
+    border-radius: 0.75rem; }
   .custom-switch .custom-control-label::after {
-    top: calc(0.175rem + 2px);
-    left: calc(-2.25rem + 2px);
-    width: calc(1rem - 4px);
-    height: calc(1rem - 4px);
+    top: calc(-0.075rem + 2px);
+    left: calc(-3.125rem + 2px);
+    width: calc(1.5rem - 4px);
+    height: calc(1.5rem - 4px);
     background-color: #BDBDBD;
-    border-radius: 0.5rem;
+    border-radius: 0.75rem;
     transition: transform 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out; }
     @media (prefers-reduced-motion: reduce) {
       .custom-switch .custom-control-label::after {
         transition: none; } }
   .custom-switch .custom-control-input:checked ~ .custom-control-label::after {
     background-color: #fff;
-    transform: translateX(0.75rem); }
+    transform: translateX(1.125rem); }
   .custom-switch .custom-control-input:disabled:checked ~ .custom-control-label::before {
     background-color: rgba(44, 44, 82, 0.5); }
 
@@ -3044,7 +3044,7 @@ input[type="button"].btn-block {
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  padding: 0.7rem 1rem; }
+  padding: 1rem 1rem; }
   .navbar .container,
   .navbar .container-fluid, .navbar .container-sm, .navbar .container-md, .navbar .container-lg, .navbar .container-xl {
     display: flex;
@@ -3092,7 +3092,7 @@ input[type="button"].btn-block {
   line-height: 1;
   background-color: transparent;
   border: 1px solid transparent;
-  border-radius: 0.6rem; }
+  border-radius: 0.8rem; }
   .navbar-toggler:hover, .navbar-toggler:focus {
     text-decoration: none; }
 
@@ -4133,7 +4133,7 @@ a.close.disabled {
 .modal-dialog {
   position: relative;
   width: auto;
-  margin: 0.5rem;
+  margin: 0.4rem;
   pointer-events: none; }
   .modal.fade .modal-dialog {
     transition: transform 0.3s ease-out;
@@ -4148,9 +4148,9 @@ a.close.disabled {
 
 .modal-dialog-scrollable {
   display: flex;
-  max-height: calc(100% - 1rem); }
+  max-height: calc(100% - 0.8rem); }
   .modal-dialog-scrollable .modal-content {
-    max-height: calc(100vh - 1rem);
+    max-height: calc(100vh - 0.8rem);
     overflow: hidden; }
   .modal-dialog-scrollable .modal-header,
   .modal-dialog-scrollable .modal-footer {
@@ -4161,10 +4161,10 @@ a.close.disabled {
 .modal-dialog-centered {
   display: flex;
   align-items: center;
-  min-height: calc(100% - 1rem); }
+  min-height: calc(100% - 0.8rem); }
   .modal-dialog-centered::before {
     display: block;
-    height: calc(100vh - 1rem);
+    height: calc(100vh - 0.8rem);
     height: min-content;
     content: ""; }
   .modal-dialog-centered.modal-dialog-scrollable {
@@ -4205,13 +4205,13 @@ a.close.disabled {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  padding: 1rem 1rem;
+  padding: 1.3rem 1.7rem;
   border-bottom: 1px solid #DFDFDF;
   border-top-left-radius: calc(0.6rem - 1px);
   border-top-right-radius: calc(0.6rem - 1px); }
   .modal-header .close {
-    padding: 1rem 1rem;
-    margin: -1rem -1rem -1rem auto; }
+    padding: 1.3rem 1.7rem;
+    margin: -1.3rem -1.7rem -1.3rem auto; }
 
 .modal-title {
   margin-bottom: 0;
@@ -4220,14 +4220,14 @@ a.close.disabled {
 .modal-body {
   position: relative;
   flex: 1 1 auto;
-  padding: 1rem; }
+  padding: 2rem; }
 
 .modal-footer {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   justify-content: flex-end;
-  padding: 0.75rem;
+  padding: 1.75rem;
   border-top: 1px solid #DFDFDF;
   border-bottom-right-radius: calc(0.6rem - 1px);
   border-bottom-left-radius: calc(0.6rem - 1px); }
