@@ -31,27 +31,37 @@
     <script src="lib/i18njs/i18n.min.js" type="text/javascript"></script>
 </head>
 
-<body>
-<nav class="navbar navbar-inverse">
+<body class="h-100">
+<!--NAVBAR-->
+<nav class="navbar bg-primary fixed-top" id="navbarStudio">
     <div class="container-fluid">
-        <div class="navbar-header">
-            <a id="studio-title" class="navbar-brand" href="#">mviewer studio</a>
-        </div>
-        <ul class="nav navbar-nav navbar-right">
-            <p class="navbar-text" id="user_connected"><span i18n="banner.not_connected">Non connecté</span></p>
-            <li><a role="button" data-toggle="modal" data-target="#mod-importfile" href="#">
-                <span role="button" class="glyphicon glyphicon-import"></span> <span i18n="banner.load">Charger</span></a></li>
-            <li><a role="button" onclick="saveApplicationParameters(0);" href="#"><span
-                    class="glyphicon glyphicon-floppy-disk"></span> <span i18n="banner.save">Sauvegarder</span></a></li>
-            <li><a role="button" onclick="saveApplicationParameters(1);" href="#"><span
-                    class="glyphicon glyphicon-download"></span> <span i18n="banner.download">Télécharger</span></a></li>
-            <li><a role="button" onclick="saveApplicationParameters(2);" href="#"><span
-                    class="glyphicon glyphicon-globe"></span> <span i18n="banner.preview">Prévisualiser</span></a></li>
-            <li id="menu_user_logout"><a role="button" href="./logout"><span
-                    class="glyphicon glyphicon-off"></span> <span i18n="banner.logout">Déconnexion</span></a></li>
-        </ul>
+      <a class="navbar-brand" onclick="showHome()">
+        <img src="img/logo_mviewerstudio.svg" alt="Logo" width="125" class="d-inline-block mx-right-4"> 
+        <!--Custom title name Studio
+            <span class="mx-3"><span id="studio-title" class="navbar-brand" href="#"></span></span>
+        -->
+      </a>
+      <div class="d-flex align-items-center" id="navBarStudioMenu">
+        <p class="navbar-text px-4" id="user_connected"><span i18n="banner.not_connected">Non connecté</span></p>
+        <a class="px-4" role="button" data-bs-toggle="modal" data-bs-target="#mod-importfile" href="#">
+            <span role="button" class="glyphicon glyphicon-import"></span> <span i18n="banner.load">Charger</span>
+        </a>
+        <a class="px-4" role="button" onclick="saveApplicationParameters(0);" href="#">
+            <span class="glyphicon glyphicon-floppy-disk"></span> <span i18n="banner.save">Sauvegarder</span>
+        </a>
+        <a class="px-4" role="button" onclick="saveApplicationParameters(1);" href="#">
+            <span class="glyphicon glyphicon-download"></span> <span i18n="banner.download">Télécharger</span>
+        </a>
+        <a class="px-4" role="button" onclick="saveApplicationParameters(2);" href="#">
+            <span class="glyphicon glyphicon-globe"></span> <span i18n="banner.preview">Prévisualiser</span>
+        </a>
+        <li class="px-4" id="menu_user_logout"><a role="button" href="./logout"><span
+            class="glyphicon glyphicon-off"></span> <span i18n="banner.logout">Déconnexion</span></a></li>
+        <a class="zoom" onclick="showHome()"><i class="ri-home-6-line" style="font-size: 30px;"></i></a>
+      </div>
     </div>
 </nav>
+<!--/NAVBAR-->
 <div class="container">
     <div id="content">
         <!-- Title-->
