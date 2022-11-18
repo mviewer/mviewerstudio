@@ -74,7 +74,7 @@ x.addListener(displayWizard)
 
 // Display title name app in Wizard
 
-const inputNameApp = document.getElementById('Input1');
+const inputNameApp = document.getElementById('opt-title');
 const log = document.getElementById('nameAppBlock');
 
 inputNameApp.addEventListener('change', function (e) {
