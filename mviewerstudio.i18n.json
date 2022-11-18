@@ -1,10 +1,10 @@
 {
     "fr": {
-        "head.title": "Titre",
+        "head.title": "Titre de l'application",
         "banner.not_connected": "Non connecté",
-        "banner.load": "Charger",
-        "banner.save": "Sauvegarder",
-        "banner.download": "Télécharger",
+        "banner.load": "Ouvrir un projet existant",
+        "banner.save": "Enregistrer",
+        "banner.download": "Télécharger votre application",
         "banner.preview": "Prévisualiser",
         "banner.logout": "Déconnexion",
         "tabs.app.title": "Application",
@@ -68,11 +68,11 @@
         "tabs.search.elastic_search.v_1_4" : "1.4",
         "modal.group.select" : "Sélectionner un groupe",
         "modal.group.description" : "Vous appartenez à plusieurs groupes. Vous devez en sélectionner un pour créer ou enregistrer une carte associée à celui-ci.",
-        "modal.file.import" : "Charger un fichier de configuration",
+        "modal.file.import" : "Ouvrir un projet existant",
         "modal.file.serverside" : "Localisé sur le serveur",
         "modal.file.local" : "Sur votre ordinateur",
-        "modal.file.select" : "Choisissez un fichier",
-        "modal.file.browse" : "Parcourir...",
+        "modal.file.select" : "Sélectionnez un fichier de configuration .XML",
+        "modal.file.browse" : "Parcourir",
         "modal.file.group" : "Groupe",
         "modal.file.author" : "Auteur",
         "modal.file.deleteallmyapps" : "Supprimer toutes mes applications",
@@ -181,7 +181,7 @@
         "msg.xml_doc_invalid": "Document xml invalide"
     },
     "en": {
-        "head.title": "App title",
+        "head.title": "Application title",
         "banner.not_connected": "Not connected",
         "banner.load": "Load",
         "banner.save": "Save",
