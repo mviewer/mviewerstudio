@@ -49,7 +49,7 @@
                 <span role="button" class="glyphicon glyphicon-import"></span> <span i18n="banner.load">Charger</span>
             </a>
             <a class="px-4" role="button" onclick="saveApplicationParameters(1);" href="#">
-                <span class="glyphicon glyphicon-download"></span> <span i18n="banner.download">Télécharger</span>
+                <span class="glyphicon glyphicon-download"></span> 
             </a>
             <li class="px-4" id="menu_user_logout"><a role="button" href="./logout"><span
                 class="glyphicon glyphicon-off"></span> <span i18n="banner.logout">Déconnexion</span></a></li>
@@ -556,7 +556,24 @@
                         <!-- Publication -->
                         <div class="tab-pane container fade" id="publication">
                             <h1>Félicitations !</h1>
-                            <h4 class="text-primary">Vous avez terminé la configuration de votre application mviewer.</p>                            
+                            <h4 class="text-primary">Vous avez terminé la configuration de votre application mviewer.</p>  
+                            <div id="cardsPublication" class="my-5">
+                                <!--Download-->
+                                <div style="max-width: 18rem;">
+                                    <a role="button" onclick="saveApplicationParameters(1);" href="#">
+                                        <div class="card text-white bg-info p-3 zoomCard h-100 noborder" style="max-width: 18rem;">
+                                            <div class="card-body mb-5">
+                                            <span class="iconCard-finish">
+                                                <i class="ri-download-line" style="font-size: 20px;vertical-align: middle;"></i>
+                                            </span>                            
+                                            <h5 class="card-title mt-4"><span i18n="banner.download">Télécharger votre application</span></h5>
+                                            <p class="card-text">Télécharger le fichier de configuration .XML et déposer le sur un serveur</p>                              
+                                            </div>
+                                        </div>
+                                    </a> 
+                                </div>                                
+                                <!--Download-->
+                            </div>                          
                             <div class="mt-4">
                                 <a class="btn btn-outline-warning btnPrev"><i class="ri-arrow-left-line"></i> Précédent</a>
                             </div>  

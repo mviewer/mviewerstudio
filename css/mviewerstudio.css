@@ -611,6 +611,10 @@ a {
 	margin-bottom: 0em;
 }
 
+#cardsPublication a:hover {
+    text-decoration: none;
+}
+
 /* Fonctionnalités */
 
 .list-flex {
