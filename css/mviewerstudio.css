@@ -495,7 +495,7 @@ a {
 /*
     -- NAVBAR
     */
-#navbarStudio a {
+#navbarStudio a, #navbarStudio span {
 	color: white;
 	font-weight: 500;
 }
