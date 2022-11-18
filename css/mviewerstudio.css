@@ -166,3 +166,258 @@ select#opt-style {
 .tab-content .tab-pane {
     margin-top: 1em;
 }
+
+
+/**
+
+-- NEW STYLESHEET --
+
+**/
+
+/* 
+    ---
+    MVIEWER STUDIO
+    Feuille de style pour les propriétés spécifiques
+    -
+    Version 2022
+    ---
+    */
+
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+    body {
+        font-family: 'Poppins', sans-serif;
+    }
+
+    /*
+    -- GENERAL
+    */
+
+    a {
+        cursor: pointer;
+    }
+
+    .noborder {
+        border: none;
+    }
+
+    .strong{
+        font-weight: 600;
+        font-size: 1.1em;
+    }
+
+    .hideBlock{
+        display: none;
+    }
+
+    .showBlock{
+        display: block;
+    }
+
+    .list-group-item {
+        background-color: #ffffff00;
+    }
+
+    /*
+    -- EFFECTS HOVER
+    */
+
+    .zoom, .zoomCard{
+        transition: transform .2s;
+    }
+
+    .zoom:hover {
+        transform: scale(1.2);
+    }
+    .zoomCard:hover {
+        transform: scale(1.05); 
+        opacity: 0.92;
+    }
+
+
+    /*
+    -- NAVBAR
+    */
+    #navbarStudio a {
+        color: white;
+        font-weight: 500;
+    }
+
+    /*
+    -- HOME
+    */   
+
+    .subtitle-home {
+        color: var(--warning);
+        font-size: 18px;
+        font-weight: 700;
+    }
+    
+    .title-home {
+        color: var(--primary);
+        font-size: 50px;
+        font-weight: 700;
+        /* line-height: 1; */
+    }
+
+    .iconCard-home {
+        background-color: #ffffff3d;
+        padding: 0rem;
+        padding: 15px;
+        border-radius: 1em;
+        margin-bottom: 0em;
+    }
+
+    #cardsHome {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-start;
+        align-items: stretch;
+    }    
+
+    #cardsHome a:hover{        
+        text-decoration: none!important;
+    }    
+
+    #cardsHome .card-text, #cardsPublication .card-text {
+        font-size: 16px;
+        font-weight: 300;
+    }
+
+    #containerHome .nav-item {
+        color: #929292;
+    }
+
+    /*
+    -- TOOLSBAR
+    --*/
+
+    #toolsbarStudio {
+        text-align: end;
+        position: absolute;
+        right: 2em;
+    }
+
+    #toolsbarStudio .nav-link {        
+        border-radius: 0.8rem;
+        margin-left: 1em;
+        font-weight: 500;
+        padding: 0.7rem 0.75rem;
+        font-size: 0.9rem;
+        line-height: 1.5;
+    }
+
+    #toolsbarStudio .nav-link:hover {        
+        opacity: 0.8;
+    }
+
+    #toolsbarStudio .nav-link i{        
+        vertical-align: middle;
+    }
+
+    #toolsbarStudio-View{
+        color: var(--info);
+        background-color: #934ae430;
+    }
+
+    #toolsbarStudio-Save{
+        color: white;
+        background-color: var(--info);
+    }
+
+    #btnSwitchAdvanced {
+        color: var(--info);
+    }
+
+    /*
+    -- STUDIO
+    */ 
+
+    /* Title */
+
+    #stepStudioContent h1 {
+        color: var(--primary);
+        font-weight: 600;
+    }
+
+    #stepStudioContent h1 i {
+        font-weight: normal;
+        vertical-align: bottom;
+    }
+
+    /* Wizard */
+
+    #blockWizard > div {
+        border-radius: 1em;
+        padding: 2rem;
+    }
+
+    #wizardCredits a{
+        color: #929292 !important;
+    }
+
+    #wizardCredits a:hover{
+        text-decoration: underline;
+    }
+
+    /* Bloc Help */
+    #helpStudioBloc {
+        background-color: #934ae424;
+        padding: 1.5rem 1rem;
+        border-radius: 0.8em;
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        justify-content: space-evenly;
+    }
+    
+    #helpStudioBloc a:hover{
+        color: white;
+    }
+
+    /* Publication */
+
+    .iconCard-finish {
+        background-color: #ffffff3d;
+        padding: 0rem;
+        padding: 12px 18px;
+        border-radius: 1rem;
+        margin-bottom: 0em;
+    }
+
+    /* Fonctionnalités */
+
+    .list-flex{
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    /* Application */
+
+    .img-BackgroundMap {
+        width: 4em;
+        border-radius: 1em;
+        margin-right: 1em;
+    }
+
+
+
+    /*
+    -- MOBILE 
+    */
+
+    @media (max-width: 800px) {
+        #stepStudioContent{
+            margin: 6em 0em!important;
+        }
+
+        #containerHome {
+            padding: 10em 2em;
+        }
+        
+        #cardsHome a {
+            margin-bottom: 2em!important;
+        }
+        
+    }
