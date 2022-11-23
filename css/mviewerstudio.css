@@ -663,6 +663,14 @@ a {
 	margin-right: 1em;
 }
 
+#backgroundlayers-config .bl {
+	border-left: none;
+	border-right: none;
+}
+#backgroundlayers-config .bl:first-child {
+    border-top: none;
+}
+
 
 /*
     -- MOBILE 

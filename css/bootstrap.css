@@ -2653,7 +2653,7 @@ input[type="button"].btn-block {
   position: relative;
   display: block;
   min-height: 1.35rem;
-  padding-left: 2rem; }
+  padding-left: 1.5rem; }
 
 .custom-control-inline {
   display: inline-flex;
@@ -2663,8 +2663,8 @@ input[type="button"].btn-block {
   position: absolute;
   left: 0;
   z-index: -1;
-  width: 1.5rem;
-  height: 1.425rem;
+  width: 1rem;
+  height: 1.175rem;
   opacity: 0; }
   .custom-control-input:checked ~ .custom-control-label::before {
     color: #fff;
@@ -2689,22 +2689,22 @@ input[type="button"].btn-block {
   vertical-align: top; }
   .custom-control-label::before {
     position: absolute;
-    top: -0.075rem;
-    left: -2rem;
+    top: 0.175rem;
+    left: -1.5rem;
     display: block;
-    width: 1.5rem;
-    height: 1.5rem;
+    width: 1rem;
+    height: 1rem;
     pointer-events: none;
     content: "";
     background-color: #fff;
     border: #BDBDBD solid 1px; }
   .custom-control-label::after {
     position: absolute;
-    top: -0.075rem;
-    left: -2rem;
+    top: 0.175rem;
+    left: -1.5rem;
     display: block;
-    width: 1.5rem;
-    height: 1.5rem;
+    width: 1rem;
+    height: 1rem;
     content: "";
     background: no-repeat 50% / 50% 50%; }
 
@@ -2737,26 +2737,26 @@ input[type="button"].btn-block {
   background-color: rgba(44, 44, 82, 0.5); }
 
 .custom-switch {
-  padding-left: 3.125rem; }
+  padding-left: 2.25rem; }
   .custom-switch .custom-control-label::before {
-    left: -3.125rem;
-    width: 2.625rem;
+    left: -2.25rem;
+    width: 1.75rem;
     pointer-events: all;
-    border-radius: 0.75rem; }
+    border-radius: 0.5rem; }
   .custom-switch .custom-control-label::after {
-    top: calc(-0.075rem + 2px);
-    left: calc(-3.125rem + 2px);
-    width: calc(1.5rem - 4px);
-    height: calc(1.5rem - 4px);
+    top: calc(0.175rem + 2px);
+    left: calc(-2.25rem + 2px);
+    width: calc(1rem - 4px);
+    height: calc(1rem - 4px);
     background-color: #BDBDBD;
-    border-radius: 0.75rem;
+    border-radius: 0.5rem;
     transition: transform 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out; }
     @media (prefers-reduced-motion: reduce) {
       .custom-switch .custom-control-label::after {
         transition: none; } }
   .custom-switch .custom-control-input:checked ~ .custom-control-label::after {
     background-color: #fff;
-    transform: translateX(1.125rem); }
+    transform: translateX(0.75rem); }
   .custom-switch .custom-control-input:disabled:checked ~ .custom-control-label::before {
     background-color: rgba(44, 44, 82, 0.5); }
 

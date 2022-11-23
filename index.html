@@ -213,144 +213,231 @@
                     <!--/.TOOLSBAR -->
                     <!-- STUDIO TABS -->
                     <div class="tab-content my-4" id="stepStudioContent">
-                        <!-- APPLICATION -->
+                        <!-- Application -->
                         <div class="tab-pane container active" id="app">
                             <h1><i class="ri-equalizer-line"></i> Application</h1>
                             <div class="form-group mt-4">
                                 <label for="opt-title" i18n="head.title" class="form-label">Titre de l'application</label>
                                 <input class="form-control" id="opt-title" type="text" name="textinput" placeholder="Mon application">
                             </div>
-                            <!-- logo-->
-                        <div class="form-group">
-                            <label class="col-md-4 control-label" for="opt-logo" i18n="tabs.app.url">URL du logo</label>
-                            <div class="col-md-8">
-                                <input id="opt-logo" name="textinput" type="text"
-                                       class="form-control input-md checkedurl"
-                                       placeholder="https://geobretagne.fr/pub/logo/region-bretagne.jpg">
-                            </div>
-                        </div>
-
-                        <!-- help-->
-                        <div class="form-group">
-                            <label class="col-md-4 control-label" for="opt-help" i18n="tabs.app.help_link">Page d'aide (html)</label>
-                            <div class="col-md-8">
-                                <input id="opt-help" name="textinput" type="text"
-                                       class="form-control input-md checkedurl" placeholder="Ex: mviewer_help.html">
-                            </div>
-                        </div>
-
-                        <!--style-->
-                        <div class="form-group">
-                            <label class="control-label col-md-4" for="frm-style" i18n="tabs.app.style">Style</label>
-                            <div class="col-md-8">
-                                <select id="opt-style" name="style" class="form-control default"
-                                        onchange="updateTheme(this);">
-                                    <option class="alizarin" value="css/themes/alizarin.css">alizarin</option>
-                                    <option class="blue" value="css/themes/blue.css">blue</option>
-                                    <option class="default" selected value="css/themes/default.css">default</option>
-                                    <option class="nephritis" value="css/themes/nephritis.css">nephritis</option>
-                                    <option class="ripe_lemon" value="css/themes/ripe_lemon.css">ripe_lemon</option>
-                                    <option class="amethyst" value="css/themes/amethyst.css">amethyst</option>
-                                    <option class="carrot" value="css/themes/carrot.css">carrot</option>
-                                    <option class="green" value="css/themes/green.css">green</option>
-                                    <option class="peter_river" value="css/themes/peter_river.css">peter_river</option>
-                                    <option class="black" value="css/themes/black.css">black</option>
-                                    <option class="chambray" value="css/themes/chambray.css">chambray</option>
-                                    <option class="green_sea" value="css/themes/green_sea.css">green_sea</option>
-                                    <option class="pink" value="css/themes/pink.css">pink</option>
-                                    <option class="wet_asphalt" value="css/themes/wet_asphalt.css">wet_asphalt</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="col-md-4 control-label" for="checkboxes" i18n="tabs.app.options">Options</label>
-                            <div class="col-md-8">
-                                <div class="checkbox">
-                                    <label for="opt-measuretools">
-                                        <input type="checkbox" name="checkboxes" id="opt-measuretools">
-                                        <span i18n="tabs.app.opt_measure">Outils de mesures</span>
-                                    </label>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label for="opt-logo" i18n="tabs.app.url" class="form-label">Lien vers le logo</label>
+                                    <input class="form-control checkedurl" id="opt-logo" placeholder="https://monlogo.png">
                                 </div>
-
-                                <div class="checkbox">
-                                    <label for="opt-exportpng">
-                                        <input type="checkbox" name="checkboxes" id="opt-exportpng">
-                                        <span i18n="tabs.app.opt_export">Export de la carte au format png</span>
-                                    </label>
-                                </div>
-
-                                <div class="checkbox">
-                                    <label for="opt-showhelp">
-                                        <input type="checkbox" name="checkboxes" id="opt-showhelp">
-
-                                        <span i18n="tabs.app.opt_help">Afficher l'aide au démarrage</span>
-                                    </label>
-                                </div>
-
-                                <div class="checkbox">
-                                    <label for="opt-coordinates">
-                                        <input type="checkbox" name="checkboxes" id="opt-coordinates">
-
-                                        <span i18n="tabs.app.opt_coords">Affichage des coordonnées au click</span>
-                                    </label>
-                                </div>
-                                <div class="checkbox">
-                                    <label for="opt-togglealllayersfromtheme">
-                                        <input type="checkbox" name="checkboxes" id="opt-togglealllayersfromtheme">
-
-                                        <span i18n="tabs.app.opt_data">Afficher/masquer toutes les données d'une thématique en un clic</span>
-                                    </label>
-                                </div>
-                                <div class="checkbox">
-                                    <label for="opt-maxextent">
-                                        <input type="checkbox" name="checkboxes" id="opt-maxextent">
-                                        <span i18n="tabs.app.opt_maxextent">Interdire la navigation hors de l'étendue ci contre</span>
-                                    </label>
+                                <div class="col-md-6">
+                                    <label class="form-label" for="frm-style" i18n="tabs.app.style">Thème de l'application</label>
+                                    <select class="form-control default" id="opt-style" name="style" onchange="updateTheme(this);">
+                                        <option class="alizarin" value="css/themes/alizarin.css">alizarin</option>
+                                        <option class="blue" value="css/themes/blue.css">blue</option>
+                                        <option class="default" selected value="css/themes/default.css">default</option>
+                                        <option class="nephritis" value="css/themes/nephritis.css">nephritis</option>
+                                        <option class="ripe_lemon" value="css/themes/ripe_lemon.css">ripe_lemon</option>
+                                        <option class="amethyst" value="css/themes/amethyst.css">amethyst</option>
+                                        <option class="carrot" value="css/themes/carrot.css">carrot</option>
+                                        <option class="green" value="css/themes/green.css">green</option>
+                                        <option class="peter_river" value="css/themes/peter_river.css">peter_river</option>
+                                        <option class="black" value="css/themes/black.css">black</option>
+                                        <option class="chambray" value="css/themes/chambray.css">chambray</option>
+                                        <option class="green_sea" value="css/themes/green_sea.css">green_sea</option>
+                                        <option class="pink" value="css/themes/pink.css">pink</option>
+                                        <option class="wet_asphalt" value="css/themes/wet_asphalt.css">wet_asphalt</option>
+                                    </select>
                                 </div>
                             </div>
-                        </div>
-                            <!-- Map -->
-                            <div class="form-group">
-                                <div class="col-md-12">
-                                    <div id="map" class="map"></div>
+                            <!--Fonctionnalités et options de la carte-->                          
+                            <div class="row mt-4">
+                                <div class="col-md-6">
+                                    <ul class="list-group">
+                                        <li class="list-group-item">
+                                            <span class="title-accordion" i18n="tabs.app.options">Fonctionnalités</span><br>
+                                            <span class="subtitle-accordion">Activer les outils que vous souhaitez afficher au sein de votre application</span>
+                                        </li>
+                                        <li class="list-group-item list-flex">
+                                            <span i18n="tabs.app.opt_measure">Outils de mesures</span>
+                                            <div class="custom-control custom-switch">
+                                                <input type="checkbox" class="custom-control-input" name="checkboxes" id="opt-measuretools">
+                                                <label class="custom-control-label" for="opt-measuretools"></label>
+                                            </div>
+                                        </li>
+                                        <li class="list-group-item list-flex">
+                                            <span i18n="tabs.app.opt_export">Export de la carte en image</span>
+                                            <div class="custom-control custom-switch">
+                                                <input type="checkbox" class="custom-control-input" name="checkboxes" id="opt-exportpng">
+                                                <label class="custom-control-label" for="opt-exportpng"></label>
+                                            </div>
+                                        </li>
+                                        <li class="list-group-item list-flex">
+                                            <span i18n="tabs.app.opt_coords">Affichage des coordonnées au click</span>
+                                            <div class="custom-control custom-switch">
+                                                <input type="checkbox" class="custom-control-input" name="checkboxes" id="opt-coordinates">
+                                                <label class="custom-control-label" for="opt-coordinates"></label>
+                                            </div>
+                                        </li>
+                                        <li class="list-group-item list-flex">
+                                            <span i18n="tabs.app.opt_data">Afficher/masquer toutes les données d'une thématique en un click</span>                                          
+                                            <div class="custom-control custom-switch">
+                                                <input type="checkbox" class="custom-control-input" name="checkboxes" id="opt-togglealllayersfromtheme">
+                                                <label class="custom-control-label" for="opt-togglealllayersfromtheme"></label>
+                                            </div>
+                                        </li>
+                                      </ul>
                                 </div>
-                            </div>
+                                <div class="col-md-6">
+                                    <ul class="list-group">
+                                        <li class="list-group-item">
+                                            <span class="title-accordion">Options de la carte<br></span>
+                                            <span class="subtitle-accordion">Paramétrer l'étendue et le zoom de la carte au démarrage de l'application</span>
+                                        </li>
+                                        <li class="list-group-item p-0">
+                                             <!-- Map -->
+                                            <div id="map" class="map"></div>
+                                        </li>
+                                        <li class="list-group-item list-flex">
+                                            <span i18n="tabs.app.opt_maxextent">Interdire la navigation hors de l'étendue définie ci-dessus</span>                                           
+                                            <div class="custom-control custom-switch">
+                                                <input type="checkbox" class="custom-control-input" name="checkboxes" id="opt-maxextent">
+                                                <label class="custom-control-label" for="opt-maxextent"></label>
+                                            </div>
+                                        </li>
+                                      </ul>
+                                </div>
+                            </div>  
+                            <!--./Fonctionnalités et options de la carte-->                          
 
-                            <div id="backgroundlayers-config">
-                                <div class="row">
-                                    <div class="col-sm-6 col-md-6">
+                            <!--Fond de plan-->
+                            <div class="accordion mt-4" id="backgroundlayers-config">
+                                <div class="accordion-item">
+                                  <h2 class="accordion-header" >
+                                    <a class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFondPlan" aria-expanded="true" aria-controls="collapseFondPlan">
+                                      <div>
+                                        <span class="title-accordion">Fonds de plan<br></span>
+                                        <span class="subtitle-accordion">Sélectionner les fonds de plan à afficher et le mode d'affichage</span>
+                                      </div>
+                                    </a>
+                                  </h2>
+                                  <div id="collapseFondPlan" class="accordion-collapse collapse" aria-labelledby="accordionFondPlan">
+                                    <div class="accordion-body p-0"> 
+                                        <ul class="list-group list-group-flush">
+                                            <div id="frm-bl"></div>
+                                            <li class="list-group-item" >
+                                                <div class="row mb-2" >                                                    
+                                                    <div class="col-md-6 advanced" style="display: none;">
+                                                        <label for="frm-bl-mode" class="form-label" i18n="tabs.bg.displaymode" >Mode d'affichage</label>
+                                                        <select id="frm-bl-mode" name="bl-mode" class="form-control">
+                                                            <option value="default"  i18n="tabs.bg.display_normal">Normal</option>
+                                                            <option value="gallery" i18n="tabs.bg.display_gallery">Gallerie</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <label for="frm-bl-mode" class="form-label" i18n="tabs.bg.startup_bg">Fond de plan au démarrage</label>
+                                                        <select id="frm-bl-visible" name="bl-visible" class="form-control" onchange="mv.changeVisibleBaseLayer(this.value)"></select>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                          </ul>                                        
                                     </div>
-                                    <div class="col-sm-3 col-md-3">
-                                        <div class="form-group">
-                                            <label class="control-label" for="frm-bl-mode">
-                                              <span i18n="tabs.bg.displaymode"> Mode d'affichage</span>
-                                            </label>
-                                            <select id="frm-bl-mode" name="bl-mode" class="form-control">
-                                                <option value="default"  i18n="tabs.bg.display_normal">normal</option>
-                                                <option value="gallery" i18n="tabs.bg.display_gallery">gallerie</option>
-                                            </select>
+                                  </div>
+                                </div>                                
+                            </div>  
+                            <!--./Fond de plan-->
+
+                            <!--Page d'accueil-->
+                            <div class="accordion mt-4 advanced" style="display: none;">
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="accordionHomePage">
+                                        <a class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseHomePage" aria-expanded="true" aria-controls="collapseHomePage">
+                                        <div>
+                                            <span class="title-accordion">Page d'accueil <br></span>
+                                            <span class="subtitle-accordion">Paramétrer la page d'accueil / documentation</span>
+                                        </div>
+                                        </a>
+                                    </h2>
+                                    <div id="collapseHomePage" class="accordion-collapse collapse" aria-labelledby="accordionHomePage">
+                                        <div class="accordion-body"> 
+                                            <div class="form-group">
+                                                <label for="opt-help" i18n="tabs.app.help_link" class="form-label">Lien vers la page d'accueil</label>
+                                                <input class="form-control checkedurl" id="opt-help" name="textinput" type="text" placeholder="https://mapage.html">
+                                            </div>
+                                            <div class="custom-control custom-switch">
+                                                <input type="checkbox" class="custom-control-input" id="opt-showhelp">
+                                                <label class="custom-control-label" for="opt-showhelp"><span i18n="tabs.app.opt_help">Afficher la page d'accueil au démarrage</span></label>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="col-sm-3 col-md-3">
-                                        <div class="form-group">
-                                            <label class="control-label" for="frm-bl-mode">
-                                              <span i18n="tabs.bg.startup_bg">Fond affiché au démarrage</span>
-                                            </label>
-                                            <select id="frm-bl-visible" name="bl-visible" class="form-control"
-                                                    onchange="mv.changeVisibleBaseLayer(this.value)"></select>
-                                        </div>
+                                </div>                                
+                            </div>  
+                            <!--./Page d'accueil-->
+
+                            <div class="accordion mt-4" id="search-config">
+                                <div class="accordion-item">
+                                  <h2 class="accordion-header" >
+                                    <a class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSearch" aria-expanded="true" aria-controls="collapseFondPlan">
+                                      <div>
+                                        <span class="title-accordion">Recherche<br></span>
+                                        <span class="subtitle-accordion">Paramétrer les fonctionnalités disponibles dans la barre de recherche</span>
+                                      </div>
+                                    </a>
+                                  </h2>
+                                  <div id="collapseSearch" class="accordion-collapse collapse" aria-labelledby="accordionSearch">
+                                    <div class="accordion-body p-0"> 
+                                        <ul class="list-group list-group-flush">            
+                                            <li class="list-group-item advanced" style="display: none;">
+                                                <div class="list-flex">
+                                                    <div>
+                                                        <p class="strong" i18n="tabs.search.entity_search.activate">Activer la recherche d'entité</p>
+                                                        <p>La recherche peut être activée si la couche est de type <code>GEOJSON</code>. Cette fonctionnalité est également activable pour les couches de type <code>WMS</code> à la condition que les entités qui composent cette couche soient également indéxées dans Elasticsearch.</p>
+                                                    </div>
+                                                    <div class="custom-control custom-switch">
+                                                        <input type="checkbox" class="custom-control-input" id="opt-searchfeatures">
+                                                        <label class="custom-control-label" for="opt-searchfeatures"></label>
+                                                    </div>
+                                                </div>                                                    
+                                            </li>
+                                            <li class="list-group-item">
+                                                <div class="list-flex">
+                                                    <p class="strong" i18n="tabs.search.address_search.title">Activer la recherche d'adresse</p>
+                                                    <div class="custom-control custom-switch">
+                                                        <input type="checkbox" class="custom-control-input" id="SwitchAdressSearch">
+                                                        <label class="custom-control-label" for="SwitchAdressSearch"></label>
+                                                    </div>
+                                                </div>
+                                                <div id="AppSearchBlock" style="display: none;">
+                                                    <div class="row mb-2" >                                                    
+                                                        <div class="col-md-12">
+                                                            <label for="frm-searchlocalities" i18n="tabs.search.address_search.service" class="form-label">Service utilisé</label>
+                                                            <select class="form-control b" id="frm-searchlocalities" name="searchlocalities" onchange="mv.changeSearchLocalities(this.value)">
+                                                                <option value="false" i18n="tabs.search.address_search.none">Non utilisé</option>
+                                                                <option value="ban" i18n="tabs.search.address_search.ban">Base adresse Nationale</option>
+                                                                <option value="geoportail" i18n="tabs.search.address_search.geoportal">Géoportail</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>    
+                                                    <div class="row my-2 align-items-stretch">
+                                                            <div class="col-md-6" id="opt-searchl-url" style="display: none;">
+                                                                <label for="opt-searchlocalities-url" i18n="tabs.search.address_search.url" class="form-label">URL</label>
+                                                                <input class="form-control" id="opt-searchlocalities-url" type="text" placeholder="Url du service">
+                                                            </div>
+                                                            <div class="col-md-6" id="opt-searchl-attribution" style="display: none;">
+                                                                <label for="opt-searchlocalities-attribution" i18n="tabs.search.address_search.attribution" class="form-label">Attribution</label>
+                                                                <input class="form-control" id="opt-searchlocalities-attribution" type="text"  placeholder="Attribution du service"  i18n="tabs.search.address_search.attribution.ph">
+                                                            </div>   
+                                                    </div>
+                                                </div>                                                
+                                            </li>
+                                          </ul>                                        
                                     </div>
-                                </div>
-                                <div id="frm-bl"></div>
-                            </div>
+                                  </div>
+                                </div>                                
+                            </div>  
+                            <!--./Recherche-->
                             
                             
                             <div class="mt-4">
                                 <a class="btn btn-warning btnNext">Suivant <i class="ri-arrow-right-line"></i> </a>
                             </div>  
                         </div>
-                        <!-- /.APPLICATION -->
+                        <!-- /.Application -->
                         <!-- Thématiques & données -->
                         <div class="tab-pane container fade" id="themesdata">
                             <h1><i class="ri-stack-line"></i> Thématiques & données</h1>
@@ -460,62 +547,8 @@
                         <div class="tab-pane container fade advanced" id="fadanced" style="display: none">
                             <h1><i class="ri-list-settings-line"></i> Fonctionnalités avancées</h1>
 
-                            <div class="tab-pane" id="search-config">
-                                <div class="panel panel-default">
-                                    <div class="panel-heading"><h3 class="panel-title" i18n="tabs.search.entity_search.title">Recherche d'entités</h3></div>
-                                    <div class="panel-body">
-                                        <div class="form-group">
-                        
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" value="" id="opt-searchfeatures" required>
-                                                <label class="form-check-label" i18n="tabs.search.entity_search.activate" for="opt-searchfeatures">
-                                                Activer la recherche d'entités
-                                                </label>
-                                            </div>
-                                        </div>
-                                        <p i18n="tabs.search.entity_search.p1">
-                                            La recherche d'entités peut être activée sur les couches de type GeoJSON.
-                                        </p>
-                                        <p i18n="tabs.search.entity_search.p2">
-                                            Cette fonctionnalité est également activable pour les couches de type WMS à la condition que les
-                                            entités qui composent cette couche soient également indexées par Elasticsearch.
-                                        </p>
-                                    </div>
-                                </div>
-                        
-                                <div class="panel panel-default">
-                                    <div class="panel-heading"><h3 class="panel-title" i18n="tabs.search.address_search.title">Recherche d'adresses</h3></div>
-                                    <div class="panel-body">
-                                        <div class="form-group">
-                                            <label class="control-label col-md-4" for="frm-searchlocalities" i18n="tabs.search.address_search.service">Service utilisé</label>
-                                            <select id="frm-searchlocalities" name="searchlocalities" class="form-control"
-                                                    onchange="mv.changeSearchLocalities(this.value)" style="width:auto;">
-                                                <option value="false" i18n="tabs.search.address_search.none">Non utilisé</option>
-                                                <option value="ban" i18n="tabs.search.address_search.ban">Base adresse Nationale</option>
-                                                <option value="geoportail" i18n="tabs.search.address_search.geoportal">Géoportail</option>
-                                            </select>
-                                        </div>
-                        
-                                        <form id="searchlocalities_options" class="form-horizontal">
-                                            <div class="form-group">
-                                                <label class="col-md-4 control-label" for="opt-searchlocalities-url" i18n="tabs.search.address_search.url">URL</label>
-                                                <div class="col-md-4">
-                                                    <input id="opt-searchlocalities-url" type="text" placeholder="Url"
-                                                           class="form-control input-md">
-                                                </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <label class="col-md-4 control-label"
-                                                       for="opt-searchlocalities-attribution" i18n="tabs.search.address_search.attribution">Attribution</label>
-                                                <div class="col-md-4">
-                                                    <input id="opt-searchlocalities-attribution" type="text"
-                                                           placeholder="Attribution du service"  i18n="tabs.search.address_search.attribution.ph" class="form-control input-md">
-                                                </div>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div>
-                        
+                            <div class="tab-pane">
+                                                       
                                 <div class="panel panel-default">
                                     <div class="panel-heading">
                                         <h3 class="panel-title" i18n="tabs.search.elastic_search.title">Elasticsearch</h3>
