@@ -44,9 +44,12 @@
             -->
         </a>
         <div class="d-flex align-items-center" id="navBarStudioMenu">
-            <p class="navbar-text px-4" id="user_connected"><span i18n="banner.not_connected">Non connecté</span></p>            
-            <li class="px-4" id="menu_user_logout"><a role="button" href="./logout"><span
-                class="glyphicon glyphicon-off"></span> <span i18n="banner.logout">Déconnexion</span></a></li>
+            <div class="nav-item">
+                <span class="navbar-text px-2" id="user_connected"><span i18n="banner.not_connected">Non connecté</span></span>         
+            </div>               
+            <div class="px-4 nav-item" id="menu_user_logout">
+                <a role="button" href="./logout"><span i18n="banner.logout">Déconnexion</span></a>
+            </div>
             <a class="zoom" onclick="showHome()"><i class="ri-home-6-line" style="font-size: 30px;"></i></a>
         </div>
         </div>
