@@ -129,7 +129,7 @@ $(document).ready(function(){
             }
 
             if (API.xml) {
-                loadApplicationParametersFromRemoteFile(API.xml);
+                loadApplicationParametersFromRemoteFile(API.xml);                
             } else if (API.wmc) {
                 loadApplicationParametersFromWMC(API.wmc);
             } else {
@@ -756,6 +756,7 @@ var  loadApplicationParametersFromRemoteFile = function (url) {
         },
         success: function( data ) {
             mv.parseApplication(data);
+            showStudio();
         },
         error: function (xhr, ajaxOptions, thrownError) {
             console.error("map file retrieval failed", {
@@ -775,6 +776,7 @@ var loadApplicationParametersFromWMC = function (url) {
         url: url,
         success: function( data ) {
             mv.parseWMC(data);
+            showStudio();
         },
         error: function (xhr, ajaxOptions, thrownError) {
             console.error("web map context (WMC) file retrieval failed", {

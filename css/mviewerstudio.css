@@ -261,6 +261,16 @@ a {
 	background-color: #ffffff00;
 }
 
+/* Button */
+
+button i {
+    vertical-align: middle;
+}
+
+.btn-outline-danger:hover {
+    color: white;
+}
+
 /*
     -- EFFECTS HOVER
     */
@@ -544,6 +554,21 @@ a {
 
 #containerHome .nav-item {
 	color: #929292;
+}
+
+/* Modal Open project */
+
+#liste_applications a {
+    color: inherit;
+}
+
+#liste_applications h5 {
+    color: var(--info)!important;
+}
+
+#liste_applications a:hover {
+    text-decoration: none;
+    background-color: var(--light);
 }
 
 /*
