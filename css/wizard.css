@@ -33,9 +33,10 @@ STYLE FOR WIZARD
 }
 
 #stepStudio .title-wizard {
-	margin-bottom: 0px !important;
-	font-size: large;
-	font-weight: 500;
+	margin-bottom: 5px !important;
+    font-size: large;
+    font-weight: 500;
+    line-height: 1.2;
 }
 
 #stepStudio .subtitle-wizard {

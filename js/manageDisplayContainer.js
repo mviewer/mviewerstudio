@@ -22,13 +22,3 @@ activeSearch.addEventListener('change', (event) => {
     document.getElementById('AppSearchBlock').style.display = "none";
   }    
 })
-
-const activeElasSearch = document.getElementById('SwitchElastic');
-
-activeElasSearch.addEventListener('change', (event) => {
-  if (event.currentTarget.checked) {
-    document.getElementById('FadvElasticBlock').style.display = "block"; 
-  } else {
-    document.getElementById('FadvElasticBlock').style.display = "none";
-  }    
-})

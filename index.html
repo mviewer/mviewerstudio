@@ -161,7 +161,7 @@
                         <!-- ./STEP STUDIO -->       
                         <div class="text-info mt-4" id="helpStudioBloc">
                             <img src="img/doc.png" alt="Img doc" width="80px" style="margin-right: 2em;">
-                            <div class="helpStudio-text">
+                            <div class="helpStudio-text my-2">
                                 <h4 class="strong m-0">Besoin d'aide ?</h4>
                                 <p>Aidez-vous de la documentation</p>
                                 <a class="btn btn-outline-info" href="https://github.com/geobretagne/mviewerstudio/blob/master/doc/user.md" target="_blank">Consulter</a>
@@ -549,86 +549,90 @@
                         <!-- Fonctionnalités avancées -->
                         <div class="tab-pane container fade advanced" id="fadanced" style="display: none">
                             <h1><i class="ri-list-settings-line"></i> Fonctionnalités avancées</h1>
-
-                            <div class="tab-pane">
-                                                       
-                                <div class="panel panel-default">
-                                    <div class="panel-heading">
-                                        <h3 class="panel-title" i18n="tabs.search.elastic_search.title">Elasticsearch</h3>
-                                    </div>
-                                    <div class="panel-body">
-                                        <div class="form-group">
-                                            <label class="control-label col-md-4" for="frm-globalsearch" i18n="tabs.search.elastic_search.options">Options</label>
-                                            <select id="frm-globalsearch" name="globalsearch" class="form-control"
-                                                    onchange="mv.changeGlobalSearch(this.value)" style="width:auto;">
-                                                <option value="false" i18n="tabs.search.elastic_search.disabled">Non utilisé</option>
-                                                <option value="elasticsearch" i18n="tabs.search.elastic_search.enabled">Activé</option>
-                                            </select>
-                                        </div>
-                        
-                                        <form id="searchelasticsearch_options" class="form-horizontal">
-                                            <div class="form-group">
-                                                <label class="col-md-4 control-label" for="opt-elasticsearch-url"  i18n="tabs.search.elastic_search.es_url">URL
-                                                    Elasticsearch</label>
-                                                <div class="col-md-4">
-                                                    <input id="opt-elasticsearch-url" type="text" placeholder="Url Elasticsearch"
-                                                            i18n="tabs.search.elastic_search.es_url.ph" class="form-control input-md">
-                                                </div>
-                                            </div>
-                        
-                                            <div class="form-group">
-                                                <label class="col-md-4 control-label" for="opt-elasticsearch-geometryfield" i18n="tabs.search.elastic_search.geom_field">geometryfield</label>
-                                                <div class="col-md-4">
-                                                    <input id="opt-elasticsearch-geometryfield" type="text" placeholder="geometryfield"
-                                                           class="form-control input-md">
-                                                </div>
-                                            </div>
-                        
-                                            <div class="form-group">
-                                                <label class="col-md-4 control-label" for="opt-elasticsearch-linkid" i18n="tabs.search.elastic_search.linkid">linkid</label>
-                                                <div class="col-md-4">
-                                                    <input id="opt-elasticsearch-linkid" type="text" placeholder="linkid"
-                                                           class="form-control input-md">
-                                                </div>
-                                            </div>
-                        
-                                            <div class="form-group">
-                                                <label class="col-md-4 control-label" for="opt-elasticsearch-doctypes" i18n="tabs.search.elastic_search.doctypes">doctypes</label>
-                                                <div class="col-md-4">
-                                                    <input id="opt-elasticsearch-doctypes" type="text" placeholder="doctypes"
-                                                           class="form-control input-md">
-                                                </div>
-                                            </div>
-                        
-                                            <div class="form-group">
-                                                <label class="control-label col-md-4" for="opt-elasticsearch-querymode" i18n="tabs.search.elastic_search.qmode">Mode</label>
-                                                <select id="opt-elasticsearch-querymode" class="form-control" style="width:auto;"
-                                                        onchange="">
-                                                    <option value="match" i18n="tabs.search.elastic_search.qmode_match">match</option>
-                                                    <option value="term" i18n="tabs.search.elastic_search.qmode_term">term</option>
-                                                    <option value="phrase" i18n="tabs.search.elastic_search.qmode_phrase">phrase</option>
-                                                </select>
-                                            </div>
-                        
-                                            <div class="checkbox">
-                                                <label for="opt-elasticsearch-bbox">
-                                                    <input type="checkbox" id="opt-elasticsearch-bbox" value="0">
-                                                    <span i18n="tabs.search.elastic_search.search_in_map_extent">Rechercher dans l'emprise de la carte</span>
-                                                </label>
-                                            </div>
-                        
-                                            <div class="form-group">
-                                                <label class="control-label col-md-4" for="opt-elasticsearch-version" i18n="tabs.search.elastic_search.version">Version</label>
-                                                <select id="opt-elasticsearch-version" class="form-control" style="width:auto;"
-                                                        onchange="">
-                                                    <option value="current" i18n="tabs.search.elastic_search.v_current">current</option>
-                                                    <option value="1.4" i18n="tabs.search.elastic_search.v_1_4">1.4</option>
-                                                </select>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div>
+                            <div class="alert alert-info text-info my-3" role="alert">
+                                <i class="bi bi-exclamation-circle"></i> Le paramétrage de cette section est optionnel.
                             </div>
+
+                            <!--Recherche ElasticSearch-->
+                            <div class="accordion mt-4" id="accordionElasticSearch">
+                                <div class="accordion-item">
+                                  <h2 class="accordion-header" >
+                                    <a class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseElasticSearch" aria-expanded="true" aria-controls="collapseElasticSearch">
+                                      <div>
+                                        <span class="title-accordion" i18n="tabs.search.elastic_search.title">ElasticSearch</span></br>
+                                        <span class="subtitle-accordion">Paramétrer une recherche basée sur un index Elasticsearch</span>
+                                      </div>
+                                    </a>
+                                  </h2>
+                                  <div id="collapseElasticSearch" class="accordion-collapse collapse" aria-labelledby="accordionElasticSearch">
+                                    <div class="accordion-body p-0"> 
+                                        <ul class="list-group list-group-flush">
+                                            <li class="list-group-item">
+                                                <div id="FadvElasticBlock">
+                                                    <div class="row mt-2" >
+                                                        <div class="col-md-12">
+                                                            <p class="strong">Activer la recherche ElasticSearch</p>
+                                                            <select id="frm-globalsearch" name="globalsearch" class="form-control"
+                                                                    onchange="mv.changeGlobalSearch(this.value)">
+                                                                <option value="false" i18n="tabs.search.elastic_search.disabled">Non utilisé</option>
+                                                                <option value="elasticsearch" i18n="tabs.search.elastic_search.enabled">Activé</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row mt-2" >
+                                                        <div class="col-md-6">
+                                                            <label for="opt-elasticsearch-url"  i18n="tabs.search.elastic_search.es_url" class="form-label">URL Elasticsearch</label>
+                                                            <input class="form-control" id="opt-elasticsearch-url" type="text" i18n="tabs.search.elastic_search.es_url.ph" placeholder="URL Elasticsearch">
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <label for="opt-elasticsearch-geometryfield" i18n="tabs.search.elastic_search.geom_field" class="form-label">Geometryfield</label>
+                                                            <input class="form-control" id="opt-elasticsearch-geometryfield" type="text" placeholder="geometryfield">
+                                                        </div>
+                                                    </div>
+                                                    <div class="row mt-2" >   
+                                                        <div class="col-md-6">
+                                                            <label for="opt-elasticsearch-linkid" i18n="tabs.search.elastic_search.linkid" class="form-label">linkid</label>
+                                                            <input class="form-control" id="opt-elasticsearch-linkid" type="text" placeholder="linkid">
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <label for="opt-elasticsearch-doctypes" i18n="tabs.search.elastic_search.doctypes" class="form-label">Doctypes</label>
+                                                            <input class="form-control" id="opt-elasticsearch-doctypes" type="text" placeholder="doctypes">
+                                                        </div>
+                                                    </div>
+                                                    <div class="row mt-2" >                                                    
+                                                        <div class="col-md-6">
+                                                            <label for="opt-elasticsearch-querymode" i18n="tabs.search.elastic_search.qmode" class="form-label">Mode</label>
+                                                            <select id="opt-elasticsearch-querymode" class="form-control">
+                                                                <option value="match" i18n="tabs.search.elastic_search.qmode_match">match</option>
+                                                                <option value="term" i18n="tabs.search.elastic_search.qmode_term">term</option>
+                                                                <option value="phrase" i18n="tabs.search.elastic_search.qmode_phrase">phrase</option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <label for="opt-elasticsearch-version" i18n="tabs.search.elastic_search.version" class="form-label">Version</label>
+                                                            <select id="opt-elasticsearch-version" class="form-control">
+                                                                <option value="current" i18n="tabs.search.elastic_search.v_current">current</option>
+                                                                <option value="1.4" i18n="tabs.search.elastic_search.v_1_4">1.4</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row mt-2">
+                                                        <div class="col-md-12">
+                                                            <div class="custom-control custom-switch">
+                                                                <input type="checkbox" class="custom-control-input" id="opt-elasticsearch-bbox" value="0">
+                                                                <label class="custom-control-label" for="opt-elasticsearch-bbox"></label>
+                                                                <span i18n="tabs.search.elastic_search.search_in_map_extent">Rechercher dans l'emprise de la carte</span>
+                                                            </div>
+                                                        </div>                                                        
+                                                    </div>                                                    
+                                                </div>                                                
+                                            </li>
+                                          </ul>                                        
+                                    </div>
+                                  </div>
+                                </div>                                
+                            </div>  
+                            <!--./Recherche ElasticSearch-->
                             
                             <div class="mt-4">
                                 <a class="btn btn-outline-warning btnPrev"><i class="ri-arrow-left-line"></i> Précédent</a>
