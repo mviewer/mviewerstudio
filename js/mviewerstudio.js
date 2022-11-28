@@ -94,7 +94,7 @@ $(document).ready(function(){
                         cls ="";
                     }
                     csw_provider_html = '<li class="' + cls + '">';
-                    csw_provider_html += '<a onclick="setActiveProvider(this);" href="#" class="dropdown-toggle"';
+                    csw_provider_html += '<a onclick="setActiveProvider(this);" href="#" class="dropdown-item"';
                     csw_provider_html += ' data-providertype="csw" data-provider="' + provider.url + '"';
                     if (provider.baseref) {
                         csw_provider_html += ' data-metadata-app="' + provider.baseref + '"';
@@ -116,7 +116,7 @@ $(document).ready(function(){
                         cls ="";
                     }
                     wms_providers.push('<li class="' + cls + '">' +
-                        '<a onclick="setActiveProvider(this);" data-providertype="wms" class="dropdown-toggle"' +
+                        '<a onclick="setActiveProvider(this);" data-providertype="wms" class="dropdown-item"' +
                         ' data-provider="' + provider.url + '" href="#">' +
                         provider.title + '</a></li>');
                     nb_providers ++;
@@ -267,7 +267,7 @@ var loadLayers = function (themeid) {
 };
 
 var sortableLayerList = Sortable.create(document.getElementById('themeLayers'), {
-    handle: '.glyphicon-move',
+    handle: '.layer-move',
     animation: 150,
     ghostClass: 'ghost',
     onEnd: function (evt) {
@@ -332,12 +332,12 @@ var addLayer = function (title, layerid) {
     }
     var item = $("#themeLayers").append([
         '<div class="list-group-item layers-list-item" data-layerid="'+layerid+'">',
-            '<span class="glyphicon glyphicon-move" aria-hidden="true"></span>',
-            '<div class="pull-right btn-group" role="group">',
-                '<button class="btn btn-sm btn-warning" onclick="editLayer(this);"><span class="layer-edit glyphicon glyphicon-pencil" title="Editer cette couche"></span></button>',
-                '<button class="btn btn-sm btn-warning" onclick="deleteLayerItem(this);"><span class="layer-remove glyphicon glyphicon-remove" title="Supprimer"></span></button>',
-            '</div>',
             '<span class="layer-name">'+title+'</span>',
+            '<div class="layer-options-btn">',
+                '<button class="btn btn-sm btn-secondary"><span class="layer-move" title="Déplacer"><i class="bi bi-arrows-move"></i></span></button>',
+                '<button class="btn btn-sm btn-secondary" onclick="deleteLayerItem(this);"><span class="layer-remove" title="Supprimer"><i class="bi bi-x-circle"></i></span></button>',
+                '<button class="btn btn-sm btn-info" onclick="editLayer(this);"><span class="layer-edit" title="Editer cette couche"><i class="bi bi-gear-fill"></i></span></button>',
+            '</div>',
         '</div>'].join(""));
 
      if (title === 'Nouvelle couche') {
@@ -352,10 +352,10 @@ var editLayer = function (item) {
     var title = element.find(".layer-name").text();
     var layerid = element.attr("data-layerid");
     if (layerid != "undefined") {
-        $("#mod-layerOptions").modal();
+        $("#mod-layerOptions").modal('show');
         mv.showLayerOptions(element);
     } else {
-        $("#mod-layerNew").modal();
+        $("#mod-layerNew").modal('show');
     }
 };
 
@@ -820,13 +820,13 @@ var updateProviderSearchButtonState = function () {
 };
 
 var addNewProvider = function (el) {
-    var frm = $(el).closest("div");
+    var frm = $(el).closest("#addCatalogData");
     var url = frm.find("input.custom-url").val();
     var type = frm.find("select").val();
     var title = frm.find("input.custom-title").val();
 
     if (title && url) {
-        $("#providers_list").append('<li><a onclick="setActiveProvider(this);" data-providertype="' + type +
+        $("#providers_list").append('<li><a onclick="setActiveProvider(this);" class="dropdown-item" data-providertype="' + type +
             '" data-provider="' + url + '" href="#">' + title + '</a></li>').trigger("click");
         frm.find("input.custom-url").val("");
         frm.find("input.custom-title").val("");

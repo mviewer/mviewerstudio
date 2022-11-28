@@ -34,6 +34,7 @@
     color: var(--info);
 }
 
+.layer-move,
 .theme-move {
 	cursor: move;
 	cursor: -webkit-grabbing;
@@ -65,6 +66,27 @@
     border-color: rgba(0, 0, 0, 0.125);
 }
 
+/* Paramétrage de la thématique sélectionnée */ 
+
+.layers-list-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.layer-options-btn .btn {
+    margin: 0 5px;
+}
+
+.selected-icon {
+	margin: .2em .5em;
+	padding: 0.1em .5em;
+	border: 1px solid #337ab7;
+	background-color: #d9edf7;
+	color: #337ab7;
+}
+
+
 /* Modal iconPicker */
 
 .icon-picker-list a:hover, .icon-picker-list a.active {
@@ -76,85 +98,8 @@
 	margin-right: 20px;
 }
 
+/* Inconnu */
 
-/* Thème de l'application */
-
-
-#opt-style option {
-	color: #FFFFFF;
-}
-
-.alizarin {
-	background-color: #E64B3B;
-}
-
-.blue {
-	background-color: #F6F7F8;
-}
-
-.default {
-	background-color: #34495D;
-}
-
-.nephritis {
-	background-color: #26AE60;
-}
-
-.ripe_lemon {
-	background-color: #F6CA17;
-}
-
-.amethyst {
-	background-color: #9A59B6;
-}
-
-.carrot {
-	background-color: #E67E21;
-}
-
-.green {
-	background-color: #70BA50;
-}
-
-.peter_river {
-	background-color: #3497DB;
-}
-
-.black {
-	background-color: #000000;
-}
-
-.chambray {
-	background-color: #3A529A;
-}
-
-.green_sea {
-	background-color: #1ABC9C;
-}
-
-.pink {
-	background-color: #F62359;
-}
-
-.wet_asphalt {
-	background-color: #34495D;
-}
-
-.row.fld.selected {
-	background-color: #9E9E9E;
-}
-
-#map {
-	height: 25em;
-}
-
-.selected-icon {
-	margin: .2em .5em;
-	padding: 0.1em .5em;
-	border: 1px solid #337ab7;
-	background-color: #d9edf7;
-	color: #337ab7;
-}
 
 div#map_filter {
 	height: 300px !important;
@@ -224,12 +169,32 @@ select#opt-style {
 }
 
 
-/* Import des thématiques */
+/* Modal - Import des thématiques */
 
 #importedThemes .list-group-item:hover {
     background-color: var(--light);
 }
 
+/* Modal - Ajout d'une couche */
+
+#mod-layerNew h6 {
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.ogc-results .list-group-item {
+    margin: 5px 0px;
+    border-radius: 14px;
+}
+
+.ogc-results .list-group-item:hover {
+    background-color: var(--light);
+}
+
+.ogc-results .list-group-item .custom-checkbox {
+    display: flex;
+    align-items: center;
+}
 
 
 /**
@@ -265,6 +230,10 @@ a {
 
 .noborder {
 	border: none;
+}
+
+.noborderradius {
+	border-radius: 0!important;
 }
 
 .strong {
@@ -717,6 +686,77 @@ button i {
 }
 #backgroundlayers-config .bl:first-child {
     border-top: none;
+}
+
+/* Thème de l'application */
+
+
+#opt-style option {
+	color: #FFFFFF;
+}
+
+.alizarin {
+	background-color: #E64B3B;
+}
+
+.blue {
+	background-color: #F6F7F8;
+}
+
+.default {
+	background-color: #34495D;
+}
+
+.nephritis {
+	background-color: #26AE60;
+}
+
+.ripe_lemon {
+	background-color: #F6CA17;
+}
+
+.amethyst {
+	background-color: #9A59B6;
+}
+
+.carrot {
+	background-color: #E67E21;
+}
+
+.green {
+	background-color: #70BA50;
+}
+
+.peter_river {
+	background-color: #3497DB;
+}
+
+.black {
+	background-color: #000000;
+}
+
+.chambray {
+	background-color: #3A529A;
+}
+
+.green_sea {
+	background-color: #1ABC9C;
+}
+
+.pink {
+	background-color: #F62359;
+}
+
+.wet_asphalt {
+	background-color: #34495D;
+}
+
+.row.fld.selected {
+	background-color: #9E9E9E;
+}
+
+#map {
+	height: 25em;
 }
 
 

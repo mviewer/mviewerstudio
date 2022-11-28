@@ -1227,57 +1227,59 @@
     </div>
 
     <!-- Modal new Layer-->
-    <div class="modal fade" id="mod-layerNew" role="dialog">
+    <div class="modal fade" id="mod-layerNew" role="dialog" tabindex="-1" aria-labelledby="mod-layerNew" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title" i18n="modal.layer.new.searchdata">Rechercher des données</h4>
+                    <h5 class="modal-title" i18n="modal.layer.new.searchdata">Ajouter une couche</h5>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 </div>
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-md-12">
-                            <div class="input-group">
-                                <input type="text" id="input-ogc-filter" class="form-control" aria-label="..."
-                                       placeholder="Rechercher..." i18n="modal.layer.new.searchdata.ph">
-                                <div class="input-group-btn">
-                                    <button id="providers_dropdown" type="button" class="btn btn-warning dropdown-toggle"
-                                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" i18n="modal.layer.new.provider">
-                                        Fournisseurs de données<span class="caret"/></button>
-                                    <ul class="dropdown-menu dropdown-menu-right" id="providers_list">
-                                    </ul>
-                                    <button id="provider_search_btn" type="button" class="btn btn-primary" disabled="enabled" onclick="mv.search()"><span class="glyphicon glyphicon-search"/>
-                                    </button>
-                                </div><!-- /btn-group -->
-                            </div><!-- /input-group -->
-                        </div><!-- /.col-md-12 -->
-                    </div><!-- /.row -->
-                    <div class="row text-center text-warning" style="padding: 1rem;" id="search-message" i18n="modal.layer.new.provider.noneselected">
-                        Aucun fournisseur sélectionné. Veuillez en choisir un.
+                            <h6>Rechercher une données</h6>
+                            <div class="input-group my-3">
+                                <input type="text" id="input-ogc-filter" class="form-control" aria-label="..." placeholder="Rechercher..." i18n="modal.layer.new.searchdata.ph">
+                                <div class="input-group-append">
+                                    <button id="providers_dropdown" class="btn btn-outline-info dropdown-toggle noborderradius" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" i18n="modal.layer.new.provider">Catalogue de données</button>   
+                                    <ul class="dropdown-menu dropdown-menu-end" id="providers_list"></ul>                     
+                                    <button class="btn btn-info" id="provider_search_btn" type="button" disabled="enabled" onclick="mv.search()"><i class="bi bi-search"></i></button>
+                                    
+                                </div> 
+                            </div>
+                        </div>
+                    </div>  
+                    <div class="row" style="padding: 1rem;" id="search-message" i18n="modal.layer.new.provider.noneselected">
+                        Veuillez sélectionner un catalogue de données
                     </div>
                     <div class="row ogc-results" id="csw-results" style="display: none;"></div>
                     <div class="row ogc-results" id="wms-results" style="display: none;"></div>
                     <div class="row ogc-results" id="wfs-results" style="display: none;"></div>
-                </div>
-                <div class="modal-footer">
-                    <div class="pull-left">
-                        <div class="form form-inline">
-                            <div class="form-group">
-                                <input class="form-control custom-url" type="text"  i18n="modal.layer.new.provider.ph"
-                                       placeholder="URL du fournisseur..." oninput="updateAddProviderButtonState(this);"> </input>
-                                <select class="form-control">
-                                    <option value="csw" i18n="modal.layer.new.provider.csw">CSW</option>
-                                    <option value="wms" i18n="modal.layer.new.provider.wms">WMS</option>
-                                </select>
-                                <input class="form-control custom-title" type="text" placeholder="Nom..." oninput="updateAddProviderButtonState(this);"> </input>
-                                <button id="add_provider_btn" type="button" class="btn btn-primary" disabled onclick="addNewProvider(this);" i18n="modal.layer.new.provider.add">
-                                    Ajouter un fournisseur
-                                </button>
+                    
+                    <div class="advanced" style="display:none;">   
+                        <hr>                    
+                        <div class="row">                             
+                            <div class="col-md-12">
+                                <h6>Ajouter un catalogue de données</h6>
+                                <div class="input-group my-3" id="addCatalogData">
+                                    <input type="text" class="form-control custom-title" aria-label="..." placeholder="Nom" oninput="updateAddProviderButtonState(this);">
+                                    <input type="text" class="form-control custom-url" aria-label="..." i18n="modal.layer.new.provider.ph" placeholder="URL du fournisseur" oninput="updateAddProviderButtonState(this);" >
+                                    <select class="form-control">
+                                        <option value="csw" i18n="modal.layer.new.provider.csw">CSW</option>
+                                        <option value="wms" i18n="modal.layer.new.provider.wms">WMS</option>
+                                      </select>
+                                    <div class="input-group-append">                    
+                                        <button class="btn btn-info" type="button" id="add_provider_btn" disabled onclick="addNewProvider(this);"><i class="bi bi-plus-lg"></i> Ajouter</button> 
+                                    </div> 
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <button type="button" class="btn btn-success" onclick="mv.getConfLayers();" i18n="select">Sélectionner</button>
-                    <button type="button" class="btn btn-default" data-dismiss="modal" i18n="close">Fermer</button>
+                         
+                </div>
+                <div class="modal-footer">                    
+                    <button type="button" class="btn btn-primary" onclick="mv.getConfLayers();" i18n="select">Sélectionner</button>
+                    <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal" i18n="close">Fermer</button>
                 </div>
             </div>
         </div>

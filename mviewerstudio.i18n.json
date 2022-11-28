@@ -152,7 +152,7 @@
         "modal.features.select" : "Sélection de données",
         "modal.features.values" : "Valeurs",
         "modal.themes.select" : "Sélection de Thématiques",
-        "modal.layer.new.searchdata" : "Rechercher des données",
+        "modal.layer.new.searchdata" : "Ajouter une couche de données",
         "modal.layer.new.searchdata.ph" : "Rechercher...",
         "modal.layer.new.provider" : "Fournisseurs de données",
         "modal.layer.new.provider.noneselected" : "Aucun fournisseur sélectionné. Veuillez en choisir un.",
