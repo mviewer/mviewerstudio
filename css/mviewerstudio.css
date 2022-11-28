@@ -1,18 +1,45 @@
-body {
-	width: 100%;
-	height: 100%;
-}
 
-.glyphicon-move {
-	cursor: move;
-	cursor: -webkit-grabbing;
-	top: 0.15em;
-	padding-right: 0.5em;
-}
+
+
 
 .ghost {
 	opacity: 1;
 	background: #337ab7;
+}
+/* 
+-- THEMATIQUES & DONNEES 
+*/
+
+/* Panneaux des thématiques */
+
+.themes-list-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.theme-options-btn .btn {
+    margin: 0 5px;
+}
+
+.theme-name {
+    font-weight: 500;
+    margin-right: 10px;
+}
+
+.theme-infos-layer {
+    background-color: #934ae430;
+    padding: 4px 9px;
+    border-radius: 10px;
+    color: var(--info);
+}
+
+.theme-move {
+	cursor: move;
+	cursor: -webkit-grabbing;
+	float: right;
+	padding-right: 0.2em;
+	padding-left: 0.2em;
 }
 
 .layer-remove,
@@ -20,8 +47,6 @@ body {
 	float: right;
 	padding-right: 0.2em;
 	padding-left: 0.2em;
-	color: #000000;
-	font-size: 1.2em;
 	cursor: pointer;
 }
 
@@ -30,15 +55,24 @@ body {
 	float: right;
 	padding-right: 0.2em;
 	padding-left: 0.2em;
-	color: #000000;
 	cursor: pointer;
-	font-size: 1.2em;
+}
+
+#themes-list .list-group-item.active,
+#themeLayers .list-group-item.active {
+	color: #4e4e4e;
+    background-color: var(--light);
+    border-color: rgba(0, 0, 0, 0.125);
 }
 
 .btn-layer-new {
 	float: right;
 	margin-right: 20px;
 }
+
+
+/* Thème de l'application */
+
 
 #opt-style option {
 	color: #FFFFFF;
@@ -183,29 +217,13 @@ select#opt-style {
 	margin-left: -30px !important;
 }
 
-#themes-list .list-group-item.active,
-#themeLayers .list-group-item.active {
-	color: #31708f;
-	background-color: #d9edf7;
-	border-color: #bce8f1;
+
+/* Import des thématiques */
+
+#importedThemes .list-group-item:hover {
+    background-color: var(--light);
 }
 
-.themes-list-item .btn-group,
-.layers-list-item .btn-group {
-	margin-top: -3px;
-	margin-right: -8px;
-}
-
-.themes-list-item .label-info {
-	margin-right: 1em;
-	margin-left: 0.5em;
-	font-size: 100%;
-	float: right;
-}
-
-.tab-content .tab-pane {
-	margin-top: 1em;
-}
 
 
 /**
@@ -227,6 +245,8 @@ select#opt-style {
 
 body {
 	font-family: 'Poppins', sans-serif;
+	width: 100%;
+	height: 100%;
 }
 
 /*

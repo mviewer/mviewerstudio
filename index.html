@@ -443,41 +443,42 @@
                         <!-- /.Application -->
                         <!-- Thématiques & données -->
                         <div class="tab-pane container fade" id="themesdata">
-                            <h1><i class="ri-stack-line"></i> Thématiques & données</h1>
-                            <div class="well">
-                                <h4 i18n="tabs.data.help_title">Sélection, paramétrage et organisation des données</h4>
-                                <p i18n="tabs.data.help_text">Dans cette section, créer une ou plusieurs thématiques que vous peuplerez avec des données
-                                    provenant de différentes plateformes. Il également est possible d'importer des thématiques externes</p>
-                            </div>
-                    
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <!-- List with handle -->
-                                    <div class="panel panel-default">
-                                        <div class="panel-heading" i18n="tabs.data.themespanel.title">Panneau des thématiques</div>
-                                        <div class="panel-body">
+                            <h1><i class="ri-stack-line"></i> Thématiques & données</h1>   
+                            <div class="row mt-5">
+                                <div class="col-md-12">
+                                    <ul class="list-group">
+                                        <li class="list-group-item">
+                                            <span class="title-accordion" i18n="tabs.data.themespanel.title">Menu des thématiques</span><br>
+                                            <span class="subtitle-accordion">Créer, importer et gérer vos thématiques et données</span>
+                                        </li>
+                                        <li class="list-group-item">
+                                            <!-- List with handle -->
                                             <div id="themes-list" class="list-group"></div>
-                                            <div class="btn-group">
-                                                <button id="btn-addTheme" title="Créer une nouvelle thématique" class="btn btn-primary"
+                                            <div class="my-3 text-right">
+                                                <button id="btn-addTheme" title="Créer une nouvelle thématique" class="btn btn-info"
                                                         onclick="addTheme('Nouvelle thématique', true, createId('theme'));">
-                                                    <span class="glyphicon glyphicon-plus" aria-hidden="true"> </span>
+                                                    <span><i class="bi bi-plus-lg"></i> </span>
                                                     <span i18n="tabs.data.themespanel.create">Créer</span>
                                                 </button>
-                                                <button id="btn-importTheme" title="Importer une thématique depuis un autre mviewer" class="btn btn-success" onclick="$('#mod-themesview input').prop('checked', false);" data-toggle="modal" data-target="#mod-themesview">
-                                                    <span class="glyphicon glyphicon-plus" aria-hidden="true"> </span>
+                                                <button id="btn-importTheme" title="Importer une thématique depuis un autre mviewer" class="btn btn-outline-info" onclick="$('#mod-themesview input').prop('checked', false);" data-bs-toggle="modal" data-bs-target="#mod-themesview">
+                                                    <span><i class="bi bi-download"></i> </span>
                                                     <span i18n="tabs.data.themespanel.import">Importer</span>
                                                 </button>
+                                            </div>                                            
+                                        </li>
+                                        <li class="list-group-item list-flex">
+                                            <span i18n="tabs.data.themespanel.options">Réduire le panneau des thématiques au démarrage</span>                                          
+                                            <div class="custom-control custom-switch">
+                                                <input type="checkbox" class="custom-control-input" name="checkboxes" id="opt-mini">
+                                                <label class="custom-control-label" for="opt-mini"></label>
                                             </div>
-                                        </div>
-                                        <div class="panel-footer">
-                                            <div class="checkbox">
-                                                <label for="opt-mini">
-                                                    <input type="checkbox" name="checkboxes" id="opt-mini">
-                                                    <span i18n="tabs.data.themespanel.options">Option d'affichage : réduire le panneau des thématiques au démarrage</span>
-                                                </label>
-                                            </div>
-                                        </div>
-                                    </div>
+                                        </li>
+                                      </ul>
+                                </div>
+                            </div>                    
+                    
+                            <div class="row my-3">
+                                <div class="col-md-6">                                    
                                 </div>
                                 <div class="col-md-6">
                                     <div id="panel-theme" class="panel panel-info" style="display: none;">
@@ -781,7 +782,7 @@
     </div>
 
     <!-- Modal layer options-->
-    <div class="modal fade" id="mod-layerOptions" role="dialog">
+    <div class="modal fade" id="mod-layerOptions" role="dialog" tabindex="-1" aria-labelledby="mod-layerOptions" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -1162,7 +1163,7 @@
     </div>
 
     <!-- Modal codeView-->
-    <div class="modal fade" id="mod-codeview" role="dialog">
+    <div class="modal fade" id="mod-codeview" role="dialog" tabindex="-1" aria-labelledby="mod-codeview" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
@@ -1182,7 +1183,7 @@
     </div>
 
     <!-- Modal featuresView-->
-    <div class="modal fade" id="mod-featuresview" role="dialog">
+    <div class="modal fade" id="mod-featuresview" role="dialog" tabindex="-1" aria-labelledby="mod-featuresview" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -1202,23 +1203,24 @@
     </div>
 
     <!-- Modal Themes import-->
-    <div class="modal fade" id="mod-themesview" role="dialog">
+    <div class="modal fade" id="mod-themesview" role="dialog" tabindex="-1" aria-labelledby="mod-themesview" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title" i18n="modal.themes.select">Sélection de Thématiques</h4>
+                    <h5 class="modal-title">Importer une thématique externe</h5>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 </div>
                 <div class="modal-body">
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-12">
                             <div id="importedThemes" class="list-group">
                             </div>
                         </div>
                     </div><!-- /.row -->
                 </div>
-                  <div class="modal-footer">
-                    <button type="button" class="btn btn-success" data-dismiss="modal" onclick="importThemes()" i18n="import">Importer</button>
+                  <div class="modal-footer">                    
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="importThemes()" i18n="import">Importer</button>
+                    <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal">Fermer</button>
                 </div>
             </div>
         </div>
@@ -1281,7 +1283,7 @@
         </div>
     </div>
     <!-- Modal icon picker-->
-    <div id="iconPicker" class="modal fade">
+    <div id="iconPicker" class="modal fade" role="dialog" tabindex="-1" aria-labelledby="iconPicker" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">

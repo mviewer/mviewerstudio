@@ -71,10 +71,10 @@ $(document).ready(function(){
 								var themeid = mv.id;
 								if (url && themeid) {
 									html.push(['<div class="checkbox list-group-item">',
-										'<label for="import-theme-'+themeid+id+'">',
-											'<input type="checkbox" data-url="'+url+'" data-theme-label="'+mv.title+'" data-theme-id="'+themeid+'" name="checkboxes" id="import-theme-'+themeid+id+'">',
-											mv.title,
-										'</label></div>'].join(""));
+										'<div class="custom-control custom-checkbox">',
+											'<input type="checkbox" class="custom-control-input" data-url="'+url+'" data-theme-label="'+mv.title+'" data-theme-id="'+themeid+'" name="checkboxes" id="import-theme-'+themeid+id+'">',
+                                            '<label class="custom-control-label" for="import-theme-'+themeid+id+'">'+mv.title+'</label>',
+										'</div></div>'].join(""));
 								}
 							}
 						});
@@ -289,7 +289,7 @@ var deleteLayerItem = function (btn) {
 };
 
 var sortableThemeList = Sortable.create(document.getElementById('themes-list'), {
-    handle: '.glyphicon-move',
+    handle: '.theme-move',
     animation: 150,
     ghostClass: 'ghost',
     onEnd: function (evt) {
@@ -379,22 +379,26 @@ var addTheme = function (title, collapsed, themeid, icon, url) {
     if (url) {
         //external theme
          $("#themes-list").append([
-        '<div class="list-group-item list-group-item-info themes-list-item" data-theme-url="'+url+'" data-theme="'+title+'" data-themeid="'+themeid+'" data-theme-collapsed="'+collapsed+'" data-theme-icon="'+icon+'">',
-            '<span class="glyphicon glyphicon-move" aria-hidden="true"></span>',
-            '<div class="pull-right btn-group" role="group">',
-                '<button class="btn btn-sm btn-warning" onclick="deleteThemeItem(this);" ><span class="theme-remove glyphicon glyphicon-remove" title="Supprimer"></span></button>',
+        '<div class="list-group-item list-group-item themes-list-item" data-theme-url="'+url+'" data-theme="'+title+'" data-themeid="'+themeid+'" data-theme-collapsed="'+collapsed+'" data-theme-icon="'+icon+'">',
+            '<div class="theme-infos">',
+                '<span class="theme-name">'+title+'</span><span class="theme-infos-layer">Ext.</span>',
             '</div>',
-            '<span class="theme-name">'+title+'</span><span class="label label-success">Ext.</span>',
+            '<div class="theme-options-btn">',
+                '<button class="btn btn-sm btn-secondary" ><span class="theme-move" title="Déplacer"><i class="bi bi-arrows-move"></i></span></button>',
+                '<button class="btn btn-sm btn-secondary" onclick="deleteThemeItem(this);" ><span class="theme-remove" title="Supprimer"><i class="bi bi-x-circle"></i></span></button>',
+            '</div>',
         '</div>'].join(""));
     } else {
          $("#themes-list").append([
-        '<div class="list-group-item themes-list-item" data-theme="'+title+'" data-themeid="'+themeid+'" data-theme-collapsed="'+collapsed+'" data-theme-icon="'+icon+'">',
-            '<span class="glyphicon glyphicon-move" aria-hidden="true"></span>',
-            '<div class="pull-right btn-group" role="group">',
-                '<button class="btn btn-sm btn-warning" onclick="editTheme(this);"><span class="theme-edit glyphicon glyphicon-pencil" title="Editer ce thème"></span></button>',
-                '<button class="btn btn-sm btn-warning" onclick="deleteThemeItem(this);" ><span class="theme-remove glyphicon glyphicon-remove" title="Supprimer"></span></button>',
+        '<div class="list-group-item themes-list-item" data-theme="'+title+'" data-themeid="'+themeid+'" data-theme-collapsed="'+collapsed+'" data-theme-icon="'+icon+'">',   
+            '<div class="theme-infos">',
+                '<span class="theme-name">'+title+'</span><span class="theme-infos-layer">0</span>',
             '</div>',
-            '<span class="theme-name">'+title+'</span><span class="label label-info">0</span>',
+            '<div class="theme-options-btn">',
+                '<button class="btn btn-sm btn-secondary" ><span class="theme-move" title="Déplacer"><i class="bi bi-arrows-move"></i></span></button>',
+                '<button class="btn btn-sm btn-secondary" onclick="deleteThemeItem(this);" ><span class="theme-remove" title="Supprimer"><i class="bi bi-x-circle"></i></span></button>',
+                '<button class="btn btn-sm btn-info" onclick="editTheme(this);"><span class="theme-edit" title="Editer ce thème"><i class="bi bi-gear-fill"></i></span></button>',                
+            '</div>',
         '</div>'].join(""));
     }
 
@@ -449,7 +453,7 @@ var saveTheme = function () {
     theme.attr("data-theme-icon", icon);
     theme.find(".theme-name").text(title);
     var nb_layers = $("#themeLayers .list-group-item").length;
-    theme.find(".label").text(nb_layers);
+    theme.find(".theme-infos-layer").text(nb_layers);
     //deactivate theme edition
     $("#themes-list .list-group-item").removeClass("active");
     $("#panel-theme").hide();
