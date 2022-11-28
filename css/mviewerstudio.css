@@ -65,6 +65,12 @@
     border-color: rgba(0, 0, 0, 0.125);
 }
 
+/* Modal iconPicker */
+
+.icon-picker-list a:hover, .icon-picker-list a.active {
+    background-color: var(--info)!important;
+}
+
 .btn-layer-new {
 	float: right;
 	margin-right: 20px;
