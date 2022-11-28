@@ -87,16 +87,7 @@
 }
 
 
-/* Modal iconPicker */
 
-.icon-picker-list a:hover, .icon-picker-list a.active {
-    background-color: var(--info)!important;
-}
-
-.btn-layer-new {
-	float: right;
-	margin-right: 20px;
-}
 
 /* Inconnu */
 
@@ -194,6 +185,21 @@ select#opt-style {
 .ogc-results .list-group-item .custom-checkbox {
     display: flex;
     align-items: center;
+}
+
+/* Modal iconPicker */
+
+.icon-picker-list a:hover, .icon-picker-list a.active {
+    background-color: var(--info)!important;
+}
+
+.btn-layer-new {
+	float: right;
+	margin-right: 20px;
+}
+
+.icon-picker-list li {
+    flex: 0 0 10%!important;
 }
 
 
