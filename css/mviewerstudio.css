@@ -92,9 +92,7 @@
 /* Inconnu */
 
 
-div#map_filter {
-	height: 300px !important;
-}
+
 
 #providers_dropdown {
 	width: 25em;
@@ -105,36 +103,13 @@ div#map_filter {
 	margin-bottom: 0;
 }
 
-.bl img {
-	max-height: 80px;
-}
 
-.bl .thumbnail {
-	background-color: #dcdada;
-}
-
-.bl.visible .thumbnail {
-	background-color: #fff;
-}
-
-.bl .caption {
-	text-align: center;
-}
 
 select#opt-style {
 	color: #fff;
 }
 
-#frm-lis-styles .caption {
-	font-size: xx-small;
-}
 
-#frm-lis-styles input[type="text"] {
-	width: 100%;
-	background: grey;
-	color: white;
-	font-size: x-small;
-}
 
 #query-parameters {
 	display: none;
@@ -153,10 +128,6 @@ select#opt-style {
 
 #fuse_options {
 	display: none;
-}
-
-.checkbox.lg input[type=checkbox] {
-	margin-left: -30px !important;
 }
 
 
@@ -201,6 +172,106 @@ select#opt-style {
 .icon-picker-list li {
     flex: 0 0 10%!important;
 }
+
+/*  Modal LayerOptions */
+
+#layer_sections .title-accordion {
+    font-size: 1rem;
+}
+
+#frm-lis-styles {
+    display: flex;
+    align-items: stretch;
+}
+
+.layer-style {
+    margin-bottom: 1em;
+}
+
+.layer-style-block {
+    border: 1px solid #D1D1D1;
+    border-radius: 0.6rem;
+    padding: 15px;height: 100%;
+}
+
+div#map_filter {
+	height: 300px !important;
+}
+
+
+#frm-lis-styles input[type="text"] {
+	width: 100%;
+    border: 1px solid #D1D1D1;
+    border-radius: 0.4rem;
+    color: grey;
+    padding: 2px 5px;
+}
+
+#frm-lis-styles input[type="text"]:focus-visible {
+    outline: none;
+    background-color: #d1d1d12b;
+}
+
+.layer-style-block img {
+    width: fit-content;
+}
+
+.layer-style-block label:hover {
+    color: var(--info);
+}
+
+/* Interrogation */
+
+.list-group-item.fld {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-direction: row;
+    border-left: none;
+    border-right: none;
+}
+
+.list-group-item.fld:first-child {
+    border-top: none;
+}
+
+.list-group-item.fld:last-child {
+    border-bottom: none;
+}
+
+.list-group-item.fld i {
+    cursor: grab;
+}
+
+.list-group-item.fld.selected {
+    background-color: var(--light);
+}
+
+.list-group-item.fld.selected .fld-name {
+    font-weight: 600;
+}
+
+/* -- */
+
+
+/* Modal Configuration XML */
+
+pre.windows-code-XML {
+    background-color: #060024;
+    color: white;
+    padding: 1rem 0.5rem;
+}
+
+/* Scrollbar */
+pre::-webkit-scrollbar {
+  width: 8px;
+    height:10px
+}
+pre::-webkit-scrollbar-thumb {
+  background: #767987;
+  border-radius: 8px;
+}
+
 
 
 /**
@@ -257,6 +328,38 @@ a {
 
 .list-group-item {
 	background-color: #ffffff00;
+}
+
+.modal{
+  overflow-y: auto !important;
+}
+
+/* Alert */
+
+.alert-info {
+    display: flex;
+    align-items: center;
+    line-height: 1.2;
+}
+
+.alert-info i {
+    margin-right: 1em;
+}
+
+/* Tagsinput */
+
+#mod-layerOptions .bootstrap-tagsinput {
+    width: 100%;
+    box-shadow: none;
+    border-radius: 0.6em;
+    padding: 0.5rem 0.5rem;
+}
+
+.bootstrap-tagsinput .tag {
+    background-color: var(--info)!important;
+    color: white;
+    padding: 2px 6px!important;
+    border-radius: 7px!important;
 }
 
 /* Button */
@@ -476,16 +579,16 @@ button i {
 
 /* Nav in modal */
 
-.modal-body .nav .nav-item {
-    padding: 0px 2em 0 0;
+.modal-body .nav-pills .nav-item {
+    padding: 0px 1.5em 0 0;
 }
 
-.modal-body .nav .nav-link {
+.modal-body .nav-pills .nav-link {
     padding: 8px 0px;
 }
 
 
-.modal-body .nav .nav-link.active {
+.modal-body .nav-pills .nav-link.active {
     color: var(--info);
     background: none;
     font-weight:500;

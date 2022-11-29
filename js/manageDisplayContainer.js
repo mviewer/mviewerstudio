@@ -22,3 +22,11 @@ activeSearch.addEventListener('change', (event) => {
     document.getElementById('AppSearchBlock').style.display = "none";
   }    
 })
+
+
+// Manage display nav-tab for LayerOptions modal 
+
+$('#mod-layerOptions').on('hidden.bs.modal', function() { 
+  // reset multi-tab modal to initial state 
+  $(this).find('.nav-item a:first').tab('show');   
+}) ;

@@ -315,7 +315,7 @@ sortLayers = function (fromIndex, toIndex) {
 };
 
 var sortableAttributeList = Sortable.create(document.getElementById('frm-lis-fields'), {
-    handle: '.glyphicon-move',
+    handle: '.bi-arrows-move',
     animation: 150,
     ghostClass: 'ghost',
 });
@@ -909,7 +909,7 @@ var _elementTranslate = function (element) {
 };
 
 $('#mod-featuresview').on('hidden.bs.modal', function () {
-    var option = $(this).attr("data-target");
+    var option = $(this).attr("data-bs-target");
     var target = "";
     if (option === 'source') { target = "#source_fields_tags"; }
     if (option === 'control') { target = "#control_fields_tags"; }
@@ -918,7 +918,7 @@ $('#mod-featuresview').on('hidden.bs.modal', function () {
     });
 });
 
-$('a[href="#geo_filter"]').on('shown.bs.tab', function (e) {
+$('a[data-bs-target="#geo_filter"]').on('shown.bs.tab', function (e) {
     addgeoFilter();
 });
 

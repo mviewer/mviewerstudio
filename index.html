@@ -539,8 +539,7 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            
+                            </div>                            
                             <div class="mt-4">
                                 <a class="btn btn-outline-warning btnPrev"><i class="ri-arrow-left-line"></i> Précédent</a>
                                 <a class="btn btn-warning btnNext">Suivant <i class="ri-arrow-right-line"></i> </a>
@@ -783,304 +782,403 @@
 
     <!-- Modal layer options-->
     <div class="modal fade" id="mod-layerOptions" role="dialog" tabindex="-1" aria-labelledby="mod-layerOptions" aria-hidden="true">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title" i18n="modal.layer.edit">Edition de couche</h4>
+                    <h5 class="modal-title" i18n="modal.layer.edit">Paramètres de la couche</h5>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 </div>
                 <div class="modal-body">
-                    <ul class="nav nav-tabs" role="tablist" id="layer_sections_menu">
-                        <li role="presentation" class="active"><a href="#layer_conf1" role="tab" data-toggle="tab" i18n="modal.layer.edit.base">Base</a>
+                    <ul class="nav nav-pills mb-3" id="layer_sections_menu" role="tablist">
+                        <li class="nav-item" role="presentation">
+                          <a class="nav-link active" data-bs-toggle="pill" data-bs-target="#layer_conf1" type="button" role="tab" aria-controls="pills-layer_conf1" aria-selected="true" i18n="modal.layer.edit.base">
+                              Général
+                          </a>
                         </li>
-                        <li role="presentation"><a href="#layer_conf2" role="tab" data-toggle="tab" i18n="modal.layer.edit.sheet">Fiche</a></li>
-                        <li role="presentation"><a href="#layer_conf3" role="tab" data-toggle="tab" i18n="modal.layer.edit.display">Affichage</a>
+                        <li class="nav-item" role="presentation">
+                          <a class="nav-link" data-bs-toggle="pill" data-bs-target="#layer_conf3" type="button" role="tab" aria-controls="pills-layer_conf3" aria-selected="false" i18n="modal.layer.edit.display">
+                            Options avancées
+                          </a>
                         </li>
-                        <li role="presentation"><a href="#layer_conf4" role="tab" data-toggle="tab" i18n="modal.layer.edit.filter">Filtre</a></li>
-                        <li role="presentation"><a href="#layer_conf5" role="tab" data-toggle="tab" i18n="modal.layer.edit.choices">Liste de
-                            choix</a></li>
-                        <li role="presentation"><a href="#layer_conf6" role="tab" data-toggle="tab" i18n="modal.layer.edit.search">Recherche</a>
+                        <li class="nav-item" role="presentation">
+                          <a class="nav-link" data-bs-toggle="pill" data-bs-target="#layer_conf2" type="button" role="tab" aria-controls="pills-layer_conf2" aria-selected="false" i18n="modal.layer.edit.sheet">
+                            Interrogation
+                          </a>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                          <a class="nav-link" data-bs-toggle="pill" data-bs-target="#layer_conf4" type="button" role="tab" aria-controls="pills-layer_conf4" aria-selected="false" i18n="modal.layer.edit.filter">
+                            Filtre statique
+                          </a>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                          <a class="nav-link" data-bs-toggle="pill" data-bs-target="#layer_conf5" type="button" role="tab" aria-controls="pills-layer_conf5" aria-selected="false" i18n="modal.layer.edit.choices">
+                            Filtre dynamique
+                          </a>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                          <a class="nav-link" data-bs-toggle="pill" data-bs-target="#layer_conf6" type="button" role="tab" aria-controls="pills-layer_conf6" aria-selected="false" i18n="modal.layer.edit.search">
+                            Recherche
+                          </a>
                         </li>
                     </ul>
-                    <div class="tab-content" id="layer_sections">
-                        <div role="tabpanel" class="tab-pane active" id="layer_conf1">
-                            <form>
+                    <div class="tab-content mt-3" id="layer_sections">
+                        <div role="tabpanel" class="tab-pane fade show active" id="layer_conf1">
+                            <div class="my-2">
                                 <div class="form-group">
                                     <label for="frm-layer-title" i18n="modal.layer.name">Nom</label>
                                     <input type="text" class="form-control" id="frm-layer-title"
                                            placeholder="nom de la couche" i18n="modal.layer.name.ph">
-                                </div>
-                                <!--<div class="form-group">
-                                    <label for="frm-type">Type</label>
-                                    <input type="text" class="form-control" id="frm-type" placeholder="type">
-                                </div>-->
-                                <div class="form-group">
-                                    <label class="control-label" for="frm-type" i18n="modal.layer.type">Type</label>
-                                    <select id="frm-type" name="type" class="form-control"
-                                            onchange="mv.changeLayerType(this.value);">
-                                        <option value="wms" i18n="modal.layer.type.wms">WMS</option>
-                                        <option value="geojson" i18n="modal.layer.type.geojson" disabled>GeoJSON</option>
-                                        <option value="kml" i18n="modal.layer.type.kml" disabled>KML</option>
-                                        <option value="customlayer" i18n="modal.layer.type.custom" disabled>Customlayer</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label for="frm-layerid" i18n="modal.layer.id">id</label>
-                                    <input type="text" class="form-control" id="frm-layerid" placeholder="id">
-                                </div>
-                                <div class="form-group">
-                                    <label for="frm-url" i18n="modal.layer.url">url</label>
-                                    <input type="text" class="form-control checkedurl" id="frm-url"
-                                           placeholder="url">
                                 </div>
                                 <div class="form-group">
                                     <label for="frm-attribution" i18n="modal.layer.attr">Attributions</label>
                                     <input type="text" class="form-control" id="frm-attribution"
                                            placeholder="Attribution">
                                 </div>
-                                <div class="form-group">
-                                    <label for="frm-metadata" i18n="modal.layer.htmlmetadataurl">URL fiche de métadonnées (html)</label>
-                                    <input type="text" class="form-control checkedurl" id="frm-metadata"
-                                           placeholder="metadata">
+                                <div class="form-group" lang="en-US">
+                                    <label for="frm-opacity" i18n="modal.layer.opacity">Opacité</label>
+                                    <input type="number" class="form-control" id="frm-opacity"
+                                           placeholder="Opacité (0 à 1)" step="0.1" min="0.1" max="1.0"
+                                           value="1" i18n="modal.layer.display.ph.opacity">
                                 </div>
                                 <div class="form-group">
-                                    <label for="frm-metadata-csw" i18n="modal.layer.xmlmetadataurl">URL fiche de métadonnées (xml)</label>
-                                    <input type="text" class="form-control checkedurl" id="frm-metadata-csw"
-                                           placeholder="metadata-csw">
-                                </div>
-                                <div class="form-group">
-                                    <label class="control-label" for="frm-type" i18n="modal.layer.ac">Contraintes d'accès</label>
-                                    <select id="frm-secure" name="type" class="form-control">
-                                        <option value="public" i18n="modal.layer.ac.public">Accès public</option>
-                                        <option value="global" i18n="modal.layer.ac.auth.global">Accès soumis à authentification globale (CAS georchestra)</option>
-                                        <option value="layer" i18n="modal.layer.ac.auth.service">Accès soumis à authentification au niveau du service (Basic Authent)</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <div class="checkbox">
-                                        <label>
-                                            <input id="frm-useproxy" type="checkbox"><span i18n="modal.layer.proxy"> Utiliser le proxy du viewer (nécessaire si HTTPS non disponible pour la couche)</span>
-                                        </label>
+                                    <div class="custom-control custom-switch">
+                                        <input type="checkbox" class="custom-control-input" id="frm-visible">
+                                        <label class="custom-control-label" for="frm-visible" i18n="modal.layer.visibleonstart">Afficher la couche au démarrage de l'application</label>
                                     </div>
                                 </div>
-                            </form>
+                                <div class="mt-4">
+                                    <h6 i18n="modal.layer.styles">Style(s) de la couche disponible(s)</h6>
+                                    <div class="row mt-3" id="frm-lis-styles"></div>
+                                    <p><small>Si plusieurs styles sont sélectionnés, veuillez indiquer les libéllés des styles qui apparaîtront dans la liste déroulante.</small></p>
+                                </div>
+                                
+                            </div>
                         </div>
-                        <div role="tabpanel" class="tab-pane" id="layer_conf2">
+                        <div role="tabpanel" class="tab-pane fade" id="layer_conf2">                            
                             <form>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <div class="checkbox">
-                                                <label>
-                                                    <input id="frm-queryable" type="checkbox"><span i18n="modal.layer.queryable">interrogeable</span>
-                                                </label>
-                                            </div>
-                                        </div>
+                                <div class="form-group">
+                                    <div class="custom-control custom-switch mt-2">
+                                        <input type="checkbox" class="custom-control-input" id="frm-queryable">
+                                        <label class="custom-control-label" for="frm-queryable"><span i18n="modal.layer.queryable">Activer l'interrogation de la couche au click sur la carte</span></label>
                                     </div>
+                                </div>
+                                <div class="row">                                    
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label class="control-label" for="frm-infopanel" i18n="modal.layer.info.position">Position fiche
-                                                info</label>
+                                            <label class="control-label" for="frm-infopanel" i18n="modal.layer.info.position">Position de la fiche d'information</label>
                                             <select id="frm-infopanel" name="infoformat" class="form-control">
                                                 <option value="right-panel" i18n="modal.layer.info.right">Panneau de droite</option>
                                                 <option value="bottom-panel" i18n="modal.layer.info.down">Panneau du bas</option>
                                             </select>
                                         </div>
                                     </div>
+                                    <div class="form-group">
+                                        <label for="frm-featurecount" i18n="modal.layer.featurecount">Limitation du nombre de réponses</label>
+                                        <input type="number" class="form-control" id="frm-featurecount"
+                                               placeholder="Nombre max d'entités retournées" step="1" min="1"
+                                                i18n="modal.layer.featurecount.ph" max="50" value="5">
+                                    </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-md-6">
+                                    <div class="col-md-12">
                                         <div class="form-group">
                                             <label class="control-label" for="frm-infoformat" i18n="modal.layer.infoformat">Format de la fiche
                                                 d'information</label>
                                             <select id="frm-infoformat" name="infoformat" class="form-control"
                                                     onchange="mv.showHideQueryParameters(this.value);">
-                                                <option value="text/html" i18n="modal.layer.infoformat.html">standard</option>
-                                                <option value="application/vnd.ogc.gml" i18n="modal.layer.infoformat.gml">personnalisé</option>
+                                                <option value="text/html" i18n="modal.layer.infoformat.html">Standard</option>
+                                                <option value="application/vnd.ogc.gml" i18n="modal.layer.infoformat.gml">Personnalisé</option>
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="col-md-6">
+                                </div>
+                                <div id="query-parameters">       
+                                    <!--LayerTempl-->
+                                    <div class="accordion mt-2" id="accordionLayerTempl">
+                                        <div class="accordion-item">
+                                        <h2 class="accordion-header" >
+                                            <a class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseLayerTempl" aria-expanded="true" aria-controls="collapseLayerTempl">
+                                            <div>
+                                                <span class="title-accordion">Configurer la fiche d'information</span></br>
+                                                <span class="subtitle-accordion">Sélectionner les champs à afficher et leurs aspects</span>
+                                            </div>
+                                            </a>
+                                        </h2>
+                                        <div id="collapseLayerTempl" class="accordion-collapse collapse" aria-labelledby="accordionLayerTempl">
+                                            <div class="accordion-body p-0"> 
+                                                <ul class="list-group list-group-flush">
+                                                    <div id="frm-lis-fields"></div>                                                    
+                                                </ul>                                        
+                                            </div>
+                                        </div>
+                                        </div>                                
+                                    </div>  
+                                    <!--./LayerTempl-->                                 
+                                    <!--Mustache-->
+                                    <div class="accordion mt-2" id="accordionMustache">
+                                        <div class="accordion-item">
+                                        <h2 class="accordion-header" >
+                                            <a class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseMustache" aria-expanded="true" aria-controls="collapseMustache">
+                                            <div>
+                                                <span class="title-accordion">Utiliser un template externe</span>
+                                            </div>
+                                            </a>
+                                        </h2>
+                                        <div id="collapseMustache" class="accordion-collapse collapse" aria-labelledby="accordionMustache">
+                                            <div class="accordion-body"> 
+                                                <div class="form-group">                                                    
+                                                    <div class="custom-control custom-switch my-2">
+                                                        <input type="checkbox" class="custom-control-input" id="frm-template">
+                                                        <label class="custom-control-label" for="frm-template"><span i18n="modal.layer.query.usetemplate">Utiliser un template externe</span></label>
+                                                    </div>
+                                                    <div>
+                                                        <label for="frm-template-url" i18n="modal.layer.query.templateurl">Lien vers le template .mst</label>
+                                                        <input type="text" class="form-control checkedurl" id="frm-template-url" placeholder="https://montemplate.fr"/>
+                                                    </div>                                                    
+                                                </div>                                                                                                                            
+                                            </div>
+                                        </div>
+                                        </div>                                
+                                    </div>  
+                                    <!--./Mustache-->
+                                </div>
+                            </form>
+                        </div>
+
+                        <div role="tabpanel" class="tab-pane fade" id="layer_conf3">
+                            <!--Type de couche-->
+                            <div class="accordion mt-2" id="accordionOptionsType">
+                                <div class="accordion-item">
+                                  <h2 class="accordion-header" >
+                                    <a class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOptionsType" aria-expanded="true" aria-controls="collapseOptionsType">
+                                      <div>
+                                        <span class="title-accordion">Type de couche</span>
+                                      </div>
+                                    </a>
+                                  </h2>
+                                  <div id="collapseOptionsType" class="accordion-collapse collapse" aria-labelledby="accordionOptionsType">
+                                    <div class="accordion-body"> 
+                                        <div class="row">
+                                            <div class="col-md-6 form-group">
+                                                <label class="control-label" for="frm-type" i18n="modal.layer.type">Type</label>
+                                                <select id="frm-type" name="type" class="form-control"
+                                                        onchange="mv.changeLayerType(this.value);">
+                                                    <option value="wms" i18n="modal.layer.type.wms">WMS</option>
+                                                    <option value="geojson" i18n="modal.layer.type.geojson" disabled>GeoJSON</option>
+                                                    <option value="kml" i18n="modal.layer.type.kml" disabled>KML</option>
+                                                    <option value="customlayer" i18n="modal.layer.type.custom" disabled>Customlayer</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-6 form-group">
+                                                <label for="frm-layerid" i18n="modal.layer.id">id</label>
+                                                <input type="text" class="form-control" id="frm-layerid" placeholder="id">
+                                            </div>
+                                        </div>
                                         <div class="form-group">
-                                            <label for="frm-featurecount" i18n="modal.layer.featurecount">Limitation du nombre de réponses</label>
-                                            <input type="number" class="form-control" id="frm-featurecount"
-                                                   placeholder="Nombre max d'entités retournées" step="1" min="1"
-                                                    i18n="modal.layer.featurecount.ph" max="50" value="5">
+                                            <label for="frm-url" i18n="modal.layer.url">url</label>
+                                            <input type="text" class="form-control checkedurl" id="frm-url"placeholder="url">
+                                        </div>                                 
+                                    </div>
+                                  </div>
+                                </div>                                
+                            </div>  
+                            <!--./Type de couche-->
+                            <!--Métadonnées-->
+                            <div class="accordion mt-2" id="accordionMetadata">
+                                <div class="accordion-item">
+                                  <h2 class="accordion-header" >
+                                    <a class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseMetadata" aria-expanded="true" aria-controls="collapseMetadata">
+                                      <div>
+                                        <span class="title-accordion">Métadonnées</span>
+                                      </div>
+                                    </a>
+                                  </h2>
+                                  <div id="collapseMetadata" class="accordion-collapse collapse" aria-labelledby="accordionMetadata">
+                                    <div class="accordion-body"> 
+                                        <div class="form-group">
+                                            <label for="frm-metadata" i18n="modal.layer.htmlmetadataurl">URL fiche de métadonnées (html)</label>
+                                            <input type="text" class="form-control checkedurl" id="frm-metadata"
+                                                   placeholder="metadata">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="frm-metadata-csw" i18n="modal.layer.xmlmetadataurl">URL fiche de métadonnées (xml)</label>
+                                            <input type="text" class="form-control checkedurl" id="frm-metadata-csw"
+                                                   placeholder="metadata-csw">
+                                        </div>                                                                               
+                                    </div>
+                                  </div>
+                                </div>                                
+                            </div>  
+                            <!--./Métadonnées-->
+                            <!--Accès-->
+                            <div class="accordion mt-2" id="accordionAccessLayer">
+                                <div class="accordion-item">
+                                  <h2 class="accordion-header" >
+                                    <a class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseAccessLayer" aria-expanded="true" aria-controls="collapseAccessLayer">
+                                      <div>
+                                        <span class="title-accordion">Accès à la couche</span>
+                                      </div>
+                                    </a>
+                                  </h2>
+                                  <div id="collapseAccessLayer" class="accordion-collapse collapse" aria-labelledby="accordionAccessLayer">
+                                    <div class="accordion-body"> 
+                                        <div class="form-group">
+                                            <label class="control-label" for="frm-type" i18n="modal.layer.ac">Contraintes d'accès</label>
+                                            <select id="frm-secure" name="type" class="form-control">
+                                                <option value="public" i18n="modal.layer.ac.public">Accès public</option>
+                                                <option value="global" i18n="modal.layer.ac.auth.global">Accès soumis à authentification globale (CAS georchestra)</option>
+                                                <option value="layer" i18n="modal.layer.ac.auth.service">Accès soumis à authentification au niveau du service (Basic Authent)</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="custom-control custom-switch">
+                                                <input type="checkbox" class="custom-control-input" id="frm-useproxy">
+                                                <label class="custom-control-label" for="frm-useproxy" i18n="modal.layer.proxy">Utiliser le proxy du viewer (nécessaire si HTTPS non disponible pour la couche)</label>
+                                            </div>
+                                        </div>                                                                               
+                                    </div>
+                                  </div>
+                                </div>                                
+                            </div>  
+                            <!--./Accès-->
+                            <!--Affichage-->
+                            <div class="accordion mt-2" id="accordionDisplayLayer">
+                                <div class="accordion-item">
+                                  <h2 class="accordion-header" >
+                                    <a class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDisplayLayer" aria-expanded="true" aria-controls="collapseDisplayLayer">
+                                      <div>
+                                        <span class="title-accordion">Options d'affichage</span>
+                                      </div>
+                                    </a>
+                                  </h2>
+                                  <div id="collapseDisplayLayer" class="accordion-collapse collapse" aria-labelledby="accordionDisplayLayer">
+                                    <div class="accordion-body">                                         
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <label for="frm-scalemin" i18n="modal.layer.scale.min">Echelle mini</label>
+                                                <input type="number" class="form-control" id="frm-scalemin"
+                                                       placeholder="Echelle mini" i18n="modal.layer.display.ph.minscale"/>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="frm-scalemax" i18n="modal.layer.scale.max">Echelle maxi</label>
+                                                <input type="number" class="form-control" id="frm-scalemax"
+                                                       placeholder="Echelle maxi" i18n="modal.layer.display.ph.maxscale"/>
+                                            </div>
+                                        </div>
+                                        <div class="form-group mt-2">
+                                            <label for="frm-legendurl" i18n="modal.layer.legendurl">Légende statique</label>
+                                            <input type="text" class="form-control checkedurl" id="frm-legendurl"
+                                               placeholder="URL vers Image légende" i18n="modal.layer.display.ph.legend_image_url"/>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="custom-control custom-switch">
+                                                <input type="checkbox" class="custom-control-input" id="frm-tiled">
+                                                <label class="custom-control-label" for="frm-tiled" i18n="modal.layer.tiled">Couche tuilée</label>
+                                            </div>
+                                        </div>
+                                        <hr>
+                                        <h6 for="frm-upload-sld-file" i18n="modal.layer.sld.external">Utiliser un style externe</h6>                                        
+                                        <div class="input-group">
+                                            <input type="text" class="form-control checkedurl" id="frm-upload-sld-file" placeholder="URL SLD externe" i18n="modal.layer.display.ph.external_sld">
+                                            <div class="input-group-append">                                                
+                                                <button type="button" class="btn btn-outline-info" i18n="modal.layer.uploadsldfile" onclick="document.getElementById('frm-upload-sld-file').click()">Téléverser un SLD</button>
+                                                <button type="button" class="btn btn-info">
+                                                    <span
+                                                            data-toggle="tooltip"
+                                                            data-placement="top"
+                                                            title="Vous pouvez insérer une URL vers un SLD. Si votre couche provient d'un geoserver, vous pouvez specifier uniquement le nom du SLD dans geoserver (ex: un_entrepot:mon_sld)"
+                                                            i18n="modal.layer.uploadsld.tooltips"
+                                                        ><i class="bi bi-info-circle"></i></span>                                                
+                                                </button>
+                                            </div>    
                                         </div>
                                     </div>
-                                </div>
-                                <div id="query-parameters">
-                                    <div class="form-group">
-                                        <div class="checkbox">
-                                            <label>
-                                                <input id="frm-template" type="checkbox"><span i18n="modal.layer.query.usetemplate">Utiliser un template</span>
-                                            </label>
-                                        </div>
-                                        <label for="frm-template-url" i18n="modal.layer.query.templateurl">URL template</label>
-                                        <input type="text" class="form-control checkedurl" id="frm-template-url"
-                                               placeholder="URL template"/>
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="control-label" for="frm-fields" i18n="modal.layer.query.fields">Champs</label>
-                                        <div id="frm-lis-fields"></div>
-                                    </div>
-                                </div>
-                            </form>
+                                  </div>
+                                </div>                                
+                            </div>  
+                            <!--./Affichage-->
                         </div>
 
-                        <div role="tabpanel" class="tab-pane" id="layer_conf3">
-                            <form>
-                                <div class="form-group">
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <div class="checkbox">
-                                                    <label>
-                                                        <input id="frm-tiled" type="checkbox"><span i18n="modal.layer.tiled"> Couche tuilée</span>
-                                                    </label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <div class="checkbox">
-                                                    <label>
-                                                        <input id="frm-visible" type="checkbox"><span i18n="modal.layer.visibleonstart"> Visible au
-                                                        démarrage</span>
-                                                    </label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <label for="frm-legendurl" i18n="modal.layer.legendurl">Légende statique</label>
-                                    <input type="text" class="form-control checkedurl" id="frm-legendurl"
-                                           placeholder="URL vers Image légende" i18n="modal.layer.display.ph.legend_image_url"/>
-                                    <div class="row">
-                                        <div class="col-md-4">
-                                            <div class="form-group" lang="en-US">
-                                                <label for="frm-opacity" i18n="modal.layer.opacity">Opacité</label>
-                                                <input type="number" class="form-control" id="frm-opacity"
-                                                       placeholder="Opacité (0 à 1)" step="0.1" min="0.1" max="1.0"
-                                                       value="1" i18n="modal.layer.display.ph.opacity">
-                                            </div>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <label for="frm-scalemin" i18n="modal.layer.scale.min">Echelle mini</label>
-                                            <input type="number" class="form-control" id="frm-scalemin"
-                                                   placeholder="Echelle mini" i18n="modal.layer.display.ph.minscale"/>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <label for="frm-scalemax" i18n="modal.layer.scale.max">Echelle maxi</label>
-                                            <input type="number" class="form-control" id="frm-scalemax"
-                                                   placeholder="Echelle maxi" i18n="modal.layer.display.ph.maxscale"/>
-                                        </div>
-                                    </div>
-
-                                    <label class="control-label" for="frm-styles" i18n="modal.layer.styles">Styles</label>
-                                    <div class="row" id="frm-lis-styles"></div>
-                                    <hr>
-                                    <label for="frm-sld" i18n="modal.layer.sld.external">Style externe</label>
-                                    <div class="input-group">
-                                        <input type="text" class="form-control checkedurl" id="frm-sld"
-                                           placeholder="URL SLD externe" i18n="modal.layer.display.ph.external_sld"/>
-                                        <span class="input-group-btn">
-                                            <input type="file" id="frm-upload-sld-file" style="display: none;" onchange="uploadSldFileToBackend(this)">
-                                            <button class="btn btn-default"
-                                                    type="button"
-                                                    i18n="modal.layer.uploadsldfile"
-                                                    onclick="document.getElementById('frm-upload-sld-file').click()"
-                                            >
-                                                Téléverser un SLD
-                                            </button>
-                                            <button class="btn btn-default" type="button">
-                                                <span class="glyphicon glyphicon-info-sign"
-                                                      data-toggle="tooltip"
-                                                      data-placement="top"
-                                                      title="Vous pouvez insérer une URL vers un SLD. Si votre couche provient d'un geoserver, vous pouvez specifier uniquement le nom du SLD dans geoserver (ex: un_entrepot:mon_sld)"
-                                                      i18n="modal.layer.uploadsld.tooltips"
-                                                ></span>
-                                            </button>
-                                        </span>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-
-                        <div role="tabpanel" class="tab-pane" id="layer_conf4">
+                        <div role="tabpanel" class="tab-pane fade" id="layer_conf4">
                             <div class="well well-sm">
-                                <p i18n="modal.layer.filter.serverside">Filtre CQL prédéfini : filtrage attributaire statique des objets affichés dans
-                                    la couche.</p>
-                                <p><small><strong><span i18n="modal.layer.filter.geoserver-only-warning.h"> Activable uniquement avec GeoServer.</span></strong>
-                                <span i18n="modal.layer.filter.geoserver-only-warning.txt">Les filtres CQL ne peuvent activés qu'avec des couches de données issues
-                                de GeoServer. Il ne s'agit pas d'une fonction standard de WMS.</span></small></p>
-                            </div>
+                                <p i18n="modal.layer.filter.serverside">
+                                    Cette fonctionnalité permet de définir des conditions d'affichage des objets de la couche, selon des valeurs attributaires
+                                    ou une emprise géographique. Ce filtre statique et ne peut être désactiver par vos utilisateurs au sein de l'application.
+                                </p>
+                                <div class="alert alert-info text-info my-2" role="alert">
+                                    <i class="ri-information-line" style="font-size: 20px;vertical-align: middle;"></i>
+                                    <span i18n="modal.layer.filter.geoserver-only-warning.txt">
+                                        Cette fonctionnalité est basée sur un filtre CQL. Les filtres CQL ne peuvent activés qu'avec des couches de données issues de Geoserver. 
+                                        Il ne s'agit pas d'une fonction standard de WMS.
+                                    </span>                                    
+                                </div>
+                            </div>                           
                             <form>
+                                <div class="row mt-3">
+                                    <div class="col-md-12">
+                                        <label for="frm-filter" i18n="modal.layer.filter.serverside.active">Filtre actif</label>
+                                    </div>
+                                </div>
                                 <div class="row">
                                     <div class="col-md-12">
-                                        <label for="frm-filter" i18n="modal.layer.filter.serverside.active">filtre actif</label>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-8">
-                                        <div class="form-group">
-                                            <input type="textarea" class="form-control" id="frm-filter"
-                                                   placeholder="filtre cql"  i18n="modal.layer.filter.cql.ph">
+                                        <div class="input-group mb-3">
+                                            <input type="text" type="textarea" class="form-control" id="frm-filter" placeholder="Expression CQL"  i18n="modal.layer.filter.cql.ph">
+                                            <div class="input-group-append">
+                                              <button class="btn btn-info" type="button" id="button-addon2" onclick="$('#filter_wizard').toggle();"><i class="bi bi-plus-lg"></i> <span i18n="modal.layer.filter.serverside.create">Créer un filtre</span></button>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <button type="button" onclick="$('#filter_wizard').toggle();"
-                                                class="btn btn-primary" i18n="modal.layer.filter.serverside.create">Créer un filtre
-                                        </button>
-                                    </div>
+                                    </div>                                    
                                 </div>
-                                <div id="filter_wizard" style="display:none;">
-                                    <!-- Nav tabs -->
-                                    <ul class="nav nav-tabs" role="tablist">
-                                        <li role="presentation" class="active"><a href="#attribute_filter"
-                                                                                  aria-controls="attribute_filter"
-                                                                                  role="tab" data-toggle="tab"
-                                                                                  i18n="modal.layer.filter.serverside.filter.attributes">Filtre
-                                            attributaire</a></li>
-                                        <li role="presentation"><a href="#geo_filter" aria-controls="geo_filter"
-                                                                   role="tab" data-toggle="tab"
-                                                                   i18n="modal.layer.filter.serverside.filter.geo">Filtre
-                                            géographique</a></li>
+                                <div id="filter_wizard" style="display:none;">                                    
+                                    <ul class="nav nav-tabs mt-3" role="tablist">
+                                        <li class="nav-item" role="presentation">
+                                            <a class="nav-link active" aria-controls="attribute_filter" role="tab" data-bs-toggle="tab" data-bs-target="#attribute_filter" i18n="modal.layer.filter.serverside.filter.attributes">Filtre
+                                            attributaire</a>
+                                        </li>
+                                        <li class="nav-item" role="presentation">
+                                            <a class="nav-link" aria-controls="geo_filter" role="tab" data-bs-toggle="tab" data-bs-target="#geo_filter" i18n="modal.layer.filter.serverside.filter.geo">Filtre                                         géographique</a>
+                                        </li>
                                     </ul>
                                     <!-- Tab panes -->
                                     <div class="tab-content">
-                                        <div role="tabpanel" class="tab-pane active" id="attribute_filter">
-                                            <div class="form-group">
+                                        <div role="tabpanel" class="tab-pane fade show active" id="attribute_filter">
+                                            <div class="form-group mt-3">
                                                 <label class="control-label" i18n="modal.layer.filter.fields">Champs</label>
                                                 <select id="attribute_filter_fields" name="fields"
                                                         class="form-control"
                                                         onchange="extractFeatures(this.value, 'source')">
                                                 </select>
-                                            </div>
-                                            <div class="form-group">
-                                                <label class="control-label" i18n="modal.layer.filter.serverside.filter.operator">Opérateur</label>
-                                                <select id="attribute_filter_operators" name="operators"
-                                                        class="form-control">
-                                                    <option value="=">=</option>
-                                                    <option value="IN">IN</option>
-                                                    <option value="NOT IN">NOT IN</option>
-                                                </select>
-                                            </div>
+                                            </div>                                            
                                             <div class="row">
-                                                <div class="col-md-8">
-                                                    <label class="control-label" i18n="modal.layer.filter.selected">valeurs sélectionnées</label>
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label class="control-label" i18n="modal.layer.filter.serverside.filter.operator">Opérateur</label>
+                                                        <select id="attribute_filter_operators" name="operators" class="form-control">
+                                                            <option value="=">=</option>
+                                                            <option value="IN">IN</option>
+                                                            <option value="NOT IN">NOT IN</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label class="control-label" i18n="modal.layer.filter.selected">Valeur(s) sélectionnée(s)</label>
                                                     <div class="form-group">
                                                         <input type="text" value="" data-role="tagsinput"
                                                                id="source_fields_tags" class="form-control"/>
                                                     </div>
                                                 </div>
-                                                <div class="col-md-4" style="padding-top: 25px;">
-                                                    <button type="button" onclick="mv.saveSourceAttributeFilter()"
-                                                            class="btn btn-success" i18n="modal.layer.filter.serverside.filter.apply">Appliquer le filtre
-                                                    </button>
-                                                </div>
+                                                
                                             </div>
+                                            <div class="">
+                                                <button type="button" onclick="mv.saveSourceAttributeFilter()"
+                                                        class="btn btn-outline-info" i18n="modal.layer.filter.serverside.filter.apply">Appliquer le filtre
+                                                </button>
+                                            </div>
+
+
+
                                         </div>
-                                        <div role="tabpanel" class="tab-pane" id="geo_filter">
+                                        <div role="tabpanel" class="tab-pane fade" id="geo_filter">
                                             <div id="map_filter" class="map"></div>
                                         </div>
                                     </div>
@@ -1088,44 +1186,53 @@
                             </form>
                         </div>
 
-                        <div role="tabpanel" class="tab-pane" id="layer_conf5">
+                        <div role="tabpanel" class="tab-pane fade" id="layer_conf5">
                             <div class="well well-sm">
-                                <p i18n="modal.layer.filter.clientside">Filtre CQL dynamique : filtrage attributaire des objets affichés dans la couche
-                                    à l'aide de listes déroulantes présentes dans la légende de la couche.</p>
-                                <p><small><strong><span i18n="modal.layer.filter.geoserver-only-warning.h"> Activable uniquement avec GeoServer.</span></strong>
-                                <span i18n="modal.layer.filter.geoserver-only-warning.txt">Les filtres CQL ne peuvent activés qu'avec des couches de données issues
-                                de GeoServer. Il ne s'agit pas d'une fonction standard de WMS.</span></small></p>
+                                <p i18n="modal.layer.filter.clientside">
+                                    Cette fonctionnalité permet de pré-définir des conditions d'affichage attributairs des objets de la couche. L'utilisateur pourra
+                                    filtrer les entités selon les conditions définies ci-dessous à l'aide d'une liste déroulante disponible dans le bloc légende.
+                                </p>
+                                <div class="alert alert-info text-info my-2" role="alert">
+                                    <i class="ri-information-line" style="font-size: 20px;vertical-align: middle;"></i>
+                                    <span i18n="modal.layer.filter.geoserver-only-warning.txt">
+                                        Cette fonctionnalité est basée sur un filtre CQL. Les filtres CQL ne peuvent activés qu'avec des couches de données issues de Geoserver. 
+                                        Il ne s'agit pas d'une fonction standard de WMS.
+                                    </span>                                    
+                                </div>
                             </div>
-                            <form>
-                                <div class="form-group">
+                            <div class="form-group mt-3">
                                     <div class="form-group">
                                         <label for="frm-attributelabel" i18n="modal.layer.filter.clientside.label">Label</label>
                                         <input type="textarea" class="form-control" id="frm-attributelabel"
                                                placeholder="Texte à afficher" i18n="modal.layer.filter.clientside.label.ph">
                                     </div>
-                                    <div class="form-group">
-                                        <label class="control-label" i18n="modal.layer.filter.fields">Champs</label>
-                                        <select id="opt-attributefield" name="fields" class="form-control"
-                                                onchange="extractFeatures(this.value,'control')">
-                                        </select>
-                                        <label class="control-label" i18n="modal.layer.filter.selected">valeurs sélectionnées</label>
-                                        <div class="form-group">
-                                            <input type="text" value="" data-role="tagsinput"
-                                                   id="control_fields_tags" class="form-control"/>
+                                    <div class="form-group row">
+                                        <div class="col-md-6">
+                                            <label class="control-label" i18n="modal.layer.filter.fields">Champs à filtrer</label>
+                                            <select id="opt-attributefield" name="fields" class="form-control"
+                                                    onchange="extractFeatures(this.value,'control')">
+                                            </select>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="control-label" i18n="modal.layer.filter.selected">Valeur(s) sélectionnée(s)</label>
+                                            <div class="form-group">
+                                                <input type="text" value="" data-role="tagsinput" id="control_fields_tags" class="form-control"/>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            </form>
+                            </div>
                         </div>
 
-                        <div role="tabpanel" class="tab-pane" id="layer_conf6">
+                        <div role="tabpanel" class="tab-pane fade" id="layer_conf6">
+                            <div class="alert alert-info text-info my-2" role="alert">
+                                <i class="ri-information-line" style="font-size: 20px;vertical-align: middle;"></i>
+                                Pour utiliser cette fonctionnalité, les entités de la couche doivent être indexées par ElasticSearch.
+                            </div>
                             <form>
-                                <div class="form-group">
-                                    <div class="checkbox">
-                                        <label>
-                                            <input id="frm-searchable" type="checkbox"><span i18n="modal.layer.search.enable"> Activer la recherche pour
-                                            cette donnée</span>
-                                        </label>
+                                <div class="form-group my-3">
+                                    <div class="custom-control custom-switch">
+                                        <input type="checkbox" class="custom-control-input" id="frm-searchable">
+                                        <label class="custom-control-label" for="frm-searchable" i18n="modal.layer.search.enable">Activer la recherche pour cette donnée</label>
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -1152,11 +1259,11 @@
                         </div>
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" onclick="mv.saveLayerOptions()" class="btn btn-success" i18n="save">Enregistrer
+                <div class="modal-footer">                    
+                    <button type="button" onclick="mv.form2xml()" class="btn btn-outline-info" i18n="view">Voir</button>
+                    <button type="button" onclick="mv.saveLayerOptions()" class="btn btn-primary" i18n="save">Enregistrer
                     </button>
-                    <button type="button" onclick="mv.form2xml()" class="btn btn-info" i18n="view">Voir</button>
-                    <button type="button" class="btn btn-default" data-dismiss="modal" i18n="close">Fermer</button>
+                    <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal" i18n="close">Fermer</button>
                 </div>
             </div>
         </div>
@@ -1164,19 +1271,19 @@
 
     <!-- Modal codeView-->
     <div class="modal fade" id="mod-codeview" role="dialog" tabindex="-1" aria-labelledby="mod-codeview" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
+        <div class="modal-dialog modal-xl">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title" i18n="modal.code.xml">Configuration XML</h4>
+                    <h5 class="modal-title" i18n="modal.code.xml">Configuration XML</h5>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 </div>
                 <div class="modal-body">
                     <div class="row">
-                        <pre></pre>
+                        <pre class="windows-code-XML"></pre>
                     </div><!-- /.row -->
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal" i18n="close">Fermer</button>
+                    <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal" i18n="close">Fermer</button>
                 </div>
             </div>
         </div>
@@ -1187,16 +1294,19 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title" i18n="modal.features.select">Sélection de données</h4>
+                    <h5 class="modal-title" i18n="modal.features.select">Sélection des valeurs</h5>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 </div>
                 <div class="modal-body">
                     <div class="row">
-                        <div class="col-md-6">
-                            <label class="control-label" i18n="modal.features.values">Valeurs</label>
+                        <div class="col-md-12">
+                            <label class="control-label" i18n="modal.features.values">Sélectionner les valeurs sur lesquelles appliquer un filtre :</label>
                             <div id="distinct_values" class="list-group"></div>
                         </div>
-                    </div><!-- /.row -->
+                    </div>
+                </div>
+                <div class="modal-footer">                    
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Valider</button>
                 </div>
             </div>
         </div>
