@@ -38,6 +38,12 @@ $('#opt-title').change(function() {
   }
 });
 
+// Force update map size 
+
+$( "#navWizApp" ).click(function() {
+  map.updateSize();
+});
+
 // Manage display of options
 
 const activeSearch = document.getElementById('SwitchAdressSearch');
@@ -49,7 +55,6 @@ activeSearch.addEventListener('change', (event) => {
     document.getElementById('AppSearchBlock').style.display = "none";
   }    
 })
-
 
 // Manage display nav-tab for LayerOptions modal 
 
