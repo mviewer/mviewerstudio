@@ -1,11 +1,6 @@
 
 
 
-
-.ghost {
-	opacity: 1;
-	background: #337ab7;
-}
 /* 
 -- THEMATIQUES & DONNEES 
 */
@@ -105,9 +100,7 @@
 
 
 
-select#opt-style {
-	color: #fff;
-}
+
 
 
 
@@ -799,64 +792,67 @@ button i {
 
 /* Thème de l'application */
 
+select#opt-style {
+	color: #fff;
+}
 
 #opt-style option {
 	color: #FFFFFF;
 }
 
-.alizarin {
+.alizarin, .alizarin:focus {
 	background-color: #E64B3B;
 }
 
-.blue {
+.blue, .blue:focus {
 	background-color: #F6F7F8;
 }
 
-.default {
+.default, .default:focus {
 	background-color: #34495D;
 }
 
-.nephritis {
+.nephritis, .nephritis:focus {
 	background-color: #26AE60;
 }
 
-.ripe_lemon {
+.ripe_lemon, .ripe_lemon:focus {
 	background-color: #F6CA17;
 }
 
-.amethyst {
+.amethyst, .amethyst:focus {
 	background-color: #9A59B6;
 }
 
-.carrot {
+.carrot, .carrot:focus {
 	background-color: #E67E21;
 }
 
-.green {
+.green, .green:focus {
 	background-color: #70BA50;
 }
 
-.peter_river {
+.peter_river, .peter_river:focus {
 	background-color: #3497DB;
 }
 
-.black {
+.black, .black:focus {
 	background-color: #000000;
 }
 
-.chambray {
+.chambray, .chambray:focus {
 	background-color: #3A529A;
 }
 
-.green_sea {
+.green_sea, .green_sea:focus {
 	background-color: #1ABC9C;
 }
 
-.pink {
+.pink, .pink:focus {
 	background-color: #F62359;
 }
 
-.wet_asphalt {
+.wet_asphalt, .wet_asphalt:focus {
 	background-color: #34495D;
 }
 

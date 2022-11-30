@@ -256,33 +256,41 @@
                                             <span class="title-accordion" i18n="tabs.app.options">Fonctionnalités</span><br>
                                             <span class="subtitle-accordion">Activer les outils que vous souhaitez afficher au sein de votre application</span>
                                         </li>
-                                        <li class="list-group-item list-flex">
-                                            <span i18n="tabs.app.opt_measure">Outils de mesures</span>
-                                            <div class="custom-control custom-switch">
-                                                <input type="checkbox" class="custom-control-input" name="checkboxes" id="opt-measuretools">
-                                                <label class="custom-control-label" for="opt-measuretools"></label>
-                                            </div>
+                                        <li class="list-group-item">
+                                            <div class="list-flex">
+                                                <span i18n="tabs.app.opt_measure">Outils de mesures</span>
+                                                <div class="custom-control custom-switch">
+                                                    <input type="checkbox" class="custom-control-input" name="checkboxes" id="opt-measuretools">
+                                                    <label class="custom-control-label" for="opt-measuretools"></label>
+                                                </div>
+                                            </div>                                            
                                         </li>
-                                        <li class="list-group-item list-flex">
-                                            <span i18n="tabs.app.opt_export">Export de la carte en image</span>
-                                            <div class="custom-control custom-switch">
-                                                <input type="checkbox" class="custom-control-input" name="checkboxes" id="opt-exportpng">
-                                                <label class="custom-control-label" for="opt-exportpng"></label>
-                                            </div>
+                                        <li class="list-group-item">
+                                            <div class="list-flex">
+                                                <span i18n="tabs.app.opt_export">Export de la carte en image</span>
+                                                <div class="custom-control custom-switch">
+                                                    <input type="checkbox" class="custom-control-input" name="checkboxes" id="opt-exportpng">
+                                                    <label class="custom-control-label" for="opt-exportpng"></label>
+                                                </div>
+                                            </div>                                            
                                         </li>
-                                        <li class="list-group-item list-flex">
-                                            <span i18n="tabs.app.opt_coords">Affichage des coordonnées au click</span>
-                                            <div class="custom-control custom-switch">
-                                                <input type="checkbox" class="custom-control-input" name="checkboxes" id="opt-coordinates">
-                                                <label class="custom-control-label" for="opt-coordinates"></label>
-                                            </div>
+                                        <li class="list-group-item advanced" style="display: none;">
+                                            <div class="list-flex">
+                                                <span i18n="tabs.app.opt_coords">Affichage des coordonnées au click</span>
+                                                <div class="custom-control custom-switch">
+                                                    <input type="checkbox" class="custom-control-input" name="checkboxes" id="opt-coordinates">
+                                                    <label class="custom-control-label" for="opt-coordinates"></label>
+                                                </div>
+                                            </div>                                            
                                         </li>
-                                        <li class="list-group-item list-flex">
-                                            <span i18n="tabs.app.opt_data">Afficher/masquer toutes les données d'une thématique en un click</span>                                          
-                                            <div class="custom-control custom-switch">
-                                                <input type="checkbox" class="custom-control-input" name="checkboxes" id="opt-togglealllayersfromtheme">
-                                                <label class="custom-control-label" for="opt-togglealllayersfromtheme"></label>
-                                            </div>
+                                        <li class="list-group-item advanced" style="display: none;">
+                                            <div class="list-flex">
+                                                <span i18n="tabs.app.opt_data">Afficher/masquer toutes les données d'une thématique en un click</span>                                          
+                                                <div class="custom-control custom-switch">
+                                                    <input type="checkbox" class="custom-control-input" name="checkboxes" id="opt-togglealllayersfromtheme">
+                                                    <label class="custom-control-label" for="opt-togglealllayersfromtheme"></label>
+                                                </div>
+                                            </div>                                            
                                         </li>
                                       </ul>
                                 </div>
@@ -296,12 +304,14 @@
                                              <!-- Map -->
                                             <div id="map" class="map"></div>
                                         </li>
-                                        <li class="list-group-item list-flex">
-                                            <span i18n="tabs.app.opt_maxextent">Interdire la navigation hors de l'étendue définie ci-dessus</span>                                           
-                                            <div class="custom-control custom-switch">
-                                                <input type="checkbox" class="custom-control-input" name="checkboxes" id="opt-maxextent">
-                                                <label class="custom-control-label" for="opt-maxextent"></label>
-                                            </div>
+                                        <li class="list-group-item advanced" style="display: none;">
+                                            <div class="list-flex">
+                                                <span i18n="tabs.app.opt_maxextent">Interdire la navigation hors de l'étendue définie ci-dessus</span>                                           
+                                                <div class="custom-control custom-switch">
+                                                    <input type="checkbox" class="custom-control-input" name="checkboxes" id="opt-maxextent">
+                                                    <label class="custom-control-label" for="opt-maxextent"></label>
+                                                </div>
+                                            </div>                                            
                                         </li>
                                       </ul>
                                 </div>
@@ -411,7 +421,7 @@
                                                             <label for="frm-searchlocalities" i18n="tabs.search.address_search.service" class="form-label">Service utilisé</label>
                                                             <select class="form-control b" id="frm-searchlocalities" name="searchlocalities" onchange="mv.changeSearchLocalities(this.value)">
                                                                 <option value="false" i18n="tabs.search.address_search.none">Non utilisé</option>
-                                                                <option value="ban" i18n="tabs.search.address_search.ban">Base adresse Nationale</option>
+                                                                <option value="ban" i18n="tabs.search.address_search.ban">Base Adresse Nationale</option>
                                                                 <option value="geoportail" i18n="tabs.search.address_search.geoportal">Géoportail</option>
                                                             </select>
                                                         </div>
