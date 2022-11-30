@@ -50,7 +50,7 @@
             <div class="px-4 nav-item" id="menu_user_logout">
                 <a role="button" href="./logout"><span i18n="banner.logout">Déconnexion</span></a>
             </div>
-            <a class="zoom" onclick="showHome()"><i class="ri-home-6-line" style="font-size: 30px;"></i></a>
+            <a class="zoom" onclick="saveStudio();"><i class="ri-home-6-line" style="font-size: 30px;"></i></a>
         </div>
         </div>
     </nav>
@@ -694,6 +694,31 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Fermer</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Credits-->
+    <div class="modal fade" id="mod-closeStudio" tabindex="-1" role="dialog" aria-labelledby="mod-closeStudio" aria-hidden="true">
+        <div class="modal-dialog ">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"></h5>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body">
+                    <h5 class="text-primary">Attention</h5>
+                    <p>Vous quittez le studio, que souhaitez-vous faire ?</p>
+                    <a class="cardsClose save-close zoomCard" onclick="saveApplicationParameters(0); showHome();">
+                        <i class="ri-save-line"></i>
+                        <span>Enregister mon application et quitter le studio</span>
+                    </a>
+                    <a class="cardsClose notsave-close zoomCard" onclick="showHome()">
+                        <i class="bi bi-x-circle"></i>
+                        <span>Ne pas sauvegarder mes modifications et quitter le studio</span>
+                    </a>
+                    <a class="returnConf-close" data-bs-dismiss="modal" aria-label="Close"><i class="ri-arrow-left-line"></i> Retour</a>                    
                 </div>
             </div>
         </div>

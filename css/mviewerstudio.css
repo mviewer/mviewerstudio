@@ -1,4 +1,46 @@
+/* Modal - Close Studio */
 
+.cardsClose {
+    display: flex;
+	align-items: center;
+    padding: 1rem;
+    margin: 15px 0;
+    border-radius: 0.6rem;
+}
+
+.save-close {
+    background-color: var(--info)!important;
+    color: white!important;
+}
+
+.notsave-close {
+    color: var(--info)!important;
+	border:1px solid var(--info);
+}
+
+.cardsClose i {
+    font-size: 1.2em;    
+    padding: 8px 12px;
+    border-radius: 0.6rem;
+    margin-right: 1rem;
+}
+
+.save-close i{
+    background-color: #ffffff45;
+}
+
+.notsave-close i{
+    background-color: #934ae43b!important;
+}
+
+.returnConf-close i {
+    font-size: 1.2em;
+    vertical-align: middle;
+}
+
+a.returnConf-close:hover {
+    color: var(--info);
+}
 
 
 /* 

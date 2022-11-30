@@ -6,9 +6,16 @@ function showStudio() {
     map.updateSize();
 }
 
-function showHome() {
-    document.getElementById("containerStudio").hidden = true;
-    document.getElementById("containerHome").hidden = false;
+function saveStudio() {
+    if ($("#containerStudio").is(':visible')) {
+      $('#mod-closeStudio').modal('show');
+    }
+}
+
+function showHome() {  
+  document.getElementById("containerStudio").hidden = true;
+  $('#mod-closeStudio').modal('hide');
+  document.getElementById("containerHome").hidden = false;
 }
 
 // Manage display of options
