@@ -79,13 +79,13 @@
 }
 
 .selected-icon {
-	margin: .2em .5em;
-	padding: 0.1em .5em;
-	border: 1px solid #337ab7;
-	background-color: #d9edf7;
-	color: #337ab7;
+    margin: 0.2em 0.5em;
+    padding: 0.1em 0.5em;
+    padding: 0.6em 0.9em;
+    background-color: #e7e7e7;
+    color: #515151;
+    border-radius: 9px;
 }
-
 
 
 
@@ -139,7 +139,7 @@ select#opt-style {
 
 /* Modal - Ajout d'une couche */
 
-#mod-layerNew h6 {
+#mod-layerNew h6, #mod-layerOptions h6, #mod-themeOptions h6 {
     font-size: 16px;
     font-weight: 500;
 }

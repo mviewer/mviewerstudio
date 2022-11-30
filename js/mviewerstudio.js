@@ -241,7 +241,7 @@ var newConfiguration = function () {
     });
 
     $("#opt-style").val("css/themes/default.css").trigger("change");
-    $("#panel-theme").hide();
+    $("#mod-themeOptions").modal('hide');
 
     map.getView().setCenter(_conf.map.center);
     map.getView().setZoom(_conf.map.zoom);
@@ -372,7 +372,7 @@ var importThemes = function () {
 };
 
 var addTheme = function (title, collapsed, themeid, icon, url) {
-    if ($("#panel-theme").is(":visible")) {
+    if ($("#mod-themeOptions").is(":visible")) {
         alert(mviewer.tr('msg.save_theme_first'));
         return;
     }
@@ -425,7 +425,7 @@ var editTheme = function (item) {
     var icon = $(item).parent().parent().attr("data-theme-icon");
     if (icon === "undefined") icon = 'fas fa-caret-right';
 
-    $("#panel-theme").show();
+    $("#mod-themeOptions").modal('show');
     $("#theme-edit-title").val(title);
     $("#theme-edit-collapsed").prop('checked', collapsed);
     $("#theme-edit").attr("data-themeid", themeid);
@@ -456,7 +456,7 @@ var saveTheme = function () {
     theme.find(".theme-infos-layer").text(nb_layers);
     //deactivate theme edition
     $("#themes-list .list-group-item").removeClass("active");
-    $("#panel-theme").hide();
+    $("#mod-themeOptions").modal('hide');
 
     //save theme locally
     config.themes[themeid].title = title;
@@ -466,7 +466,7 @@ var saveTheme = function () {
 };
 
 var deleteTheme = function (themeid) {
-    $("#panel-theme").hide();
+    $("#mod-themeOptions").modal('hide');
     delete config.themes[themeid];
 };
 

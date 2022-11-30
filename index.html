@@ -477,69 +477,7 @@
                                 </div>
                             </div>                    
                     
-                            <div class="row my-3">
-                                <div class="col-md-6">                                    
-                                </div>
-                                <div class="col-md-6">
-                                    <div id="panel-theme" class="panel panel-info" style="display: none;">
-                                        <div class="panel-heading">
-                                            <h3 class="panel-title" i18n="tabs.data.paramspanel.title">Paramétrage de la Thématique sélectionnée</h3>
-                                        </div>
-                                        <div class="panel-body" id="theme-edit" data-themeid="">
-                                            <div class="input-group">
-                                                <span class="input-group-addon" i18n="tabs.data.paramspanel.name">Nom</span>
-                                                <input type="text" id="theme-edit-title" class="form-control" tabs.search.elastic_search.disabled="Titre"
-                                                       aria-describedby="basic-addon1">
-                                            </div>
-                                            <div class="checkbox">
-                                                <label for="theme-edit-collapsed">
-                                                    <input type="checkbox" name="checkboxes" id="theme-edit-collapsed" value="0">
-                                                    <span i18n="tabs.data.paramspanel.opt_unfolded">Déroulée par défaut</span>
-                                                </label>
-                                            </div>
-                                            <div class="form-group">
-                                                <label class="settinglabel" i18n="tabs.data.paramspanel.icon">Icône</label>
-                                                <span class="selected-icon"></span>
-                                                <input type="text" class="icon-class-input" id="theme-pick-icon" />
-                                                <button type="button" class="btn btn-primary picker-button">
-                                                  <span i18n="tabs.data.paramspanel.icon_pick">Choisir une icône</span>
-                                                </button>
-                                            </div>
-                                            <!-- List with handle -->
-                                            <div id="themeLayers" class="list-group"></div>
-                                            <div class="row">
-                                                <div class="col-md-12">
-                                                    <div class="pull-right">
-                                                        <button id="btn-addLayer" class="btn btn btn-primary"
-                                                                onclick="addLayer('Nouvelle couche');">
-                                                            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-                                                            <span i18n="tabs.data.paramspanel.add_data">Ajouter des données</span>
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="panel-footer">
-                                            <div class="row">
-                                                <div class="col-md-12">
-                                                    <div class="pull-right">
-                                                        <button id="btn-saveTheme" class="btn btn btn-success"
-                                                                onclick="saveTheme();">
-                                                            <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
-                                                            <span i18n="ok"> Ok</span>
-                                                        </button>
-                                                        &nbsp;&nbsp;
-                                                        <button class="btn btn btn-default" onclick="$('#panel-theme').hide();">
-                                                            <span class="glyphicon glyphicon-remove"></span>
-                                                            <span i18n="cancel"> Annuler</span>
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>                            
+                                                        
                             <div class="mt-4">
                                 <a class="btn btn-outline-warning btnPrev"><i class="ri-arrow-left-line"></i> Précédent</a>
                                 <a class="btn btn-warning btnNext">Suivant <i class="ri-arrow-right-line"></i> </a>
@@ -676,6 +614,57 @@
     </main>
 
     <!-- MODALS -->
+    <!-- Modal theme options-->
+    <div class="modal fade" id="mod-themeOptions" role="dialog" tabindex="-1" aria-labelledby="mod-themeOptions" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" i18n="tabs.data.paramspanel.title">Paramétrage de la thématique sélectionnée</h5>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body" id="theme-edit" data-themeid="">
+                    <div class="row mb-3">
+                        <div class="col-md-6">                            
+                            <label for="theme-edit-title" class="form-label" i18n="tabs.data.paramspanel.name">Nom</label>
+                            <input type="text" id="theme-edit-title" class="form-control" tabs.search.elastic_search.disabled="Titre">
+                            <div class="custom-control custom-switch mt-2">
+                                <input type="checkbox" class="custom-control-input" id="theme-edit-collapsed">
+                                <label class="custom-control-label" for="theme-edit-collapsed"><span i18n="tabs.data.paramspanel.opt_unfolded">Déroulée par défaut</span></label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">                            
+                            <div class="form-group">
+                                <label class="settinglabel" i18n="tabs.data.paramspanel.icon">Icône</label>
+                                <span class="selected-icon"></span>
+                                <input type="text" class="icon-class-input form-control" id="theme-pick-icon" />
+                                <button type="button" class="btn btn-outline-info picker-button mt-2">
+                                    <span i18n="tabs.data.paramspanel.icon_pick">Choisir une icône</span>
+                                </button>                               
+                            </div>
+                        </div>                        
+                    </div>                   
+                    
+                    <hr>
+                    <h6 class="my-2">Couches de la thématique</h6>
+                    <!-- List with handle -->
+                    <div id="themeLayers" class="list-group my-2"></div>
+                    <div class="my-3">
+                        <button id="btn-addLayer" class="btn btn-info" onclick="addLayer('Nouvelle couche');">
+                            <i class="bi bi-plus-lg"></i>
+                            <span i18n="tabs.data.paramspanel.add_data">Ajouter des données</span>
+                        </button>
+                    </div>             
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal">Annuler</button>
+                    <button id="btn-saveTheme" class="btn btn btn-primary" onclick="saveTheme();">
+                        <span>Valider</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Modal Credits-->
     <div class="modal fade" id="modalCredits" tabindex="-1" role="dialog" aria-labelledby="modalCredits" aria-hidden="true">
         <div class="modal-dialog ">
@@ -1268,6 +1257,8 @@
             </div>
         </div>
     </div>
+
+    
 
     <!-- Modal codeView-->
     <div class="modal fade" id="mod-codeview" role="dialog" tabindex="-1" aria-labelledby="mod-codeview" aria-hidden="true">
