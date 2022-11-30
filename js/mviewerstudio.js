@@ -236,12 +236,14 @@ var newConfiguration = function () {
         $("#"+param).val("");
     });
     ["opt-exportpng", "opt-measuretools", "theme-edit-collapsed", "opt-mini", "opt-showhelp", "opt-coordinates",
-        "opt-togglealllayersfromtheme"].forEach(function (param, id) {
+        "opt-togglealllayersfromtheme", "SwitchAdressSearch","SwitchAdvanced"].forEach(function (param, id) {
         $("#"+param).prop('checked', false);
     });
 
     $("#opt-style").val("css/themes/default.css").trigger("change");
+    $("#frm-searchlocalities").val("false").trigger("change");    
     $("#mod-themeOptions").modal('hide');
+    $('#FadvElasticBlock form').trigger("reset");
 
     map.getView().setCenter(_conf.map.center);
     map.getView().setZoom(_conf.map.zoom);
@@ -254,6 +256,26 @@ var newConfiguration = function () {
     savedParameters = {"application":[], "baselayers": {}};
     $("#themes-list, #themeLayers, #liste_applications, #distinct_values").find(".list-group-item").remove();
     $("#frm-bl .custom-bl").remove();
+    $("#nameAppBlock").empty();
+
+    // Gestion des accordéons    
+    ["collapseSearch", "collapseHomePage", "collapseFondPlan", "collapseElasticSearch"].forEach(function (param) {
+        $("#"+param).collapse("hide");
+    });
+
+    // Gestion des fonds de plan 
+    $("#frm-bl .bl input").prop("checked",false).trigger('change');
+    $("#frm-bl .bl input").slice(0,2).prop("checked",true).trigger('change');
+    $("#frm-bl-mode").val("default").trigger("change");   
+    $("#frm-bl-visible").val($("#frm-bl-visible option:not(:disabled)").first().val());
+
+    //Init advanced options
+    $('.advanced').css("display", "none");
+
+    // Init du wizard 
+    $('#stepStudio').find('.nav-item a:first').tab('show');
+    $('#navWizFadv').css("display", "none");
+    
 };
 
 
