@@ -924,4 +924,8 @@ select#opt-style {
 		margin-bottom: 2em !important;
 	}
 
+	#homeNavbarDoc {
+		position: relative!important;
+	}
+
 }

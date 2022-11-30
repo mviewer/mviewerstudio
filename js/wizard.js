@@ -70,7 +70,7 @@ function displayWizard(x) {
 
 var x = window.matchMedia("(max-width: 800px)");
 displayWizard(x); 
-x.addListener(displayWizard)
+x.addListener(displayWizard);
 
 // Display title name app in Wizard
 
