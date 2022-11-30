@@ -543,6 +543,7 @@ var saveApplicationParameters = function (option) {
 
     if(config.title == ''){
         alert(mviewer.tr('msg.give_title_before_save'));
+        $('#opt-title').addClass('is-invalid');
         return;
     }
 

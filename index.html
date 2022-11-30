@@ -50,7 +50,7 @@
             <div class="px-4 nav-item" id="menu_user_logout">
                 <a role="button" href="./logout"><span i18n="banner.logout">Déconnexion</span></a>
             </div>
-            <a class="zoom" onclick="saveStudio();"><i class="ri-home-6-line" style="font-size: 30px;"></i></a>
+            <a class="zoom" onclick="goHome();"><i class="ri-home-6-line" style="font-size: 30px;"></i></a>
         </div>
         </div>
     </nav>
@@ -706,13 +706,12 @@
         <div class="modal-dialog ">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title"></h5>
+                    <h5 class="modal-title">Attention</h5>
                     <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 </div>
                 <div class="modal-body">
-                    <h5 class="text-primary">Attention</h5>
                     <p>Vous quittez le studio, que souhaitez-vous faire ?</p>
-                    <a class="cardsClose save-close zoomCard" onclick="saveApplicationParameters(0); showHome();">
+                    <a class="cardsClose save-close zoomCard" onclick="saveStudio();">
                         <i class="ri-save-line"></i>
                         <span>Enregister mon application et quitter le studio</span>
                     </a>

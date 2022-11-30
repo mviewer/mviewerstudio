@@ -6,7 +6,7 @@ function showStudio() {
     map.updateSize();
 }
 
-function saveStudio() {
+function goHome() {
     if ($("#containerStudio").is(':visible')) {
       $('#mod-closeStudio').modal('show');
     }
@@ -17,6 +17,26 @@ function showHome() {
   $('#mod-closeStudio').modal('hide');
   document.getElementById("containerHome").hidden = false;
 }
+
+function saveStudio() {
+  if($("#opt-title").val() == ''){
+    alert(mviewer.tr('msg.give_title_before_save'));
+    $('#mod-closeStudio').modal('hide');
+    $('#opt-title').addClass('is-invalid');
+    return;
+  } else{
+    saveApplicationParameters(0); 
+    showHome();
+  }  
+}
+
+// Manage display of options
+
+$('#opt-title').change(function() {
+  if($("#opt-title").hasClass( "is-invalid")){
+    $("#opt-title").removeClass( "is-invalid")
+  }
+});
 
 // Manage display of options
 
