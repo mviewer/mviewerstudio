@@ -989,6 +989,62 @@
 
                         <div role="tabpanel" class="tab-pane fade" id="layer_conf3">
                             <form>
+                                <!--Affichage-->
+                                <div class="accordion mt-2" id="accordionDisplayLayer">
+                                    <div class="accordion-item">
+                                    <h2 class="accordion-header" >
+                                        <a class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDisplayLayer" aria-expanded="true" aria-controls="collapseDisplayLayer">
+                                        <div>
+                                            <span class="title-accordion" i18n="modal.layer.displayoptions.title">Options d'affichage</span>
+                                        </div>
+                                        </a>
+                                    </h2>
+                                    <div id="collapseDisplayLayer" class="accordion-collapse collapse" aria-labelledby="accordionDisplayLayer">
+                                        <div class="accordion-body">                                         
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <label for="frm-scalemin" i18n="modal.layer.scale.min">Echelle mini</label>
+                                                    <input type="number" class="form-control" id="frm-scalemin"
+                                                        placeholder="Echelle mini" i18n="modal.layer.display.ph.minscale"/>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label for="frm-scalemax" i18n="modal.layer.scale.max">Echelle maxi</label>
+                                                    <input type="number" class="form-control" id="frm-scalemax"
+                                                        placeholder="Echelle maxi" i18n="modal.layer.display.ph.maxscale"/>
+                                                </div>
+                                            </div>
+                                            <div class="form-group mt-2">
+                                                <label for="frm-legendurl" i18n="modal.layer.legendurl">Légende statique</label>
+                                                <input type="text" class="form-control checkedurl" id="frm-legendurl"
+                                                placeholder="URL vers Image légende" i18n="modal.layer.display.ph.legend_image_url"/>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="custom-control custom-switch">
+                                                    <input type="checkbox" class="custom-control-input" id="frm-tiled">
+                                                    <label class="custom-control-label" for="frm-tiled" i18n="modal.layer.tiled">Couche tuilée</label>
+                                                </div>
+                                            </div>
+                                            <hr>
+                                            <h6 for="frm-upload-sld-file" i18n="modal.layer.sld.external">Utiliser un style externe</h6>                                        
+                                            <div class="input-group">
+                                                <input type="text" class="form-control checkedurl" id="frm-upload-sld-file" placeholder="URL SLD externe" i18n="modal.layer.display.ph.external_sld">
+                                                <!--<div class="input-group-append">                                                
+                                                    <button type="button" class="btn btn-outline-info" i18n="modal.layer.uploadsldfile" onclick="document.getElementById('frm-upload-sld-file').click()">Téléverser un SLD</button>
+                                                    <button type="button" class="btn btn-info">
+                                                        <span
+                                                                data-toggle="tooltip"
+                                                                data-placement="top"
+                                                                title="Vous pouvez insérer une URL vers un SLD. Si votre couche provient d'un geoserver, vous pouvez specifier uniquement le nom du SLD dans geoserver (ex: un_entrepot:mon_sld)"
+                                                                i18n="modal.layer.uploadsld.tooltips"
+                                                            ><i class="bi bi-info-circle"></i></span>                                                
+                                                    </button>
+                                                </div>   --> 
+                                            </div>
+                                        </div>
+                                    </div>
+                                    </div>                                
+                                </div>  
+                                <!--./Affichage-->
                                 <!--Type de couche-->
                                 <div class="accordion mt-2" id="accordionOptionsType">
                                     <div class="accordion-item">
@@ -1083,63 +1139,7 @@
                                     </div>
                                     </div>                                
                                 </div>  
-                                <!--./Accès-->
-                                <!--Affichage-->
-                                <div class="accordion mt-2" id="accordionDisplayLayer">
-                                    <div class="accordion-item">
-                                    <h2 class="accordion-header" >
-                                        <a class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDisplayLayer" aria-expanded="true" aria-controls="collapseDisplayLayer">
-                                        <div>
-                                            <span class="title-accordion" i18n="modal.layer.displayoptions.title">Options d'affichage</span>
-                                        </div>
-                                        </a>
-                                    </h2>
-                                    <div id="collapseDisplayLayer" class="accordion-collapse collapse" aria-labelledby="accordionDisplayLayer">
-                                        <div class="accordion-body">                                         
-                                            <div class="row">
-                                                <div class="col-md-6">
-                                                    <label for="frm-scalemin" i18n="modal.layer.scale.min">Echelle mini</label>
-                                                    <input type="number" class="form-control" id="frm-scalemin"
-                                                        placeholder="Echelle mini" i18n="modal.layer.display.ph.minscale"/>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <label for="frm-scalemax" i18n="modal.layer.scale.max">Echelle maxi</label>
-                                                    <input type="number" class="form-control" id="frm-scalemax"
-                                                        placeholder="Echelle maxi" i18n="modal.layer.display.ph.maxscale"/>
-                                                </div>
-                                            </div>
-                                            <div class="form-group mt-2">
-                                                <label for="frm-legendurl" i18n="modal.layer.legendurl">Légende statique</label>
-                                                <input type="text" class="form-control checkedurl" id="frm-legendurl"
-                                                placeholder="URL vers Image légende" i18n="modal.layer.display.ph.legend_image_url"/>
-                                            </div>
-                                            <div class="form-group">
-                                                <div class="custom-control custom-switch">
-                                                    <input type="checkbox" class="custom-control-input" id="frm-tiled">
-                                                    <label class="custom-control-label" for="frm-tiled" i18n="modal.layer.tiled">Couche tuilée</label>
-                                                </div>
-                                            </div>
-                                            <hr>
-                                            <h6 for="frm-upload-sld-file" i18n="modal.layer.sld.external">Utiliser un style externe</h6>                                        
-                                            <div class="input-group">
-                                                <input type="text" class="form-control checkedurl" id="frm-upload-sld-file" placeholder="URL SLD externe" i18n="modal.layer.display.ph.external_sld">
-                                                <div class="input-group-append">                                                
-                                                    <button type="button" class="btn btn-outline-info" i18n="modal.layer.uploadsldfile" onclick="document.getElementById('frm-upload-sld-file').click()">Téléverser un SLD</button>
-                                                    <button type="button" class="btn btn-info">
-                                                        <span
-                                                                data-toggle="tooltip"
-                                                                data-placement="top"
-                                                                title="Vous pouvez insérer une URL vers un SLD. Si votre couche provient d'un geoserver, vous pouvez specifier uniquement le nom du SLD dans geoserver (ex: un_entrepot:mon_sld)"
-                                                                i18n="modal.layer.uploadsld.tooltips"
-                                                            ><i class="bi bi-info-circle"></i></span>                                                
-                                                    </button>
-                                                </div>    
-                                            </div>
-                                        </div>
-                                    </div>
-                                    </div>                                
-                                </div>  
-                                <!--./Affichage-->
+                                <!--./Accès-->                                
                             </form>                            
                         </div>
 
