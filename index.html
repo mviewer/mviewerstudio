@@ -706,20 +706,20 @@
         <div class="modal-dialog ">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Attention</h5>
+                    <h5 class="modal-title" i18n="modal.exit.title">Attention</h5>
                     <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 </div>
                 <div class="modal-body">
-                    <p>Vous quittez le studio, que souhaitez-vous faire ?</p>
+                    <p i18n="modal.exit.subtitle">Êtes-vous sûr de vouloir quitter votre projet en cours ?</p>
                     <a class="cardsClose save-close zoomCard" onclick="saveStudio();">
                         <i class="ri-save-line"></i>
-                        <span>Enregister mon application et quitter le studio</span>
+                        <span i18n="modal.exit.save">Enregister mon application et quitter le studio</span>
                     </a>
                     <a class="cardsClose notsave-close zoomCard" onclick="showHome()">
                         <i class="bi bi-x-circle"></i>
-                        <span>Ne pas sauvegarder mes modifications et quitter le studio</span>
+                        <span i18n="modal.exit.notsave">Ne pas sauvegarder mes modifications et quitter le studio</span>
                     </a>
-                    <a class="returnConf-close" data-bs-dismiss="modal" aria-label="Close"><i class="ri-arrow-left-line"></i> Retour</a>                    
+                    <a class="returnConf-close" data-bs-dismiss="modal" aria-label="Close"><i class="ri-arrow-left-line"></i> <span i18n="modal.exit.previous">Retour</span></a>                    
                 </div>
             </div>
         </div>
