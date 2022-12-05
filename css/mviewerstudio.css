@@ -649,6 +649,7 @@ button i {
 #navbarStudio a, #navbarStudio span {
 	color: white;
 	font-weight: 500;
+	cursor: default;
 }
 
 /*
