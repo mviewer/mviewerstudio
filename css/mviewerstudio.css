@@ -172,6 +172,11 @@ a.returnConf-close:hover {
     background-color: var(--light);
 }
 
+#importedThemes {
+    height: 550px;
+    overflow-y: auto;
+}
+
 /* Modal - Ajout d'une couche */
 
 #mod-layerNew h6, #mod-layerOptions h6, #mod-themeOptions h6 {

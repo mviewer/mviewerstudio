@@ -393,6 +393,7 @@ var importThemes = function () {
         addTheme(label, true, id, false, url);
     });
     console.groupEnd("importThemes");
+    $("#mod-themesview").modal('hide');
 };
 
 var addTheme = function (title, collapsed, themeid, icon, url) {
