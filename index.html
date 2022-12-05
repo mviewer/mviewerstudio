@@ -393,19 +393,7 @@
                                   </h2>
                                   <div id="collapseSearch" class="accordion-collapse collapse" aria-labelledby="accordionSearch">
                                     <div class="accordion-body p-0"> 
-                                        <ul class="list-group list-group-flush">            
-                                            <li class="list-group-item advanced" style="display: none;">
-                                                <div class="list-flex">
-                                                    <div>
-                                                        <p class="strong" i18n="tabs.app.search.entity_search.activate">Activer la recherche d'entité</p>
-                                                        <p i18n="tabs.app.search.entity_search.p1">La recherche peut être activée si la couche est de type GEOJSON. Cette fonctionnalité est également activable pour les couches de type WMS à la condition que les entités qui composent cette couche soient également indéxées dans Elasticsearch.</p>
-                                                    </div>
-                                                    <div class="custom-control custom-switch">
-                                                        <input type="checkbox" class="custom-control-input" id="opt-searchfeatures">
-                                                        <label class="custom-control-label" for="opt-searchfeatures"></label>
-                                                    </div>
-                                                </div>                                                    
-                                            </li>
+                                        <ul class="list-group list-group-flush">     
                                             <li class="list-group-item">
                                                 <div class="list-flex">
                                                     <p class="strong" i18n="tabs.app.search.address_search.title">Activer la recherche d'adresse</p>
@@ -436,6 +424,18 @@
                                                             </div>   
                                                     </div>
                                                 </div>                                                
+                                            </li>
+                                            <li class="list-group-item advanced" style="display: none;">
+                                                <div class="list-flex">
+                                                    <div>
+                                                        <p class="strong" i18n="tabs.app.search.entity_search.activate">Activer la recherche d'entité</p>
+                                                        <p i18n="tabs.app.search.entity_search.p1">La recherche peut être activée si la couche est de type GEOJSON. Cette fonctionnalité est également activable pour les couches de type WMS à la condition que les entités qui composent cette couche soient également indéxées dans Elasticsearch.</p>
+                                                    </div>
+                                                    <div class="custom-control custom-switch">
+                                                        <input type="checkbox" class="custom-control-input" id="opt-searchfeatures">
+                                                        <label class="custom-control-label" for="opt-searchfeatures"></label>
+                                                    </div>
+                                                </div>                                                    
                                             </li>
                                           </ul>                                        
                                     </div>

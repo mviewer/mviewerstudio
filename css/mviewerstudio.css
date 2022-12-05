@@ -832,6 +832,15 @@ button i {
     border-top: none;
 }
 
+#collapseSearch .list-group-item:first-child {
+    border-bottom: none;
+}
+
+#collapseSearch .list-group-item:not(:first-child) {
+    /* color: red; */
+    border-top: 1px solid rgba(0, 0, 0, 0.125);
+}
+
 /* Thème de l'application */
 
 select#opt-style {
