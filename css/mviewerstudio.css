@@ -219,10 +219,6 @@ a.returnConf-close:hover {
     font-size: 1rem;
 }
 
-#frm-lis-styles {
-    display: flex;
-    align-items: stretch;
-}
 
 .layer-style {
     margin-bottom: 1em;
@@ -849,6 +845,16 @@ button i {
 }
 #backgroundlayers-config .bl:first-child {
     border-top: none;
+}
+
+#frm-lis-styles {
+    display: flex;
+    align-items: stretch;
+}
+
+#frm-bl-visible option:disabled {
+    /* color: red; */
+    display: none;
 }
 
 #collapseSearch .list-group-item:first-child {
