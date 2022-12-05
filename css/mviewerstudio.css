@@ -193,6 +193,11 @@ a.returnConf-close:hover {
     align-items: center;
 }
 
+.ogc-results {
+    max-height: 420px;
+    overflow-y: auto;
+}
+
 /* Modal iconPicker */
 
 .icon-picker-list a:hover, .icon-picker-list a.active {
