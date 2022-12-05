@@ -377,6 +377,8 @@ var editLayer = function (item) {
         $("#mod-layerOptions").modal('show');
         mv.showLayerOptions(element);
     } else {
+        $("#input-ogc-filter").val("")
+        $("#csw-results .csw-result").remove();
         $("#mod-layerNew").modal('show');
     }
 };
