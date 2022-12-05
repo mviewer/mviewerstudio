@@ -289,7 +289,7 @@ var loadLayers = function (themeid) {
 };
 
 var sortableLayerList = Sortable.create(document.getElementById('themeLayers'), {
-    handle: '.layer-move',
+    handle: '.moveList',
     animation: 150,
     ghostClass: 'ghost',
     onEnd: function (evt) {
@@ -311,7 +311,7 @@ var deleteLayerItem = function (btn) {
 };
 
 var sortableThemeList = Sortable.create(document.getElementById('themes-list'), {
-    handle: '.theme-move',
+    handle: '.moveList',
     animation: 150,
     ghostClass: 'ghost',
     onEnd: function (evt) {
@@ -354,9 +354,9 @@ var addLayer = function (title, layerid) {
     }
     var item = $("#themeLayers").append([
         '<div class="list-group-item layers-list-item" data-layerid="'+layerid+'">',
-            '<span class="layer-name">'+title+'</span>',
+            '<span class="layer-name moveList">'+title+'</span>',
             '<div class="layer-options-btn">',
-                '<button class="btn btn-sm btn-secondary"><span class="layer-move" title="Déplacer"><i class="bi bi-arrows-move"></i></span></button>',
+                '<button class="btn btn-sm btn-secondary"><span class="layer-move moveList" title="Déplacer"><i class="bi bi-arrows-move"></i></span></button>',
                 '<button class="btn btn-sm btn-secondary" onclick="deleteLayerItem(this);"><span class="layer-remove" title="Supprimer"><i class="bi bi-x-circle"></i></span></button>',
                 '<button class="btn btn-sm btn-info" onclick="editLayer(this);"><span class="layer-edit" title="Editer cette couche"><i class="bi bi-gear-fill"></i></span></button>',
             '</div>',
@@ -406,10 +406,10 @@ var addTheme = function (title, collapsed, themeid, icon, url) {
          $("#themes-list").append([
         '<div class="list-group-item list-group-item themes-list-item" data-theme-url="'+url+'" data-theme="'+title+'" data-themeid="'+themeid+'" data-theme-collapsed="'+collapsed+'" data-theme-icon="'+icon+'">',
             '<div class="theme-infos">',
-                '<span class="theme-name">'+title+'</span><span class="theme-infos-layer">Ext.</span>',
+                '<span class="theme-name moveList">'+title+'</span><span class="theme-infos-layer">Ext.</span>',
             '</div>',
             '<div class="theme-options-btn">',
-                '<button class="btn btn-sm btn-secondary" ><span class="theme-move" title="Déplacer"><i class="bi bi-arrows-move"></i></span></button>',
+                '<button class="btn btn-sm btn-secondary" ><span class="theme-move moveList" title="Déplacer"><i class="bi bi-arrows-move"></i></span></button>',
                 '<button class="btn btn-sm btn-secondary" onclick="deleteThemeItem(this);" ><span class="theme-remove" title="Supprimer"><i class="bi bi-x-circle"></i></span></button>',
             '</div>',
         '</div>'].join(""));
@@ -417,10 +417,10 @@ var addTheme = function (title, collapsed, themeid, icon, url) {
          $("#themes-list").append([
         '<div class="list-group-item themes-list-item" data-theme="'+title+'" data-themeid="'+themeid+'" data-theme-collapsed="'+collapsed+'" data-theme-icon="'+icon+'">',   
             '<div class="theme-infos">',
-                '<span class="theme-name">'+title+'</span><span class="theme-infos-layer">0</span>',
+                '<span class="theme-name moveList">'+title+'</span><span class="theme-infos-layer">0</span>',
             '</div>',
             '<div class="theme-options-btn">',
-                '<button class="btn btn-sm btn-secondary" ><span class="theme-move" title="Déplacer"><i class="bi bi-arrows-move"></i></span></button>',
+                '<button class="btn btn-sm btn-secondary" ><span class="theme-move moveList" title="Déplacer"><i class="bi bi-arrows-move"></i></span></button>',
                 '<button class="btn btn-sm btn-secondary" onclick="deleteThemeItem(this);" ><span class="theme-remove" title="Supprimer"><i class="bi bi-x-circle"></i></span></button>',
                 '<button class="btn btn-sm btn-info" onclick="editTheme(this);"><span class="theme-edit" title="Editer ce thème"><i class="bi bi-gear-fill"></i></span></button>',                
             '</div>',
