@@ -239,7 +239,7 @@ var newConfiguration = function () {
         "opt-togglealllayersfromtheme", "SwitchAdressSearch","SwitchAdvanced"].forEach(function (param, id) {
         $("#"+param).prop('checked', false);
     });
-
+   
     $("#opt-style").val("css/themes/default.css").trigger("change");
     $("#frm-searchlocalities").val("false").trigger("change");    
     $("#mod-themeOptions").modal('hide');

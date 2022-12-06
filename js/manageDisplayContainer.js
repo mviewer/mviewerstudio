@@ -62,3 +62,9 @@ $('#mod-layerOptions').on('hidden.bs.modal', function() {
   // reset multi-tab modal to initial state 
   $(this).find('.nav-item a:first').tab('show');   
 }) ;
+
+// Display opacity value 
+
+$("#frm-opacity").on("change mousemove", function() {
+   $('#opacity-value').text($("#frm-opacity").val());
+});
