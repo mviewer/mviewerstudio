@@ -130,7 +130,7 @@ $(document).ready(function(){
             }
 
             if (API.xml) {
-                loadApplicationParametersFromRemoteFile(API.xml);                
+                loadApplicationParametersFromRemoteFile(API.xml);
             } else if (API.wmc) {
                 loadApplicationParametersFromWMC(API.wmc);
             } else {
