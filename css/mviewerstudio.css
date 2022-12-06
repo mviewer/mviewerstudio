@@ -1,3 +1,10 @@
+/* Modal - Features value */
+
+#distinct_values {
+    max-height: 450px;
+    overflow-y: auto;
+}
+
 /* Modal - Close Studio */
 
 .cardsClose {
