@@ -73,8 +73,9 @@ $(document).ready(function(){
 									html.push(['<div class="checkbox list-group-item">',
 										'<div class="custom-control custom-checkbox">',
 											'<input type="checkbox" class="custom-control-input" data-url="'+url+'" data-theme-label="'+mv.title+'" data-theme-id="'+themeid+'" name="checkboxes" id="import-theme-'+themeid+id+'">',
-                                            '<label class="custom-control-label" for="import-theme-'+themeid+id+'">'+mv.title+'</label>',
-										'</div></div>'].join(""));
+											'<label class="custom-control-label" for="import-theme-'+themeid+id+'">'+mv.title+'</label>',
+										'</div>',
+                                    '</div>'].join(""));
 								}
 							}
 						});
