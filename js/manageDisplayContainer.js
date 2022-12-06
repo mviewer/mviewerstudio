@@ -42,13 +42,9 @@ $( "#navWizApp" ).click(function() {
 
 // Manage display of options
 const activeSearch = document.getElementById('SwitchAdressSearch');
-
 activeSearch.addEventListener('change', (event) => {
-  if (event.currentTarget.checked) {
-    document.getElementById('AppSearchBlock').style.display = "block"; 
-  } else {
-    document.getElementById('AppSearchBlock').style.display = "none";
-  }    
+  const isDisplay = event.currentTarget.checked ? "block" : "none";
+  document.getElementById('AppSearchBlock').style.display = isDisplay;      
 })
 
 // Manage display nav-tab for LayerOptions modal 

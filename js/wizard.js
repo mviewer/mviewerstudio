@@ -1,79 +1,51 @@
 
 /* Function to switch module with prevBtn and nextBtn */
-
-function switchModule() {
-  let nextBtn = document.querySelectorAll("#stepStudioContent .tab-pane:not([style*='display: none']) .btnNext");
-  let prevBtn = document.querySelectorAll("#stepStudioContent .tab-pane:not([style*='display: none']) .btnPrev");
-
-  nextBtn.forEach(function(item, index){
-    item.addEventListener('click', function(){
-      let id = index + 1;
-      let tabElement = document.querySelectorAll("#stepStudio li:not([style*='display: none']) a")[id];
-      var lastTab = new bootstrap.Tab(tabElement);
-      lastTab.show();   
-    });
-  });  
-  prevBtn.forEach(function(item, index){
-      item.addEventListener('click', function(){
-        let id = index;
+function switchModule () {
+  ["btnNext", "btnPrev"].forEach(buttonClassName => {
+    // get buttons by class
+    let btnEl = document.querySelectorAll(`#stepStudioContent .tab-pane:not([style*='display: none']) .${ buttonClassName }`);
+    // for each buttons, add listener
+    btnEl.forEach(function (item, index) {
+      item.addEventListener('click', function () {
+        let id = buttonClassName === "btnPrev" ? index : index + 1;
         let tabElement = document.querySelectorAll("#stepStudio li:not([style*='display: none']) a")[id];
         var lastTab = new bootstrap.Tab(tabElement);
         lastTab.show();
       });
-  });
-}
-
+    })
+  })
+};
 switchModule();
 
 /* Manage display of advanced mode to adanced functions */
-
 const switchMode = document.getElementById('SwitchAdvanced');
-
 switchMode.addEventListener('change', (event) => {
-  let elementAdvanced = document.getElementsByClassName('advanced');  
+  const elementAdvanced = document.getElementsByClassName('advanced');  
   /* Hide advanced options */
-  if (event.currentTarget.checked) {
-    for (var i = 0; i < elementAdvanced.length; i++) {
-        document.getElementsByClassName('advanced')[i].style.display = "block";
-    }  
-    // It is necessary to select all the buttons at each change of mode
-    switchModule();
-  } else {
-    for (var i = 0; i < elementAdvanced.length; i++) {
-        document.getElementsByClassName('advanced')[i].style.display = "none";
-    }
-    // It is necessary to select all the buttons at each change of mode
-    switchModule();
-  }    
+  const isDisplay = event.currentTarget.checked ? "block" : "none";
+  for (var i = 0; i < elementAdvanced.length; i++) {    
+    document.getElementsByClassName('advanced')[i].style.display = isDisplay;
+  }
+  // It is necessary to select all the buttons at each change of mode
+  switchModule();
 })
 
-
 // Responsive display | 800px > Navbar fixed bottom and display btnPrev btnNext
-
 function displayWizard(x) {
-  if (x.matches) { // If media query matches
-    document.getElementById("blockWizardMobile").hidden = false;
-    document.getElementById("blockWizard").hidden = true;
-    let btnWiz = document.querySelectorAll("#stepStudioContent .btnNext,#stepStudioContent .btnPrev");
-    btnWiz.forEach(function(item){
-      item.classList.add("hideBlock");
-    }); 
-  } else {
-    document.getElementById("blockWizardMobile").hidden = true;
-    document.getElementById("blockWizard").hidden = false;
-    let btnWiz = document.querySelectorAll("#stepStudioContent .btnNext,#stepStudioContent .btnPrev");
-    btnWiz.forEach(function(item){
-      item.classList.remove("hideBlock");
-    });
-  }
+  const displayMobile = x.matches ? true : false;
+  document.getElementById("blockWizardMobile").hidden = !displayMobile;
+  document.getElementById("blockWizard").hidden = displayMobile;
+  let btnWiz = document.querySelectorAll("#stepStudioContent .btnNext,#stepStudioContent .btnPrev");
+  btnWiz.forEach(function(item){
+    displayMobile ? item.classList.add("hideBlock") : item.classList.remove("hideBlock")
+  });
 }
 
-var x = window.matchMedia("(max-width: 800px)");
-displayWizard(x); 
-x.addListener(displayWizard);
+var mediaQuery = window.matchMedia("(max-width: 800px)");
+window.addEventListener('resize', () => displayWizard(mediaQuery)); 
+displayWizard(mediaQuery);
 
 // Display title name app in Wizard
-
 const inputNameApp = document.getElementById('opt-title');
 const log = document.getElementById('nameAppBlock');
 
