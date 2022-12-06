@@ -638,10 +638,10 @@
         </div>
         <!-- /.MODULES STUDIO-->   
     </main>
-
+    
     <!-- MODALS -->
     <!-- Modal theme options-->
-    <div class="modal fade" id="mod-themeOptions" role="dialog" tabindex="-1" aria-labelledby="mod-themeOptions" aria-hidden="true">
+    <div class="modal fade" id="mod-themeOptions" role="dialog" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="mod-themeOptions" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
@@ -663,7 +663,7 @@
                                 <label class="settinglabel" i18n="modal.theme.paramspanel.icon">Icône</label>
                                 <span class="selected-icon"></span>
                                 <input type="text" class="icon-class-input form-control advanced"  style="display: none;" id="theme-pick-icon" />
-                                <button type="button" class="btn btn-outline-info picker-button mt-2">
+                                <button type="button" class="btn btn-outline-info picker-button mt-2" data-bs-target="#iconPicker" data-bs-toggle="modal">
                                     <span i18n="modal.theme.paramspanel.icon_pick">Choisir une icône</span>
                                 </button>                               
                             </div>
@@ -675,7 +675,7 @@
                     <!-- List with handle -->
                     <div id="themeLayers" class="list-group my-2"></div>
                     <div class="my-3">
-                        <button id="btn-addLayer" class="btn btn-info" onclick="addLayer('Nouvelle couche');">
+                        <button id="btn-addLayer" class="btn btn-info" onclick="addLayer('Nouvelle couche');" data-bs-target="#mod-layerNew" data-bs-toggle="modal">
                             <i class="bi bi-plus-lg"></i>
                             <span i18n="modal.theme.paramspanel.add_data">Ajouter des données</span>
                         </button>
@@ -692,7 +692,7 @@
     </div>
 
     <!-- Modal Credits-->
-    <div class="modal fade" id="modalCredits" tabindex="-1" role="dialog" aria-labelledby="modalCredits" aria-hidden="true">
+    <div class="modal fade" id="modalCredits" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="modalCredits" aria-hidden="true">
         <div class="modal-dialog ">
             <div class="modal-content">
                 <div class="modal-header">
@@ -717,7 +717,7 @@
     </div>
 
     <!-- Modal exitStudio-->
-    <div class="modal fade" id="mod-closeStudio" tabindex="-1" role="dialog" aria-labelledby="mod-closeStudio" aria-hidden="true">
+    <div class="modal fade" id="mod-closeStudio" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="mod-closeStudio" aria-hidden="true">
         <div class="modal-dialog ">
             <div class="modal-content">
                 <div class="modal-header">
@@ -741,7 +741,7 @@
     </div>
 
     <!-- Modal user group selection-->
-    <div class="modal fade" id="mod-groupselection" role="dialog" tabindex="-1" aria-labelledby="mod-importfile" aria-hidden="true">
+    <div class="modal fade" id="mod-groupselection" data-bs-backdrop="static" data-bs-keyboard="false" role="dialog" tabindex="-1" aria-labelledby="mod-importfile" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -757,7 +757,7 @@
     </div>
 
     <!-- Modal file import-->
-    <div class="modal fade" id="mod-importfile" tabindex="-1" role="dialog" aria-labelledby="mod-importfile" aria-hidden="true">
+    <div class="modal fade" id="mod-importfile" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="mod-importfile" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
@@ -822,12 +822,12 @@
     </div>
 
     <!-- Modal layer options-->
-    <div class="modal fade" id="mod-layerOptions" role="dialog" tabindex="-1" aria-labelledby="mod-layerOptions" aria-hidden="true">
+    <div class="modal fade" id="mod-layerOptions" role="dialog" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="mod-layerOptions" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" i18n="modal.layer.edit">Paramètres de la couche</h5>
-                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <button type="button" class="close" data-bs-target="#mod-themeOptions" data-bs-toggle="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 </div>
                 <div class="modal-body">
                     <ul class="nav nav-pills mb-3" id="layer_sections_menu" role="tablist">
@@ -1302,22 +1302,21 @@
                     </div>
                 </div>
                 <div class="modal-footer">                    
-                    <button type="button" onclick="mv.form2xml()" class="btn btn-outline-info advanced" i18n="view" style="display: none;">Voir</button>
-                    <button type="button" onclick="mv.saveLayerOptions()" class="btn btn-primary" i18n="save">Enregistrer
-                    </button>
-                    <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal" i18n="close">Fermer</button>
+                    <button type="button" onclick="mv.form2xml()" data-bs-target="#mod-codeview" data-bs-toggle="modal" class="btn btn-outline-info advanced" i18n="view" style="display: none;">Voir</button>
+                    <button type="button" onclick="mv.saveLayerOptions()" data-bs-target="#mod-themeOptions" data-bs-toggle="modal" class="btn btn-primary" i18n="save">Enregistrer</button>
+                    <button type="button" class="btn btn-outline-primary" data-bs-target="#mod-themeOptions" data-bs-toggle="modal" i18n="close">Fermer</button>
                 </div>
             </div>
         </div>
     </div>
    
     <!-- Modal codeView-->
-    <div class="modal fade" id="mod-codeview" role="dialog" tabindex="-1" aria-labelledby="mod-codeview" aria-hidden="true">
+    <div class="modal fade" id="mod-codeview" role="dialog" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="mod-codeview" aria-hidden="true">
         <div class="modal-dialog modal-xl">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" i18n="modal.code.xml">Configuration XML</h5>
-                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <button type="button" class="close" data-bs-target="#mod-layerOptions" data-bs-toggle="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 </div>
                 <div class="modal-body">
                     <div class="row">
@@ -1325,14 +1324,14 @@
                     </div><!-- /.row -->
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal" i18n="close">Fermer</button>
+                    <button type="button" class="btn btn-outline-primary" data-bs-target="#mod-layerOptions" data-bs-toggle="modal" i18n="close">Fermer</button>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- Modal featuresView-->
-    <div class="modal fade" id="mod-featuresview" role="dialog" tabindex="-1" aria-labelledby="mod-featuresview" aria-hidden="true">
+    <div class="modal fade" id="mod-featuresview" role="dialog" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="mod-featuresview" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -1355,7 +1354,7 @@
     </div>
 
     <!-- Modal Themes import-->
-    <div class="modal fade" id="mod-themesview" role="dialog" tabindex="-1" aria-labelledby="mod-themesview" aria-hidden="true">
+    <div class="modal fade" id="mod-themesview" role="dialog" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="mod-themesview" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -1379,12 +1378,12 @@
     </div>
 
     <!-- Modal new Layer-->
-    <div class="modal fade" id="mod-layerNew" role="dialog" tabindex="-1" aria-labelledby="mod-layerNew" aria-hidden="true">
+    <div class="modal fade" id="mod-layerNew" role="dialog" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="mod-layerNew" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" i18n="modal.layer.new.searchdata">Ajouter une couche</h5>
-                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <button type="button" class="close" data-bs-target="#mod-themeOptions" data-bs-toggle="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 </div>
                 <div class="modal-body">
                     <div class="row">
@@ -1429,19 +1428,19 @@
                          
                 </div>
                 <div class="modal-footer">                    
-                    <button type="button" class="btn btn-primary" onclick="mv.getConfLayers();" i18n="select">Sélectionner</button>
-                    <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal" i18n="close">Fermer</button>
+                    <button type="button" class="btn btn-primary" data-bs-target="#mod-themeOptions" data-bs-toggle="modal" onclick="mv.getConfLayers();" i18n="select">Sélectionner</button>
+                    <button type="button" class="btn btn-outline-primary" data-bs-target="#mod-themeOptions" data-bs-toggle="modal" i18n="close">Fermer</button>
                 </div>
             </div>
         </div>
     </div>
     <!-- Modal icon picker-->
-    <div id="iconPicker" class="modal fade" role="dialog" tabindex="-1" aria-labelledby="iconPicker" aria-hidden="true">
+    <div id="iconPicker" class="modal fade" role="dialog" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="iconPicker" aria-hidden="true">
         <div class="modal-dialog modal-xl">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title"><span i18n="modal.icon.list">Icône de la thématique</span></h5>
-                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <button type="button" class="close" data-bs-target="#mod-themeOptions" data-bs-toggle="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 </div>
                 <div class="modal-body" style="max-height: calc(100vh - 200px);overflow-y: auto;overflow-x: hidden;">
                     <div>
@@ -1456,8 +1455,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" id="change-icon" class="btn btn-primary"><span i18n="validate"> Valider</span></button>
-                    <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal" i18n="cancel">Annuler</button>
+                    <button type="button" id="change-icon" class="btn btn-primary" data-bs-target="#mod-themeOptions" data-bs-toggle="modal"><span i18n="validate"> Valider</span></button>
+                    <button type="button" class="btn btn-outline-primary" data-bs-target="#mod-themeOptions" data-bs-toggle="modal" i18n="cancel">Annuler</button>
                 </div>
             </div>
         </div>

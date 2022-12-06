@@ -302,6 +302,7 @@ div#map_filter {
 
 .layer-style-block img {
     width: fit-content;
+    max-width: 100%;
 }
 
 .layer-style-block label:hover {

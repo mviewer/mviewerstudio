@@ -375,11 +375,13 @@ var editLayer = function (item) {
     var layerid = element.attr("data-layerid");
     if (layerid != "undefined") {
         $("#mod-layerOptions").modal('show');
+        $("#mod-themeOptions").modal('hide');
         mv.showLayerOptions(element);
     } else {
         $("#input-ogc-filter").val("")
         $("#csw-results .csw-result").remove();
         $("#mod-layerNew").modal('show');
+        $("#mod-themeOptions").modal('hide');
     }
 };
 
