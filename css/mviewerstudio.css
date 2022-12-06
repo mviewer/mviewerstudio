@@ -748,6 +748,11 @@ button i {
 
 /* Modal Open project */
 
+#liste_applications {
+    height: 420px;
+    overflow-y: auto;
+}
+
 #liste_applications a {
     color: inherit;
 }
