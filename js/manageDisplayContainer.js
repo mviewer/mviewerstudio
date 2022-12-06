@@ -1,5 +1,4 @@
 /* Manage display of module */
-
 function showStudio() {
     document.getElementById("containerHome").hidden = true;
     document.getElementById("containerStudio").hidden = false;
@@ -23,7 +22,6 @@ function saveStudio() {
     alert(mviewer.tr('msg.give_title_before_save'));
     $('#mod-closeStudio').modal('hide');
     $('#opt-title').addClass('is-invalid');
-    return;
   } else{
     saveApplicationParameters(0); 
     showHome();
@@ -31,7 +29,6 @@ function saveStudio() {
 }
 
 // Manage display of options
-
 $('#opt-title').change(function() {
   if($("#opt-title").hasClass( "is-invalid")){
     $("#opt-title").removeClass( "is-invalid")
@@ -39,13 +36,11 @@ $('#opt-title').change(function() {
 });
 
 // Force update map size 
-
 $( "#navWizApp" ).click(function() {
   map.updateSize();
 });
 
 // Manage display of options
-
 const activeSearch = document.getElementById('SwitchAdressSearch');
 
 activeSearch.addEventListener('change', (event) => {
@@ -57,14 +52,12 @@ activeSearch.addEventListener('change', (event) => {
 })
 
 // Manage display nav-tab for LayerOptions modal 
-
 $('#mod-layerOptions').on('hidden.bs.modal', function() { 
   // reset multi-tab modal to initial state 
   $(this).find('.nav-item a:first').tab('show');   
-}) ;
+});
 
 // Display opacity value 
-
-$("#frm-opacity").on("change mousemove", function() {
+$("#frm-opacity").on("mousemove", function() {
    $('#opacity-value').text($("#frm-opacity").val());
 });
