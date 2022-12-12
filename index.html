@@ -217,39 +217,37 @@
                         <!-- Application -->
                         <div class="tab-pane container active" id="app">
                             <form>
-                            <h1><i class="ri-equalizer-line"></i> <span i18n="tabs.app.title">Application</span></h1>
-                            <div class="form-group mt-4">
-                                <label for="opt-title" i18n="head.title" class="form-label">Titre de l'application</label>
-                                <input class="form-control" id="opt-title" type="text" name="textinput" placeholder="Mon application">
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <label for="opt-logo" i18n="tabs.app.url" class="form-label">Lien vers le logo</label>
-                                    <input class="form-control checkedurl" id="opt-logo" placeholder="https://monlogo.png">
-                                </div>
-                                <div class="col-md-6">
-                                    <label class="form-label" for="frm-style" i18n="tabs.app.style">Thème de l'application</label>
-                                    <select class="form-control default" id="opt-style" name="style" onchange="updateTheme(this);">
-                                        <option class="alizarin" value="css/themes/alizarin.css">alizarin</option>
-                                        <option class="blue" value="css/themes/blue.css">blue</option>
-                                        <option class="default" selected value="css/themes/default.css">default</option>
-                                        <option class="nephritis" value="css/themes/nephritis.css">nephritis</option>
-                                        <option class="ripe_lemon" value="css/themes/ripe_lemon.css">ripe_lemon</option>
-                                        <option class="amethyst" value="css/themes/amethyst.css">amethyst</option>
-                                        <option class="carrot" value="css/themes/carrot.css">carrot</option>
-                                        <option class="green" value="css/themes/green.css">green</option>
-                                        <option class="peter_river" value="css/themes/peter_river.css">peter_river</option>
-                                        <option class="black" value="css/themes/black.css">black</option>
-                                        <option class="chambray" value="css/themes/chambray.css">chambray</option>
-                                        <option class="green_sea" value="css/themes/green_sea.css">green_sea</option>
-                                        <option class="pink" value="css/themes/pink.css">pink</option>
-                                        <option class="wet_asphalt" value="css/themes/wet_asphalt.css">wet_asphalt</option>
-                                    </select>
-                                </div>
-                            </div>
+                            <h1><i class="ri-equalizer-line"></i> <span i18n="tabs.app.title">Application</span></h1>                            
                             <!--Fonctionnalités et options de la carte-->                          
                             <div class="row mt-4">
                                 <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="opt-title" i18n="head.title" class="form-label">Titre de l'application</label>
+                                        <input class="form-control" id="opt-title" type="text" name="textinput" placeholder="Mon application">
+                                    </div>
+                                    <div class="form-group">
+                                            <label for="opt-logo" i18n="tabs.app.url" class="form-label">Lien vers le logo</label>
+                                            <input class="form-control checkedurl" id="opt-logo" placeholder="https://monlogo.png">
+                                    </div>
+                                    <div class="form-group">
+                                            <label class="form-label" for="frm-style" i18n="tabs.app.style">Thème de l'application</label>
+                                            <select class="form-control default" id="opt-style" name="style" onchange="updateTheme(this);">
+                                                <option class="alizarin" value="css/themes/alizarin.css">alizarin</option>
+                                                <option class="blue" value="css/themes/blue.css">blue</option>
+                                                <option class="default" selected value="css/themes/default.css">default</option>
+                                                <option class="nephritis" value="css/themes/nephritis.css">nephritis</option>
+                                                <option class="ripe_lemon" value="css/themes/ripe_lemon.css">ripe_lemon</option>
+                                                <option class="amethyst" value="css/themes/amethyst.css">amethyst</option>
+                                                <option class="carrot" value="css/themes/carrot.css">carrot</option>
+                                                <option class="green" value="css/themes/green.css">green</option>
+                                                <option class="peter_river" value="css/themes/peter_river.css">peter_river</option>
+                                                <option class="black" value="css/themes/black.css">black</option>
+                                                <option class="chambray" value="css/themes/chambray.css">chambray</option>
+                                                <option class="green_sea" value="css/themes/green_sea.css">green_sea</option>
+                                                <option class="pink" value="css/themes/pink.css">pink</option>
+                                                <option class="wet_asphalt" value="css/themes/wet_asphalt.css">wet_asphalt</option>
+                                            </select>
+                                    </div>
                                     <ul class="list-group">
                                         <li class="list-group-item">
                                             <span class="title-accordion" i18n="tabs.app.options_title">Fonctionnalités</span><br>
