@@ -105,8 +105,7 @@
                 </nav>
             </div>                        
         </div>    
-        <!--/HOME--> 
-                
+        <!--/HOME-->   
         <!-- MODULES STUDIO-->   
         <div class="container-fluid h-100" id="containerStudio" hidden>
             <div class="row justify-content-around" style="padding-top: 120px;">
@@ -226,11 +225,11 @@
                                         <input class="form-control" id="opt-title" type="text" name="textinput" placeholder="Mon application">
                                     </div>
                                     <div class="form-group">
-                                            <label for="opt-logo" i18n="tabs.app.url" class="form-label">Lien vers le logo</label>
+                                            <label for="opt-logo" class="form-label"><span i18n="tabs.app.url">Lien vers le logo </span><span class="tooltip-info" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Logo affiché en haut à gauche du mviewer"><i class="ri-information-line"></i></span></label>
                                             <input class="form-control checkedurl" id="opt-logo" placeholder="https://monlogo.png">
                                     </div>
                                     <div class="form-group">
-                                            <label class="form-label" for="frm-style" i18n="tabs.app.style">Thème de l'application</label>
+                                            <label class="form-label" for="frm-style" ><span i18n="tabs.app.style">Thème de l'application</span><span class="tooltip-info" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Couleur de l'interface du mviewer"><i class="ri-information-line"></i></span></label>
                                             <select class="form-control default" id="opt-style" name="style" onchange="updateTheme(this);">
                                                 <option class="alizarin" value="css/themes/alizarin.css">alizarin</option>
                                                 <option class="blue" value="css/themes/blue.css">blue</option>

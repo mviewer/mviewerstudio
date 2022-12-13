@@ -51,6 +51,13 @@
 	.modal {
 	  overflow-y: auto !important;
 	}
+
+	/* Tooltip */
+	.tooltip-info i {
+		vertical-align: middle;
+		margin-left: 3px;
+	}
+
 	
 	/* Alert */
 	
