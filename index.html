@@ -63,7 +63,7 @@
                         <span class="subtitle-home">MVIEWER STUDIO</span><br>
                         <span class="title-home" i18n="home.welcome_title">Bienvenue</span>                        
                     </div>
-                    <h4 class="text-primary" i18n="home.welcome_texte">Suivez les étapes pour créer votre application cartographique mviewer en quelques clics à l'aide du générateur</h4>               
+                    <h4 class="text-primary" i18n="home.welcome_texte">Créer votre application cartographique mviewer en suivant les étapes du générateur</h4>               
                 </div>
                 <div class="col-md-6">
                     <h3 class="text-primary m-2 mb-4"><strong><span i18n="home.welcome_question">Que voulez-vous faire ?</span></strong> </h3>
@@ -133,7 +133,7 @@
                                     <i class="ri-stack-line"></i>
                                     <div>
                                         <p class="title-wizard" i18n="studio.wizard.theme_title">Thématiques & données</p>
-                                        <p class="subtitle-wizard" i18n="studio.wizard.theme_text">Paramètres des thématiques et des couches</p>
+                                        <p class="subtitle-wizard" i18n="studio.wizard.theme_text">Paramètres des thématiques et des données</p>
                                     </div> 
                                 </a>
                             </li>   
@@ -161,8 +161,8 @@
                             <img src="img/doc.png" alt="Img doc" width="80px" style="margin-right: 2em;">
                             <div class="helpStudio-text my-2">
                                 <h4 class="strong m-0" i18n="studio.wizard.help_title">Besoin d'aide ?</h4>
-                                <p i18n="studio.wizard.help_text">Aidez-vous de la documentation</p>
-                                <a class="btn btn-outline-info" href="https://github.com/geobretagne/mviewerstudio/blob/master/doc/user.md" target="_blank" i18n="consult">Consulter</a>
+                                <p i18n="studio.wizard.help_text">Consulter la documentation</p>
+                                <a class="btn btn-outline-info" href="https://github.com/geobretagne/mviewerstudio/blob/master/doc/user.md" target="_blank" i18n="consult">Voir</a>
                             </div>                        
                         </div>
                     </div>
@@ -427,7 +427,7 @@
                                                 <div class="list-flex">
                                                     <div>
                                                         <p class="strong" i18n="tabs.app.search.entity_search.activate">Activer la recherche d'entité</p>
-                                                        <p i18n="tabs.app.search.entity_search.p1">La recherche peut être activée si la couche est de type GEOJSON. Cette fonctionnalité est également activable pour les couches de type WMS à la condition que les entités qui composent cette couche soient également indéxées dans Elasticsearch.</p>
+                                                        <p i18n="tabs.app.search.entity_search.p1">La recherche peut être activée si la donnée est de type GEOJSON. Cette fonctionnalité est également activable pour les données de type WMS à la condition que les entités qui composent cette donnée soient également indéxées dans Elasticsearch.</p>
                                                     </div>
                                                     <div class="custom-control custom-switch">
                                                         <input type="checkbox" class="custom-control-input" id="opt-searchfeatures">
@@ -666,10 +666,9 @@
                                 </button>                               
                             </div>
                         </div>                        
-                    </div>                   
-                    
+                    </div>
                     <hr>
-                    <h6 class="my-2" i18n="modal.theme.paramspanel.data">Couches de la thématique</h6>
+                    <h6 class="my-2" i18n="modal.theme.paramspanel.data">Données de la thématique</h6>
                     <!-- List with handle -->
                     <div id="themeLayers" class="list-group my-2"></div>
                     <div class="my-3">
@@ -798,7 +797,7 @@
                             </div>
                         </div>
                         <div class="tab-pane fade" id="local" role="tabpanel" tabindex="0">
-                            <label i18n="modal.file.selectlocal">Sélectionnez un fichier de configuration .XML :</label>
+                            <label i18n="modal.file.selectlocal">Sélectionner un fichier de configuration .XML :</label>
                             <div class="input-group mb-3">
                                 <input type="text" class="form-control" placeholder="monapplication.xml" aria-describedby="button-addon2">
                                 <div class="input-group-append">
@@ -824,7 +823,7 @@
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" i18n="modal.layer.edit">Paramètres de la couche</h5>
+                    <h5 class="modal-title" i18n="modal.layer.edit">Paramètres de la donnée</h5>
                     <button type="button" class="close" data-bs-target="#mod-themeOptions" data-bs-toggle="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 </div>
                 <div class="modal-body">
@@ -882,13 +881,13 @@
                                     <div class="form-group mt-4">
                                         <div class="custom-control custom-switch">
                                             <input type="checkbox" class="custom-control-input" id="frm-visible">
-                                            <label class="custom-control-label" for="frm-visible" i18n="modal.layer.visibleonstart">Afficher la couche au démarrage de l'application</label>
+                                            <label class="custom-control-label" for="frm-visible" i18n="modal.layer.visibleonstart">Afficher la donnée au démarrage de l'application</label>
                                         </div>
                                     </div>
                                     <div class="mt-4">
-                                        <h6 i18n="modal.layer.styles">Style(s) de la couche disponible(s)</h6>
+                                        <h6 i18n="modal.layer.styles">Style(s) de la donnée disponible(s)</h6>
                                         <div class="row mt-3" id="frm-lis-styles"></div>
-                                        <p><small><span i18n="modal.layer.styles.note">Si plusieurs styles sont sélectionnés, veuillez indiquer les libéllés des styles qui apparaîtront dans la liste déroulante.</span></small></p>
+                                        <p><small><span i18n="modal.layer.styles.note">Si plusieurs styles sont sélectionnés, indiquer les libéllés des styles qui apparaîtront dans la liste déroulante.</span></small></p>
                                     </div>                                    
                                 </div>
                             </form>                            
@@ -898,7 +897,7 @@
                                 <div class="form-group">
                                     <div class="custom-control custom-switch mt-2">
                                         <input type="checkbox" class="custom-control-input" id="frm-queryable">
-                                        <label class="custom-control-label" for="frm-queryable"><span i18n="modal.layer.queryable">Activer l'interrogation de la couche au clic sur la carte</span></label>
+                                        <label class="custom-control-label" for="frm-queryable"><span i18n="modal.layer.queryable">Activer l'interrogation de la donnée au clic sur la carte</span></label>
                                     </div>
                                 </div>
                                 <div class="row">                                    
@@ -1018,7 +1017,7 @@
                                             <div class="form-group">
                                                 <div class="custom-control custom-switch">
                                                     <input type="checkbox" class="custom-control-input" id="frm-tiled">
-                                                    <label class="custom-control-label" for="frm-tiled" i18n="modal.layer.tiled">Couche tuilée</label>
+                                                    <label class="custom-control-label" for="frm-tiled" i18n="modal.layer.tiled">Affichage tuilé</label>
                                                 </div>
                                             </div>
                                             <hr>
@@ -1048,7 +1047,7 @@
                                     <h2 class="accordion-header" >
                                         <a class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOptionsType" aria-expanded="true" aria-controls="collapseOptionsType">
                                         <div>
-                                            <span class="title-accordion" i18n="modal.layer.type.title">Type de couche</span>
+                                            <span class="title-accordion" i18n="modal.layer.type.title">Type de donnée</span>
                                         </div>
                                         </a>
                                     </h2>
@@ -1112,7 +1111,7 @@
                                     <h2 class="accordion-header" >
                                         <a class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseAccessLayer" aria-expanded="true" aria-controls="collapseAccessLayer">
                                         <div>
-                                            <span class="title-accordion" i18n="modal.layer.access.title">Accès à la couche</span>
+                                            <span class="title-accordion" i18n="modal.layer.access.title">Accès à la donnée</span>
                                         </div>
                                         </a>
                                     </h2>
@@ -1129,7 +1128,7 @@
                                             <div class="form-group">
                                                 <div class="custom-control custom-switch">
                                                     <input type="checkbox" class="custom-control-input" id="frm-useproxy">
-                                                    <label class="custom-control-label" for="frm-useproxy" i18n="modal.layer.proxy">Utiliser le proxy du viewer (nécessaire si HTTPS non disponible pour la couche)</label>
+                                                    <label class="custom-control-label" for="frm-useproxy" i18n="modal.layer.proxy">Utiliser le proxy du viewer (nécessaire si HTTPS non disponible pour la donnée)</label>
                                                 </div>
                                             </div>                                                                               
                                         </div>
@@ -1143,13 +1142,13 @@
                         <div role="tabpanel" class="tab-pane fade" id="layer_conf4">
                             <div class="well well-sm">
                                 <p i18n="modal.layer.filter.serverside">
-                                    Cette fonctionnalité permet de définir des conditions d'affichage des objets de la couche, selon des valeurs attributaires
+                                    Cette fonctionnalité permet de définir des conditions d'affichage des objets de la donnée, selon des valeurs attributaires
                                     ou une emprise géographique. Ce filtre statique ne peut pas être désactivé par vos utilisateurs au sein de l'application.
                                 </p>
                                 <div class="alert alert-info text-info my-2" role="alert">
                                     <i class="ri-information-line" style="font-size: 20px;vertical-align: middle;"></i>
                                     <span i18n="modal.layer.filter.geoserver-only-warning.txt">
-                                        Cette fonctionnalité est basée sur un filtre CQL. Les filtres CQL ne peuvent activés qu'avec des couches de données issues de Geoserver. 
+                                        Cette fonctionnalité est basée sur un filtre CQL. Les filtres CQL ne peuvent activés qu'avec des données issues de Geoserver. 
                                         Il ne s'agit pas d'une fonction standard de WMS.
                                     </span>                                    
                                 </div>
@@ -1227,13 +1226,13 @@
                         <div role="tabpanel" class="tab-pane fade" id="layer_conf5">
                             <div class="well well-sm">
                                 <p i18n="modal.layer.filter.clientside">
-                                    Cette fonctionnalité permet de pré-définir des conditions d'affichage attributairs des objets de la couche. L'utilisateur pourra
+                                    Cette fonctionnalité permet de pré-définir des conditions d'affichage attributaires des objets de la donnée. L'utilisateur pourra
                                     filtrer les entités selon les conditions définies ci-dessous à l'aide d'une liste déroulante disponible dans le bloc légende.
                                 </p>
                                 <div class="alert alert-info text-info my-2" role="alert">
                                     <i class="ri-information-line" style="font-size: 20px;vertical-align: middle;"></i>
                                     <span i18n="modal.layer.filter.geoserver-only-warning.txt">
-                                        Cette fonctionnalité est basée sur un filtre CQL. Les filtres CQL ne peuvent activés qu'avec des couches de données issues de Geoserver. 
+                                        Cette fonctionnalité est basée sur un filtre CQL. Les filtres CQL ne peuvent activés qu'avec des données issues de Geoserver. 
                                         Il ne s'agit pas d'une fonction standard de WMS.
                                     </span>                                    
                                 </div>
@@ -1266,7 +1265,7 @@
                         <div role="tabpanel" class="tab-pane fade" id="layer_conf6">
                             <div class="alert alert-info text-info my-2" role="alert">
                                 <i class="ri-information-line" style="font-size: 20px;vertical-align: middle;"></i>
-                                <span i18n="modal.layer.search.alert">Pour utiliser cette fonctionnalité, les entités de la couche doivent être indexées par ElasticSearch.</span>
+                                <span i18n="modal.layer.search.alert">Pour utiliser cette fonctionnalité, les entités de la donnée doivent être indexées par ElasticSearch.</span>
                             </div>
                             <form>
                                 <div class="form-group my-3">
@@ -1380,7 +1379,7 @@
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" i18n="modal.layer.new.searchdata">Ajouter une couche</h5>
+                    <h5 class="modal-title" i18n="modal.layer.new.searchdata">Ajouter une donnée</h5>
                     <button type="button" class="close" data-bs-target="#mod-themeOptions" data-bs-toggle="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 </div>
                 <div class="modal-body">
@@ -1398,7 +1397,7 @@
                         </div>
                     </div>  
                     <div class="row" style="padding: 1rem;" id="search-message" i18n="modal.layer.new.provider.noneselected">
-                        Veuillez sélectionner un catalogue de données
+                        Sélectionner un catalogue de données
                     </div>
                     <div class="row ogc-results" id="csw-results" style="display: none;"></div>
                     <div class="row ogc-results" id="wms-results" style="display: none;"></div>
