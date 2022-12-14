@@ -365,7 +365,10 @@ var addLayer = function (title, themeid, layerid, item) {
     $("#themeLayers-"+themeid).parent().find(".theme-infos-layer").text(nb_layers);
 };
 
-var editLayer = function (item) {
+var editLayer = function (item) {    
+    $(".themes-list-item.active").removeClass("active");
+    var themeid = $(item).parent().parent().parent().parent().attr('id');
+    $('#'+themeid).addClass('active');
     $(".layers-list-item").removeClass("active");
     var element = $(item).parent().parent();
     element.addClass("active");
@@ -373,13 +376,11 @@ var editLayer = function (item) {
     var layerid = element.attr("data-layerid");
     if (layerid != "undefined") {
         $("#mod-layerOptions").modal('show');
-        $("#mod-themeOptions").modal('hide');
-        mv.showLayerOptions(element);
+        mv.showLayerOptions(element, themeid);
     } else {
         $("#input-ogc-filter").val("")
         $("#csw-results .csw-result").remove();
         $("#mod-layerNew").modal('show');
-        $("#mod-themeOptions").modal('hide');
     }
 };
 
