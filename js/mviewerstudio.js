@@ -293,10 +293,15 @@ var deleteThemeItem = function (btn) {
     el && el.parentNode.removeChild(el);
 };
 
-var deleteLayerItem = function (btn) {
-    var el = $(btn).closest(".layers-list-item")[0];
+var deleteLayerItem = function (btn) {      
+    // Update nb_layer 
+    var themeid = $(btn).closest(".themes-list-item").attr('id');
+    var nb_layers = ($('#themeLayers-'+ themeid +' .list-group-item').length)-1;
+    $("#themeLayers-"+themeid).parent().find(".theme-infos-layer").text(nb_layers);
+    //Delete layer
+    var el = $(btn).closest(".layers-list-item")[0];    
     deleteLayer(el.getAttribute('data-layerid'));
-    el && el.parentNode.removeChild(el);
+    el && el.parentNode.removeChild(el);      
 };
 
 sortThemes = function () {
