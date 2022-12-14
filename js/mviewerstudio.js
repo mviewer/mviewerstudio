@@ -257,12 +257,10 @@ var newConfiguration = function () {
     $("#themes-list, #themeLayers, #liste_applications, #distinct_values").find(".list-group-item").remove();
     $("#frm-bl .custom-bl").remove();
     $("#nameAppBlock").empty();
-
     // Gestion des accordéons    
     ["collapseSearch", "collapseHomePage", "collapseFondPlan", "collapseElasticSearch"].forEach(function (param) {
         $("#"+param).collapse("hide");
     });
-
     // Gestion des fonds de plan 
     $("#frm-bl .bl input").prop("checked",false).trigger('change');
     $("#frm-bl .bl input").slice(0,2).prop("checked",true).trigger('change');
@@ -288,15 +286,6 @@ var loadLayers = function (themeid) {
     }
 };
 
-var sortableLayerList = Sortable.create(document.getElementById('themeLayers'), {
-    handle: '.moveList',
-    animation: 150,
-    ghostClass: 'ghost',
-    onEnd: function (evt) {
-        sortLayers(evt.oldIndex, evt.newIndex);
-    }
-});
-
 var deleteThemeItem = function (btn) {
     var el = $(btn).closest(".list-group-item")[0];
     var themeid = $(el).attr("data-themeid");
@@ -310,15 +299,6 @@ var deleteLayerItem = function (btn) {
     el && el.parentNode.removeChild(el);
 };
 
-var sortableThemeList = Sortable.create(document.getElementById('themes-list'), {
-    handle: '.moveList',
-    animation: 150,
-    ghostClass: 'ghost',
-    onEnd: function (evt) {
-        sortThemes();
-    }
-});
-
 sortThemes = function () {
     var orderedThemes = {};
     $(".themes-list-item").each(function(i,item) {
@@ -328,13 +308,25 @@ sortThemes = function () {
     config.themes = orderedThemes;
 };
 
-sortLayers = function (fromIndex, toIndex) {
-    var themeid = $("#themes-list .active").attr("data-themeid");
+sortLayers = function (evt) {
+    var themeid = evt.item.parentElement.closest(".themes-list-item").id;
     var arr = config.themes[themeid].layers;
-    var element = arr[fromIndex];
-    arr.splice(fromIndex, 1);
-    arr.splice(toIndex, 0, element);
+    var element = arr[evt.fromIndex];
+    arr.splice(evt.fromIndex, 1);
+    arr.splice(evt.toIndex, 0, element);
 };
+
+var sortableElement = function (targetId, callback){
+    Sortable.create(document.getElementById(targetId), {
+        handle: '.moveList',
+        animation: 150,
+        ghostClass: 'ghost',
+        onEnd: function (evt) {
+            callback(evt);
+        }
+    });
+};
+sortableElement('themes-list', sortThemes);
 
 var sortableAttributeList = Sortable.create(document.getElementById('frm-lis-fields'), {
     handle: '.bi-arrows-move',
@@ -347,12 +339,13 @@ $('input[type=file]').change(function () {
 });
 
 
-var addLayer = function (title, layerid) {
+var addLayer = function (title, themeid, layerid, item) {
+    //var themeid = $(this).closest(".themes-list-item").attr("data-themeid");
     // test if theme is saved
     if (!config.themes[$("#theme-edit").attr("data-themeid")]) {
         saveTheme();
     }
-    var item = $("#themeLayers").append([
+    var item = $("#themeLayers-"+themeid).append([
         '<div class="list-group-item layers-list-item" data-layerid="'+layerid+'">',
             '<span class="layer-name moveList">'+title+'</span>',
             '<div class="layer-options-btn">',
@@ -364,7 +357,10 @@ var addLayer = function (title, layerid) {
 
      if (title === 'Nouvelle couche') {
         item.find(".layer-edit").last().click();
-     }
+    }
+    // Update nb_layer 
+    var nb_layers = $('#themeLayers-'+ themeid +' .list-group-item').length;
+    $("#themeLayers-"+themeid).parent().find(".theme-infos-layer").text(nb_layers);
 };
 
 var editLayer = function (item) {
@@ -406,29 +402,32 @@ var addTheme = function (title, collapsed, themeid, icon, url) {
     if (url) {
         //external theme
          $("#themes-list").append([
-        '<div class="list-group-item list-group-item themes-list-item" data-theme-url="'+url+'" data-theme="'+title+'" data-themeid="'+themeid+'" data-theme-collapsed="'+collapsed+'" data-theme-icon="'+icon+'">',
+        '<div class="list-group-item themes-list-item" data-theme-url="'+url+'" data-theme="'+title+'" data-themeid="'+themeid+'" data-theme-collapsed="'+collapsed+'" data-theme-icon="'+icon+'">',
             '<div class="theme-infos">',
                 '<span class="theme-name moveList">'+title+'</span><span class="theme-infos-layer">Ext.</span>',
             '</div>',
-            '<div class="theme-options-btn">',
+            '<div class="theme-options-btn text-right">',
                 '<button class="btn btn-sm btn-secondary" ><span class="theme-move moveList" title="Déplacer"><i class="bi bi-arrows-move"></i></span></button>',
                 '<button class="btn btn-sm btn-secondary" onclick="deleteThemeItem(this);" ><span class="theme-remove" title="Supprimer"><i class="bi bi-x-circle"></i></span></button>',
             '</div>',
         '</div>'].join(""));
     } else {
-         $("#themes-list").append([
-        '<div class="list-group-item themes-list-item" data-theme="'+title+'" data-themeid="'+themeid+'" data-theme-collapsed="'+collapsed+'" data-theme-icon="'+icon+'">',   
-            '<div class="theme-infos">',
-                '<span class="theme-name moveList">'+title+'</span><span class="theme-infos-layer">0</span>',
-            '</div>',
-            '<div class="theme-options-btn">',
-                '<button class="btn btn-sm btn-secondary" ><span class="theme-move moveList" title="Déplacer"><i class="bi bi-arrows-move"></i></span></button>',
-                '<button class="btn btn-sm btn-secondary" onclick="deleteThemeItem(this);" ><span class="theme-remove" title="Supprimer"><i class="bi bi-x-circle"></i></span></button>',
-                '<button class="btn btn-sm btn-info" onclick="editTheme(this);"><span class="theme-edit" title="Editer ce thème"><i class="bi bi-gear-fill"></i></span></button>',                
-            '</div>',
-        '</div>'].join(""));
+        $("#themes-list").append(
+            `<div class="list-group-item themes-list-item" id="${themeid}" data-theme="${title}" data-themeid="${themeid}" data-theme-collapsed="${collapsed}" data-theme-icon="${icon}">
+                <div class="theme-infos">
+                    <span class="theme-name moveList">${title}</span><span class="theme-infos-layer">0</span>
+                </div>  
+                <div class="theme-options-btn text-right">          
+                    <button class="btn btn-sm btn-outline-info" id="btn-addLayer-${themeid}" onclick="addLayer('Nouvelle couche', '${themeid}');" data-bs-target="#mod-layerNew" data-bs-toggle="modal"><i class="bi bi-plus-lg"></i> Ajouter une donnée</button>
+                    <button class="btn btn-sm btn-secondary"><span class="theme-move moveList" title="Déplacer"><i class="bi bi-arrows-move"></i></span></button>
+                    <button class="btn btn-sm btn-secondary" onclick="deleteThemeItem(this);" ><span class="theme-remove" title="Supprimer"><i class="bi bi-x-circle"></i></span></button>
+                    <button class="btn btn-sm btn-primary" onclick="editTheme(this);"><span class="theme-edit" title="Editer ce thème"><i class="bi bi-gear-fill"></i></span></button>                
+                </div>                        
+                <div id="themeLayers-${themeid}" class="theme-layer-list list-group mt-3 mb-2"></div>
+            </div>`   
+        );
+        sortableElement("themeLayers-"+themeid, sortLayers);        
     }
-
 
     config.themes[themeid] = {
         title:title,
@@ -461,7 +460,7 @@ var editTheme = function (item) {
     $("#theme-pick-icon").siblings('.selected-icon').addClass(icon);
 
     //Remove old layers entries
-    $(".layers-list-item").remove();
+    //$(".layers-list-item").remove();
     //Show layerslm
     loadLayers(themeid);
 };
@@ -478,9 +477,7 @@ var saveTheme = function () {
     theme.attr("data-theme", title);
     theme.attr("data-theme-collapsed", collapsed);
     theme.attr("data-theme-icon", icon);
-    theme.find(".theme-name").text(title);
-    var nb_layers = $("#themeLayers .list-group-item").length;
-    theme.find(".theme-infos-layer").text(nb_layers);
+    theme.find(".theme-name").text(title);    
     //deactivate theme edition
     $("#themes-list .list-group-item").removeClass("active");
     $("#mod-themeOptions").modal('hide');
