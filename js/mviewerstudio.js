@@ -281,7 +281,7 @@ var loadLayers = function (themeid) {
     var theme = config.themes[themeid];
     if (theme) {
         $.each(theme.layers, function (index, layer) {
-            addLayer(layer.title, layer.id);
+            addLayer(layer.title, themeid, layer.id);
         });
     }
 };
@@ -341,8 +341,10 @@ $('input[type=file]').change(function () {
 
 var addLayer = function (title, themeid, layerid, item) {
     //var themeid = $(this).closest(".themes-list-item").attr("data-themeid");
+    $(".themes-list-item").removeClass("active");
+    $('#'+themeid).addClass('active');
     // test if theme is saved
-    if (!config.themes[$("#theme-edit").attr("data-themeid")]) {
+    if (!config.themes[themeid]) {
         saveTheme();
     }
     var item = $("#themeLayers-"+themeid).append([
@@ -364,7 +366,7 @@ var addLayer = function (title, themeid, layerid, item) {
 };
 
 var editLayer = function (item) {
-    $("#themeLayers .list-group-item").removeClass("active");
+    $(".layers-list-item").removeClass("active");
     var element = $(item).parent().parent();
     element.addClass("active");
     var title = element.find(".layer-name").text();
@@ -421,7 +423,7 @@ var addTheme = function (title, collapsed, themeid, icon, url) {
                     <button class="btn btn-sm btn-outline-info" id="btn-addLayer-${themeid}" onclick="addLayer('Nouvelle couche', '${themeid}');" data-bs-target="#mod-layerNew" data-bs-toggle="modal"><i class="bi bi-plus-lg"></i> Ajouter une donnée</button>
                     <button class="btn btn-sm btn-secondary"><span class="theme-move moveList" title="Déplacer"><i class="bi bi-arrows-move"></i></span></button>
                     <button class="btn btn-sm btn-secondary" onclick="deleteThemeItem(this);" ><span class="theme-remove" title="Supprimer"><i class="bi bi-x-circle"></i></span></button>
-                    <button class="btn btn-sm btn-primary" onclick="editTheme(this);"><span class="theme-edit" title="Editer ce thème"><i class="bi bi-gear-fill"></i></span></button>                
+                    <button class="btn btn-sm btn-primary" onclick="editTheme('${themeid}');"><span class="theme-edit" title="Editer ce thème"><i class="bi bi-gear-fill"></i></span></button>                
                 </div>                        
                 <div id="themeLayers-${themeid}" class="theme-layer-list list-group mt-3 mb-2"></div>
             </div>`   
@@ -442,15 +444,15 @@ var addTheme = function (title, collapsed, themeid, icon, url) {
     }
 };
 
-var editTheme = function (item) {
-    $("#themes-list .list-group-item").removeClass("active");
-    $(item).parent().parent().addClass("active");
-    var title = $(item).parent().parent().attr("data-theme");
-    var themeid = $(item).parent().parent().attr("data-themeid");
-    var collapsed = ($(item).parent().parent().attr("data-theme-collapsed")==="true")?false:true;
-    var icon = $(item).parent().parent().attr("data-theme-icon");
-    if (icon === "undefined") icon = 'fas fa-caret-right';
-
+var editTheme = function (themeid) {
+    $(".themes-list-item.active").removeClass("active");     
+    var th = $('#'+themeid);        
+    th.addClass("active");
+    var title = th.attr("data-theme");
+    var themeid = th.attr("data-themeid");
+    var collapsed = (th.attr("data-theme-collapsed")==="true")?false:true;
+    var icon = th.attr("data-theme-icon");
+    if (icon === "undefined") icon = 'fas fa-caret-right';   
     $("#mod-themeOptions").modal('show');
     $("#theme-edit-title").val(title);
     $("#theme-edit-collapsed").prop('checked', collapsed);
@@ -460,7 +462,7 @@ var editTheme = function (item) {
     $("#theme-pick-icon").siblings('.selected-icon').addClass(icon);
 
     //Remove old layers entries
-    //$(".layers-list-item").remove();
+    $('#'+themeid+' .layers-list-item').remove();
     //Show layerslm
     loadLayers(themeid);
 };
@@ -479,7 +481,7 @@ var saveTheme = function () {
     theme.attr("data-theme-icon", icon);
     theme.find(".theme-name").text(title);    
     //deactivate theme edition
-    $("#themes-list .list-group-item").removeClass("active");
+    $("#themes-list .themes-list-item").removeClass("active");
     $("#mod-themeOptions").modal('hide');
 
     //save theme locally
