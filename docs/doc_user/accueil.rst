@@ -22,7 +22,7 @@ Avant de vous lancer dans la belle aventure du mviewer studio et de goûter les 
 - Avoir créé la ou les  **fiches de métadonnées**  nécessaires sur le catalogue partenaire (ou sur son propre catalogue CSW).
 - Disposer des  **fichiers de styles** (SLD) nécessaires.
 
-N.B sur GéoBretagne : pour plus de confort et d'autonomie, il est fortement conseillé d'être administrateur délégué_ de ses données.
+> N.B. sur GéoBretagne : pour plus de confort et d'autonomie, il est fortement conseillé d'être administrateur délégué_ de ses données.
 
 Construire son application
 -------------------------------------------
@@ -65,13 +65,13 @@ Il est aussi possible d'enregistrer  |enregistrer| ou de prévisualiser |previsu
 
 Deux modes sont proposés pour des parcours utilisateur :
 
-- Mode simple par défaut
+* mode simple par défaut
 
 .. image:: ../_images/user/mviewerstudio_1_application.png
               :alt: Mode simple
               :align: center
 
-- Mode avancé avec des fonctionnalités supplémentaires pour les utilisateurs avancés
+* mode avancé avec des fonctionnalités supplémentaires pour les utilisateurs avancés
 
 .. image:: ../_images/user/mviewerstudio_1_application_avance.png
               :alt: Mode avancé
