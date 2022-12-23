@@ -59,11 +59,11 @@ Il est ensuite nécessaire d'ajouter des données à cette thématique via le bo
 	      :width: 100 pt
 
 
+Vous pouvez chercher un jeu de données dans le catalogue (ex. Région Bretagne). Vous pouvez valider votre recherche en tappant sur la touche Entrée de votre clavier ou sur l'icone loupe :
+
 .. image:: ../_images/user/mviewerstudio_2_thematiques_donnees.png
               :alt: Ajouter une donnée
               :align: center
-
-Vous pouvez chercher un jeu de données dans le catalogue (ex. Région Bretagne) :
 
 - par mot-clé :
 
