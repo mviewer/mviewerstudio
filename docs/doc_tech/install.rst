@@ -16,19 +16,21 @@ mviewerstudio peut fonctionner avec 2 backends différents
 En fonction du backend retenu, l'installation diffère.
 
 Backend PHP
+~~~~~~~
 
 Prérequis : Apache 2, PHP 7
 
 Clone du projet :
 
 cd /home/studio
-
-git clone https://github.com/geobretagne/mviewerstudio
+git clone https://github.com/mviewer/mviewerstudio
 
 Backend Python
+~~~~~~~
 
 à compléter...
 
 Docker
+~~~~~~~
 
 à compléter...

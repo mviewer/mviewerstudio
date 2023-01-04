@@ -68,7 +68,7 @@ Sauf indication contraire, cette documentation est sous licence **Creative Commo
 
 .. _CC-BY-NC-SA: https://creativecommons.org/licenses/by-nc-sa/4.0/deed.fr
 
-.. _mviewer: https://github.com/geobretagne/mviewer
+.. _mviewer: https://github.com/mviewer/mviewer
 
 .. _GitHub: https://github.com/mviewer/mviewerstudio/
 
