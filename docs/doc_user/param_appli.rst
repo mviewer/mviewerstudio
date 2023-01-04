@@ -64,12 +64,12 @@ Activer la recherche pour offrir à vos utilisateurs la possibilité de se local
               :align: center
 
 - ``A l'adresse`` : localisation à l'adresse via le service de la Base adresse nationale ou tout autre service.
-- ``Activer la recherche d'entités`` :guilabel:`mode avancé` : la recherche peut être activée si la donnée est de type GEOJSON. Cette fonctionnalité est également activable pour les données de type WMS à la condition que les entités qui composent cette donnée soient également indéxées dans Elasticsearch. 
+- ``Activer la recherche d'entités`` : la recherche peut être activée si la donnée est de type GEOJSON. Cette fonctionnalité est également activable pour les données de type WMS à la condition que les entités qui composent cette donnée soient également indéxées dans Elasticsearch :guilabel:`mode avancé`. 
 
 Page d'accueil
 -------------------------------------------
 
-Il est possible de paramétrer une page d'accueil / documentation au chargement de l'application en indiquant un lien vers une page web (format .html). :guilabel:`mode avancé`
+Il est possible de paramétrer une page d'accueil / documentation en indiquant un lien vers une page web (format .html). :guilabel:`mode avancé`
 
 .. image:: ../_images/user/mviewerstudio_1_application_page_accueil.png
               :alt: Page d'accueil
