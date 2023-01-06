@@ -86,7 +86,7 @@ Deux modes sont proposés pour des parcours utilisateur :
               :alt: Mode simple
               :align: center
 
-* mode avancé avec des fonctionnalités supplémentaires pour les utilisateurs avancés
+* mode avancé :guilabel:`mode avancé` avec des fonctionnalités supplémentaires pour les utilisateurs avancés
 
 .. image:: ../_images/user/mviewerstudio_1_application_avance.png
               :alt: Mode avancé

@@ -4,7 +4,7 @@
 .. _param_data:
 
 2) Thématiques & données
-=====================
+=========================
 
 Définir les thématiques et les données de son application.
 
@@ -25,7 +25,7 @@ Deux options sont offertes à l'utilisateur pour définir ses thématiques :
   2. Importer : pour réutiliser une thématique déjà créée au sein de la communauté mviewer (ex. la thématique des découpages territoriaux qui contient les limites de communes, EPCI et départements)
 
 Option - Créer une thématique
-~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 En cliquant sur le bouton créer, une fenêtre de paramétrage de la thématique sélectionnée s'ouvre.
 
@@ -40,7 +40,7 @@ En cliquant sur le bouton créer, une fenêtre de paramétrage de la thématique
 * ``Icône`` : sélectionner l'icône illustrant la thématique. Pour rechercher un mot clé en anglais, utiliser la recherche du navigateur (taper CRTL+F).
 
 Option - Importer une thématique une thématique
-~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 En cliquant sur Importer, possibilité d'importer une·des thématique·s existante·s (voir option external_themes dans :ref:`config`).
 
@@ -59,7 +59,7 @@ Il est ensuite nécessaire d'ajouter des données à cette thématique via le bo
 	      :width: 100 pt
 
 Ajouter une donnée
-~~~~~~~
+~~~~~~~~~~~~~~~~~~~
 
 Vous pouvez chercher un jeu de données dans un catalogue (ex. Région Bretagne). Vous pouvez valider votre recherche en tapant sur la touche Entrée de votre clavier ou sur l'icone loupe :
 
@@ -73,7 +73,7 @@ Vous pouvez chercher un jeu de données dans un catalogue (ex. Région Bretagne)
               :alt: Chercher une donnée
               :align: center
 
-- en renseignant l'adresse du catalogue fournisseur ou d'un service WMS :guilabel:`mode avancé` :
+- en renseignant l'adresse du catalogue fournisseur ou d'un service WMS :guilabel:`mode avancé`:
 
 .. image:: ../_images/user/mviewerstudio_2_thematiques_donnees_avance.png
               :alt: Chercher une donnée
@@ -91,7 +91,7 @@ Une fois cliqué sur Séléctionner, la donnée est ajoutée à l'arborescence. 
 
 
 Onglet Général
-~~~~~~~
+~~~~~~~~~~~~~~~
 
 L'onglet général recense les principales options de la donnée.
 
@@ -107,7 +107,7 @@ L'onglet général recense les principales options de la donnée.
 
 
 Onglet Interrogation
-~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~
 
 L'onglet interrogation recense les options relatives à l'interrogation de la donnée.
 
@@ -125,7 +125,7 @@ L'onglet interrogation recense les options relatives à l'interrogation de la do
         * Choix de l'ordre d'affichage dans la fiche d'information
 
 Onglet filtre dynamique
-~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~
 
 L'onglet filtre dynamique permet de filtrer la donnée via une liste déroulante entre différentes valeurs.
 
@@ -138,7 +138,7 @@ L'onglet filtre dynamique permet de filtrer la donnée via une liste déroulante
 * ``Valeur(s) sélectionnée(s)`` : valeurs disponibles dans le filtre.
 
 Onglet options avancées
-~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~
 
 L'onglet options avancées donne accès aux fonctionnalités avancées.
 
@@ -147,7 +147,7 @@ L'onglet options avancées donne accès aux fonctionnalités avancées.
               :align: center
 
 Onglet filtre statique
-~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~
 
 L'onglet filtre statique permet de filtrer les données à afficher sur la carte.
 
@@ -156,11 +156,10 @@ L'onglet filtre statique permet de filtrer les données à afficher sur la carte
               :align: center
 
 Onglet recherche
-~~~~~~~
+~~~~~~~~~~~~~~~~~
 
 L'onglet filtre dynamique permet de filtrer la donnée via une liste déroulante entre différentes valeurs.
 
 .. image:: ../_images/user/mviewerstudio_2_donnees_recherche.png
               :alt: Filtre dynamique
               :align: center
-

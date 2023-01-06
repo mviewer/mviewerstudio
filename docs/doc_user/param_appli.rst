@@ -4,9 +4,9 @@
 .. _param_appli:
 
 1) Paramétrer son application
-=====================
+==============================
 
-Le mode simple est servi par défaut. Vous pouvez basculer à tout moment sur le mode avancé en cliquant en haut à droite comme ci-dessous.
+Le mode simple est servi par défaut. Vous pouvez basculer à tout moment sur le mode avancé :guilabel:`mode avancé` en cliquant en haut à droite comme ci-dessous.
 
 .. image:: ../_images/user/mviewerstudio_1_application_defaut.png
               :alt: Page application
@@ -54,7 +54,7 @@ Sélectionner les fonds de plan à afficher en cochant la case ainsi que le fond
 * ``Mode d'affichage`` : choix entre le mode normal ou gallerie pour le changement de fond de plan :guilabel:`mode avancé`.
 
 
-Recherche
+Recherche [:guilabel:`mode avancé`]
 -------------------------------------------
 
 Activer la recherche pour offrir à vos utilisateurs la possibilité de se localiser grâce à une barre de recherche :
@@ -69,7 +69,7 @@ Activer la recherche pour offrir à vos utilisateurs la possibilité de se local
 Page d'accueil
 -------------------------------------------
 
-Il est possible de paramétrer une page d'accueil / documentation en indiquant un lien vers une page web (format .html). :guilabel:`mode avancé`
+Il est possible de paramétrer une page d'accueil / documentation en indiquant un lien vers une page web (format .html).
 
 .. image:: ../_images/user/mviewerstudio_1_application_page_accueil.png
               :alt: Page d'accueil
