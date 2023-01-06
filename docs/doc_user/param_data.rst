@@ -73,7 +73,7 @@ Vous pouvez chercher un jeu de données dans un catalogue (ex. Région Bretagne)
               :alt: Chercher une donnée
               :align: center
 
-- en renseignant l'adresse du catalogue fournisseur ou d'un service WMS :guilabel:`mode avancé`:
+- :guilabel:`mode avancé` en renseignant l'adresse du catalogue fournisseur ou d'un service WMS
 
 .. image:: ../_images/user/mviewerstudio_2_thematiques_donnees_avance.png
               :alt: Chercher une donnée
@@ -117,7 +117,7 @@ L'onglet interrogation recense les options relatives à l'interrogation de la do
 
 * ``Activer l'interrogation de la donnée au clic sur la carte`` : active l'interrogation de la donnée.
 * ``Position de la fiche d'information`` : affichage de la fiche d'information à droite ou en bas.
-* ``Limitation du nombre de réponses`` : limitation du nombre d'entités interrogées :guilabel:`mode avancé`.
+* :guilabel:`mode avancé` ``Limitation du nombre de réponses`` : limitation du nombre d'entités interrogées.
 * ``Format de la fiche d'information`` : personnalisation possible de la fiche d'information.
 
         * Choix du type : titre, texte, lien ou image.

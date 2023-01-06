@@ -27,8 +27,8 @@ Activer les outils que vous souhaitez afficher au sein de votre application :
 
 * ``Outils de mesures`` : cette option permet d'activer des outils de mesures de distance ou de surface.
 * ``Export de la carte en image`` : cette option permet d'exporter une capture d'écran de la carte consultée.
-* ``Affichage des coordonnées au clic`` : cette option permet d'afficher dans le bandeau en haut les coordonnées du point cliqué :guilabel:`mode avancé`.
-* ``Afficher/masquer toutes les données d'une thématique`` : active la possibilité d'afficher toutes les données d'un thème en un clic :guilabel:`mode avancé`.
+* :guilabel:`mode avancé` ``Affichage des coordonnées au clic`` : cette option permet d'afficher dans le bandeau en haut les coordonnées du point cliqué.
+* :guilabel:`mode avancé` ``Afficher/masquer toutes les données d'une thématique`` : active la possibilité d'afficher toutes les données d'un thème en un clic.
 
 Options de la carte
 -------------------------------------------
@@ -54,7 +54,7 @@ Sélectionner les fonds de plan à afficher en cochant la case ainsi que le fond
 * ``Mode d'affichage`` : choix entre le mode normal ou gallerie pour le changement de fond de plan :guilabel:`mode avancé`.
 
 
-Recherche [:guilabel:`mode avancé`]
+Recherche (:guilabel:`mode avancé`)
 -------------------------------------------
 
 Activer la recherche pour offrir à vos utilisateurs la possibilité de se localiser grâce à une barre de recherche :
@@ -64,7 +64,7 @@ Activer la recherche pour offrir à vos utilisateurs la possibilité de se local
               :align: center
 
 * ``A l'adresse`` : localisation à l'adresse via le service de la Base adresse nationale ou tout autre service.
-* ``Activer la recherche d'entités`` : la recherche peut être activée si la donnée est de type GEOJSON. Cette fonctionnalité est également activable pour les données de type WMS à la condition que les entités qui composent cette donnée soient également indéxées dans Elasticsearch :guilabel:`mode avancé`. 
+* ``Activer la recherche d'entités`` :guilabel:`mode avancé`: la recherche peut être activée si la donnée est de type GEOJSON. Cette fonctionnalité est également activable pour les données de type WMS à la condition que les entités qui composent cette donnée soient également indéxées dans Elasticsearch. 
 
 Page d'accueil
 -------------------------------------------
@@ -75,7 +75,7 @@ Il est possible de paramétrer une page d'accueil / documentation en indiquant u
               :alt: Page d'accueil
               :align: center
 
-* ``Afficher la page d'accueil par défaut`` : affiche la page d'accueil au lancement de l'application :guilabel:`mode avancé`.
+* ``Afficher la page d'accueil par défaut`` :guilabel:`mode avancé`: affiche la page d'accueil au lancement de l'application.
 
 
 Navigation
