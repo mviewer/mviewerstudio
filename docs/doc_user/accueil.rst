@@ -17,10 +17,10 @@ Prérequis
 
 Avant de vous lancer dans la belle aventure du mviewerstudio et de goûter les joies de monter sa propre application cartographique, vous devrez malgré tout vous être assuré·e d'avoir rempli les prérequis suivants :
 
-- Le cas échéant, disposer d'un compte avec  **les droits suffisants** pour vous connecter au mviewerstudio, si ce n'est pas le cas merci de contacter le·s administrateur·rice·s.
-- Avoir déposé le ou les jeux de données "métier" nécessaires sur un catalogue en  **flux OGC**  en respectant les recommandations (exemple sur GéoBretagne_).
-- Avoir créé la ou les  **fiches de métadonnées**  nécessaires sur le catalogue partenaire (ou sur son propre catalogue CSW).
-- Disposer des  **fichiers de styles** (SLD) nécessaires.
+* Le cas échéant, disposer d'un compte avec  **les droits suffisants** pour vous connecter au mviewerstudio, si ce n'est pas le cas merci de contacter le·s administrateur·rice·s.
+* Avoir déposé le ou les jeux de données "métier" nécessaires sur un catalogue en  **flux OGC**  en respectant les recommandations (exemple sur GéoBretagne_).
+* Avoir créé la ou les  **fiches de métadonnées**  nécessaires sur le catalogue partenaire (ou sur son propre catalogue CSW).
+* Disposer des  **fichiers de styles** (SLD) nécessaires.
 
 .. note:: Sur GéoBretagne : pour plus de confort et d'autonomie, il est fortement conseillé d'être administrateur délégué_ de ses données.
 
@@ -29,13 +29,13 @@ Construire son application
 
 Deux choix sont offerts à l'utilisateur :
 
-- Ouvrir un projet existant disponible sur un espace de stockage distant (serveur)
+* Ouvrir un projet existant disponible sur un espace de stockage distant (serveur)
 
 .. image:: ../_images/user/mviewerstudio_0_accueil_projet_existant_serveur.png
               :alt: Projet existant serveur
               :align: center
 
-- Ouvrir un projet existant disponible sur un espace de stockage local (fichier XML sur votre ordinateur)
+* Ouvrir un projet existant disponible sur un espace de stockage local (fichier XML sur votre ordinateur)
 
 .. image:: ../_images/user/mviewerstudio_0_accueil_projet_existant_local.png
               :alt: Projet existant local
@@ -97,9 +97,9 @@ Crédits
 
 Les liens en bas de page renvoient vers :
 
-- le dépôt du code github
-- la documentation sur readthedocs
-- une fenêtre crédits avec les ressources utilisées (librairies, icônes, illustrations) :
+* le dépôt du code github
+* la documentation sur readthedocs
+* une fenêtre crédits avec les ressources utilisées (librairies, icônes, illustrations) :
 
 .. image:: ../_images/user/mviewerstudio_0_accueil_credits.png
               :alt: Crédits
