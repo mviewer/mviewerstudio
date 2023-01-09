@@ -20,10 +20,9 @@ Backend PHP
 
 Prérequis : Apache 2, PHP 7
 
-Clone du projet :
+Clone du projet dans le répertoire apache :
 
-cd /home/studio
-git clone https://github.com/mviewer/mviewerstudio
+* git clone https://github.com/mviewer/mviewerstudio
 
 Backend Python
 ~~~~~~~~~~~~~~
