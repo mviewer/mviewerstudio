@@ -140,25 +140,39 @@ L'onglet filtre dynamique permet de filtrer la donnée via une liste déroulante
 Onglet options avancées
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-L'onglet options avancées donne accès aux fonctionnalités avancées.
+L'onglet options avancées donne accès aux fonctionnalités avancées. :guilabel:`mode avancé`
 
 .. image:: ../_images/user/mviewerstudio_2_donnees_avancees.png
               :alt: Options avancées
               :align: center
 
+* :guilabel:`mode avancé` ``Echelle mini / maxi`` : Echelle minimale et maximale d'affichage de la donnée.
+* :guilabel:`mode avancé` ``Légende statique`` : Lien vers une image qui s'affiche en tante que légende de la donnée.
+* :guilabel:`mode avancé` ``Affichage tuilé`` : Affichage tuilé de la donnée. La donnée est chargée progressivement.
+* :guilabel:`mode avancé` ``Utiliser un style externe`` : Lien vers un style SLD remplaçant le style du serveur cartographique.
+* :guilabel:`mode avancé` ``Type de donnée`` : Lien vers la donnée. Ne pas modifier.
+* :guilabel:`mode avancé` ``Métadonnées`` : Lien vers la métadonnée. Ne pas modifier.
+
+
 Onglet filtre statique
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-L'onglet filtre statique permet de filtrer les données à afficher sur la carte.
+L'onglet filtre statique permet de filtrer les données à afficher sur la carte. :guilabel:`mode avancé`
 
 .. image:: ../_images/user/mviewerstudio_2_filtre_statique.png
               :alt: Filtre statique
               :align: center
 
+* :guilabel:`mode avancé` ``Filtre attributaire`` : Filtre selon un attribut. Utilisation d'un filtre cql_.
+* :guilabel:`mode avancé` ``Filtre géographique`` : Filtre selon la géométrie. Utilisation d'un filtre cql_.
+
+.. _cql: https://docs.geoserver.org/stable/en/user/tutorials/cql/cql_tutorial.html#cql-tutorial
+
+
 Onglet recherche
 ~~~~~~~~~~~~~~~~~
 
-L'onglet filtre dynamique permet de filtrer la donnée via une liste déroulante entre différentes valeurs.
+L'onglet recherche permet d'activer la recherche dans l'application sur cette donnée. Cela nécessite un moteur de recherche elasticsearch pour une donnée WMS ou une donnée vectorielle type geojson pour le mode fuse. :guilabel:`mode avancé`
 
 .. image:: ../_images/user/mviewerstudio_2_donnees_recherche.png
               :alt: Filtre dynamique
