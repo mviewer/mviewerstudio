@@ -25,10 +25,10 @@ Fonctionnalités
 
 Activer les outils que vous souhaitez afficher au sein de votre application :
 
-* ``Outils de mesures`` : cette option permet d'activer des outils de mesures de distance ou de surface.
-* ``Export de la carte en image`` : cette option permet d'exporter une capture d'écran de la carte consultée.
-* :guilabel:`mode avancé` ``Affichage des coordonnées au clic`` : cette option permet d'afficher dans le bandeau en haut les coordonnées du point cliqué.
-* :guilabel:`mode avancé` ``Afficher/masquer toutes les données d'une thématique`` : active la possibilité d'afficher toutes les données d'un thème en un clic.
+- ``Outils de mesures`` : cette option permet d'activer des outils de mesures de distance ou de surface.
+- ``Export de la carte en image`` : cette option permet d'exporter une capture d'écran de la carte consultée.
+- :guilabel:`mode avancé` ``Affichage des coordonnées au clic`` : cette option permet d'afficher dans le bandeau en haut les coordonnées du point cliqué.
+- :guilabel:`mode avancé` ``Afficher/masquer toutes les données d'une thématique`` : active la possibilité d'afficher toutes les données d'un thème en un clic.
 
 Options de la carte
 -------------------------------------------
