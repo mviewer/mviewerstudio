@@ -71,7 +71,6 @@
         "tabs.app.search.entity_search.p1": "La recherche peut être activée si la donnée est de type GEOJSON. Cette fonctionnalité est également activable pour les données de type WMS à la condition que les entités qui composent cette donnée soient également indéxées dans Elasticsearch.",
         "tabs.app.search.address_search.title": "Activer la recherche d'adresse",
         "tabs.app.search.address_search.service": "Service utilisé",
-        "tabs.app.search.address_search.none": "Non utilisé",
         "tabs.app.search.address_search.ban": "Base adresse Nationale",
         "tabs.app.search.address_search.custom": "Personnalisé",
         "tabs.app.search.address_search.url": "URL",

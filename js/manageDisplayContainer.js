@@ -43,7 +43,7 @@ $( "#navWizApp" ).click(function() {
 // Manage display of options
 const activeSearch = document.getElementById('SwitchAdressSearch');
 activeSearch.addEventListener('change', (event) => {
-  const isDisplay = event.currentTarget.checked ? "block" : "none";
+  const isDisplay = event.currentTarget.checked ? "block" : "ban";
   document.getElementById('AppSearchBlock').style.display = isDisplay;      
 })
 
