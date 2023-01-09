@@ -108,7 +108,7 @@
         "tabs.data.themespanel.create": "Créer",
         "tabs.data.themespanel.import": "Importer",
         "tabs.data.themespanel.options": "Réduire le panneau des thématiques au démarrage",
-        "modal.theme.paramspanel.title": "Paramétres de la thématique sélectionnée",
+        "modal.theme.paramspanel.title": "Paramètres de la thématique sélectionnée",
         "modal.theme.paramspanel.name": "Nom",
         "modal.theme.paramspanel.opt_unfolded": "Déroulée par défaut",
         "modal.theme.paramspanel.icon": "Icône",
