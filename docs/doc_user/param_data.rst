@@ -33,11 +33,11 @@ En cliquant sur le bouton créer, une fenêtre de paramétrage de la thématique
               :alt: Création thématique
               :align: center
 
-* ``Nom`` : renseigner le nom de la thématique (ex. Ports).
+- ``Nom`` : renseigner le nom de la thématique (ex. Ports).
 
-* ``Déroulée par défaut`` : option permettant d'afficher le contenu de la thématique par défaut
+- ``Déroulée par défaut`` : option permettant d'afficher le contenu de la thématique par défaut
 
-* ``Icône`` : sélectionner l'icône illustrant la thématique. Pour rechercher un mot clé en anglais, utiliser la recherche du navigateur (taper CRTL+F).
+- ``Icône`` : sélectionner l'icône illustrant la thématique. Pour rechercher un mot clé en anglais, utiliser la recherche du navigateur (taper CRTL+F).
 
 Option - Importer une thématique une thématique
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
