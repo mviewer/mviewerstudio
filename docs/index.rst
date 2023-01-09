@@ -62,9 +62,9 @@ Cette partie est dédiée aux personnes qui ont vocation à contribuer au code m
 Auteurs et licence
 ---------------------------------------------
 
-Cette documentation a été réalisée par l'équipe « mviewer » (Région Bretagne)
+Cette documentation a été réalisée par l'équipe « mviewer » (Région Bretagne).
 
-Sauf indication contraire, cette documentation est sous licence **Creative Commons Attribution - Non Commercial - ShareAlike 4.0** (CC-BY-NC-SA_) .
+Sauf indication contraire, cette documentation est sous licence **Creative Commons Attribution - Non Commercial - ShareAlike 4.0** (CC-BY-NC-SA_).
 
 .. _CC-BY-NC-SA: https://creativecommons.org/licenses/by-nc-sa/4.0/deed.fr
 
