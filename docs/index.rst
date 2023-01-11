@@ -6,7 +6,7 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Bienvenue sur la documentation mviewer Studio !
+Bienvenue sur la documentation mviewerstudio !
 =============================================
 
 Introduction
@@ -49,7 +49,7 @@ Cette partie est dédiée aux personnes qui ont vocation à déployer et configu
 Documentation contributeur
 ---------------------------------------------
 
-Cette partie est dédiée aux personnes qui ont vocation à contribuer au code mviewerstudio. Mviewer ayant un mécanisme similaire à mviewer, elle renvoie vers la documentation mviewer.
+Cette partie est dédiée aux personnes qui ont vocation à contribuer au code mviewerstudio. Mviewerstudio ayant un mécanisme similaire à mviewer, elle renvoie vers la documentation mviewer.
 
 .. toctree::
    :hidden:
