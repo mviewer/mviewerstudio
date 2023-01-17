@@ -241,7 +241,7 @@ var newConfiguration = function () {
     });
    
     $("#opt-style").val("css/themes/default.css").trigger("change");
-    $("#frm-searchlocalities").val("false").trigger("change");    
+    $("#frm-searchlocalities").val("ban").trigger("change");    
     $("#mod-themeOptions").modal('hide');
     $('#FadvElasticBlock form').trigger("reset");
 
