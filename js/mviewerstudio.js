@@ -1,6 +1,6 @@
 var _conf;
 var API = {};
-var VERSION = "3.1-snapshot";
+var VERSION = "3.2";
 
 var mviewer = {};
 
