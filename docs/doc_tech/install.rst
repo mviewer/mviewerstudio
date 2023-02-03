@@ -32,7 +32,7 @@ Backend Python
 Prérequis
 *********
 
-.. code-block::
+.. code-block:: sh
 
     sudo apt install libxslt1-dev libxml2-dev
 
@@ -40,7 +40,7 @@ Prérequis
 Ainsi qu'une instance mviewer fonctionnelle (/mviewer)
 
 
-.. code-block::
+.. code-block:: sh
 
     mkdir -p mviewerstudio_backend/static/apps
     cp -r ../../css ../../img ../../index.html ../../js ../../lib mviewerstudio_backend/static/
@@ -50,7 +50,7 @@ Ainsi qu'une instance mviewer fonctionnelle (/mviewer)
 Et également fournir une configuration JSON. Une configuration d'exemple est disponible
 à la racine du dépot:
 
-.. code-block::
+.. code-block:: sh
 
     cp ../../config-python-sample.json mviewerstudio_backend/static/apps/config.json
 
@@ -62,14 +62,14 @@ Dans mon cas, j'ai dû exécuter la commande suivante pour faire le lien entre l
 
 Création du lien dans le dépôt mviewer (répertoire /apps) :
 
-.. code-block::
+.. code-block:: sh
 
     ln -s /<full_path>/mviewerstudio/srv/python/store/ /<full_path>/mviewer/apps/store
 
 
 
 
-.. code-block::
+.. code-block:: sh
 
     cd srv/python
     python3 -m venv .venv
