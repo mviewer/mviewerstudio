@@ -29,16 +29,19 @@ cp config-sample.json apps/config.json
 Backend Python
 ~~~~~~~~~~~~~~
 
-### Prérequis
+Prérequis
+*********
 
-.. code-block:: bash
+.. code-block::
+
     sudo apt install libxslt1-dev libxml2-dev
 
 
 Ainsi qu'une instance mviewer fonctionnelle (/mviewer)
 
 
-.. code-block:: bash
+.. code-block::
+
     mkdir -p mviewerstudio_backend/static/apps
     cp -r ../../css ../../img ../../index.html ../../js ../../lib mviewerstudio_backend/static/
     cp ../../mviewerstudio.i18n.json mviewerstudio_backend/static/mviewerstudio.i18n.json
@@ -47,7 +50,8 @@ Ainsi qu'une instance mviewer fonctionnelle (/mviewer)
 Et également fournir une configuration JSON. Une configuration d'exemple est disponible
 à la racine du dépot:
 
-.. code-block:: bash
+.. code-block::
+
     cp ../../config-python-sample.json mviewerstudio_backend/static/apps/config.json
 
 
@@ -58,13 +62,14 @@ Dans mon cas, j'ai dû exécuter la commande suivante pour faire le lien entre l
 
 Création du lien dans le dépôt mviewer (répertoire /apps) :
 
-.. code-block:: bash
+.. code-block::
+
     ln -s /<full_path>/mviewerstudio/srv/python/store/ /<full_path>/mviewer/apps/store
 
 
 
 
-.. code-block:: bash
+.. code-block::
 
     cd srv/python
     python3 -m venv .venv
