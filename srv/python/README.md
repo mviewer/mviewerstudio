@@ -39,13 +39,13 @@ cp ../../config-python-sample.json mviewerstudio_backend/static/apps/config.json
 
 ```
 
-Attention, il semble que le paramètre `export_conf_folder` ne soit pas pris en compte. Les xml des applications sont donc stockés dans le répertoire (mviewerstudio/srv/python/store/)
+Attention, il semble que le paramètre `export_conf_folder` ne soit pas pris en compte. Les xml des applications sont donc stockés dans le répertoire (mviewerstudio/srv/python/store/).
+
 Dans mon cas, j'ai dû exécuter la commande suivante pour faire le lien entre le store xml et mviewer
 
-Dans le dépôt mviewer
+Création du lien dans le dépôt mviewer (répertoire /apps) :
 ```bash
-cd mviewer/apps
-ln -s ln -s /path_vers/mviewerstudio/srv/python/store/ store
+ln -s /<full_path>/mviewerstudio/srv/python/store/ /<full_path>/mviewer/apps/store
 
 ```
 
@@ -54,7 +54,7 @@ ln -s ln -s /path_vers/mviewerstudio/srv/python/store/ store
 # mettez vous dans un .venv, ex: python -m venv .venv && source .venv/bin/activate, ou via pew ou pyenv, par exemple:
 cd srv/python
 python3 -m venv .venv
-source .ven/bin/activate
+source .venv/bin/activate
 pip install -r requirements.txt -r dev-requirements.txt
 pip install -e .
 cd  mviewerstudio_backend
