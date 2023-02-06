@@ -17,7 +17,7 @@
         },
         "user_info": "srv/user_info",
         "export_conf_folder": "/home/debian/mviewer/apps/store/",
-        "proxy": "",
+        "proxy": "proxy/?url=",
         "user_info_visible": false,
         "app_form_placeholders": {
             "app_title": "Kartenn",
