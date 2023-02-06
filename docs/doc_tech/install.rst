@@ -36,7 +36,6 @@ cp config-sample.json apps/config.json
 Modification des chemins d'accès dans le config.json :
 
 .. code-block:: json
-       :linenos:
 
     "upload_service": "srv/php/store.php",
     "delete_service": "srv/php/delete.php",
