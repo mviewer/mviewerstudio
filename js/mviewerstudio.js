@@ -1,6 +1,6 @@
 var _conf;
 var API = {};
-var VERSION = "3.1-snapshot";
+var VERSION = "3.2";
 
 var mviewer = {};
 
@@ -71,10 +71,11 @@ $(document).ready(function(){
 								var themeid = mv.id;
 								if (url && themeid) {
 									html.push(['<div class="checkbox list-group-item">',
-										'<label for="import-theme-'+themeid+id+'">',
-											'<input type="checkbox" data-url="'+url+'" data-theme-label="'+mv.title+'" data-theme-id="'+themeid+'" name="checkboxes" id="import-theme-'+themeid+id+'">',
-											mv.title,
-										'</label></div>'].join(""));
+										'<div class="custom-control custom-checkbox">',
+											'<input type="checkbox" class="custom-control-input" data-url="'+url+'" data-theme-label="'+mv.title+'" data-theme-id="'+themeid+'" name="checkboxes" id="import-theme-'+themeid+id+'">',
+											'<label class="custom-control-label" for="import-theme-'+themeid+id+'">'+mv.title+'</label>',
+										'</div>',
+                                    '</div>'].join(""));
 								}
 							}
 						});
@@ -94,7 +95,7 @@ $(document).ready(function(){
                         cls ="";
                     }
                     csw_provider_html = '<li class="' + cls + '">';
-                    csw_provider_html += '<a onclick="setActiveProvider(this);" href="#" class="dropdown-toggle"';
+                    csw_provider_html += '<a onclick="setActiveProvider(this);" href="#" class="dropdown-item"';
                     csw_provider_html += ' data-providertype="csw" data-provider="' + provider.url + '"';
                     if (provider.baseref) {
                         csw_provider_html += ' data-metadata-app="' + provider.baseref + '"';
@@ -116,7 +117,7 @@ $(document).ready(function(){
                         cls ="";
                     }
                     wms_providers.push('<li class="' + cls + '">' +
-                        '<a onclick="setActiveProvider(this);" data-providertype="wms" class="dropdown-toggle"' +
+                        '<a onclick="setActiveProvider(this);" data-providertype="wms" class="dropdown-item"' +
                         ' data-provider="' + provider.url + '" href="#">' +
                         provider.title + '</a></li>');
                     nb_providers ++;
@@ -194,7 +195,6 @@ $(document).ready(function(){
             console.groupEnd("init app from config");
         }
     });
-    $('#tabs').tab();
 });
 
 //EPSG:2154
@@ -236,12 +236,14 @@ var newConfiguration = function () {
         $("#"+param).val("");
     });
     ["opt-exportpng", "opt-measuretools", "theme-edit-collapsed", "opt-mini", "opt-showhelp", "opt-coordinates",
-        "opt-togglealllayersfromtheme"].forEach(function (param, id) {
+        "opt-togglealllayersfromtheme", "SwitchAdressSearch","SwitchAdvanced"].forEach(function (param, id) {
         $("#"+param).prop('checked', false);
     });
-
+   
     $("#opt-style").val("css/themes/default.css").trigger("change");
-    $("#panel-theme").hide();
+    $("#frm-searchlocalities").val("ban").trigger("change");    
+    $("#mod-themeOptions").modal('hide');
+    $('#FadvElasticBlock form').trigger("reset");
 
     map.getView().setCenter(_conf.map.center);
     map.getView().setZoom(_conf.map.zoom);
@@ -254,6 +256,26 @@ var newConfiguration = function () {
     savedParameters = {"application":[], "baselayers": {}};
     $("#themes-list, #themeLayers, #liste_applications, #distinct_values").find(".list-group-item").remove();
     $("#frm-bl .custom-bl").remove();
+    $("#nameAppBlock").empty();
+
+    // Gestion des accordéons    
+    ["collapseSearch", "collapseHomePage", "collapseFondPlan", "collapseElasticSearch"].forEach(function (param) {
+        $("#"+param).collapse("hide");
+    });
+
+    // Gestion des fonds de plan 
+    $("#frm-bl .bl input").prop("checked",false).trigger('change');
+    $("#frm-bl .bl input").slice(0,2).prop("checked",true).trigger('change');
+    $("#frm-bl-mode").val("default").trigger("change");   
+    $("#frm-bl-visible").val($("#frm-bl-visible option:not(:disabled)").first().val());
+
+    //Init advanced options
+    $('.advanced').css("display", "none");
+
+    // Init du wizard 
+    $('#stepStudio').find('.nav-item a:first').tab('show');
+    $('#navWizFadv').css("display", "none");
+    
 };
 
 
@@ -267,7 +289,7 @@ var loadLayers = function (themeid) {
 };
 
 var sortableLayerList = Sortable.create(document.getElementById('themeLayers'), {
-    handle: '.glyphicon-move',
+    handle: '.moveList',
     animation: 150,
     ghostClass: 'ghost',
     onEnd: function (evt) {
@@ -289,7 +311,7 @@ var deleteLayerItem = function (btn) {
 };
 
 var sortableThemeList = Sortable.create(document.getElementById('themes-list'), {
-    handle: '.glyphicon-move',
+    handle: '.moveList',
     animation: 150,
     ghostClass: 'ghost',
     onEnd: function (evt) {
@@ -315,7 +337,7 @@ sortLayers = function (fromIndex, toIndex) {
 };
 
 var sortableAttributeList = Sortable.create(document.getElementById('frm-lis-fields'), {
-    handle: '.glyphicon-move',
+    handle: '.bi-arrows-move',
     animation: 150,
     ghostClass: 'ghost',
 });
@@ -332,12 +354,12 @@ var addLayer = function (title, layerid) {
     }
     var item = $("#themeLayers").append([
         '<div class="list-group-item layers-list-item" data-layerid="'+layerid+'">',
-            '<span class="glyphicon glyphicon-move" aria-hidden="true"></span>',
-            '<div class="pull-right btn-group" role="group">',
-                '<button class="btn btn-sm btn-warning" onclick="editLayer(this);"><span class="layer-edit glyphicon glyphicon-pencil" title="Editer cette couche"></span></button>',
-                '<button class="btn btn-sm btn-warning" onclick="deleteLayerItem(this);"><span class="layer-remove glyphicon glyphicon-remove" title="Supprimer"></span></button>',
+            '<span class="layer-name moveList">'+title+'</span>',
+            '<div class="layer-options-btn">',
+                '<button class="btn btn-sm btn-secondary"><span class="layer-move moveList" title="Déplacer"><i class="bi bi-arrows-move"></i></span></button>',
+                '<button class="btn btn-sm btn-secondary" onclick="deleteLayerItem(this);"><span class="layer-remove" title="Supprimer"><i class="bi bi-x-circle"></i></span></button>',
+                '<button class="btn btn-sm btn-info" onclick="editLayer(this);"><span class="layer-edit" title="Editer cette couche"><i class="bi bi-gear-fill"></i></span></button>',
             '</div>',
-            '<span class="layer-name">'+title+'</span>',
         '</div>'].join(""));
 
      if (title === 'Nouvelle couche') {
@@ -352,10 +374,14 @@ var editLayer = function (item) {
     var title = element.find(".layer-name").text();
     var layerid = element.attr("data-layerid");
     if (layerid != "undefined") {
-        $("#mod-layerOptions").modal();
+        $("#mod-layerOptions").modal('show');
+        $("#mod-themeOptions").modal('hide');
         mv.showLayerOptions(element);
     } else {
-        $("#mod-layerNew").modal();
+        $("#input-ogc-filter").val("")
+        $("#csw-results .csw-result").remove();
+        $("#mod-layerNew").modal('show');
+        $("#mod-themeOptions").modal('hide');
     }
 };
 
@@ -369,32 +395,37 @@ var importThemes = function () {
         addTheme(label, true, id, false, url);
     });
     console.groupEnd("importThemes");
+    $("#mod-themesview").modal('hide');
 };
 
 var addTheme = function (title, collapsed, themeid, icon, url) {
-    if ($("#panel-theme").is(":visible")) {
+    if ($("#mod-themeOptions").is(":visible")) {
         alert(mviewer.tr('msg.save_theme_first'));
         return;
     }
     if (url) {
         //external theme
          $("#themes-list").append([
-        '<div class="list-group-item list-group-item-info themes-list-item" data-theme-url="'+url+'" data-theme="'+title+'" data-themeid="'+themeid+'" data-theme-collapsed="'+collapsed+'" data-theme-icon="'+icon+'">',
-            '<span class="glyphicon glyphicon-move" aria-hidden="true"></span>',
-            '<div class="pull-right btn-group" role="group">',
-                '<button class="btn btn-sm btn-warning" onclick="deleteThemeItem(this);" ><span class="theme-remove glyphicon glyphicon-remove" title="Supprimer"></span></button>',
+        '<div class="list-group-item list-group-item themes-list-item" data-theme-url="'+url+'" data-theme="'+title+'" data-themeid="'+themeid+'" data-theme-collapsed="'+collapsed+'" data-theme-icon="'+icon+'">',
+            '<div class="theme-infos">',
+                '<span class="theme-name moveList">'+title+'</span><span class="theme-infos-layer">Ext.</span>',
             '</div>',
-            '<span class="theme-name">'+title+'</span><span class="label label-success">Ext.</span>',
+            '<div class="theme-options-btn">',
+                '<button class="btn btn-sm btn-secondary" ><span class="theme-move moveList" title="Déplacer"><i class="bi bi-arrows-move"></i></span></button>',
+                '<button class="btn btn-sm btn-secondary" onclick="deleteThemeItem(this);" ><span class="theme-remove" title="Supprimer"><i class="bi bi-x-circle"></i></span></button>',
+            '</div>',
         '</div>'].join(""));
     } else {
          $("#themes-list").append([
-        '<div class="list-group-item themes-list-item" data-theme="'+title+'" data-themeid="'+themeid+'" data-theme-collapsed="'+collapsed+'" data-theme-icon="'+icon+'">',
-            '<span class="glyphicon glyphicon-move" aria-hidden="true"></span>',
-            '<div class="pull-right btn-group" role="group">',
-                '<button class="btn btn-sm btn-warning" onclick="editTheme(this);"><span class="theme-edit glyphicon glyphicon-pencil" title="Editer ce thème"></span></button>',
-                '<button class="btn btn-sm btn-warning" onclick="deleteThemeItem(this);" ><span class="theme-remove glyphicon glyphicon-remove" title="Supprimer"></span></button>',
+        '<div class="list-group-item themes-list-item" data-theme="'+title+'" data-themeid="'+themeid+'" data-theme-collapsed="'+collapsed+'" data-theme-icon="'+icon+'">',   
+            '<div class="theme-infos">',
+                '<span class="theme-name moveList">'+title+'</span><span class="theme-infos-layer">0</span>',
             '</div>',
-            '<span class="theme-name">'+title+'</span><span class="label label-info">0</span>',
+            '<div class="theme-options-btn">',
+                '<button class="btn btn-sm btn-secondary" ><span class="theme-move moveList" title="Déplacer"><i class="bi bi-arrows-move"></i></span></button>',
+                '<button class="btn btn-sm btn-secondary" onclick="deleteThemeItem(this);" ><span class="theme-remove" title="Supprimer"><i class="bi bi-x-circle"></i></span></button>',
+                '<button class="btn btn-sm btn-info" onclick="editTheme(this);"><span class="theme-edit" title="Editer ce thème"><i class="bi bi-gear-fill"></i></span></button>',                
+            '</div>',
         '</div>'].join(""));
     }
 
@@ -421,7 +452,7 @@ var editTheme = function (item) {
     var icon = $(item).parent().parent().attr("data-theme-icon");
     if (icon === "undefined") icon = 'fas fa-caret-right';
 
-    $("#panel-theme").show();
+    $("#mod-themeOptions").modal('show');
     $("#theme-edit-title").val(title);
     $("#theme-edit-collapsed").prop('checked', collapsed);
     $("#theme-edit").attr("data-themeid", themeid);
@@ -449,10 +480,10 @@ var saveTheme = function () {
     theme.attr("data-theme-icon", icon);
     theme.find(".theme-name").text(title);
     var nb_layers = $("#themeLayers .list-group-item").length;
-    theme.find(".label").text(nb_layers);
+    theme.find(".theme-infos-layer").text(nb_layers);
     //deactivate theme edition
     $("#themes-list .list-group-item").removeClass("active");
-    $("#panel-theme").hide();
+    $("#mod-themeOptions").modal('hide');
 
     //save theme locally
     config.themes[themeid].title = title;
@@ -462,7 +493,7 @@ var saveTheme = function () {
 };
 
 var deleteTheme = function (themeid) {
-    $("#panel-theme").hide();
+    $("#mod-themeOptions").modal('hide');
     delete config.themes[themeid];
 };
 
@@ -517,6 +548,7 @@ var saveApplicationParameters = function (option) {
 
     if(config.title == ''){
         alert(mviewer.tr('msg.give_title_before_save'));
+        $('#opt-title').addClass('is-invalid');
         return;
     }
 
@@ -724,6 +756,7 @@ var loadApplicationParametersFromFile = function () {
         reader.onerror = function (evt) {
             alert(mviewer.tr('msg.file_read_error'));
         }
+        showStudio();
     }
 };
 
@@ -755,6 +788,7 @@ var  loadApplicationParametersFromRemoteFile = function (url) {
         },
         success: function( data ) {
             mv.parseApplication(data);
+            showStudio();
         },
         error: function (xhr, ajaxOptions, thrownError) {
             console.error("map file retrieval failed", {
@@ -774,6 +808,7 @@ var loadApplicationParametersFromWMC = function (url) {
         url: url,
         success: function( data ) {
             mv.parseWMC(data);
+            showStudio();
         },
         error: function (xhr, ajaxOptions, thrownError) {
             console.error("web map context (WMC) file retrieval failed", {
@@ -813,13 +848,13 @@ var updateProviderSearchButtonState = function () {
 };
 
 var addNewProvider = function (el) {
-    var frm = $(el).closest("div");
+    var frm = $(el).closest("#addCatalogData");
     var url = frm.find("input.custom-url").val();
     var type = frm.find("select").val();
     var title = frm.find("input.custom-title").val();
 
     if (title && url) {
-        $("#providers_list").append('<li><a onclick="setActiveProvider(this);" data-providertype="' + type +
+        $("#providers_list").append('<li><a onclick="setActiveProvider(this);" class="dropdown-item" data-providertype="' + type +
             '" data-provider="' + url + '" href="#">' + title + '</a></li>').trigger("click");
         frm.find("input.custom-url").val("");
         frm.find("input.custom-title").val("");
@@ -902,7 +937,7 @@ var _elementTranslate = function (element) {
 };
 
 $('#mod-featuresview').on('hidden.bs.modal', function () {
-    var option = $(this).attr("data-target");
+    var option = $(this).attr("data-bs-target");
     var target = "";
     if (option === 'source') { target = "#source_fields_tags"; }
     if (option === 'control') { target = "#control_fields_tags"; }
@@ -911,7 +946,7 @@ $('#mod-featuresview').on('hidden.bs.modal', function () {
     });
 });
 
-$('a[href="#geo_filter"]').on('shown.bs.tab', function (e) {
+$('a[data-bs-target="#geo_filter"]').on('shown.bs.tab', function (e) {
     addgeoFilter();
 });
 
@@ -946,3 +981,16 @@ var uploadSldFileToBackend = function(e) {
         })
     });
 }
+
+// Press Enter to search data
+$('#input-ogc-filter').keypress(function(event){
+    var keycode = (event.keyCode ? event.keyCode : event.which);
+    if(keycode == '13'){
+        mv.search();
+    }        
+    event.stopPropagation();
+});
+
+// Display tooltip bootstrap
+const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))

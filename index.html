@@ -1,1058 +1,1466 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="fr" class="h-100">
 <head>
-    <title>mviewer studio</title>
+    <title>Mviewer Studio</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
-    <link rel="stylesheet" href="lib/openlayers/5.3/ol.css" type="text/css">
+    <meta name="author" content="Mviewer Teams">
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="img/favicon_mstudio.png" />
+    <!-- Custom stylesheet bootstrap and mstudio for this app-->
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <link rel="stylesheet" href="css/mviewerstudio.css" type="text/css">
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@2.2.0/fonts/remixicon.css">
+    <link rel="stylesheet" href="lib/openlayers/7.1/ol.css" type="text/css">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
     <script src="lib/Sortable.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/4.6.3/papaparse.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <script src="lib/bootstrap/5.2/bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-tagsinput/0.8.0/bootstrap-tagsinput.min.js"></script>
     <link rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-tagsinput/0.8.0/bootstrap-tagsinput.css"/>
-    <link rel="stylesheet" href="css/mviewerstudio.css" type="text/css">
+          href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-tagsinput/0.8.0/bootstrap-tagsinput.css"/>    
     <link rel="stylesheet" href="lib/icon-picker/icon-picker.css" type="text/css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/proj4js/2.4.4/proj4.js"></script>
-    <script type="text/javascript" src="lib/openlayers/5.3/ol.js"></script>
+    <script type="text/javascript" src="lib/openlayers/7.1/ol.js"></script>
     <script src="lib/ogc.js"></script>
     <script src="lib/mv.js"></script>
     <script src="lib/slug.js"></script>
     <script src="lib/i18njs/i18n.min.js" type="text/javascript"></script>
+    <!--Wizard-->
+    <link rel="stylesheet" href="css/wizard.css">    
 </head>
 
-<body>
-<nav class="navbar navbar-inverse">
-    <div class="container-fluid">
-        <div class="navbar-header">
-            <a id="studio-title" class="navbar-brand" href="#">mviewer studio</a>
+<body class="h-100" id="content">
+    <!--NAVBAR-->
+    <nav class="navbar bg-primary fixed-top" id="navbarStudio">
+        <div class="container-fluid">
+        <a class="navbar-brand">
+            <img src="img/logo_mviewerstudio.svg" alt="Logo" width="125" class="d-inline-block mx-right-4">             
+            <span class="mx-3"><span id="studio-title" class="navbar-brand"></span></span>            
+        </a>
+        <div class="d-flex align-items-center" id="navBarStudioMenu">
+            <div class="nav-item">
+                <span class="navbar-text px-2" id="user_connected"><span i18n="banner.not_connected">Non connecté</span></span>         
+            </div>               
+            <div class="px-4 nav-item" id="menu_user_logout">
+                <a role="button" href="./logout"><span i18n="banner.logout">Déconnexion</span></a>
+            </div>
+            <a class="zoom" onclick="goHome();"><i class="ri-home-6-line" title="Retour vers l'accueil" style="font-size: 30px;"></i></a>
         </div>
-        <ul class="nav navbar-nav navbar-right">
-            <p class="navbar-text" id="user_connected"><span i18n="banner.not_connected">Non connecté</span></p>
-            <li><a role="button" data-toggle="modal" data-target="#mod-importfile" href="#">
-                <span role="button" class="glyphicon glyphicon-import"></span> <span i18n="banner.load">Charger</span></a></li>
-            <li><a role="button" onclick="saveApplicationParameters(0);" href="#"><span
-                    class="glyphicon glyphicon-floppy-disk"></span> <span i18n="banner.save">Sauvegarder</span></a></li>
-            <li><a role="button" onclick="saveApplicationParameters(1);" href="#"><span
-                    class="glyphicon glyphicon-download"></span> <span i18n="banner.download">Télécharger</span></a></li>
-            <li><a role="button" onclick="saveApplicationParameters(2);" href="#"><span
-                    class="glyphicon glyphicon-globe"></span> <span i18n="banner.preview">Prévisualiser</span></a></li>
-            <li id="menu_user_logout"><a role="button" href="./logout"><span
-                    class="glyphicon glyphicon-off"></span> <span i18n="banner.logout">Déconnexion</span></a></li>
-        </ul>
-    </div>
-</nav>
-<div class="container">
-    <div id="content">
-        <!-- Title-->
-        <form class="form-horizontal">
-            <fieldset>
-                <div class="form-group">
-                    <label class="col-md-5 control-label" for="opt-title" i18n="head.title">Titre</label>
-                    <div class="col-md-5">
-                        <input id="opt-title" name="textinput" type="text" placeholder="Kartenn"
-                               class="form-control input-md">
+        </div>
+    </nav>
+    <!--/NAVBAR-->
+    <main class="h-100">
+        <!--HOME-->
+        <div class="container-fluid h-100" id="containerHome">
+            <div class="row justify-content-around align-items-center h-100">
+                <div class="col-md-4">
+                    <img src="img/homeMstudio.svg" alt="Logo" width="80%" class="d-inline-block mx-right-4">
+                    <div class="">
+                        <span class="subtitle-home">MVIEWER STUDIO</span><br>
+                        <span class="title-home" i18n="home.welcome_title">Bienvenue</span>                        
                     </div>
+                    <h4 class="text-primary" i18n="home.welcome_texte">Créer votre application cartographique mviewer en suivant les étapes du générateur</h4>               
                 </div>
-            </fieldset>
-        </form>
-
-        <ul id="tabs" class="nav nav-tabs" data-tabs="tabs">
-            <li class="active"><a href="#application-config" data-toggle="tab" i18n="tabs.app.title">Application</a></li>
-            <li><a href="#themes-config" data-toggle="tab" i18n="tabs.data.title">Thématiques & données</a></li>
-            <li><a href="#backgroundlayers-config" data-toggle="tab" i18n="tabs.bg.title">Couches de fond</a></li>
-            <li><a href="#search-config" data-toggle="tab" i18n="tabs.search.title">Recherche</a></li>
-        </ul>
-        <div class="tab-content">
-            <div class="tab-pane active" id="application-config">
-
-                <div class="row">
-
-                    <div class="col-md-7">
-                        <form class="form-horizontal">
-                            <fieldset>
-                                <!-- logo-->
-                                <div class="form-group">
-                                    <label class="col-md-4 control-label" for="opt-logo" i18n="tabs.app.url">URL du logo</label>
-                                    <div class="col-md-8">
-                                        <input id="opt-logo" name="textinput" type="text"
-                                               class="form-control input-md checkedurl"
-                                               placeholder="https://geobretagne.fr/pub/logo/region-bretagne.jpg">
-                                    </div>
+                <div class="col-md-6">
+                    <h3 class="text-primary m-2 mb-4"><strong><span i18n="home.welcome_question">Que voulez-vous faire ?</span></strong> </h3>
+                    <div id="cardsHome">
+                        <!--Open config-->
+                        <a data-bs-toggle="modal" data-bs-target="#mod-importfile" href="#">
+                            <div class="card text-white bg-warning p-3 m-2 zoomCard h-100 noborder" style="max-width: 18rem;">
+                                <div class="card-body mb-5">
+                                <span class="iconCard-home">
+                                    <i class="bi bi-upload" style="font-size: 20px;vertical-align: revert;"></i>
+                                </span>                            
+                                <h5 class="card-title mt-4"><span i18n="home.open_title">Ouvrir un projet existant</span></h5>
+                                <p class="card-text"><span i18n="home.open_texte">Importer un fichier de configuration .XML depuis votre ordinateur ou un serveur</span></p>                              
                                 </div>
-
-                                <!-- help-->
-                                <div class="form-group">
-                                    <label class="col-md-4 control-label" for="opt-help" i18n="tabs.app.help_link">Page d'aide (html)</label>
-                                    <div class="col-md-8">
-                                        <input id="opt-help" name="textinput" type="text"
-                                               class="form-control input-md checkedurl" placeholder="Ex: mviewer_help.html">
-                                    </div>
+                            </div>
+                        </a> 
+                        <!--Open config-->
+                        <!--New config-->
+                        <a onclick="newConfiguration(); showStudio()">
+                            <div class="card text-white bg-info p-3 m-2 zoomCard h-100 noborder" style="max-width: 18rem;">
+                                <div class="card-body mb-5">
+                                <span class="iconCard-home">
+                                    <i class="bi bi-file-earmark-plus" style="font-size: 20px;vertical-align: revert;"></i>
+                                </span>                            
+                                <h5 class="card-title mt-4"><span i18n="home.newproject_title">Créer un nouveau projet</span></h5>
+                                <p class="card-text"><span i18n="home.newproject_texte">Débuter la configuration d'une nouvelle application mviewer</span></p>                              
                                 </div>
-
-                                <!--style-->
-                                <div class="form-group">
-                                    <label class="control-label col-md-4" for="frm-style" i18n="tabs.app.style">Style</label>
-                                    <div class="col-md-8">
-                                        <select id="opt-style" name="style" class="form-control default"
-                                                onchange="updateTheme(this);">
-                                            <option class="alizarin" value="css/themes/alizarin.css">alizarin</option>
-                                            <option class="blue" value="css/themes/blue.css">blue</option>
-                                            <option class="default" selected value="css/themes/default.css">default</option>
-                                            <option class="nephritis" value="css/themes/nephritis.css">nephritis</option>
-                                            <option class="ripe_lemon" value="css/themes/ripe_lemon.css">ripe_lemon</option>
-                                            <option class="amethyst" value="css/themes/amethyst.css">amethyst</option>
-                                            <option class="carrot" value="css/themes/carrot.css">carrot</option>
-                                            <option class="green" value="css/themes/green.css">green</option>
-                                            <option class="peter_river" value="css/themes/peter_river.css">peter_river</option>
-                                            <option class="black" value="css/themes/black.css">black</option>
-                                            <option class="chambray" value="css/themes/chambray.css">chambray</option>
-                                            <option class="green_sea" value="css/themes/green_sea.css">green_sea</option>
-                                            <option class="pink" value="css/themes/pink.css">pink</option>
-                                            <option class="wet_asphalt" value="css/themes/wet_asphalt.css">wet_asphalt</option>
-                                        </select>
+                            </div>
+                        </a> 
+                        <!--New config-->
+                    </div>                    
+                </div>
+                <nav class="navbar fixed-bottom" id="homeNavbarDoc">
+                    <div class="container-fluid justify-content-end">
+                        <a class="nav-item m-3" href="https://github.com/mviewer/mviewerstudio" target="_blank" i18n="home.navlink_github">Github</a>
+                        <a class="nav-item m-3" href="https://mviewerstudio.readthedocs.io/fr/stable/" target="_blank" i18n="home.navlink_doc">Documentation</a>
+                        <a class="nav-item m-3" data-bs-toggle="modal" data-bs-target="#modalCredits" i18n="home.navlink_credits">Crédits</a>
+                    </div>
+                </nav>
+            </div>                        
+        </div>    
+        <!--/HOME-->   
+        <!-- MODULES STUDIO-->   
+        <div class="container-fluid h-100" id="containerStudio" hidden>
+            <div class="row justify-content-around" style="padding-top: 120px;">
+                <!-- WIZARD BLOC -->
+                <div class="col-xl-3 col-md-12" id="blockWizard">
+                    <div class="bg-light">
+                        <div class="mb-3">
+                            <h5 class="text-primary">MVIEWER</h5>
+                            <h4 class="text-primary strong" id="nameAppBlock">Mon application</h4>
+                        </div> 
+                        <!-- STEP STUDIO -->
+                        <ul class="nav nav-pills flex-column mb-5" id="stepStudio">
+                            <li class="nav-item" id="navWizApp">
+                                <a class="nav-link active" data-bs-toggle="tab" href="#app">
+                                    <i class="ri-equalizer-line"></i>
+                                    <div>
+                                        <p class="title-wizard" i18n="studio.wizard.app_title">Application </p>
+                                        <p class="subtitle-wizard" i18n="studio.wizard.app_text">Paramètres globaux de l'application</p>
+                                    </div>                                
+                                </a>
+                            </li>
+                            <li class="nav-item" id="navWizData">
+                                <a class="nav-link" data-bs-toggle="tab" href="#themesdata">
+                                    <i class="ri-stack-line"></i>
+                                    <div>
+                                        <p class="title-wizard" i18n="studio.wizard.theme_title">Thématiques & données</p>
+                                        <p class="subtitle-wizard" i18n="studio.wizard.theme_text">Paramètres des thématiques et des données</p>
+                                    </div> 
+                                </a>
+                            </li>   
+                            <li class="nav-item advanced" id="navWizFadv" style="display: none">
+                                <a class="nav-link" data-bs-toggle="tab" href="#fadanced">
+                                    <i class="ri-list-settings-line"></i>
+                                    <div>
+                                        <p class="title-wizard" i18n="studio.wizard.advanced_title">Fonctionnalités avancées</p>
+                                        <p class="subtitle-wizard" i18n="studio.wizard.advanced_text">Paramètres des fonctionnalités supplémentaires</p>
                                     </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <label class="col-md-4 control-label" for="checkboxes" i18n="tabs.app.options">Options</label>
-                                    <div class="col-md-8">
-                                        <div class="checkbox">
-                                            <label for="opt-measuretools">
-                                                <input type="checkbox" name="checkboxes" id="opt-measuretools">
+                                </a>
+                            </li>                         
+                            <li class="nav-item" id="navWizPub">
+                                <a class="nav-link" data-bs-toggle="tab" href="#publication">                                
+                                    <i class="ri-download-line"></i>
+                                    <div>
+                                        <p class="title-wizard" i18n="studio.wizard.publication_title">Publication</p>
+                                        <p class="subtitle-wizard" i18n="studio.wizard.publication_text">Finaliser votre application</p>
+                                    </div>                                    
+                                </a>
+                            </li>
+                        </ul>
+                        <!-- ./STEP STUDIO -->       
+                        <div class="text-info mt-4" id="helpStudioBloc">
+                            <img src="img/doc.png" alt="Img doc" width="80px" style="margin-right: 2em;">
+                            <div class="helpStudio-text my-2">
+                                <h4 class="strong m-0" i18n="studio.wizard.help_title">Besoin d'aide ?</h4>
+                                <p i18n="studio.wizard.help_text">Consulter la documentation</p>
+                                <a class="btn btn-outline-info" href="https://mviewerstudio.readthedocs.io/fr/stable/" target="_blank" i18n="consult">Voir</a>
+                            </div>                        
+                        </div>
+                    </div>
+                    <ul class="nav" id="wizardCredits">
+                        <a class="nav-link m-1" href="https://github.com/mviewer/mviewerstudio" target="_blank" i18n="home.navlink_github">Github</a>                          
+                        <a class="nav-link m-1" data-bs-toggle="modal" data-bs-target="#modalCredits" i18n="home.navlink_credits">Crédits</a>
+                    </ul>                       
+                </div>
+                <!-- /WIZARD BLOC -->
+                <!-- WIZARD BLOC MOBILE -->
+                <nav class="navbar fixed-bottom bg-light justify-content-center" id="blockWizardMobile" hidden>
+                    <ul class="nav bg-light justify-content-center">
+                        <li class="nav-item">
+                                <a class="nav-link active" data-bs-toggle="tab" href="#app">
+                                    <i class="ri-equalizer-line"></i>                               
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" data-bs-toggle="tab" href="#themesdata">
+                                    <i class="ri-stack-line"></i> 
+                                </a>
+                            </li>
+                            <li class="nav-item advanced" style="display: none">
+                                <a class="nav-link" data-bs-toggle="tab" href="#fadanced">                                
+                                    <i class="ri-list-settings-line"></i>
+                                </a>
+                            </li>                            
+                            <li class="nav-item">
+                                <a class="nav-link" data-bs-toggle="tab" href="#publication">                                
+                                    <i class="ri-download-line"></i>                                
+                                </a>
+                            </li>
+                    </ul>
+                </nav>                
+                <!-- /WIZARD BLOC MOBILE -->
+                <!-- CONTAINER STUDIO -->
+                <div class="col-xl-8 col-md-12">
+                    <!--TOOLSBAR -->
+                    <div id="toolsbarStudio">                        
+                        <ul class="nav align-items-center justify-content-end">                            
+                            <a class="nav-link" id="toolsbarStudio-View" onclick="saveApplicationParameters(2);" href="#"><i class="ri-eye-2-line"></i> <span i18n="studio.toolsbar.preview">Prévisualiser</span></a>                          
+                            <a class="nav-link" id="toolsbarStudio-Save" onclick="saveApplicationParameters(0);" href="#"><i class="ri-save-line"></i> <span i18n="studio.toolsbar.save">Enregistrer</span></a>
+                        </ul>
+                        <div class="custom-control custom-switch mt-2" id="btnSwitchAdvanced">
+                            <input type="checkbox" class="custom-control-input" id="SwitchAdvanced">
+                            <label class="custom-control-label" for="SwitchAdvanced"><span i18n="studio.toolsbar.advanced">Mode avancé</span></label>
+                        </div>
+                    </div>                    
+                    <!--/.TOOLSBAR -->
+                    <!-- STUDIO TABS -->
+                    <div class="tab-content my-4" id="stepStudioContent">
+                        <!-- Application -->
+                        <div class="tab-pane container active" id="app">
+                            <form>
+                            <h1><i class="ri-equalizer-line"></i> <span i18n="tabs.app.title">Application</span></h1>                            
+                            <!--Fonctionnalités et options de la carte-->                          
+                            <div class="row mt-4">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="opt-title" i18n="head.title" class="form-label">Titre de l'application</label>
+                                        <input class="form-control" id="opt-title" type="text" name="textinput" placeholder="Mon application">
+                                    </div>
+                                    <div class="form-group">
+                                            <label for="opt-logo" class="form-label"><span i18n="tabs.app.url">Lien vers le logo </span><span class="tooltip-info" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Logo affiché en haut à gauche du mviewer"><i class="ri-information-line"></i></span></label>
+                                            <input class="form-control checkedurl" id="opt-logo" placeholder="https://monlogo.png">
+                                    </div>
+                                    <div class="form-group">
+                                            <label class="form-label" for="frm-style" ><span i18n="tabs.app.style">Thème de l'application</span><span class="tooltip-info" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Couleur de l'interface du mviewer"><i class="ri-information-line"></i></span></label>
+                                            <select class="form-control default" id="opt-style" name="style" onchange="updateTheme(this);">
+                                                <option class="alizarin" value="css/themes/alizarin.css">alizarin</option>
+                                                <option class="blue" value="css/themes/blue.css">blue</option>
+                                                <option class="default" selected value="css/themes/default.css">default</option>
+                                                <option class="nephritis" value="css/themes/nephritis.css">nephritis</option>
+                                                <option class="ripe_lemon" value="css/themes/ripe_lemon.css">ripe_lemon</option>
+                                                <option class="amethyst" value="css/themes/amethyst.css">amethyst</option>
+                                                <option class="carrot" value="css/themes/carrot.css">carrot</option>
+                                                <option class="green" value="css/themes/green.css">green</option>
+                                                <option class="peter_river" value="css/themes/peter_river.css">peter_river</option>
+                                                <option class="black" value="css/themes/black.css">black</option>
+                                                <option class="chambray" value="css/themes/chambray.css">chambray</option>
+                                                <option class="green_sea" value="css/themes/green_sea.css">green_sea</option>
+                                                <option class="pink" value="css/themes/pink.css">pink</option>
+                                                <option class="wet_asphalt" value="css/themes/wet_asphalt.css">wet_asphalt</option>
+                                            </select>
+                                    </div>
+                                    <ul class="list-group">
+                                        <li class="list-group-item">
+                                            <span class="title-accordion" i18n="tabs.app.options_title">Fonctionnalités</span><br>
+                                            <span class="subtitle-accordion" i18n="tabs.app.options_text">Activer les outils que vous souhaitez afficher au sein de votre application</span>
+                                        </li>
+                                        <li class="list-group-item">
+                                            <div class="list-flex">
                                                 <span i18n="tabs.app.opt_measure">Outils de mesures</span>
-                                            </label>
+                                                <div class="custom-control custom-switch">
+                                                    <input type="checkbox" class="custom-control-input" name="checkboxes" id="opt-measuretools">
+                                                    <label class="custom-control-label" for="opt-measuretools"></label>
+                                                </div>
+                                            </div>                                            
+                                        </li>
+                                        <li class="list-group-item">
+                                            <div class="list-flex">
+                                                <span i18n="tabs.app.opt_export">Export de la carte en image</span>
+                                                <div class="custom-control custom-switch">
+                                                    <input type="checkbox" class="custom-control-input" name="checkboxes" id="opt-exportpng">
+                                                    <label class="custom-control-label" for="opt-exportpng"></label>
+                                                </div>
+                                            </div>                                            
+                                        </li>
+                                        <li class="list-group-item advanced" style="display: none;">
+                                            <div class="list-flex">
+                                                <span i18n="tabs.app.opt_coords">Affichage des coordonnées au clic</span>
+                                                <div class="custom-control custom-switch">
+                                                    <input type="checkbox" class="custom-control-input" name="checkboxes" id="opt-coordinates">
+                                                    <label class="custom-control-label" for="opt-coordinates"></label>
+                                                </div>
+                                            </div>                                            
+                                        </li>
+                                        <li class="list-group-item advanced" style="display: none;">
+                                            <div class="list-flex">
+                                                <span i18n="tabs.app.opt_data">Afficher/masquer toutes les données d'une thématique en un clic</span>                                          
+                                                <div class="custom-control custom-switch">
+                                                    <input type="checkbox" class="custom-control-input" name="checkboxes" id="opt-togglealllayersfromtheme">
+                                                    <label class="custom-control-label" for="opt-togglealllayersfromtheme"></label>
+                                                </div>
+                                            </div>                                            
+                                        </li>
+                                      </ul>
+                                </div>
+                                <div class="col-md-6">
+                                    <ul class="list-group">
+                                        <li class="list-group-item">
+                                            <span class="title-accordion" i18n="tabs.app.map_title">Options de la carte</span><br>
+                                            <span class="subtitle-accordion" i18n="tabs.app.map_text">Paramètrer l'étendue et le zoom de la carte au démarrage de l'application</span>
+                                        </li>
+                                        <li class="list-group-item p-0">
+                                             <!-- Map -->
+                                            <div id="map" class="map"></div>
+                                        </li>
+                                        <li class="list-group-item advanced" style="display: none;">
+                                            <div class="list-flex">
+                                                <span i18n="tabs.app.opt_maxextent">Interdire la navigation hors de l'étendue définie ci-dessus</span>                                           
+                                                <div class="custom-control custom-switch">
+                                                    <input type="checkbox" class="custom-control-input" name="checkboxes" id="opt-maxextent">
+                                                    <label class="custom-control-label" for="opt-maxextent"></label>
+                                                </div>
+                                            </div>                                            
+                                        </li>
+                                      </ul>
+                                </div>
+                            </div>  
+                            <!--./Fonctionnalités et options de la carte-->                          
+
+                            <!--Fond de plan-->
+                            <div class="accordion mt-4" id="backgroundlayers-config">
+                                <div class="accordion-item">
+                                  <h2 class="accordion-header" >
+                                    <a class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFondPlan" aria-expanded="true" aria-controls="collapseFondPlan">
+                                      <div>
+                                        <span class="title-accordion" i18n="tabs.app.bg_title">Fonds de plan</span><br>
+                                        <span class="subtitle-accordion" i18n="tabs.app.bg_text">Sélectionner les fonds de plan à afficher et le mode d'affichage</span>
+                                      </div>
+                                    </a>
+                                  </h2>
+                                  <div id="collapseFondPlan" class="accordion-collapse collapse" aria-labelledby="accordionFondPlan">
+                                    <div class="accordion-body p-0"> 
+                                        <ul class="list-group list-group-flush">
+                                            <div id="frm-bl"></div>
+                                            <li class="list-group-item" >
+                                                <div class="row mb-2" >                                                    
+                                                    <div class="col-md-6 advanced" style="display: none;">
+                                                        <label for="frm-bl-mode" class="form-label" i18n="tabs.app.bg.displaymode" >Mode d'affichage</label>
+                                                        <select id="frm-bl-mode" name="bl-mode" class="form-control">
+                                                            <option value="default"  i18n="tabs.app.bg.display_normal">Normal</option>
+                                                            <option value="gallery" i18n="tabs.app.bg.display_gallery">Gallerie</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <label for="frm-bl-mode" class="form-label" i18n="tabs.app.bg.startup_bg">Fond de plan au démarrage</label>
+                                                        <select id="frm-bl-visible" name="bl-visible" class="form-control" onchange="mv.changeVisibleBaseLayer(this.value)"></select>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                          </ul>                                        
+                                    </div>
+                                  </div>
+                                </div>                                
+                            </div>  
+                            <!--./Fond de plan-->
+
+                            <!--Page d'accueil-->
+                            <div class="accordion mt-4 advanced" style="display: none;">
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="accordionHomePage">
+                                        <a class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseHomePage" aria-expanded="true" aria-controls="collapseHomePage">
+                                        <div>
+                                            <span class="title-accordion" i18n="tabs.app.home_title">Page d'accueil </span><br>
+                                            <span class="subtitle-accordion" i18n="tabs.app.home_text">Paramétrer la page d'accueil / documentation</span>
                                         </div>
-
-                                        <div class="checkbox">
-                                            <label for="opt-exportpng">
-                                                <input type="checkbox" name="checkboxes" id="opt-exportpng">
-                                                <span i18n="tabs.app.opt_export">Export de la carte au format png</span>
-                                            </label>
-                                        </div>
-
-                                        <div class="checkbox">
-                                            <label for="opt-showhelp">
-                                                <input type="checkbox" name="checkboxes" id="opt-showhelp">
-
-                                                <span i18n="tabs.app.opt_help">Afficher l'aide au démarrage</span>
-                                            </label>
-                                        </div>
-
-                                        <div class="checkbox">
-                                            <label for="opt-coordinates">
-                                                <input type="checkbox" name="checkboxes" id="opt-coordinates">
-
-                                                <span i18n="tabs.app.opt_coords">Affichage des coordonnées au click</span>
-                                            </label>
-                                        </div>
-                                        <div class="checkbox">
-                                            <label for="opt-togglealllayersfromtheme">
-                                                <input type="checkbox" name="checkboxes" id="opt-togglealllayersfromtheme">
-
-                                                <span i18n="tabs.app.opt_data">Afficher/masquer toutes les données d'une thématique en un clic</span>
-                                            </label>
-                                        </div>
-                                        <div class="checkbox">
-                                            <label for="opt-maxextent">
-                                                <input type="checkbox" name="checkboxes" id="opt-maxextent">
-                                                <span i18n="tabs.app.opt_maxextent">Interdire la navigation hors de l'étendue ci contre</span>
-                                            </label>
+                                        </a>
+                                    </h2>
+                                    <div id="collapseHomePage" class="accordion-collapse collapse" aria-labelledby="accordionHomePage">
+                                        <div class="accordion-body"> 
+                                            <div class="form-group">
+                                                <label for="opt-help" i18n="tabs.app.help_link" class="form-label">Lien vers la page d'accueil</label>
+                                                <input class="form-control checkedurl" id="opt-help" name="textinput" type="text" placeholder="https://mapage.html">
+                                            </div>
+                                            <div class="custom-control custom-switch">
+                                                <input type="checkbox" class="custom-control-input" id="opt-showhelp">
+                                                <label class="custom-control-label" for="opt-showhelp"><span i18n="tabs.app.opt_help">Afficher la page d'accueil au démarrage</span></label>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            </fieldset>
-                        </form>
-                    </div>
-                    <div class="col-md-5">
-                        <form class="form-horizontal">
-                            <fieldset>
-                                <!-- Map -->
-                                <div class="form-group">
-                                    <div class="col-md-12">
-                                        <div id="map" class="map"></div>
+                                </div>                                
+                            </div>  
+                            <!--./Page d'accueil-->
+
+                            <div class="accordion mt-4" id="search-config">
+                                <div class="accordion-item">
+                                  <h2 class="accordion-header" >
+                                    <a class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSearch" aria-expanded="true" aria-controls="collapseFondPlan">
+                                      <div>
+                                        <span class="title-accordion" i18n="tabs.app.search.title">Recherche</span><br>
+                                        <span class="subtitle-accordion" i18n="tabs.app.search.subtitle">Paramétrer les fonctionnalités disponibles dans la barre de recherche</span>
+                                      </div>
+                                    </a>
+                                  </h2>
+                                  <div id="collapseSearch" class="accordion-collapse collapse" aria-labelledby="accordionSearch">
+                                    <div class="accordion-body p-0"> 
+                                        <ul class="list-group list-group-flush">     
+                                            <li class="list-group-item">
+                                                <div class="list-flex">
+                                                    <p class="strong" i18n="tabs.app.search.address_search.title">Activer la recherche d'adresse</p>
+                                                    <div class="custom-control custom-switch">
+                                                        <input type="checkbox" class="custom-control-input" id="SwitchAdressSearch">
+                                                        <label class="custom-control-label" for="SwitchAdressSearch"></label>
+                                                    </div>
+                                                </div>
+                                                <div id="AppSearchBlock" style="display: none;">
+                                                    <div class="row mb-2" >                                                    
+                                                        <div class="col-md-12">
+                                                            <label for="frm-searchlocalities" i18n="tabs.app.search.address_search.service" class="form-label">Service utilisé</label>
+                                                            <select class="form-control b" id="frm-searchlocalities" name="searchlocalities" onchange="mv.changeSearchLocalities(this.value)">
+                                                                <option value="ban" i18n="tabs.app.search.address_search.ban">Base Adresse Nationale</option>
+                                                                <option value="custom" i18n="tabs.app.search.address_search.custom">Personnalisé</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>    
+                                                    <div class="row my-2 align-items-stretch">
+                                                            <div class="col-md-6" id="opt-searchl-url" style="display: none;">
+                                                                <label for="opt-searchlocalities-url" i18n="tabs.app.search.address_search.url" class="form-label">URL</label>
+                                                                <input class="form-control" id="opt-searchlocalities-url" type="text" placeholder="Url du service">
+                                                            </div>
+                                                            <div class="col-md-6" id="opt-searchl-attribution" style="display: none;">
+                                                                <label for="opt-searchlocalities-attribution" i18n="tabs.app.search.address_search.attribution" class="form-label">Attribution</label>
+                                                                <input class="form-control" id="opt-searchlocalities-attribution" type="text"  placeholder="Attribution du service"  i18n="tabs.app.search.address_search.attribution.ph">
+                                                            </div>   
+                                                    </div>
+                                                </div>                                                
+                                            </li>
+                                            <li class="list-group-item advanced" style="display: none;">
+                                                <div class="list-flex">
+                                                    <div>
+                                                        <p class="strong" i18n="tabs.app.search.entity_search.activate">Activer la recherche d'entité</p>
+                                                        <p i18n="tabs.app.search.entity_search.p1">La recherche peut être activée si la donnée est de type GEOJSON. Cette fonctionnalité est également activable pour les données de type WMS à la condition que les entités qui composent cette donnée soient également indéxées dans Elasticsearch.</p>
+                                                    </div>
+                                                    <div class="custom-control custom-switch">
+                                                        <input type="checkbox" class="custom-control-input" id="opt-searchfeatures">
+                                                        <label class="custom-control-label" for="opt-searchfeatures"></label>
+                                                    </div>
+                                                </div>                                                    
+                                            </li>
+                                          </ul>                                        
                                     </div>
-                                </div>
-                            </fieldset>
-                        </form>
-                    </div>
-
-                </div>
-            </div>
-
-            <div class="tab-pane" id="themes-config">
-                <div class="well">
-                    <h4 i18n="tabs.data.help_title">Sélection, paramétrage et organisation des données</h4>
-                    <p i18n="tabs.data.help_text">Dans cette section, créer une ou plusieurs thématiques que vous peuplerez avec des données
-                        provenant de différentes plateformes. Il également est possible d'importer des thématiques externes</p>
-                </div>
-
-                <div class="row">
-                    <div class="col-md-6">
-                        <!-- List with handle -->
-                        <div class="panel panel-default">
-                            <div class="panel-heading" i18n="tabs.data.themespanel.title">Panneau des thématiques</div>
-                            <div class="panel-body">
-                                <div id="themes-list" class="list-group"></div>
-                                <div class="btn-group">
-                                    <button id="btn-addTheme" title="Créer une nouvelle thématique" class="btn btn-primary"
-                                            onclick="addTheme('Nouvelle thématique', true, createId('theme'));">
-                                        <span class="glyphicon glyphicon-plus" aria-hidden="true"> </span>
-                                        <span i18n="tabs.data.themespanel.create">Créer</span>
-                                    </button>
-                                    <button id="btn-importTheme" title="Importer une thématique depuis un autre mviewer" class="btn btn-success" onclick="$('#mod-themesview input').prop('checked', false);" data-toggle="modal" data-target="#mod-themesview">
-                                        <span class="glyphicon glyphicon-plus" aria-hidden="true"> </span>
-                                        <span i18n="tabs.data.themespanel.import">Importer</span>
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="panel-footer">
-                                <div class="checkbox">
-                                    <label for="opt-mini">
-                                        <input type="checkbox" name="checkboxes" id="opt-mini">
-                                        <span i18n="tabs.data.themespanel.options">Option d'affichage : réduire le panneau des thématiques au démarrage</span>
-                                    </label>
-                                </div>
-                            </div>
+                                  </div>
+                                </div>                                
+                            </div>  
+                            <!--./Recherche-->                          
+                                <div class="mt-4">
+                                    <a class="btn btn-warning btnNext"><span i18n="studio.wizard.btn.next">Suivant</span> <i class="ri-arrow-right-line"></i> </a>
+                                </div> 
+                            </form> 
                         </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div id="panel-theme" class="panel panel-info" style="display: none;">
-                            <div class="panel-heading">
-                                <h3 class="panel-title" i18n="tabs.data.paramspanel.title">Paramétrage de la Thématique sélectionnée</h3>
+                        <!-- /.Application -->
+                        <!-- Thématiques & données -->
+                        <div class="tab-pane container fade" id="themesdata">
+                            <h1><i class="ri-stack-line"></i> <span i18n="tabs.data.title">Thématiques & données</span></h1>   
+                            <div class="row mt-5">
+                                <div class="col-md-12">
+                                    <ul class="list-group">
+                                        <li class="list-group-item">
+                                            <span class="title-accordion" i18n="tabs.data.themespanel.title">Panneau des thématiques</span><br>
+                                            <span class="subtitle-accordion" i18n="tabs.data.themespanel.subtitle">Créer, importer et gérer vos thématiques et données</span>
+                                        </li>
+                                        <li class="list-group-item">
+                                            <!-- List with handle -->
+                                            <div id="themes-list" class="list-group"></div>
+                                            <div class="my-3 text-right">
+                                                <button id="btn-addTheme" title="Créer une nouvelle thématique" class="btn btn-info"
+                                                        onclick="addTheme('Nouvelle thématique', true, createId('theme'));">
+                                                    <span><i class="bi bi-plus-lg"></i> </span>
+                                                    <span i18n="tabs.data.themespanel.create">Créer</span>
+                                                </button>
+                                                <button id="btn-importTheme" title="Importer une thématique depuis un autre mviewer" class="btn btn-outline-info" onclick="$('#mod-themesview input').prop('checked', false);" data-bs-toggle="modal" data-bs-target="#mod-themesview">
+                                                    <span><i class="bi bi-download"></i> </span>
+                                                    <span i18n="tabs.data.themespanel.import">Importer</span>
+                                                </button>
+                                            </div>                                            
+                                        </li>
+                                        <li class="list-group-item list-flex">
+                                            <span i18n="tabs.data.themespanel.options">Réduire le panneau des thématiques au démarrage</span>                                          
+                                            <div class="custom-control custom-switch">
+                                                <input type="checkbox" class="custom-control-input" name="checkboxes" id="opt-mini">
+                                                <label class="custom-control-label" for="opt-mini"></label>
+                                            </div>
+                                        </li>
+                                      </ul>
+                                </div>
+                            </div>                    
+                    
+                                                        
+                            <div class="mt-4">
+                                <a class="btn btn-outline-warning btnPrev"><i class="ri-arrow-left-line"></i> <span i18n="studio.wizard.btn.previous">Précédent</span></a>
+                                <a class="btn btn-warning btnNext"><span i18n="studio.wizard.btn.next">Suivant</span> <i class="ri-arrow-right-line"></i> </a>
+                            </div>  
+                        </div>
+                        <!-- /.Thématiques & données -->
+                        <!-- Fonctionnalités avancées -->
+                        <div class="tab-pane container fade advanced" id="fadanced" style="display: none">
+                            <h1><i class="ri-list-settings-line"></i> <span i18n="tabs.adv.title">Fonctionnalités avancées</span></h1>
+                            <div class="alert alert-info text-info my-3" role="alert">
+                                <i class="bi bi-exclamation-circle"></i> 
+                                <span i18n="tabs.adv.alert">Le paramétrage de cette section est optionnel.</span>
                             </div>
-                            <div class="panel-body" id="theme-edit" data-themeid="">
-                                <div class="input-group">
-                                    <span class="input-group-addon" i18n="tabs.data.paramspanel.name">Nom</span>
-                                    <input type="text" id="theme-edit-title" class="form-control" tabs.search.elastic_search.disabled="Titre"
-                                           aria-describedby="basic-addon1">
-                                </div>
-                                <div class="checkbox">
-                                    <label for="theme-edit-collapsed">
-                                        <input type="checkbox" name="checkboxes" id="theme-edit-collapsed" value="0">
-                                        <span i18n="tabs.data.paramspanel.opt_unfolded">Déroulée par défaut</span>
-                                    </label>
-                                </div>
-                                <div class="form-group">
-                                    <label class="settinglabel" i18n="tabs.data.paramspanel.icon">Icône</label>
-                                    <span class="selected-icon"></span>
-                                    <input type="text" class="icon-class-input" id="theme-pick-icon" />
-                                    <button type="button" class="btn btn-primary picker-button">
-                                      <span i18n="tabs.data.paramspanel.icon_pick">Choisir une icône</span>
-                                    </button>
-                                </div>
-                                <!-- List with handle -->
-                                <div id="themeLayers" class="list-group"></div>
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <div class="pull-right">
-                                            <button id="btn-addLayer" class="btn btn btn-primary"
-                                                    onclick="addLayer('Nouvelle couche');">
-                                                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-                                                <span i18n="tabs.data.paramspanel.add_data">Ajouter des données</span>
-                                            </button>
+
+                            <!--Recherche ElasticSearch-->
+                            <div class="accordion mt-4" id="accordionElasticSearch">
+                                <div class="accordion-item">
+                                  <h2 class="accordion-header" >
+                                    <a class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseElasticSearch" aria-expanded="true" aria-controls="collapseElasticSearch">
+                                      <div>
+                                        <span class="title-accordion" i18n="tabs.search.elastic_search.title">ElasticSearch</span></br>
+                                        <span class="subtitle-accordion" i18n="tabs.search.elastic_search.subtitle">Paramétrer une recherche basée sur un index Elasticsearch</span>
+                                      </div>
+                                    </a>
+                                  </h2>
+                                  <div id="collapseElasticSearch" class="accordion-collapse collapse" aria-labelledby="accordionElasticSearch">
+                                    <div class="accordion-body p-0"> 
+                                        <ul class="list-group list-group-flush">
+                                            <li class="list-group-item">
+                                                <div id="FadvElasticBlock">
+                                                    <form>
+                                                        <div class="row mt-2" >
+                                                            <div class="col-md-12">
+                                                                <p class="strong" i18n="tabs.search.elastic_search.activate">Activer la recherche ElasticSearch</p>
+                                                                <select id="frm-globalsearch" name="globalsearch" class="form-control"
+                                                                        onchange="mv.changeGlobalSearch(this.value)">
+                                                                    <option value="false" i18n="tabs.search.elastic_search.disabled">Non utilisé</option>
+                                                                    <option value="elasticsearch" i18n="tabs.search.elastic_search.enabled">Activé</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row mt-2" >
+                                                            <div class="col-md-6">
+                                                                <label for="opt-elasticsearch-url"  i18n="tabs.search.elastic_search.es_url" class="form-label">URL Elasticsearch</label>
+                                                                <input class="form-control" id="opt-elasticsearch-url" type="text" i18n="tabs.search.elastic_search.es_url.ph" placeholder="URL Elasticsearch">
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <label for="opt-elasticsearch-geometryfield" i18n="tabs.search.elastic_search.geom_field" class="form-label">Geometryfield</label>
+                                                                <input class="form-control" id="opt-elasticsearch-geometryfield" type="text" placeholder="geometryfield">
+                                                            </div>
+                                                        </div>
+                                                        <div class="row mt-2" >   
+                                                            <div class="col-md-6">
+                                                                <label for="opt-elasticsearch-linkid" i18n="tabs.search.elastic_search.linkid" class="form-label">linkid</label>
+                                                                <input class="form-control" id="opt-elasticsearch-linkid" type="text" placeholder="linkid">
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <label for="opt-elasticsearch-doctypes" i18n="tabs.search.elastic_search.doctypes" class="form-label">Doctypes</label>
+                                                                <input class="form-control" id="opt-elasticsearch-doctypes" type="text" placeholder="doctypes">
+                                                            </div>
+                                                        </div>
+                                                        <div class="row mt-2" >                                                    
+                                                            <div class="col-md-6">
+                                                                <label for="opt-elasticsearch-querymode" i18n="tabs.search.elastic_search.qmode" class="form-label">Mode</label>
+                                                                <select id="opt-elasticsearch-querymode" class="form-control">
+                                                                    <option value="match" i18n="tabs.search.elastic_search.qmode_match">match</option>
+                                                                    <option value="term" i18n="tabs.search.elastic_search.qmode_term">term</option>
+                                                                    <option value="phrase" i18n="tabs.search.elastic_search.qmode_phrase">phrase</option>
+                                                                </select>
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <label for="opt-elasticsearch-version" i18n="tabs.search.elastic_search.version" class="form-label">Version</label>
+                                                                <select id="opt-elasticsearch-version" class="form-control">
+                                                                    <option value="current" i18n="tabs.search.elastic_search.v_current">current</option>
+                                                                    <option value="1.4" i18n="tabs.search.elastic_search.v_1_4">1.4</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row mt-2">
+                                                            <div class="col-md-12">
+                                                                <div class="custom-control custom-switch">
+                                                                    <input type="checkbox" class="custom-control-input" id="opt-elasticsearch-bbox" value="0">
+                                                                    <label class="custom-control-label" for="opt-elasticsearch-bbox"></label>
+                                                                    <span i18n="tabs.search.elastic_search.search_in_map_extent">Rechercher dans l'emprise de la carte</span>
+                                                                </div>
+                                                            </div>                                                        
+                                                        </div>
+                                                    </form>                                                                                                        
+                                                </div>                                                
+                                            </li>
+                                          </ul>                                        
+                                    </div>
+                                  </div>
+                                </div>                                
+                            </div>  
+                            <!--./Recherche ElasticSearch-->
+                            
+                            <div class="mt-4">
+                                <a class="btn btn-outline-warning btnPrev"><i class="ri-arrow-left-line"></i> <span i18n="studio.wizard.btn.previous">Précédent</span></a>
+                                <a class="btn btn-warning btnNext"><span i18n="studio.wizard.btn.next">Suivant</span> <i class="ri-arrow-right-line"></i> </a>
+                            </div>  
+                        </div>                       
+                        <!-- /.Fonctionnalités avancées -->
+                        <!-- Publication -->
+                        <div class="tab-pane container fade" id="publication">
+                            <h1 i18n="tabs.publication.finish">Félicitations !</h1>
+                            <h4 class="text-primary" i18n="tabs.publication.subfinish">Vous avez terminé la configuration de votre application mviewer.</h4>  
+                            <div id="cardsPublication" class="my-5">
+                                <!--Download-->
+                                <div style="max-width: 18rem;">
+                                    <a role="button" onclick="saveApplicationParameters(1);" href="#">
+                                        <div class="card text-white bg-info p-3 zoomCard h-100 noborder" style="max-width: 18rem;">
+                                            <div class="card-body mb-5">
+                                            <span class="iconCard-finish">
+                                                <i class="ri-download-line" style="font-size: 20px;vertical-align: middle;"></i>
+                                            </span>                            
+                                            <h5 class="card-title mt-4"><span i18n="tabs.publication.download_title">Télécharger votre application</span></h5>
+                                            <p class="card-text" i18n="tabs.publication.download_text">Télécharger le fichier de configuration .XML et déposer le sur un serveur</p>                              
+                                            </div>
                                         </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="panel-footer">
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <div class="pull-right">
-                                            <button id="btn-saveTheme" class="btn btn btn-success"
-                                                    onclick="saveTheme();">
-                                                <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
-                                                <span i18n="ok"> Ok</span>
-                                            </button>
-                                            &nbsp;&nbsp;
-                                            <button class="btn btn btn-default" onclick="$('#panel-theme').hide();">
-                                                <span class="glyphicon glyphicon-remove"></span>
-                                                <span i18n="cancel"> Annuler</span>
-                                            </button>
+                                    </a> 
+                                </div>                                
+                                <!--Download-->
+                                <!--Preview-->
+                                <div style="max-width: 18rem;">
+                                    <a role="button" onclick="saveApplicationParameters(2);" href="#">
+                                        <div class="card border-info p-3 zoomCard h-100" style="max-width: 18rem;">
+                                            <div class="card-body mb-5">
+                                            <span class="iconCard-finish" style=" background-color: #934de236;">
+                                                <i class="ri-eye-2-line" style="font-size: 20px;vertical-align: middle;"></i>
+                                            </span>                            
+                                            <h5 class="card-title mt-4"><span i18n="tabs.publication.preview_title">Prévisualiser votre application</span></h5>
+                                            <p class="card-text" i18n="tabs.publication.preview_text">Tester et valider votre configuration en live</p>                              
+                                            </div>
                                         </div>
-                                    </div>
-                                </div>
-                            </div>
+                                    </a> 
+                                </div>                                
+                                <!--Download-->
+                            </div>                          
+                            <div class="mt-4">
+                                <a class="btn btn-outline-warning btnPrev"><i class="ri-arrow-left-line"></i> <span i18n="studio.wizard.btn.previous">Précédent</span></a>
+                            </div>  
                         </div>
-                    </div>
+                        <!-- /.Publication -->
+                    </div>  
+                    <!--/.STUDIO TABS-->
                 </div>
+                <!-- /CONTAINER STUDIO -->
             </div>
-            <div class="tab-pane" id="backgroundlayers-config">
-                <div class="row">
-                    <div class="col-sm-6 col-md-6">
-                    </div>
-                    <div class="col-sm-3 col-md-3">
-                        <div class="form-group">
-                            <label class="control-label" for="frm-bl-mode">
-                              <span i18n="tabs.bg.displaymode"> Mode d'affichage</span>
-                            </label>
-                            <select id="frm-bl-mode" name="bl-mode" class="form-control">
-                                <option value="default"  i18n="tabs.bg.display_normal">normal</option>
-                                <option value="gallery" i18n="tabs.bg.display_gallery">gallerie</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-sm-3 col-md-3">
-                        <div class="form-group">
-                            <label class="control-label" for="frm-bl-mode">
-                              <span i18n="tabs.bg.startup_bg">Fond affiché au démarrage</span>
-                            </label>
-                            <select id="frm-bl-visible" name="bl-visible" class="form-control"
-                                    onchange="mv.changeVisibleBaseLayer(this.value)"></select>
-                        </div>
-                    </div>
+        </div>
+        <!-- /.MODULES STUDIO-->   
+    </main>
+    
+    <!-- MODALS -->
+    <!-- Modal theme options-->
+    <div class="modal fade" id="mod-themeOptions" role="dialog" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="mod-themeOptions" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" i18n="modal.theme.paramspanel.title">Paramètres de la thématique sélectionnée</h5>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 </div>
-                <div id="frm-bl"></div>
-            </div>
-
-            <div class="tab-pane" id="search-config">
-                <div class="panel panel-default">
-                    <div class="panel-heading"><h3 class="panel-title" i18n="tabs.search.entity_search.title">Recherche d'entités</h3></div>
-                    <div class="panel-body">
-                        <div class="form-group">
-
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" value="" id="opt-searchfeatures" required>
-                                <label class="form-check-label" i18n="tabs.search.entity_search.activate" for="opt-searchfeatures">
-                                Activer la recherche d'entités
-                                </label>
+                <div class="modal-body" id="theme-edit" data-themeid="">
+                    <div class="row mb-3">
+                        <div class="col-md-6">                            
+                            <label for="theme-edit-title" class="form-label" i18n="modal.theme.paramspanel.name">Nom</label>
+                            <input type="text" id="theme-edit-title" class="form-control" tabs.search.elastic_search.disabled="Titre">
+                            <div class="custom-control custom-switch mt-2">
+                                <input type="checkbox" class="custom-control-input" id="theme-edit-collapsed">
+                                <label class="custom-control-label" for="theme-edit-collapsed"><span i18n="modal.theme.paramspanel.opt_unfolded">Déroulée par défaut</span></label>
                             </div>
                         </div>
-                        <p i18n="tabs.search.entity_search.p1">
-                            La recherche d'entités peut être activée sur les couches de type GeoJSON.
-                        </p>
-                        <p i18n="tabs.search.entity_search.p2">
-                            Cette fonctionnalité est également activable pour les couches de type WMS à la condition que les
-                            entités qui composent cette couche soient également indexées par Elasticsearch.
-                        </p>
+                        <div class="col-md-6">                            
+                            <div class="form-group">
+                                <label class="settinglabel" i18n="modal.theme.paramspanel.icon">Icône</label>
+                                <span class="selected-icon"></span>
+                                <input type="text" class="icon-class-input form-control advanced"  style="display: none;" id="theme-pick-icon" />
+                                <button type="button" class="btn btn-outline-info picker-button mt-2" data-bs-target="#iconPicker" data-bs-toggle="modal">
+                                    <span i18n="modal.theme.paramspanel.icon_pick">Choisir une icône</span>
+                                </button>                               
+                            </div>
+                        </div>                        
                     </div>
+                    <hr>
+                    <h6 class="my-2" i18n="modal.theme.paramspanel.data">Données de la thématique</h6>
+                    <!-- List with handle -->
+                    <div id="themeLayers" class="list-group my-2"></div>
+                    <div class="my-3">
+                        <button id="btn-addLayer" class="btn btn-info" onclick="addLayer('Nouvelle couche');" data-bs-target="#mod-layerNew" data-bs-toggle="modal">
+                            <i class="bi bi-plus-lg"></i>
+                            <span i18n="modal.theme.paramspanel.add_data">Ajouter des données</span>
+                        </button>
+                    </div>             
                 </div>
-
-                <div class="panel panel-default">
-                    <div class="panel-heading"><h3 class="panel-title" i18n="tabs.search.address_search.title">Recherche d'adresses</h3></div>
-                    <div class="panel-body">
-                        <div class="form-group">
-                            <label class="control-label col-md-4" for="frm-searchlocalities" i18n="tabs.search.address_search.service">Service utilisé</label>
-                            <select id="frm-searchlocalities" name="searchlocalities" class="form-control"
-                                    onchange="mv.changeSearchLocalities(this.value)" style="width:auto;">
-                                <option value="false" i18n="tabs.search.address_search.none">Non utilisé</option>
-                                <option value="ban" i18n="tabs.search.address_search.ban">Base adresse Nationale</option>
-                                <option value="geoportail" i18n="tabs.search.address_search.geoportal">Géoportail</option>
-                            </select>
-                        </div>
-
-                        <form id="searchlocalities_options" class="form-horizontal">
-                            <div class="form-group">
-                                <label class="col-md-4 control-label" for="opt-searchlocalities-url" i18n="tabs.search.address_search.url">URL</label>
-                                <div class="col-md-4">
-                                    <input id="opt-searchlocalities-url" type="text" placeholder="Url"
-                                           class="form-control input-md">
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-md-4 control-label"
-                                       for="opt-searchlocalities-attribution" i18n="tabs.search.address_search.attribution">Attribution</label>
-                                <div class="col-md-4">
-                                    <input id="opt-searchlocalities-attribution" type="text"
-                                           placeholder="Attribution du service"  i18n="tabs.search.address_search.attribution.ph" class="form-control input-md">
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h3 class="panel-title" i18n="tabs.search.elastic_search.title">Elasticsearch</h3>
-                    </div>
-                    <div class="panel-body">
-                        <div class="form-group">
-                            <label class="control-label col-md-4" for="frm-globalsearch" i18n="tabs.search.elastic_search.options">Options</label>
-                            <select id="frm-globalsearch" name="globalsearch" class="form-control"
-                                    onchange="mv.changeGlobalSearch(this.value)" style="width:auto;">
-                                <option value="false" i18n="tabs.search.elastic_search.disabled">Non utilisé</option>
-                                <option value="elasticsearch" i18n="tabs.search.elastic_search.enabled">Activé</option>
-                            </select>
-                        </div>
-
-                        <form id="searchelasticsearch_options" class="form-horizontal">
-                            <div class="form-group">
-                                <label class="col-md-4 control-label" for="opt-elasticsearch-url"  i18n="tabs.search.elastic_search.es_url">URL
-                                    Elasticsearch</label>
-                                <div class="col-md-4">
-                                    <input id="opt-elasticsearch-url" type="text" placeholder="Url Elasticsearch"
-                                            i18n="tabs.search.elastic_search.es_url.ph" class="form-control input-md">
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label class="col-md-4 control-label" for="opt-elasticsearch-geometryfield" i18n="tabs.search.elastic_search.geom_field">geometryfield</label>
-                                <div class="col-md-4">
-                                    <input id="opt-elasticsearch-geometryfield" type="text" placeholder="geometryfield"
-                                           class="form-control input-md">
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label class="col-md-4 control-label" for="opt-elasticsearch-linkid" i18n="tabs.search.elastic_search.linkid">linkid</label>
-                                <div class="col-md-4">
-                                    <input id="opt-elasticsearch-linkid" type="text" placeholder="linkid"
-                                           class="form-control input-md">
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label class="col-md-4 control-label" for="opt-elasticsearch-doctypes" i18n="tabs.search.elastic_search.doctypes">doctypes</label>
-                                <div class="col-md-4">
-                                    <input id="opt-elasticsearch-doctypes" type="text" placeholder="doctypes"
-                                           class="form-control input-md">
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label class="control-label col-md-4" for="opt-elasticsearch-querymode" i18n="tabs.search.elastic_search.qmode">Mode</label>
-                                <select id="opt-elasticsearch-querymode" class="form-control" style="width:auto;"
-                                        onchange="">
-                                    <option value="match" i18n="tabs.search.elastic_search.qmode_match">match</option>
-                                    <option value="term" i18n="tabs.search.elastic_search.qmode_term">term</option>
-                                    <option value="phrase" i18n="tabs.search.elastic_search.qmode_phrase">phrase</option>
-                                </select>
-                            </div>
-
-                            <div class="checkbox">
-                                <label for="opt-elasticsearch-bbox">
-                                    <input type="checkbox" id="opt-elasticsearch-bbox" value="0">
-                                    <span i18n="tabs.search.elastic_search.search_in_map_extent">Rechercher dans l'emprise de la carte</span>
-                                </label>
-                            </div>
-
-                            <div class="form-group">
-                                <label class="control-label col-md-4" for="opt-elasticsearch-version" i18n="tabs.search.elastic_search.version">Version</label>
-                                <select id="opt-elasticsearch-version" class="form-control" style="width:auto;"
-                                        onchange="">
-                                    <option value="current" i18n="tabs.search.elastic_search.v_current">current</option>
-                                    <option value="1.4" i18n="tabs.search.elastic_search.v_1_4">1.4</option>
-                                </select>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div> <!-- tab-content-->
-
-        <!-- Modal user group selection-->
-        <div class="modal fade" id="mod-groupselection" role="dialog">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h4 class="modal-title" i18n="modal.group.select">Sélectionner un groupe</h4>
-                        <p i18n="modal.group.description">Vous appartenez à plusieurs groupes. Vous devez en sélectionner un pour créer ou enregistrer une carte associée à celui-ci.
-                    </div>
-                    <div class="modal-body">
-                        <div class="list-group" id="user_group_list"></div>
-                    </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal" i18n="cancel">Annuler</button>
+                    <button id="btn-saveTheme" class="btn btn btn-primary" onclick="saveTheme();">
+                        <span i18n="validate">Valider</span>
+                    </button>
                 </div>
             </div>
         </div>
+    </div>
 
-        <!-- Modal file import-->
-        <div class="modal fade" id="mod-importfile" role="dialog">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        <h4 class="modal-title" i18n="modal.file.import">Charger un fichier de configuration</h4>
+    <!-- Modal Credits-->
+    <div class="modal fade" id="modalCredits" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="modalCredits" aria-hidden="true">
+        <div class="modal-dialog ">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><span i18n="modal.credits.title">Crédits</span></h5>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body">
+                    <p>MviewerStudio | Licence GPL-3.0 | Version 3.1</p>
+                    <div class="alert alert-info text-info my-2" role="alert">
+                        <i class="ri-information-line" style="font-size: 20px;vertical-align: middle;"></i>
+                        <span i18n="modal.credits.alert">Compatible à partir de la version 3.8 du mviewer</span> 
                     </div>
-                    <div class="modal-body">
-
-                        <ul class="nav nav-tabs" role="tablist">
-                            <li role="presentation" class="active"><a href="#serverside" aria-controls="serverside" role="tab" data-toggle="tab" i18n="modal.file.serverside">Localisé sur le serveur</a></li>
-                            <li role="presentation"><a href="#local" aria-controls="local" role="tab" data-toggle="tab" i18n="modal.file.local">Sur votre ordinateur</a></li>
-                        </ul>
-
-                        <br>
-
-                        <div class="tab-content">
-                            <div role="tabpanel" class="tab-pane" id="local">
-                                <div class="alert alert-info">
-                                    <label i18n="modal.file.select">Choisissez un fichier</label>
-                                    <div class="input-group">
-                                        <input type="text" id="subfile" class="form-control">
-                                        <span class="input-group-btn">
-                                            <button class="btn btn-primary" type="button"
-                                                    onclick="$('#filebutton').click();">
-                                                <span class="glyphicon glyphicon-folder-open"></span>
-                                                &nbsp;<span i18n="modal.file.browse">Parcourir...</span>
-                                            </button>
-                                        </span>
-                                    </div>
-                                    <input type="file" name="filebutton" style="display: none;" id="filebutton">
-                                </div>
-                            </div>
-                            <div role="tabpanel" class="tab-pane active" id="serverside">
-                                <form class="form-inline">
-                                    <div class="form-group" style="display: none;">
-                                        <label for="apps_group_list" i18n="modal.file.group">Groupe</label>
-                                        <select class="form-control" id="apps_group_list" onchange="mv.filterApplications()"></select>
-                                    </div>
-                                    <div class="form-group" style="display: none;">
-                                        <label for="apps_creator_list" i18n="modal.file.author">Auteur</label>
-                                        <select class="form-control" id="apps_creator_list" onchange="mv.filterApplications()"></select>
-                                    </div>
-                                </form>
-                                <br>
-                                <div class="list-group" id="liste_applications"></div>
-                                <div class="text-right">
-                                    <button type="button" class="btn btn-danger" onclick="deleteMyApplications();">
-                                        <span class="glyphicon glyphicon-trash"></span>
-                                        &nbsp;<span i18n="modal.file.deleteallmyapps">Supprimer toutes mes applications</span>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal" i18n="close">Fermer</button>
-                    </div>
+                    <p><span class="strong" i18n="modal.credits.lib">Librairies</span><br>Bootstrap 5.2.0 | OpenLayers 7.1</p>
+                    <p><span class="strong" i18n="modal.credits.icon">Icônes</span><br>Remix Icon | Bootstrap Icons </p>
+                    <p><span class="strong" i18n="modal.credits.draw">Illustrations</span><br>VectorJuice sur Freepik.com</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal"><span i18n="close">Fermer</span></button>
                 </div>
             </div>
         </div>
+    </div>
 
-        <!-- Modal layer options-->
-        <div class="modal fade" id="mod-layerOptions" role="dialog">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        <h4 class="modal-title" i18n="modal.layer.edit">Edition de couche</h4>
-                    </div>
-                    <div class="modal-body">
-                        <ul class="nav nav-tabs" role="tablist" id="layer_sections_menu">
-                            <li role="presentation" class="active"><a href="#layer_conf1" role="tab" data-toggle="tab" i18n="modal.layer.edit.base">Base</a>
-                            </li>
-                            <li role="presentation"><a href="#layer_conf2" role="tab" data-toggle="tab" i18n="modal.layer.edit.sheet">Fiche</a></li>
-                            <li role="presentation"><a href="#layer_conf3" role="tab" data-toggle="tab" i18n="modal.layer.edit.display">Affichage</a>
-                            </li>
-                            <li role="presentation"><a href="#layer_conf4" role="tab" data-toggle="tab" i18n="modal.layer.edit.filter">Filtre</a></li>
-                            <li role="presentation"><a href="#layer_conf5" role="tab" data-toggle="tab" i18n="modal.layer.edit.choices">Liste de
-                                choix</a></li>
-                            <li role="presentation"><a href="#layer_conf6" role="tab" data-toggle="tab" i18n="modal.layer.edit.search">Recherche</a>
-                            </li>
-                        </ul>
-                        <div class="tab-content" id="layer_sections">
-                            <div role="tabpanel" class="tab-pane active" id="layer_conf1">
-                                <form>
+    <!-- Modal exitStudio-->
+    <div class="modal fade" id="mod-closeStudio" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="mod-closeStudio" aria-hidden="true">
+        <div class="modal-dialog ">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" i18n="modal.exit.title">Attention</h5>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body">
+                    <p i18n="modal.exit.subtitle">Êtes-vous sûr de vouloir quitter votre projet en cours ?</p>
+                    <a class="cardsClose save-close zoomCard" onclick="saveStudio();">
+                        <i class="ri-save-line"></i>
+                        <span i18n="modal.exit.save">Enregister mon application et quitter le studio</span>
+                    </a>
+                    <a class="cardsClose notsave-close zoomCard" onclick="showHome()">
+                        <i class="bi bi-x-circle"></i>
+                        <span i18n="modal.exit.notsave">Ne pas sauvegarder mes modifications et quitter le studio</span>
+                    </a>
+                    <a class="returnConf-close" data-bs-dismiss="modal" aria-label="Close"><i class="ri-arrow-left-line"></i> <span i18n="modal.exit.previous">Retour</span></a>                    
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal user group selection-->
+    <div class="modal fade" id="mod-groupselection" data-bs-backdrop="static" data-bs-keyboard="false" role="dialog" tabindex="-1" aria-labelledby="mod-importfile" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" i18n="modal.group.select">Sélectionner un groupe</h5>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>                    
+                </div>
+                <div class="modal-body">
+                    <p i18n="modal.group.description">Vous appartenez à plusieurs groupes. Vous devez en sélectionner un pour créer ou enregistrer une carte associée à celui-ci.</p>
+                    <div class="list-group" id="user_group_list"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal file import-->
+    <div class="modal fade" id="mod-importfile" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="mod-importfile" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" i18n="modal.file.import">Ouvrir un projet existant</h5>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body">
+                    <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+                        <li class="nav-item" role="presentation">
+                          <a class="nav-link active" data-bs-toggle="pill" data-bs-target="#serverside" type="button" role="tab" aria-controls="pills-serverside" aria-selected="true">
+                                <span i18n="modal.file.serverside">Sur le serveur</span> 
+                          </a>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                          <a class="nav-link" data-bs-toggle="pill" data-bs-target="#local" type="button" role="tab" aria-controls="pills-local" aria-selected="false">
+                            <span i18n="modal.file.local">Depuis votre ordinateur</span> 
+                          </a>
+                        </li>
+                      </ul>
+                      <div class="tab-content mb-4">
+                        <div class="tab-pane fade show active" id="serverside" role="tabpanel" tabindex="0">                            
+                            <form class="row ">
+                                <div class="col-md-6" style="display: none;">
+                                    <label for="apps_group_list" i18n="modal.file.group">Groupe</label>
+                                    <select class="form-control" id="apps_group_list" onchange="mv.filterApplications()"></select>
+                                </div>
+                                <div class="col-md-6" style="display: none;">
+                                    <label for="apps_creator_list" i18n="modal.file.author">Auteur</label>
+                                    <select class="form-control" id="apps_creator_list" onchange="mv.filterApplications()"></select>
+                                </div>
+                            </form>
+                            <br>
+                            <p><span i18n="modal.file.selectserverside">Sélectionnez une application :</span></p>
+                            <div class="list-group mb-3" id="liste_applications"></div>
+                            <div class="text-right">
+                                <button type="button" class="btn btn btn-outline-danger" onclick="deleteMyApplications();">
+                                    <i class="ri-delete-bin-2-line"></i>
+                                    <span i18n="modal.file.deleteallmyapps">Supprimer toutes mes applications</span>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="local" role="tabpanel" tabindex="0">
+                            <label i18n="modal.file.selectlocal">Sélectionner un fichier de configuration .XML :</label>
+                            <div class="input-group mb-3">
+                                <input type="text" class="form-control" placeholder="monapplication.xml" aria-describedby="button-addon2">
+                                <div class="input-group-append">
+                                    <button class="btn btn-info" type="button" onclick="$('#filebutton').click();">
+                                        <i class="bi bi-folder2-open"></i>
+                                        <span i18n="modal.file.browse">Parcourir</span>
+                                    </button>
+                                </div>                                
+                            </div>
+                            <input type="file" name="filebutton" style="display: none;" id="filebutton">
+                        </div>
+                      </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal"><span i18n="close">Fermer</span></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal layer options-->
+    <div class="modal fade" id="mod-layerOptions" role="dialog" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="mod-layerOptions" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" i18n="modal.layer.edit">Paramètres de la donnée</h5>
+                    <button type="button" class="close" data-bs-target="#mod-themeOptions" data-bs-toggle="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body">
+                    <ul class="nav nav-pills mb-3" id="layer_sections_menu" role="tablist">
+                        <li class="nav-item" role="presentation">
+                          <a class="nav-link active" data-bs-toggle="pill" data-bs-target="#layer_conf1" type="button" role="tab" aria-controls="pills-layer_conf1" aria-selected="true" i18n="modal.layer.edit.base">
+                              Général
+                          </a>
+                        </li>
+                        <li class="nav-item advanced" role="presentation" style="display: none;">
+                          <a class="nav-link" data-bs-toggle="pill" data-bs-target="#layer_conf3" type="button" role="tab" aria-controls="pills-layer_conf3" aria-selected="false" i18n="modal.layer.edit.display">
+                            Options avancées
+                          </a>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                          <a class="nav-link" data-bs-toggle="pill" data-bs-target="#layer_conf2" type="button" role="tab" aria-controls="pills-layer_conf2" aria-selected="false" i18n="modal.layer.edit.sheet">
+                            Interrogation
+                          </a>
+                        </li>
+                        <li class="nav-item advanced" role="presentation" style="display: none;">
+                          <a class="nav-link" data-bs-toggle="pill" data-bs-target="#layer_conf4" type="button" role="tab" aria-controls="pills-layer_conf4" aria-selected="false" i18n="modal.layer.edit.filter">
+                            Filtre statique
+                          </a>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                          <a class="nav-link" data-bs-toggle="pill" data-bs-target="#layer_conf5" type="button" role="tab" aria-controls="pills-layer_conf5" aria-selected="false" i18n="modal.layer.edit.choices">
+                            Filtre dynamique
+                          </a>
+                        </li>
+                        <li class="nav-item advanced" role="presentation" style="display: none;">
+                          <a class="nav-link" data-bs-toggle="pill" data-bs-target="#layer_conf6" type="button" role="tab" aria-controls="pills-layer_conf6" aria-selected="false" i18n="modal.layer.edit.search">
+                            Recherche
+                          </a>
+                        </li>
+                    </ul>
+                    <div class="tab-content mt-3" id="layer_sections">
+                        <div role="tabpanel" class="tab-pane fade show active" id="layer_conf1">
+                            <form>
+                                <div class="my-2">
                                     <div class="form-group">
                                         <label for="frm-layer-title" i18n="modal.layer.name">Nom</label>
                                         <input type="text" class="form-control" id="frm-layer-title"
                                                placeholder="nom de la couche" i18n="modal.layer.name.ph">
-                                    </div>
-                                    <!--<div class="form-group">
-                                        <label for="frm-type">Type</label>
-                                        <input type="text" class="form-control" id="frm-type" placeholder="type">
-                                    </div>-->
-                                    <div class="form-group">
-                                        <label class="control-label" for="frm-type" i18n="modal.layer.type">Type</label>
-                                        <select id="frm-type" name="type" class="form-control"
-                                                onchange="mv.changeLayerType(this.value);">
-                                            <option value="wms" i18n="modal.layer.type.wms">WMS</option>
-                                            <option value="geojson" i18n="modal.layer.type.geojson" disabled>GeoJSON</option>
-                                            <option value="kml" i18n="modal.layer.type.kml" disabled>KML</option>
-                                            <option value="customlayer" i18n="modal.layer.type.custom" disabled>Customlayer</option>
-                                        </select>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="frm-layerid" i18n="modal.layer.id">id</label>
-                                        <input type="text" class="form-control" id="frm-layerid" placeholder="id">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="frm-url" i18n="modal.layer.url">url</label>
-                                        <input type="text" class="form-control checkedurl" id="frm-url"
-                                               placeholder="url">
                                     </div>
                                     <div class="form-group">
                                         <label for="frm-attribution" i18n="modal.layer.attr">Attributions</label>
                                         <input type="text" class="form-control" id="frm-attribution"
                                                placeholder="Attribution">
                                     </div>
-                                    <div class="form-group">
-                                        <label for="frm-metadata" i18n="modal.layer.htmlmetadataurl">URL fiche de métadonnées (html)</label>
-                                        <input type="text" class="form-control checkedurl" id="frm-metadata"
-                                               placeholder="metadata">
+                                    <div class="form-group" lang="en-US">
+                                        <label for="frm-opacity" i18n="modal.layer.opacity">Opacité </label><span id="opacity-value">1</span>
+                                        <input type="range" class="form-control-range mt-1" id="frm-opacity" step="0.1" min="0" max="1" value="1">
+                                        
                                     </div>
-                                    <div class="form-group">
-                                        <label for="frm-metadata-csw" i18n="modal.layer.xmlmetadataurl">URL fiche de métadonnées (xml)</label>
-                                        <input type="text" class="form-control checkedurl" id="frm-metadata-csw"
-                                               placeholder="metadata-csw">
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="control-label" for="frm-type" i18n="modal.layer.ac">Contraintes d'accès</label>
-                                        <select id="frm-secure" name="type" class="form-control">
-                                            <option value="public" i18n="modal.layer.ac.public">Accès public</option>
-                                            <option value="global" i18n="modal.layer.ac.auth.global">Accès soumis à authentification globale (CAS georchestra)</option>
-                                            <option value="layer" i18n="modal.layer.ac.auth.service">Accès soumis à authentification au niveau du service (Basic Authent)</option>
-                                        </select>
-                                    </div>
-                                    <div class="form-group">
-                                        <div class="checkbox">
-                                            <label>
-                                                <input id="frm-useproxy" type="checkbox"><span i18n="modal.layer.proxy"> Utiliser le proxy du viewer (nécessaire si HTTPS non disponible pour la couche)</span>
-                                            </label>
+                                    <div class="form-group mt-4">
+                                        <div class="custom-control custom-switch">
+                                            <input type="checkbox" class="custom-control-input" id="frm-visible">
+                                            <label class="custom-control-label" for="frm-visible" i18n="modal.layer.visibleonstart">Afficher la donnée au démarrage de l'application</label>
                                         </div>
                                     </div>
-                                </form>
-                            </div>
-                            <div role="tabpanel" class="tab-pane" id="layer_conf2">
-                                <form>
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <div class="checkbox">
-                                                    <label>
-                                                        <input id="frm-queryable" type="checkbox"><span i18n="modal.layer.queryable">interrogeable</span>
-                                                    </label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label class="control-label" for="frm-infopanel" i18n="modal.layer.info.position">Position fiche
-                                                    info</label>
-                                                <select id="frm-infopanel" name="infoformat" class="form-control">
-                                                    <option value="right-panel" i18n="modal.layer.info.right">Panneau de droite</option>
-                                                    <option value="bottom-panel" i18n="modal.layer.info.down">Panneau du bas</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label class="control-label" for="frm-infoformat" i18n="modal.layer.infoformat">Format de la fiche
-                                                    d'information</label>
-                                                <select id="frm-infoformat" name="infoformat" class="form-control"
-                                                        onchange="mv.showHideQueryParameters(this.value);">
-                                                    <option value="text/html" i18n="modal.layer.infoformat.html">standard</option>
-                                                    <option value="application/vnd.ogc.gml" i18n="modal.layer.infoformat.gml">personnalisé</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label for="frm-featurecount" i18n="modal.layer.featurecount">Limitation du nombre de réponses</label>
-                                                <input type="number" class="form-control" id="frm-featurecount"
-                                                       placeholder="Nombre max d'entités retournées" step="1" min="1"
-                                                        i18n="modal.layer.featurecount.ph" max="50" value="5">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div id="query-parameters">
-                                        <div class="form-group">
-                                            <div class="checkbox">
-                                                <label>
-                                                    <input id="frm-template" type="checkbox"><span i18n="modal.layer.query.usetemplate">Utiliser un template</span>
-                                                </label>
-                                            </div>
-                                            <label for="frm-template-url" i18n="modal.layer.query.templateurl">URL template</label>
-                                            <input type="text" class="form-control checkedurl" id="frm-template-url"
-                                                   placeholder="URL template"/>
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="control-label" for="frm-fields" i18n="modal.layer.query.fields">Champs</label>
-                                            <div id="frm-lis-fields"></div>
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-
-                            <div role="tabpanel" class="tab-pane" id="layer_conf3">
-                                <form>
-                                    <div class="form-group">
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <div class="checkbox">
-                                                        <label>
-                                                            <input id="frm-tiled" type="checkbox"><span i18n="modal.layer.tiled"> Couche tuilée</span>
-                                                        </label>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <div class="checkbox">
-                                                        <label>
-                                                            <input id="frm-visible" type="checkbox"><span i18n="modal.layer.visibleonstart"> Visible au
-                                                            démarrage</span>
-                                                        </label>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <label for="frm-legendurl" i18n="modal.layer.legendurl">Légende statique</label>
-                                        <input type="text" class="form-control checkedurl" id="frm-legendurl"
-                                               placeholder="URL vers Image légende" i18n="modal.layer.display.ph.legend_image_url"/>
-                                        <div class="row">
-                                            <div class="col-md-4">
-                                                <div class="form-group" lang="en-US">
-                                                    <label for="frm-opacity" i18n="modal.layer.opacity">Opacité</label>
-                                                    <input type="number" class="form-control" id="frm-opacity"
-                                                           placeholder="Opacité (0 à 1)" step="0.1" min="0.1" max="1.0"
-                                                           value="1" i18n="modal.layer.display.ph.opacity">
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <label for="frm-scalemin" i18n="modal.layer.scale.min">Echelle mini</label>
-                                                <input type="number" class="form-control" id="frm-scalemin"
-                                                       placeholder="Echelle mini" i18n="modal.layer.display.ph.minscale"/>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <label for="frm-scalemax" i18n="modal.layer.scale.max">Echelle maxi</label>
-                                                <input type="number" class="form-control" id="frm-scalemax"
-                                                       placeholder="Echelle maxi" i18n="modal.layer.display.ph.maxscale"/>
-                                            </div>
-                                        </div>
-
-                                        <label class="control-label" for="frm-styles" i18n="modal.layer.styles">Styles</label>
-                                        <div class="row" id="frm-lis-styles"></div>
-                                        <hr>
-                                        <label for="frm-sld" i18n="modal.layer.sld.external">Style externe</label>
-                                        <div class="input-group">
-                                            <input type="text" class="form-control checkedurl" id="frm-sld"
-                                               placeholder="URL SLD externe" i18n="modal.layer.display.ph.external_sld"/>
-                                            <span class="input-group-btn">
-                                                <input type="file" id="frm-upload-sld-file" style="display: none;" onchange="uploadSldFileToBackend(this)">
-                                                <button class="btn btn-default"
-                                                        type="button"
-                                                        i18n="modal.layer.uploadsldfile"
-                                                        onclick="document.getElementById('frm-upload-sld-file').click()"
-                                                >
-                                                    Téléverser un SLD
-                                                </button>
-                                                <button class="btn btn-default" type="button">
-                                                    <span class="glyphicon glyphicon-info-sign"
-                                                          data-toggle="tooltip"
-                                                          data-placement="top"
-                                                          title="Vous pouvez insérer une URL vers un SLD. Si votre couche provient d'un geoserver, vous pouvez specifier uniquement le nom du SLD dans geoserver (ex: un_entrepot:mon_sld)"
-                                                          i18n="modal.layer.uploadsld.tooltips"
-                                                    ></span>
-                                                </button>
-                                            </span>
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-
-                            <div role="tabpanel" class="tab-pane" id="layer_conf4">
-                                <div class="well well-sm">
-                                    <p i18n="modal.layer.filter.serverside">Filtre CQL prédéfini : filtrage attributaire statique des objets affichés dans
-                                        la couche.</p>
-                                    <p><small><strong><span i18n="modal.layer.filter.geoserver-only-warning.h"> Activable uniquement avec GeoServer.</span></strong>
-                                    <span i18n="modal.layer.filter.geoserver-only-warning.txt">Les filtres CQL ne peuvent activés qu'avec des couches de données issues
-                                    de GeoServer. Il ne s'agit pas d'une fonction standard de WMS.</span></small></p>
+                                    <div class="mt-4">
+                                        <h6 i18n="modal.layer.styles">Style(s) de la donnée disponible(s)</h6>
+                                        <div class="row mt-3" id="frm-lis-styles"></div>
+                                        <p><small><span i18n="modal.layer.styles.note">Si plusieurs styles sont sélectionnés, indiquer les libéllés des styles qui apparaîtront dans la liste déroulante.</span></small></p>
+                                    </div>                                    
                                 </div>
-                                <form>
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <label for="frm-filter" i18n="modal.layer.filter.serverside.active">filtre actif</label>
+                            </form>                            
+                        </div>
+                        <div role="tabpanel" class="tab-pane fade" id="layer_conf2">                            
+                            <form>
+                                <div class="form-group">
+                                    <div class="custom-control custom-switch mt-2">
+                                        <input type="checkbox" class="custom-control-input" id="frm-queryable">
+                                        <label class="custom-control-label" for="frm-queryable"><span i18n="modal.layer.queryable">Activer l'interrogation de la donnée au clic sur la carte</span></label>
+                                    </div>
+                                </div>
+                                <div class="row">                                    
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="control-label" for="frm-infopanel" i18n="modal.layer.info.position">Position de la fiche d'information</label>
+                                            <select id="frm-infopanel" name="infoformat" class="form-control">
+                                                <option value="right-panel" i18n="modal.layer.info.right">Panneau de droite</option>
+                                                <option value="bottom-panel" i18n="modal.layer.info.down">Panneau du bas</option>
+                                            </select>
                                         </div>
                                     </div>
-                                    <div class="row">
-                                        <div class="col-md-8">
-                                            <div class="form-group">
-                                                <input type="textarea" class="form-control" id="frm-filter"
-                                                       placeholder="filtre cql"  i18n="modal.layer.filter.cql.ph">
+                                    <div class="form-group advanced" style="display: none;">
+                                        <label for="frm-featurecount" i18n="modal.layer.featurecount">Limitation du nombre de réponses</label>
+                                        <input type="number" class="form-control" id="frm-featurecount"
+                                               placeholder="Nombre max d'entités retournées" step="1" min="1"
+                                                i18n="modal.layer.featurecount.ph" max="50" value="5">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label class="control-label" for="frm-infoformat" i18n="modal.layer.infoformat">Format de la fiche
+                                                d'information</label>
+                                            <select id="frm-infoformat" name="infoformat" class="form-control"
+                                                    onchange="mv.showHideQueryParameters(this.value);">                                                
+                                                <option value="application/vnd.ogc.gml" i18n="modal.layer.infoformat.gml">Personnalisé</option>
+                                                <option value="text/html" i18n="modal.layer.infoformat.html">Standard</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="query-parameters">       
+                                    <!--LayerTempl-->
+                                    <div class="accordion mt-2" id="accordionLayerTempl">
+                                        <div class="accordion-item">
+                                        <h2 class="accordion-header" >
+                                            <a class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseLayerTempl" aria-expanded="true" aria-controls="collapseLayerTempl">
+                                            <div>
+                                                <span class="title-accordion" i18n="modal.layer.customtemplate.title">Configurer la fiche d'information</span></br>
+                                                <span class="subtitle-accordion" i18n="modal.layer.customtemplate.subtitle">Sélectionner les champs à afficher et leurs aspects</span>
+                                            </div>
+                                            </a>
+                                        </h2>
+                                        <div id="collapseLayerTempl" class="accordion-collapse collapse show" aria-labelledby="accordionLayerTempl">
+                                            <div class="accordion-body p-0"> 
+                                                <ul class="list-group list-group-flush">
+                                                    <div id="frm-lis-fields"></div>                                                    
+                                                </ul>                                        
                                             </div>
                                         </div>
-                                        <div class="col-md-4">
-                                            <button type="button" onclick="$('#filter_wizard').toggle();"
-                                                    class="btn btn-primary" i18n="modal.layer.filter.serverside.create">Créer un filtre
-                                            </button>
+                                        </div>                                
+                                    </div>  
+                                    <!--./LayerTempl-->                                 
+                                    <!--Mustache-->
+                                    <div class="accordion mt-2 advanced" id="accordionMustache" style="display: none;">
+                                        <div class="accordion-item">
+                                        <h2 class="accordion-header" >
+                                            <a class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseMustache" aria-expanded="true" aria-controls="collapseMustache">
+                                            <div>
+                                                <span class="title-accordion" i18n="modal.layer.query.usetemplate">Utiliser un template externe</span>
+                                            </div>
+                                            </a>
+                                        </h2>
+                                        <div id="collapseMustache" class="accordion-collapse collapse" aria-labelledby="accordionMustache">
+                                            <div class="accordion-body"> 
+                                                <div class="form-group">                                                    
+                                                    <div class="custom-control custom-switch mb-2">
+                                                        <input type="checkbox" class="custom-control-input" id="frm-template">
+                                                        <label class="custom-control-label" for="frm-template"><span i18n="modal.layer.query.usetemplate">Utiliser un template externe</span></label>
+                                                    </div>
+                                                    <div>
+                                                        <label for="frm-template-url" i18n="modal.layer.query.templateurl">Lien vers le template .mst</label>
+                                                        <input type="text" class="form-control checkedurl" id="frm-template-url" placeholder="https://montemplate.fr"/>
+                                                    </div>                                                    
+                                                </div>                                                                                                                            
+                                            </div>
+                                        </div>
+                                        </div>                                
+                                    </div>  
+                                    <!--./Mustache-->
+                                </div>
+                            </form>
+                        </div>
+
+                        <div role="tabpanel" class="tab-pane fade" id="layer_conf3">
+                            <form>
+                                <!--Affichage-->
+                                <div class="accordion mt-2" id="accordionDisplayLayer">
+                                    <div class="accordion-item">
+                                    <h2 class="accordion-header" >
+                                        <a class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDisplayLayer" aria-expanded="true" aria-controls="collapseDisplayLayer">
+                                        <div>
+                                            <span class="title-accordion" i18n="modal.layer.displayoptions.title">Options d'affichage</span>
+                                        </div>
+                                        </a>
+                                    </h2>
+                                    <div id="collapseDisplayLayer" class="accordion-collapse collapse" aria-labelledby="accordionDisplayLayer">
+                                        <div class="accordion-body">                                         
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <label for="frm-scalemin" i18n="modal.layer.scale.min">Echelle mini</label>
+                                                    <input type="number" class="form-control" id="frm-scalemin"
+                                                        placeholder="Echelle mini" i18n="modal.layer.display.ph.minscale"/>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label for="frm-scalemax" i18n="modal.layer.scale.max">Echelle maxi</label>
+                                                    <input type="number" class="form-control" id="frm-scalemax"
+                                                        placeholder="Echelle maxi" i18n="modal.layer.display.ph.maxscale"/>
+                                                </div>
+                                            </div>
+                                            <div class="form-group mt-2">
+                                                <label for="frm-legendurl" i18n="modal.layer.legendurl">Légende statique</label>
+                                                <input type="text" class="form-control checkedurl" id="frm-legendurl"
+                                                placeholder="URL vers Image légende" i18n="modal.layer.display.ph.legend_image_url"/>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="custom-control custom-switch">
+                                                    <input type="checkbox" class="custom-control-input" id="frm-tiled">
+                                                    <label class="custom-control-label" for="frm-tiled" i18n="modal.layer.tiled">Affichage tuilé</label>
+                                                </div>
+                                            </div>
+                                            <hr>
+                                            <h6 for="frm-upload-sld-file" i18n="modal.layer.sld.external">Utiliser un style externe</h6>                                        
+                                            <div class="input-group">
+                                                <input type="text" class="form-control checkedurl" id="frm-upload-sld-file" placeholder="URL SLD externe" i18n="modal.layer.display.ph.external_sld">
+                                                <!--<div class="input-group-append">                                                
+                                                    <button type="button" class="btn btn-outline-info" i18n="modal.layer.uploadsldfile" onclick="document.getElementById('frm-upload-sld-file').click()">Téléverser un SLD</button>
+                                                    <button type="button" class="btn btn-info">
+                                                        <span
+                                                                data-toggle="tooltip"
+                                                                data-placement="top"
+                                                                title="Vous pouvez insérer une URL vers un SLD. Si votre couche provient d'un geoserver, vous pouvez specifier uniquement le nom du SLD dans geoserver (ex: un_entrepot:mon_sld)"
+                                                                i18n="modal.layer.uploadsld.tooltips"
+                                                            ><i class="bi bi-info-circle"></i></span>                                                
+                                                    </button>
+                                                </div>   --> 
+                                            </div>
                                         </div>
                                     </div>
-                                    <div id="filter_wizard" style="display:none;">
-                                        <!-- Nav tabs -->
-                                        <ul class="nav nav-tabs" role="tablist">
-                                            <li role="presentation" class="active"><a href="#attribute_filter"
-                                                                                      aria-controls="attribute_filter"
-                                                                                      role="tab" data-toggle="tab"
-                                                                                      i18n="modal.layer.filter.serverside.filter.attributes">Filtre
-                                                attributaire</a></li>
-                                            <li role="presentation"><a href="#geo_filter" aria-controls="geo_filter"
-                                                                       role="tab" data-toggle="tab"
-                                                                       i18n="modal.layer.filter.serverside.filter.geo">Filtre
-                                                géographique</a></li>
-                                        </ul>
-                                        <!-- Tab panes -->
-                                        <div class="tab-content">
-                                            <div role="tabpanel" class="tab-pane active" id="attribute_filter">
-                                                <div class="form-group">
-                                                    <label class="control-label" i18n="modal.layer.filter.fields">Champs</label>
-                                                    <select id="attribute_filter_fields" name="fields"
-                                                            class="form-control"
-                                                            onchange="extractFeatures(this.value, 'source')">
+                                    </div>                                
+                                </div>  
+                                <!--./Affichage-->
+                                <!--Type de couche-->
+                                <div class="accordion mt-2" id="accordionOptionsType">
+                                    <div class="accordion-item">
+                                    <h2 class="accordion-header" >
+                                        <a class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOptionsType" aria-expanded="true" aria-controls="collapseOptionsType">
+                                        <div>
+                                            <span class="title-accordion" i18n="modal.layer.type.title">Type de donnée</span>
+                                        </div>
+                                        </a>
+                                    </h2>
+                                    <div id="collapseOptionsType" class="accordion-collapse collapse" aria-labelledby="accordionOptionsType">
+                                        <div class="accordion-body"> 
+                                            <div class="row">
+                                                <div class="col-md-6 form-group">
+                                                    <label class="control-label" for="frm-type" i18n="modal.layer.type">Type</label>
+                                                    <select id="frm-type" name="type" class="form-control"
+                                                            onchange="mv.changeLayerType(this.value);">
+                                                        <option value="wms" i18n="modal.layer.type.wms">WMS</option>
+                                                        <option value="geojson" i18n="modal.layer.type.geojson" disabled>GeoJSON</option>
+                                                        <option value="kml" i18n="modal.layer.type.kml" disabled>KML</option>
+                                                        <option value="customlayer" i18n="modal.layer.type.custom" disabled>Customlayer</option>
                                                     </select>
                                                 </div>
-                                                <div class="form-group">
-                                                    <label class="control-label" i18n="modal.layer.filter.serverside.filter.operator">Opérateur</label>
-                                                    <select id="attribute_filter_operators" name="operators"
-                                                            class="form-control">
-                                                        <option value="=">=</option>
-                                                        <option value="IN">IN</option>
-                                                        <option value="NOT IN">NOT IN</option>
-                                                    </select>
-                                                </div>
-                                                <div class="row">
-                                                    <div class="col-md-8">
-                                                        <label class="control-label" i18n="modal.layer.filter.selected">valeurs sélectionnées</label>
-                                                        <div class="form-group">
-                                                            <input type="text" value="" data-role="tagsinput"
-                                                                   id="source_fields_tags" class="form-control"/>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-4" style="padding-top: 25px;">
-                                                        <button type="button" onclick="mv.saveSourceAttributeFilter()"
-                                                                class="btn btn-success" i18n="modal.layer.filter.serverside.filter.apply">Appliquer le filtre
-                                                        </button>
-                                                    </div>
+                                                <div class="col-md-6 form-group">
+                                                    <label for="frm-layerid" i18n="modal.layer.id">id</label>
+                                                    <input type="text" class="form-control" id="frm-layerid" placeholder="id">
                                                 </div>
                                             </div>
-                                            <div role="tabpanel" class="tab-pane" id="geo_filter">
-                                                <div id="map_filter" class="map"></div>
-                                            </div>
+                                            <div class="form-group">
+                                                <label for="frm-url" i18n="modal.layer.url">url</label>
+                                                <input type="text" class="form-control checkedurl" id="frm-url"placeholder="url">
+                                            </div>                                 
                                         </div>
                                     </div>
-                                </form>
-                            </div>
-
-                            <div role="tabpanel" class="tab-pane" id="layer_conf5">
-                                <div class="well well-sm">
-                                    <p i18n="modal.layer.filter.clientside">Filtre CQL dynamique : filtrage attributaire des objets affichés dans la couche
-                                        à l'aide de listes déroulantes présentes dans la légende de la couche.</p>
-                                    <p><small><strong><span i18n="modal.layer.filter.geoserver-only-warning.h"> Activable uniquement avec GeoServer.</span></strong>
-                                    <span i18n="modal.layer.filter.geoserver-only-warning.txt">Les filtres CQL ne peuvent activés qu'avec des couches de données issues
-                                    de GeoServer. Il ne s'agit pas d'une fonction standard de WMS.</span></small></p>
-                                </div>
-                                <form>
-                                    <div class="form-group">
-                                        <div class="form-group">
-                                            <label for="frm-attributelabel" i18n="modal.layer.filter.clientside.label">Label</label>
-                                            <input type="textarea" class="form-control" id="frm-attributelabel"
-                                                   placeholder="Texte à afficher" i18n="modal.layer.filter.clientside.label.ph">
+                                    </div>                                
+                                </div>  
+                                <!--./Type de couche-->
+                                <!--Métadonnées-->
+                                <div class="accordion mt-2" id="accordionMetadata">
+                                    <div class="accordion-item">
+                                    <h2 class="accordion-header" >
+                                        <a class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseMetadata" aria-expanded="true" aria-controls="collapseMetadata">
+                                        <div>
+                                            <span class="title-accordion" i18n="modal.layer.metadata.title">Métadonnées</span>
                                         </div>
-                                        <div class="form-group">
-                                            <label class="control-label" i18n="modal.layer.filter.fields">Champs</label>
+                                        </a>
+                                    </h2>
+                                    <div id="collapseMetadata" class="accordion-collapse collapse" aria-labelledby="accordionMetadata">
+                                        <div class="accordion-body"> 
+                                            <div class="form-group">
+                                                <label for="frm-metadata" i18n="modal.layer.htmlmetadataurl">URL fiche de métadonnées (html)</label>
+                                                <input type="text" class="form-control checkedurl" id="frm-metadata"
+                                                    placeholder="metadata">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="frm-metadata-csw" i18n="modal.layer.xmlmetadataurl">URL fiche de métadonnées (xml)</label>
+                                                <input type="text" class="form-control checkedurl" id="frm-metadata-csw"
+                                                    placeholder="metadata-csw">
+                                            </div>                                                                               
+                                        </div>
+                                    </div>
+                                    </div>                                
+                                </div>  
+                                <!--./Métadonnées-->
+                                <!--Accès-->
+                                <div class="accordion mt-2" id="accordionAccessLayer">
+                                    <div class="accordion-item">
+                                    <h2 class="accordion-header" >
+                                        <a class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseAccessLayer" aria-expanded="true" aria-controls="collapseAccessLayer">
+                                        <div>
+                                            <span class="title-accordion" i18n="modal.layer.access.title">Accès à la donnée</span>
+                                        </div>
+                                        </a>
+                                    </h2>
+                                    <div id="collapseAccessLayer" class="accordion-collapse collapse" aria-labelledby="accordionAccessLayer">
+                                        <div class="accordion-body"> 
+                                            <div class="form-group">
+                                                <label class="control-label" for="frm-type" i18n="modal.layer.ac">Contraintes d'accès</label>
+                                                <select id="frm-secure" name="type" class="form-control">
+                                                    <option value="public" i18n="modal.layer.ac.public">Accès public</option>
+                                                    <option value="global" i18n="modal.layer.ac.auth.global">Accès soumis à authentification globale (CAS georchestra)</option>
+                                                    <option value="layer" i18n="modal.layer.ac.auth.service">Accès soumis à authentification au niveau du service (Basic Authent)</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="custom-control custom-switch">
+                                                    <input type="checkbox" class="custom-control-input" id="frm-useproxy">
+                                                    <label class="custom-control-label" for="frm-useproxy" i18n="modal.layer.proxy">Utiliser le proxy du viewer (nécessaire si HTTPS non disponible pour la donnée)</label>
+                                                </div>
+                                            </div>                                                                               
+                                        </div>
+                                    </div>
+                                    </div>                                
+                                </div>  
+                                <!--./Accès-->                                
+                            </form>                            
+                        </div>
+
+                        <div role="tabpanel" class="tab-pane fade" id="layer_conf4">
+                            <div class="well well-sm">
+                                <p i18n="modal.layer.filter.serverside">
+                                    Cette fonctionnalité permet de définir des conditions d'affichage des objets de la donnée, selon des valeurs attributaires
+                                    ou une emprise géographique. Ce filtre statique ne peut pas être désactivé par vos utilisateurs au sein de l'application.
+                                </p>
+                                <div class="alert alert-info text-info my-2" role="alert">
+                                    <i class="ri-information-line" style="font-size: 20px;vertical-align: middle;"></i>
+                                    <span i18n="modal.layer.filter.geoserver-only-warning.txt">
+                                        Cette fonctionnalité est basée sur un filtre CQL. Les filtres CQL ne peuvent activés qu'avec des données issues de Geoserver. 
+                                        Il ne s'agit pas d'une fonction standard de WMS.
+                                    </span>                                    
+                                </div>
+                            </div>                           
+                            <form>
+                                <div class="row mt-3">
+                                    <div class="col-md-12">
+                                        <label for="frm-filter" i18n="modal.layer.filter.serverside.active">Filtre actif</label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="input-group mb-3">
+                                            <input type="text" type="textarea" class="form-control" id="frm-filter" placeholder="Expression CQL"  i18n="modal.layer.filter.cql.ph">
+                                            <div class="input-group-append">
+                                              <button class="btn btn-info" type="button" id="button-addon2" onclick="$('#filter_wizard').toggle();"><i class="bi bi-plus-lg"></i> <span i18n="modal.layer.filter.serverside.create">Créer un filtre</span></button>
+                                            </div>
+                                        </div>
+                                    </div>                                    
+                                </div>
+                                <div id="filter_wizard" style="display:none;">                                    
+                                    <ul class="nav nav-tabs mt-3" role="tablist">
+                                        <li class="nav-item" role="presentation">
+                                            <a class="nav-link active" aria-controls="attribute_filter" role="tab" data-bs-toggle="tab" data-bs-target="#attribute_filter" i18n="modal.layer.filter.serverside.filter.attributes">Filtre
+                                            attributaire</a>
+                                        </li>
+                                        <li class="nav-item" role="presentation">
+                                            <a class="nav-link" aria-controls="geo_filter" role="tab" data-bs-toggle="tab" data-bs-target="#geo_filter" i18n="modal.layer.filter.serverside.filter.geo">Filtre                                         géographique</a>
+                                        </li>
+                                    </ul>
+                                    <!-- Tab panes -->
+                                    <div class="tab-content">
+                                        <div role="tabpanel" class="tab-pane fade show active" id="attribute_filter">
+                                            <div class="form-group mt-3">
+                                                <label class="control-label" i18n="modal.layer.filter.fields">Champs</label>
+                                                <select id="attribute_filter_fields" name="fields"
+                                                        class="form-control"
+                                                        onchange="extractFeatures(this.value, 'source')">
+                                                </select>
+                                            </div>                                            
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label class="control-label" i18n="modal.layer.filter.serverside.filter.operator">Opérateur</label>
+                                                        <select id="attribute_filter_operators" name="operators" class="form-control">
+                                                            <option value="=">=</option>
+                                                            <option value="IN">IN</option>
+                                                            <option value="NOT IN">NOT IN</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label class="control-label" i18n="modal.layer.filter.selected">Valeur(s) sélectionnée(s)</label>
+                                                    <div class="form-group">
+                                                        <input type="text" value="" data-role="tagsinput"
+                                                               id="source_fields_tags" class="form-control"/>
+                                                    </div>
+                                                </div>
+                                                
+                                            </div>
+                                            <div class="">
+                                                <button type="button" onclick="mv.saveSourceAttributeFilter()"
+                                                        class="btn btn-outline-info" i18n="modal.layer.filter.serverside.filter.apply">Appliquer le filtre
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div role="tabpanel" class="tab-pane fade" id="geo_filter">
+                                            <div id="map_filter" class="map"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+
+                        <div role="tabpanel" class="tab-pane fade" id="layer_conf5">
+                            <div class="well well-sm">
+                                <p i18n="modal.layer.filter.clientside">
+                                    Cette fonctionnalité permet de pré-définir des conditions d'affichage attributaires des objets de la donnée. L'utilisateur pourra
+                                    filtrer les entités selon les conditions définies ci-dessous à l'aide d'une liste déroulante disponible dans le bloc légende.
+                                </p>
+                                <div class="alert alert-info text-info my-2" role="alert">
+                                    <i class="ri-information-line" style="font-size: 20px;vertical-align: middle;"></i>
+                                    <span i18n="modal.layer.filter.geoserver-only-warning.txt">
+                                        Cette fonctionnalité est basée sur un filtre CQL. Les filtres CQL ne peuvent activés qu'avec des données issues de Geoserver. 
+                                        Il ne s'agit pas d'une fonction standard de WMS.
+                                    </span>                                    
+                                </div>
+                            </div>
+                            <form>
+                                <div class="form-group mt-3">
+                                    <div class="form-group">
+                                        <label for="frm-attributelabel" i18n="modal.layer.filter.clientside.label">Nom du filtre</label>
+                                        <input type="textarea" class="form-control" id="frm-attributelabel"
+                                               placeholder="Texte à afficher" i18n="modal.layer.filter.clientside.label.ph">
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="col-md-6">
+                                            <label class="control-label" i18n="modal.layer.filter.fields">Champs à filtrer</label>
                                             <select id="opt-attributefield" name="fields" class="form-control"
                                                     onchange="extractFeatures(this.value,'control')">
                                             </select>
-                                            <label class="control-label" i18n="modal.layer.filter.selected">valeurs sélectionnées</label>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="control-label" i18n="modal.layer.filter.selected">Valeur(s) sélectionnée(s)</label>
                                             <div class="form-group">
-                                                <input type="text" value="" data-role="tagsinput"
-                                                       id="control_fields_tags" class="form-control"/>
+                                                <input type="text" value="" data-role="tagsinput" id="control_fields_tags" class="form-control"/>
                                             </div>
                                         </div>
                                     </div>
-                                </form>
-                            </div>
-
-                            <div role="tabpanel" class="tab-pane" id="layer_conf6">
-                                <form>
-                                    <div class="form-group">
-                                        <div class="checkbox">
-                                            <label>
-                                                <input id="frm-searchable" type="checkbox"><span i18n="modal.layer.search.enable"> Activer la recherche pour
-                                                cette donnée</span>
-                                            </label>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="control-label" for="frm-searchengine" i18n="modal.layer.search.engine">Moteur de recherche</label>
-                                        <select id="frm-searchengine" class="form-control"
-                                                onchange="mv.changeSearchEngine(this.value)">
-                                            <option value="elasticsearch" i18n="modal.layer.search.engine.es">Elasticsearch</option>
-                                            <option value="fuse" i18n="modal.layer.search.engine.fuse" disabled>Fuse.js</option>
-                                        </select>
-                                    </div>
-                                    <div id="fuse_options">
-                                        <div class="form-group">
-                                            <label for="frm-fusesearchkeys" i18n="modal.layer.search.fuse.fusesearchkeys">fusesearchkeys</label>
-                                            <input type="text" class="form-control" id="frm-fusesearchkeys"
-                                                   placeholder="fusesearchkeys">
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="frm-fusesearchkeys" i18n="modal.layer.search.fuse.fusesearchresult">fusesearchresult</label>
-                                            <input type="text" class="form-control" id="frm-fusesearchresult"
-                                                   placeholder="fusesearchresult">
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" onclick="mv.saveLayerOptions()" class="btn btn-success" i18n="save">Enregistrer
-                        </button>
-                        <button type="button" onclick="mv.form2xml()" class="btn btn-info" i18n="view">Voir</button>
-                        <button type="button" class="btn btn-default" data-dismiss="modal" i18n="close">Fermer</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Modal codeView-->
-        <div class="modal fade" id="mod-codeview" role="dialog">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        <h4 class="modal-title" i18n="modal.code.xml">Configuration XML</h4>
-                    </div>
-                    <div class="modal-body">
-                        <div class="row">
-                            <pre></pre>
-                        </div><!-- /.row -->
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal" i18n="close">Fermer</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Modal featuresView-->
-        <div class="modal fade" id="mod-featuresview" role="dialog">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        <h4 class="modal-title" i18n="modal.features.select">Sélection de données</h4>
-                    </div>
-                    <div class="modal-body">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <label class="control-label" i18n="modal.features.values">Valeurs</label>
-                                <div id="distinct_values" class="list-group"></div>
-                            </div>
-                        </div><!-- /.row -->
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Modal Themes import-->
-        <div class="modal fade" id="mod-themesview" role="dialog">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        <h4 class="modal-title" i18n="modal.themes.select">Sélection de Thématiques</h4>
-                    </div>
-                    <div class="modal-body">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div id="importedThemes" class="list-group">
                                 </div>
+                            </form>                            
+                        </div>
+
+                        <div role="tabpanel" class="tab-pane fade" id="layer_conf6">
+                            <div class="alert alert-info text-info my-2" role="alert">
+                                <i class="ri-information-line" style="font-size: 20px;vertical-align: middle;"></i>
+                                <span i18n="modal.layer.search.alert">Pour utiliser cette fonctionnalité, les entités de la donnée doivent être indexées par ElasticSearch.</span>
                             </div>
-                        </div><!-- /.row -->
+                            <form>
+                                <div class="form-group my-3">
+                                    <div class="custom-control custom-switch">
+                                        <input type="checkbox" class="custom-control-input" id="frm-searchable">
+                                        <label class="custom-control-label" for="frm-searchable" i18n="modal.layer.search.enable">Activer la recherche pour cette donnée</label>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label" for="frm-searchengine" i18n="modal.layer.search.engine">Moteur de recherche</label>
+                                    <select id="frm-searchengine" class="form-control"
+                                            onchange="mv.changeSearchEngine(this.value)">
+                                        <option value="elasticsearch" i18n="modal.layer.search.engine.es">Elasticsearch</option>
+                                        <option value="fuse" i18n="modal.layer.search.engine.fuse" disabled>Fuse.js</option>
+                                    </select>
+                                </div>
+                                <div id="fuse_options">
+                                    <div class="form-group">
+                                        <label for="frm-fusesearchkeys" i18n="modal.layer.search.fuse.fusesearchkeys">fusesearchkeys</label>
+                                        <input type="text" class="form-control" id="frm-fusesearchkeys"
+                                               placeholder="fusesearchkeys">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="frm-fusesearchkeys" i18n="modal.layer.search.fuse.fusesearchresult">fusesearchresult</label>
+                                        <input type="text" class="form-control" id="frm-fusesearchresult"
+                                               placeholder="fusesearchresult">
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
                     </div>
-                      <div class="modal-footer">
-                        <button type="button" class="btn btn-success" data-dismiss="modal" onclick="importThemes()" i18n="import">Importer</button>
-                    </div>
+                </div>
+                <div class="modal-footer">                    
+                    <button type="button" onclick="mv.form2xml()" data-bs-target="#mod-codeview" data-bs-toggle="modal" class="btn btn-outline-info advanced" i18n="view" style="display: none;">Voir</button>
+                    <button type="button" onclick="mv.saveLayerOptions()" data-bs-target="#mod-themeOptions" data-bs-toggle="modal" class="btn btn-primary" i18n="save">Enregistrer</button>
+                    <button type="button" class="btn btn-outline-primary" data-bs-target="#mod-themeOptions" data-bs-toggle="modal" i18n="close">Fermer</button>
                 </div>
             </div>
         </div>
+    </div>
+   
+    <!-- Modal codeView-->
+    <div class="modal fade" id="mod-codeview" role="dialog" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="mod-codeview" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" i18n="modal.code.xml">Configuration XML</h5>
+                    <button type="button" class="close" data-bs-target="#mod-layerOptions" data-bs-toggle="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <pre class="windows-code-XML"></pre>
+                    </div><!-- /.row -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-primary" data-bs-target="#mod-layerOptions" data-bs-toggle="modal" i18n="close">Fermer</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
-        <!-- Modal new Layer-->
-        <div class="modal fade" id="mod-layerNew" role="dialog">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        <h4 class="modal-title" i18n="modal.layer.new.searchdata">Rechercher des données</h4>
-                    </div>
-                    <div class="modal-body">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="input-group">
-                                    <input type="text" id="input-ogc-filter" class="form-control" aria-label="..."
-                                           placeholder="Rechercher..." i18n="modal.layer.new.searchdata.ph">
-                                    <div class="input-group-btn">
-                                        <button id="providers_dropdown" type="button" class="btn btn-warning dropdown-toggle"
-                                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" i18n="modal.layer.new.provider">
-                                            Fournisseurs de données<span class="caret"/></button>
-                                        <ul class="dropdown-menu dropdown-menu-right" id="providers_list">
-                                        </ul>
-                                        <button id="provider_search_btn" type="button" class="btn btn-primary" disabled="enabled" onclick="mv.search()"><span class="glyphicon glyphicon-search"/>
-                                        </button>
-                                    </div><!-- /btn-group -->
-                                </div><!-- /input-group -->
-                            </div><!-- /.col-md-12 -->
-                        </div><!-- /.row -->
-                        <div class="row text-center text-warning" style="padding: 1rem;" id="search-message" i18n="modal.layer.new.provider.noneselected">
-                            Aucun fournisseur sélectionné. Veuillez en choisir un.
+    <!-- Modal featuresView-->
+    <div class="modal fade" id="mod-featuresview" role="dialog" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="mod-featuresview" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" i18n="modal.features.select">Sélection des valeurs</h5>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label class="control-label" i18n="modal.features.values">Sélectionner les valeurs sur lesquelles appliquer un filtre :</label>
+                            <div id="distinct_values" class="list-group"></div>
                         </div>
-                        <div class="row ogc-results" id="csw-results" style="display: none;"></div>
-                        <div class="row ogc-results" id="wms-results" style="display: none;"></div>
-                        <div class="row ogc-results" id="wfs-results" style="display: none;"></div>
                     </div>
-                    <div class="modal-footer">
-                        <div class="pull-left">
-                            <div class="form form-inline">
-                                <div class="form-group">
-                                    <input class="form-control custom-url" type="text"  i18n="modal.layer.new.provider.ph"
-                                           placeholder="URL du fournisseur..." oninput="updateAddProviderButtonState(this);"> </input>
+                </div>
+                <div class="modal-footer">                    
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Valider</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Themes import-->
+    <div class="modal fade" id="mod-themesview" role="dialog" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="mod-themesview" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" i18n="modal.themes.select">Importer une thématique externe</h5>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div id="importedThemes" class="list-group">
+                            </div>
+                        </div>
+                    </div><!-- /.row -->
+                </div>
+                  <div class="modal-footer">                    
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="importThemes()" i18n="import">Importer</button>
+                    <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal" i18n="close">Fermer</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal new Layer-->
+    <div class="modal fade" id="mod-layerNew" role="dialog" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="mod-layerNew" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" i18n="modal.layer.new.searchdata">Ajouter une donnée</h5>
+                    <button type="button" class="close" data-bs-target="#mod-themeOptions" data-bs-toggle="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h6 i18n="modal.layer.new.searchdata.title">Rechercher une données</h6>
+                            <div class="input-group my-3">
+                                <input type="text" id="input-ogc-filter" class="form-control" aria-label="..." placeholder="Rechercher..." i18n="modal.layer.new.searchdata.ph">
+                                <div class="input-group-append">
+                                    <button id="providers_dropdown" class="btn btn-outline-info dropdown-toggle noborderradius" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Catalogue de données</button>   
+                                    <ul class="dropdown-menu dropdown-menu-end" id="providers_list"></ul>                     
+                                    <button class="btn btn-info" id="provider_search_btn" type="button" disabled="enabled" onclick="mv.search()"><i class="bi bi-search"></i></button>
+                                </div> 
+                            </div>
+                        </div>
+                    </div>  
+                    <div class="row" style="padding: 1rem;" id="search-message" i18n="modal.layer.new.provider.noneselected">
+                        Sélectionner un catalogue de données
+                    </div>
+                    <div class="row ogc-results" id="csw-results" style="display: none;"></div>
+                    <div class="row ogc-results" id="wms-results" style="display: none;"></div>
+                    <div class="row ogc-results" id="wfs-results" style="display: none;"></div>
+                    
+                    <div class="advanced" style="display:none;">   
+                        <hr>                    
+                        <div class="row">                             
+                            <div class="col-md-12">
+                                <h6 i18n="modal.layer.new.provider.add">Ajouter un catalogue de données</h6>
+                                <div class="input-group my-3" id="addCatalogData">
+                                    <input type="text" class="form-control custom-title" aria-label="..." placeholder="Nom" oninput="updateAddProviderButtonState(this);">
+                                    <input type="text" class="form-control custom-url" aria-label="..." i18n="modal.layer.new.provider.ph" placeholder="URL du fournisseur" oninput="updateAddProviderButtonState(this);" >
                                     <select class="form-control">
                                         <option value="csw" i18n="modal.layer.new.provider.csw">CSW</option>
                                         <option value="wms" i18n="modal.layer.new.provider.wms">WMS</option>
-                                    </select>
-                                    <input class="form-control custom-title" type="text" placeholder="Nom..." oninput="updateAddProviderButtonState(this);"> </input>
-                                    <button id="add_provider_btn" type="button" class="btn btn-primary" disabled onclick="addNewProvider(this);" i18n="modal.layer.new.provider.add">
-                                        Ajouter un fournisseur
-                                    </button>
+                                      </select>
+                                    <div class="input-group-append">                    
+                                        <button class="btn btn-info" type="button" id="add_provider_btn" disabled onclick="addNewProvider(this);"><i class="bi bi-plus-lg"></i> <span i18n="add">Ajouter</span> </button> 
+                                    </div> 
                                 </div>
                             </div>
                         </div>
-                        <button type="button" class="btn btn-success" onclick="mv.getConfLayers();" i18n="select">Sélectionner</button>
-                        <button type="button" class="btn btn-default" data-dismiss="modal" i18n="close">Fermer</button>
                     </div>
+                         
+                </div>
+                <div class="modal-footer">                    
+                    <button type="button" class="btn btn-primary" data-bs-target="#mod-themeOptions" data-bs-toggle="modal" onclick="mv.getConfLayers();" i18n="select">Sélectionner</button>
+                    <button type="button" class="btn btn-outline-primary" data-bs-target="#mod-themeOptions" data-bs-toggle="modal" i18n="close">Fermer</button>
                 </div>
             </div>
         </div>
-        <!-- Modal icon picker-->
-        <div id="iconPicker" class="modal fade">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title" i18n="modal.icon.list">Liste des icônes</h4>
+    </div>
+    <!-- Modal icon picker-->
+    <div id="iconPicker" class="modal fade" role="dialog" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="iconPicker" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><span i18n="modal.icon.list">Icône de la thématique</span></h5>
+                    <button type="button" class="close" data-bs-target="#mod-themeOptions" data-bs-toggle="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body" style="max-height: calc(100vh - 200px);overflow-y: auto;overflow-x: hidden;">
+                    <div>
+                        <ul class="icon-picker-list">
+                            <li>
+                                <a data-class="{{item}} {{activeState}}" data-index="{{index}}">
+                                    <span class="{{item}}"></span>
+                                    <span class="name-class">{{item}}</span>
+                                </a>
+                            </li>
+                        </ul>
                     </div>
-                    <div class="modal-body" style="max-height: calc(100vh - 200px);overflow-y: auto;">
-                        <div>
-                            <ul class="icon-picker-list">
-                                <li>
-                                    <a data-class="{{item}} {{activeState}}" data-index="{{index}}">
-                                        <span class="{{item}}"></span>
-                                        <span class="name-class">{{item}}</span>
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" id="change-icon" class="btn btn-success">
-                            <span class="fa fa-check-circle-o"></span>
-                            <span i18n="modal.icon.list">  Utiliser l'icône sélectionnée</span>
-                        </button>
-                        <button type="button" class="btn btn-default" data-dismiss="modal" i18n="cancel">Annuler</button>
-                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="change-icon" class="btn btn-primary" data-bs-target="#mod-themeOptions" data-bs-toggle="modal"><span i18n="validate"> Valider</span></button>
+                    <button type="button" class="btn btn-outline-primary" data-bs-target="#mod-themeOptions" data-bs-toggle="modal" i18n="cancel">Annuler</button>
                 </div>
             </div>
         </div>
     </div>
 </div>
+</div>
+    
+<script src="js/wizard.js"></script>
+<script src="js/manageDisplayContainer.js"></script>
 <script src="js/mviewerstudio.js"></script>
 <script src="lib/icon-picker/icon-picker.js"></script>
 </body>
