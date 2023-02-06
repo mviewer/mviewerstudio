@@ -17,9 +17,14 @@ Vous pouvez utiliser la composition docker présente à la racine du dépot. Le
 Vous devrez d'abord copier les ressources statiques de la partie cliente de `mviewerstudio`:
 
 ### Prérequis
+
+Python et son gestionnaire de paquets (pip) doivent être déjà installés.
+
+Installer ensuite ces dépendances :
+
 ```bash
 sudo apt install libxslt1-dev libxml2-dev
-
+pip install virtualenv
 ```
 
 Ainsi qu'une instance mviewer fonctionnelle (/mviewer)
