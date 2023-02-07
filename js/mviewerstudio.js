@@ -232,10 +232,10 @@ var map2 = new ol.Map({
 var config;
 
 var newConfiguration = function () {
-    ["opt-title", "opt-logo", "opt-help", "theme-edit-icon", "theme-edit-title"].forEach(function (param, id) {
+    ["opt-title", "opt-logo", "opt-favicon", "opt-help", "opt-titlehelp", "opt-home", "theme-edit-icon", "theme-edit-title"].forEach(function (param, id) {
         $("#"+param).val("");
     });
-    ["opt-exportpng", "opt-measuretools", "theme-edit-collapsed", "opt-mini", "opt-showhelp", "opt-coordinates",
+    ["opt-exportpng","opt-zoom","opt-geoloc","opt-mouseposition","opt-studio","opt-measuretools","opt-initialextent","theme-edit-collapsed", "opt-mini", "opt-showhelp", "opt-coordinates",
         "opt-togglealllayersfromtheme", "SwitchAdressSearch","SwitchAdvanced"].forEach(function (param, id) {
         $("#"+param).prop('checked', false);
     });
@@ -536,12 +536,20 @@ var saveApplicationParameters = function (option) {
     var application = ['<application',
         'title="'+$("#opt-title").val()+'"',
         'logo="'+$("#opt-logo").val()+'"',
+        'favicon="'+$("#opt-favicon").val()+'"',
         'help="'+$("#opt-help").val()+'"',
+        'titlehelp="'+$("#opt-titlehelp").val()+'"',
+        'home="'+$("#opt-home").val()+'"',
         'style="'+$("#opt-style").val()+'"',
-        'exportpng="'+($('#opt-exportpng').prop('checked')=== true)+'"',
+        'zoomtools="'+($('#opt-zoom').prop('checked')=== true)+'"',
+        'initialextenttool="'+($('#opt-initialextent').prop('checked')=== true)+'"',
+        'exportpng="'+($('#opt-exportpng').prop('checked')=== true)+'"',        
         'showhelp="'+($('#opt-showhelp').prop('checked')=== true)+'"',
         'coordinates="'+($('#opt-coordinates').prop('checked')=== true)+'"',
         'measuretools="'+($('#opt-measuretools').prop('checked')=== true)+'"',
+        'mouseposition="'+($('#opt-mouseposition').prop('checked')=== true)+'"',
+        'geoloc="'+($('#opt-geoloc').prop('checked')=== true)+'"',
+        'studio="'+($('#opt-studio').prop('checked')=== true)+'"',        
         'togglealllayersfromtheme="'+($('#opt-togglealllayersfromtheme').prop('checked')=== true)+'"'];
 
     config.title = $("#opt-title").val();
