@@ -440,11 +440,13 @@
                                                 </div>   
                                                 <div class="col-md-6">
                                                     <div class="form-group">
-                                                        <label for="opt-titlehelp" class="form-label"><span i18n="tabs.app.help_icon">Icône du bouton</span></label>
+                                                        <label for="opt-iconhelp" class="form-label"><span i18n="tabs.app.help_icon">Icône du bouton</span></label>
+                                                        
                                                         <div class="input-group">
-                                                            <input type="text" class="form-control" placeholder="Recipient's username">
+                                                            <input type="text" class="icon-class-input form-control" placeholder="fas fa-home" id="opt-iconhelp">
+                                                            <span class="selected-icon"></span>
                                                             <div class="input-group-append">
-                                                              <button class="btn btn-outline-info" type="button" id="button-addon2">
+                                                              <button class="btn btn-outline-info picker-button" type="button" data-bs-target="#iconHelpPicker" data-bs-toggle="modal">
                                                                 <span i18n="select">Sélectionner</span>
                                                             </button>
                                                             </div>
@@ -1540,6 +1542,33 @@
                 <div class="modal-footer">
                     <button type="button" id="change-icon" class="btn btn-primary" data-bs-target="#mod-themeOptions" data-bs-toggle="modal"><span i18n="validate"> Valider</span></button>
                     <button type="button" class="btn btn-outline-primary" data-bs-target="#mod-themeOptions" data-bs-toggle="modal" i18n="cancel">Annuler</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal icon picker for HelpBtn-->
+    <div id="iconHelpPicker" class="modal fade" role="dialog" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="iconHelpPicker" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><span i18n="modal.iconhelp.list">Icône du bouton vers la fenêtre d'aide</span></h5>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body" style="max-height: calc(100vh - 200px);overflow-y: auto;overflow-x: hidden;">
+                    <div>
+                        <ul class="icon-picker-list">
+                            <li>
+                                <a data-class="{{item}} {{activeState}}" data-index="{{index}}">
+                                    <span class="{{item}}"></span>
+                                    <span class="name-class">{{item}}</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="change-icon" class="btn btn-primary" data-bs-dismiss="modal" aria-label="Close"><span i18n="validate"> Valider</span></button>
+                    <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal" aria-label="Close" i18n="cancel">Annuler</button>
                 </div>
             </div>
         </div>

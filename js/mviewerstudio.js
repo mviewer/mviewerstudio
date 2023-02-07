@@ -232,7 +232,7 @@ var map2 = new ol.Map({
 var config;
 
 var newConfiguration = function () {
-    ["opt-title", "opt-logo", "opt-favicon", "opt-help", "opt-titlehelp", "opt-home", "theme-edit-icon", "theme-edit-title"].forEach(function (param, id) {
+    ["opt-title", "opt-logo", "opt-favicon", "opt-help", "opt-home", "theme-edit-icon", "theme-edit-title"].forEach(function (param, id) {
         $("#"+param).val("");
     });
     ["opt-exportpng","opt-zoom","opt-geoloc","opt-mouseposition","opt-studio","opt-measuretools","opt-initialextent","theme-edit-collapsed", "opt-mini", "opt-showhelp", "opt-coordinates",
@@ -245,6 +245,13 @@ var newConfiguration = function () {
     $("#mod-themeOptions").modal('hide');
     $('#FadvElasticBlock form').trigger("reset");
 
+    // Icon help 
+    var icon = 'fas fa-home';
+    $("#opt-iconhelp").val(icon);
+    $("#opt-iconhelp").siblings('.selected-icon').attr('class', 'selected-icon');
+    $("#opt-iconhelp").siblings('.selected-icon').addClass(icon);
+
+    
     map.getView().setCenter(_conf.map.center);
     map.getView().setZoom(_conf.map.zoom);
     config = {
@@ -539,6 +546,7 @@ var saveApplicationParameters = function (option) {
         'favicon="'+$("#opt-favicon").val()+'"',
         'help="'+$("#opt-help").val()+'"',
         'titlehelp="'+$("#opt-titlehelp").val()+'"',
+        'iconhelp="'+$("#opt-iconhelp").val()+'"',
         'home="'+$("#opt-home").val()+'"',
         'style="'+$("#opt-style").val()+'"',
         'zoomtools="'+($('#opt-zoom').prop('checked')=== true)+'"',

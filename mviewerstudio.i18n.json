@@ -220,6 +220,7 @@
         "modal.layer.new.provider.wms" : "WMS",
         "modal.layer.new.provider.add" : "Ajouter un catalogue de données",
         "modal.icon.list" : "Icône de la thématique",
+        "modal.iconhelp.list" : "Icône du bouton vers la fenêtre d'aide",
         "modal.exit.title" : "Attention",
         "modal.exit.subtitle" : "Êtes-vous sûr de vouloir quitter votre projet en cours ?",
         "modal.exit.save" : "Enregister mon application et quitter le studio",
