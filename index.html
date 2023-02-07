@@ -216,41 +216,72 @@
                         <!-- Application -->
                         <div class="tab-pane container active" id="app">
                             <form>
-                            <h1><i class="ri-equalizer-line"></i> <span i18n="tabs.app.title">Application</span></h1>                            
-                            <!--Fonctionnalités et options de la carte-->                          
+                            <h1><i class="ri-equalizer-line"></i> <span i18n="tabs.app.title">Application</span></h1>         
                             <div class="row mt-4">
-                                <div class="col-md-6">
+                                <div class="col-md-12">
                                     <div class="form-group">
                                         <label for="opt-title" i18n="head.title" class="form-label">Titre de l'application</label>
                                         <input class="form-control" id="opt-title" type="text" name="textinput" placeholder="Mon application">
                                     </div>
+                                </div>                                
+                            </div>  
+                            <div class="row">
+                                <div class="col-md-6">
                                     <div class="form-group">
-                                            <label for="opt-logo" class="form-label"><span i18n="tabs.app.url">Lien vers le logo </span><span class="tooltip-info" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Logo affiché en haut à gauche du mviewer"><i class="ri-information-line"></i></span></label>
-                                            <input class="form-control checkedurl" id="opt-logo" placeholder="https://monlogo.png">
+                                        <label for="opt-logo" class="form-label"><span i18n="tabs.app.url">Lien vers le logo </span><span class="tooltip-info" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Logo affiché en haut à gauche du mviewer"><i class="ri-information-line"></i></span></label>
+                                        <input class="form-control checkedurl" id="opt-logo" placeholder="https://monlogo.png">
                                     </div>
+                                </div>   
+                                <div class="col-md-6">
                                     <div class="form-group">
-                                            <label class="form-label" for="frm-style" ><span i18n="tabs.app.style">Thème de l'application</span><span class="tooltip-info" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Couleur de l'interface du mviewer"><i class="ri-information-line"></i></span></label>
-                                            <select class="form-control default" id="opt-style" name="style" onchange="updateTheme(this);">
-                                                <option class="alizarin" value="css/themes/alizarin.css">alizarin</option>
-                                                <option class="blue" value="css/themes/blue.css">blue</option>
-                                                <option class="default" selected value="css/themes/default.css">default</option>
-                                                <option class="nephritis" value="css/themes/nephritis.css">nephritis</option>
-                                                <option class="ripe_lemon" value="css/themes/ripe_lemon.css">ripe_lemon</option>
-                                                <option class="amethyst" value="css/themes/amethyst.css">amethyst</option>
-                                                <option class="carrot" value="css/themes/carrot.css">carrot</option>
-                                                <option class="green" value="css/themes/green.css">green</option>
-                                                <option class="peter_river" value="css/themes/peter_river.css">peter_river</option>
-                                                <option class="black" value="css/themes/black.css">black</option>
-                                                <option class="chambray" value="css/themes/chambray.css">chambray</option>
-                                                <option class="green_sea" value="css/themes/green_sea.css">green_sea</option>
-                                                <option class="pink" value="css/themes/pink.css">pink</option>
-                                                <option class="wet_asphalt" value="css/themes/wet_asphalt.css">wet_asphalt</option>
-                                            </select>
+                                        <label for="opt-favicon" class="form-label"><span i18n="tabs.app.favicon">Lien vers le favicon </span><span class="tooltip-info" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Logo affiché dans l'onglet du navigateur"><i class="ri-information-line"></i></span></label>
+                                        <input class="form-control checkedurl" id="opt-favicon" placeholder="https://monfavicon.png">
                                     </div>
+                                </div>         
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="opt-home" class="form-label"><span i18n="tabs.app.home">Lien vers la page principale </span><span class="tooltip-info" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Redirection vers la page indiquée lors du clique sur le logo"><i class="ri-information-line"></i></span></label>
+                                        <input class="form-control checkedurl" id="opt-home" placeholder="https://mapage.fr">
+                                    </div>
+                                </div>   
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="form-label" for="frm-style" ><span i18n="tabs.app.style">Thème de l'application</span><span class="tooltip-info" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Couleur de l'interface du mviewer"><i class="ri-information-line"></i></span></label>
+                                        <select class="form-control default" id="opt-style" name="style" onchange="updateTheme(this);">
+                                            <option class="alizarin" value="css/themes/alizarin.css">alizarin</option>
+                                            <option class="blue" value="css/themes/blue.css">blue</option>
+                                            <option class="default" selected value="css/themes/default.css">default</option>
+                                            <option class="nephritis" value="css/themes/nephritis.css">nephritis</option>
+                                            <option class="ripe_lemon" value="css/themes/ripe_lemon.css">ripe_lemon</option>
+                                            <option class="amethyst" value="css/themes/amethyst.css">amethyst</option>
+                                            <option class="carrot" value="css/themes/carrot.css">carrot</option>
+                                            <option class="green" value="css/themes/green.css">green</option>
+                                            <option class="peter_river" value="css/themes/peter_river.css">peter_river</option>
+                                            <option class="black" value="css/themes/black.css">black</option>
+                                            <option class="chambray" value="css/themes/chambray.css">chambray</option>
+                                            <option class="green_sea" value="css/themes/green_sea.css">green_sea</option>
+                                            <option class="pink" value="css/themes/pink.css">pink</option>
+                                            <option class="wet_asphalt" value="css/themes/wet_asphalt.css">wet_asphalt</option>
+                                        </select>
+                                    </div>
+                                </div>                                
+                            </div>                  
+                            <!--Fonctionnalités et options de la carte-->                          
+                            <div class="row mt-4">
+                                <div class="col-md-6">    
                                     <ul class="list-group">
                                         <li class="list-group-item">
                                             <span class="title-accordion" i18n="tabs.app.options_title">Fonctionnalités</span><br>
                                             <span class="subtitle-accordion" i18n="tabs.app.options_text">Activer les outils que vous souhaitez afficher au sein de votre application</span>
+                                        </li>
+                                        <li class="list-group-item">
+                                            <div class="list-flex">
+                                                <span i18n="tabs.app.opt_zoom">Outils de zoom</span>
+                                                <div class="custom-control custom-switch">
+                                                    <input type="checkbox" class="custom-control-input" name="checkboxes" id="opt-zoom">
+                                                    <label class="custom-control-label" for="opt-zoom"></label>
+                                                </div>
+                                            </div>                                            
                                         </li>
                                         <li class="list-group-item">
                                             <div class="list-flex">
@@ -281,10 +312,37 @@
                                         </li>
                                         <li class="list-group-item advanced" style="display: none;">
                                             <div class="list-flex">
+                                                <span i18n="tabs.app.opt_mouseposition">Afficher les coordonnées correspondant à la position de la souris</span>
+                                                <div class="custom-control custom-switch">
+                                                    <input type="checkbox" class="custom-control-input" name="checkboxes" id="opt-mouseposition">
+                                                    <label class="custom-control-label" for="opt-mouseposition"></label>
+                                                </div>
+                                            </div>                                            
+                                        </li>
+                                        <li class="list-group-item advanced" style="display: none;">
+                                            <div class="list-flex">
                                                 <span i18n="tabs.app.opt_data">Afficher/masquer toutes les données d'une thématique en un clic</span>                                          
                                                 <div class="custom-control custom-switch">
                                                     <input type="checkbox" class="custom-control-input" name="checkboxes" id="opt-togglealllayersfromtheme">
                                                     <label class="custom-control-label" for="opt-togglealllayersfromtheme"></label>
+                                                </div>
+                                            </div>                                            
+                                        </li>
+                                        <li class="list-group-item advanced" style="display: none;">
+                                            <div class="list-flex">
+                                                <span i18n="tabs.app.opt_geoloc">Se géolocaliser</span>                                          
+                                                <div class="custom-control custom-switch">
+                                                    <input type="checkbox" class="custom-control-input" name="checkboxes" id="opt-geoloc">
+                                                    <label class="custom-control-label" for="opt-geoloc"></label>
+                                                </div>
+                                            </div>                                            
+                                        </li>
+                                        <li class="list-group-item advanced" style="display: none;">
+                                            <div class="list-flex">
+                                                <span i18n="tabs.app.opt_studio">Ouvrir la carte dans le studio</span>                                          
+                                                <div class="custom-control custom-switch">
+                                                    <input type="checkbox" class="custom-control-input" name="checkboxes" id="opt-geoloc">
+                                                    <label class="custom-control-label" for="opt-geoloc"></label>
                                                 </div>
                                             </div>                                            
                                         </li>
@@ -299,6 +357,15 @@
                                         <li class="list-group-item p-0">
                                              <!-- Map -->
                                             <div id="map" class="map"></div>
+                                        </li>
+                                        <li class="list-group-item advanced" style="display: none;">
+                                            <div class="list-flex">
+                                                <span i18n="tabs.app.opt_initialextent">Revenir à l'étendue initiale</span>                                           
+                                                <div class="custom-control custom-switch">
+                                                    <input type="checkbox" class="custom-control-input" name="checkboxes" id="opt-initialextent">
+                                                    <label class="custom-control-label" for="opt-initialextent"></label>
+                                                </div>
+                                            </div>                                            
                                         </li>
                                         <li class="list-group-item advanced" style="display: none;">
                                             <div class="list-flex">
@@ -364,6 +431,27 @@
                                     </h2>
                                     <div id="collapseHomePage" class="accordion-collapse collapse" aria-labelledby="accordionHomePage">
                                         <div class="accordion-body"> 
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label for="opt-titlehelp" class="form-label"><span i18n="tabs.app.help_title">Titre de la fenêtre d'aide au survol</span></label>
+                                                        <input class="form-control" id="opt-titlehelp" placeholder="Accueil">
+                                                    </div>
+                                                </div>   
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label for="opt-titlehelp" class="form-label"><span i18n="tabs.app.help_icon">Icône du bouton</span></label>
+                                                        <div class="input-group">
+                                                            <input type="text" class="form-control" placeholder="Recipient's username">
+                                                            <div class="input-group-append">
+                                                              <button class="btn btn-outline-info" type="button" id="button-addon2">
+                                                                <span i18n="select">Sélectionner</span>
+                                                            </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>      
+                                            </div>    
                                             <div class="form-group">
                                                 <label for="opt-help" i18n="tabs.app.help_link" class="form-label">Lien vers la page d'accueil</label>
                                                 <input class="form-control checkedurl" id="opt-help" name="textinput" type="text" placeholder="https://mapage.html">
