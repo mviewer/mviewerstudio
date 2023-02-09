@@ -43,6 +43,7 @@ Cette partie est dédiée aux personnes qui ont vocation à déployer et configu
    :caption: Documentation technique
 
    doc_tech/install
+   doc_tech/install_python
    doc_tech/config
 
 
