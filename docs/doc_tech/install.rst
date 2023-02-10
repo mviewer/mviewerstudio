@@ -49,4 +49,32 @@ Modification des chemins d'accès dans le config.json :
 Docker
 ~~~~~~~
 
-à compléter...
+Vous pouvez utiliser la composition docker présente à la racine du dépot. Le Dockerfile permet de construire l'image pour un usage de production.
+
+
+Développer avec le backend mviewerstudio
+****************************************
+
+Configuration
+~~~~~~~~~~~~~~
+
+La configuration front est localisée dans les fichiers :
+
+- ``/srv/python/mviewerstudio_backend/static/apps/config.json``
+
+La configuration back est localisée dans les fichiers :
+
+- ``/srv/python/mviewerstudio_backend/settings.py``
+
+
+Proxy
+~~~~~
+
+Pour utiliser les services types OGC (catalogue ou serveurs cartographiques), vous aurez besoin d'utiliser le proxy.
+
+Le Proxy utilise un paramètre ``PROXY_WHITE_LIST`` qui doit être complété par tous les domaines (FQDN) des services que vous utiliserez.
+
+Ce paramètre est accessible dans : 
+
+- /srv/python/mviewerstudio_backend/settings.py
+
