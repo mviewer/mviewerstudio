@@ -22,7 +22,6 @@ else
     MVIEWERSTUDIO_DIR="$(pwd)/mviewerstudio"
 fi
 
-STATIC_DIR="${MVIEWERSTUDIO_DIR}/srv/python/mviewerstudio_backend/static"
 
 # Clone repo and change branch if needed
 
