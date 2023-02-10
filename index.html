@@ -971,12 +971,20 @@
                                             <input type="checkbox" class="custom-control-input" id="frm-visible">
                                             <label class="custom-control-label" for="frm-visible" i18n="modal.layer.visibleonstart">Afficher la donnée au démarrage de l'application</label>
                                         </div>
+                                        <div class="custom-control custom-switch">
+                                            <input type="checkbox" class="custom-control-input" id="frm-toplayer">
+                                            <label class="custom-control-label" for="frm-toplayer" i18n="modal.layer.toplayer">Afficher la donnée en première position de la carte</label>
+                                        </div>
                                     </div>
                                     <div class="mt-4">
+                                        <p><small><span i18n="modal.layer.styles.note">Si plusieurs styles sont sélectionnés, indiquer les libéllés des styles qui apparaîtront dans la liste déroulante.</span></small></p>
                                         <h6 i18n="modal.layer.styles">Style(s) de la donnée disponible(s)</h6>
                                         <div class="row mt-3" id="frm-lis-styles"></div>
-                                        <p><small><span i18n="modal.layer.styles.note">Si plusieurs styles sont sélectionnés, indiquer les libéllés des styles qui apparaîtront dans la liste déroulante.</span></small></p>
                                     </div>                                    
+                                    <div class="form-group">
+                                        <label for="frm-layer-styletitle" i18n="modal.layer.style.title">Libellé de la liste des styles</label>
+                                        <input type="text" class="form-control" id="frm-layer-styletitle" placeholder="Libellé de la liste des styles" i18n="modal.layer.style.placeholder">
+                                    </div>                               
                                 </div>
                             </form>                            
                         </div>
