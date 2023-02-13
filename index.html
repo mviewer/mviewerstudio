@@ -209,7 +209,7 @@
                             <input type="checkbox" class="custom-control-input" id="SwitchAdvanced">
                             <label class="custom-control-label" for="SwitchAdvanced"><span i18n="studio.toolsbar.advanced">Mode avancé</span></label>
                         </div>
-                    </div>
+                    </div>                    
                     <!--/.TOOLSBAR -->
                     <!-- STUDIO TABS -->
                     <div class="tab-content my-4" id="stepStudioContent">
@@ -440,16 +440,13 @@
                                                 </div>   
                                                 <div class="col-md-6">
                                                     <div class="form-group">
-                                                        <label for="opt-iconhelp" class="form-label"><span i18n="tabs.app.help_icon">Icône du bouton</span></label>
-                                                        
-                                                        <div class="input-group">
+                                                        <label for="opt-iconhelp" class="form-label"><span i18n="tabs.app.help_icon">Icône du bouton</span></label>                                                        
+                                                        <div class="d-flex">
                                                             <input type="text" class="icon-class-input form-control" placeholder="fas fa-home" id="opt-iconhelp">
                                                             <span class="selected-icon"></span>
-                                                            <div class="input-group-append">
-                                                              <button class="btn btn-outline-info picker-button" type="button" data-bs-target="#iconHelpPicker" data-bs-toggle="modal">
+                                                            <button class="btn btn-outline-info picker-button" type="button" data-bs-target="#iconPicker" data-bs-toggle="modal">
                                                                 <span i18n="select">Sélectionner</span>
-                                                            </button>
-                                                            </div>
+                                                            </button>                                                           
                                                         </div>
                                                     </div>
                                                 </div>      
@@ -749,7 +746,7 @@
                                 <label class="settinglabel" i18n="modal.theme.paramspanel.icon">Icône</label>
                                 <span class="selected-icon"></span>
                                 <input type="text" class="icon-class-input form-control advanced"  style="display: none;" id="theme-pick-icon" />
-                                <button type="button" class="btn btn-outline-info picker-button mt-2" data-bs-target="#iconPicker" data-bs-toggle="modal">
+                                <button type="button" class="btn btn-outline-info picker-button mt-2">
                                     <span i18n="modal.theme.paramspanel.icon_pick">Choisir une icône</span>
                                 </button>                               
                             </div>
@@ -1093,10 +1090,6 @@
                                     </h2>
                                     <div id="collapseDisplayLayer" class="accordion-collapse collapse" aria-labelledby="accordionDisplayLayer">
                                         <div class="accordion-body">                                         
-                                            <div class="form-group mt-2">
-                                                <label for="frm-layer-index" i18n="modal.layer.index">Index de couche</label>
-                                                <input type="number" min="0" class="form-control" id="frm-layer-index" i18n="modal.layer.index"/>
-                                            </div>
                                             <div class="row">
                                                 <div class="col-md-6">
                                                     <label for="frm-scalemin" i18n="modal.layer.scale.min">Echelle mini</label>
@@ -1576,34 +1569,7 @@
         <div class="modal-dialog modal-xl">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title"><span i18n="modal.icon.list">Icône de la thématique</span></h5>
-                    <button type="button" class="close" data-bs-target="#mod-themeOptions" data-bs-toggle="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                </div>
-                <div class="modal-body" style="max-height: calc(100vh - 200px);overflow-y: auto;overflow-x: hidden;">
-                    <div>
-                        <ul class="icon-picker-list">
-                            <li>
-                                <a data-class="{{item}} {{activeState}}" data-index="{{index}}">
-                                    <span class="{{item}}"></span>
-                                    <span class="name-class">{{item}}</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" id="change-icon" class="btn btn-primary" data-bs-target="#mod-themeOptions" data-bs-toggle="modal"><span i18n="validate"> Valider</span></button>
-                    <button type="button" class="btn btn-outline-primary" data-bs-target="#mod-themeOptions" data-bs-toggle="modal" i18n="cancel">Annuler</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Modal icon picker for HelpBtn-->
-    <div id="iconHelpPicker" class="modal fade" role="dialog" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="iconHelpPicker" aria-hidden="true">
-        <div class="modal-dialog modal-xl">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title"><span i18n="modal.iconhelp.list">Icône du bouton vers la fenêtre d'aide</span></h5>
+                    <h5 class="modal-title"><span i18n="modal.icon.list">Sélectionner une icône</span></h5>
                     <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 </div>
                 <div class="modal-body" style="max-height: calc(100vh - 200px);overflow-y: auto;overflow-x: hidden;">
@@ -1619,7 +1585,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" id="change-icon" class="btn btn-primary" data-bs-dismiss="modal" aria-label="Close"><span i18n="validate"> Valider</span></button>
+                    <button type="button" id="change-icon" class="btn btn-primary" aria-label="Close"><span i18n="validate"> Valider</span></button>
                     <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal" aria-label="Close" i18n="cancel">Annuler</button>
                 </div>
             </div>
