@@ -1109,11 +1109,6 @@
                                                         placeholder="Echelle maxi" i18n="modal.layer.display.ph.maxscale"/>
                                                 </div>
                                             </div>
-                                            <div class="form-group mt-2">
-                                                <label for="frm-legendurl" i18n="modal.layer.legendurl">Légende statique</label>
-                                                <input type="text" class="form-control checkedurl" id="frm-legendurl"
-                                                placeholder="URL vers Image légende" i18n="modal.layer.display.ph.legend_image_url"/>
-                                            </div>
                                             <div class="form-group">
                                                 <div class="custom-control custom-switch">
                                                     <input type="checkbox" class="custom-control-input" id="frm-tiled">
@@ -1149,6 +1144,43 @@
                                     </div>                                
                                 </div>  
                                 <!--./Affichage-->
+                                <!--Type de légende-->
+                                <div class="accordion mt-2" id="accordionOptionsLegend">
+                                    <div class="accordion-item">
+                                    <h2 class="accordion-header" >
+                                        <a class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOptionsLegend" aria-expanded="true" aria-controls="collapseOptionsLegend">
+                                        <div>
+                                            <span class="title-accordion" i18n="modal.layer.title">Gestion de la légende</span>
+                                        </div>
+                                        </a>
+                                    </h2>
+                                    <div id="collapseOptionsLegend" class="accordion-collapse collapse" aria-labelledby="accordionOptionsLegend">
+                                        <div class="accordion-body"> 
+                                            <div class="row">
+                                                <div class="col-md-6 form-group">
+                                                    <label class="control-label" for="frm-legend" i18n="modal.layer.legend">Type de la légende</label>
+                                                    <select id="frm-legend" name="type-legend" class="form-control" onchange="mv.changeLayerLegend(this.value);">
+                                                        <option value="default" i18n="modal.layer.legend.default" selected>Par défaut</option>
+                                                        <option value="custom" i18n="modal.layer.legend.custom">Personnalisée</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="form-group" id="group-legend-default">
+                                                <div class="custom-control custom-switch">
+                                                    <input type="checkbox" class="custom-control-input" id="frm-layer-legend-dynamic">
+                                                    <label class="custom-control-label" for="frm-tiled" i18n="modal.layer.legend.dynamic">Adapter la légende selon les données visibles dans l'emprise de la carte</label>
+                                                </div>
+                                            </div>
+                                            <div class="form-group mt-2 d-none" id="group-legend-custom">
+                                                <label for="frm-legendurl" i18n="modal.layer.legendurl.text">Lien vers une légende personnalisée (image)</label>
+                                                <input type="text" class="form-control checkedurl" id="frm-layer-legendurl-url"
+                                                placeholder="URL vers Image légende" i18n="modal.layer.legendurl.placeholder"/>
+                                            </div>                          
+                                        </div>
+                                    </div>
+                                    </div>                                
+                                </div>  
+                                <!--./Type de légende-->
                                 <!--Type de couche-->
                                 <div class="accordion mt-2" id="accordionOptionsType">
                                     <div class="accordion-item">
