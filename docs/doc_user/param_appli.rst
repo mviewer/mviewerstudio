@@ -17,18 +17,26 @@ Champs principaux
 
 * ``Titre de l'application`` (\* champ obligatoire) : renseigner le titre de votre application cartographique (ex. "Le plan vélo de la Communauté de communes de Châteaugiron").
 * ``Lien vers le logo`` : renseigner l'URL du logo de l'entité productrice de l'application qui apparaitra dans dans le bandeau de l'application (Exemple sur GéoBretagne, les logos des partenaires sont stockés ici_).
-
+* :guilabel:`mode avancé` ``Lien vers le favicon`` : renseigner l'URL du fichier image à utiliser comme favicon de l’application.
+* :guilabel:`mode avancé` ``Lien vers la page principale`` : renseigner le lien d'une page web vers laquelle l'utilisateur sera redirigée en cliquant sur le logo de l'application mviewer.
 * ``Thème de l'application`` : choisir le thème permettant de personnaliser l'interface de votre application (couleur).
 
 Fonctionnalités
 -------------------------------------------
 
-Activer les outils que vous souhaitez afficher au sein de votre application :
+.. image:: ../_images/user/mviewerstudio_1_application_fonctionnalites.png
+              :alt: Page application fonctionnalites
+              :align: center
 
+Activer les outils que vous souhaitez afficher au sein de votre application :
+* ``Outils de zoom`` : cette option permet d'activer les outils de zoom +/- sur la carte.
 * ``Outils de mesures`` : cette option permet d'activer des outils de mesures de distance ou de surface.
 * ``Export de la carte en image`` : cette option permet d'exporter une capture d'écran de la carte consultée.
 * :guilabel:`mode avancé` ``Affichage des coordonnées au clic`` : cette option permet d'afficher dans le bandeau en haut les coordonnées du point cliqué.
+* :guilabel:`mode avancé` ``Afficher les coordonnées correspondant à la position de la souris`` : cette option permet d'afficher les coordonnées correspondant à la position de la souris en bas à droite de la carte .
 * :guilabel:`mode avancé` ``Afficher/masquer toutes les données d'une thématique`` : active la possibilité d'afficher toutes les données d'un thème en un clic.
+* ``Se géolocaliser`` : cette option permet d'activer l'outil de géolocalisation (bouton permettant à l'utilisateur de se localiser sur la carte).
+* :guilabel:`mode avancé` ``Ouvrir la carte dans le studio`` : active la possibilité d'ouvrir la carte en cours au sein d'un mviewerstudio.
 
 Options de la carte
 -------------------------------------------
@@ -39,7 +47,8 @@ Paramétrer l'étendue et le zoom de la carte au démarrage de l'application. Ai
               :alt: Options de la carte
               :align: center
 
-* ``Interdire la navigation hors de l'étendue définie ci-dessus`` : bloque l'emprise de la carte sur l'emprise définie :guilabel:`mode avancé`.
+* :guilabel:`mode avancé` ``Revenir à l'étendue initiale`` : cette option permet d'activer le bouton de retour à l’étendue initiale.
+* :guilabel:`mode avancé` ``Interdire la navigation hors de l'étendue définie ci-dessus`` : bloque l'emprise de la carte sur l'emprise définie.
 
 Fonds de plan
 -------------------------------------------
@@ -66,7 +75,7 @@ Activer la recherche pour offrir à vos utilisateurs la possibilité de se local
 * ``A l'adresse`` : localisation à l'adresse via le service de la Base adresse nationale ou tout autre service.
 * ``Activer la recherche d'entités`` :guilabel:`mode avancé`: la recherche peut être activée si la donnée est de type GEOJSON. Cette fonctionnalité est également activable pour les données de type WMS à la condition que les entités qui composent cette donnée soient également indéxées dans Elasticsearch. 
 
-Page d'accueil
+Page d'accueil (:guilabel:`mode avancé`)
 -------------------------------------------
 
 Il est possible de paramétrer une page d'accueil / documentation en indiquant un lien vers une page web (format .html).
@@ -75,6 +84,9 @@ Il est possible de paramétrer une page d'accueil / documentation en indiquant u
               :alt: Page d'accueil
               :align: center
 
+* ``Titre de la fenêtre d'aide / accueil`` :guilabel:`mode avancé`: Indiquer le titre de la modal avec les informations relatives à l'application (accueil ou aide).
+* ``Icône du bouton`` :guilabel:`mode avancé`: Sélectionner une icône pour le bouton d'accès à la page d'aide (localisé dans le bandeau de l'application).
+* ``Lien vers la page d'accueil`` :guilabel:`mode avancé`: Indiquer l'URL vers la page d'aide au format .html.
 * ``Afficher la page d'accueil par défaut`` :guilabel:`mode avancé`: affiche la page d'accueil au lancement de l'application.
 
 
