@@ -154,7 +154,7 @@ L'onglet options avancées donne accès aux fonctionnalités avancées. :guilabe
 * :guilabel:`mode avancé` ``Affichage de la données seulement sur la carte`` : Permet de rendre la couche seulement visible sur la carte, et invisible dans les thématiques et la légende.
 * :guilabel:`mode avancé` ``Utiliser un style externe`` : Lien vers un style SLD remplaçant le style du serveur cartographique.
 * :guilabel:`mode avancé` ``Type de légende`` : Lien vers la métadonnée. Ne pas modifier.
-* :guilabel:`mode avancé` ``Adopter la légende selon les données sur la carte`` : Permet d'afficher une légende qui ne contient que les styles des données visualisées sur l'étendu de la carte en cours de consultation.
+* :guilabel:`mode avancé` ``Adapter la légende selon le zoom de la carte`` : Précise si la légende est liée à l’échelle de la carte et si elle nécessite d’être actualisée à chaque changement d’échelle de la carte.
 * :guilabel:`mode avancé` ``Lien vers une légende personnalisée`` : URL vers un fichier afin d'afficher la légende à partir d'une image.
 * :guilabel:`mode avancé` ``Métadonnées`` : Lien vers la métadonnée. Ne pas modifier.
 * :guilabel:`mode avancé` ``Type de donnée`` : Lien vers la donnée. Ne pas modifier.
