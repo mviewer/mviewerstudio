@@ -363,7 +363,6 @@ var addLayer = function (title, layerid, index) {
         <div class="list-group-item layers-list-item" data-layerid="${layerid}">
             <span class="layer-name moveList">${title}</span>
             <div class="layer-options-btn" style="display:inline-flex; justify-content: end;">
-                <input class="form-control index-selector" onchange="mv.saveLayerOptions('${layerid}')" type="number" style="padding-right:5px;max-width:20%;" value="${index}">
                 <button class="btn btn-sm btn-secondary"><span class="layer-move moveList" title="Déplacer"><i class="bi bi-arrows-move"></i></span></button>
                 <button class="btn btn-sm btn-secondary" onclick="deleteLayerItem(this);"><span class="layer-remove" title="Supprimer"><i class="bi bi-x-circle"></i></span></button>
                 <button class="btn btn-sm btn-info" onclick="editLayer(this);"><span class="layer-edit" title="Editer cette couche"><i class="bi bi-gear-fill"></i></span></button>
