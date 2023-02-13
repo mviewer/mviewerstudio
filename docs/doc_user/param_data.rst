@@ -103,8 +103,9 @@ L'onglet général recense les principales options de la donnée.
 * ``Attributions`` : source de la donnée.
 * ``Opacité`` : opacité par défaut de la donnée.
 * ``Afficher la donnée au démarrage de l'application`` : la donnée s'affiche au lancement de l'application.
+* ``Afficher la donnée en première position de la carte`` : la données s'affiche toujours au-dessus des autres données qui n'ont pas activée cette option.
 * ``Styles disponibles`` : choix du·des style·s de la donnée dans notre application. Possibilité d'éditer le libellé du style.
-
+* ``Libellé de la liste des styles`` : Titre de la liste de sélection des styles.
 
 Onglet Interrogation
 ~~~~~~~~~~~~~~~~~~~~~
@@ -146,13 +147,18 @@ L'onglet options avancées donne accès aux fonctionnalités avancées. :guilabe
               :alt: Options avancées
               :align: center
 
+* :guilabel:`mode avancé` ``Index de couche`` : Position dans l'ordre d'affichage des données sur la carte et la légende.
 * :guilabel:`mode avancé` ``Echelle mini / maxi`` : Echelle minimale et maximale d'affichage de la donnée.
-* :guilabel:`mode avancé` ``Légende statique`` : Lien vers une image qui s'affiche en tante que légende de la donnée.
 * :guilabel:`mode avancé` ``Affichage tuilé`` : Affichage tuilé de la donnée. La donnée est chargée progressivement.
+* :guilabel:`mode avancé` ``Affichage exclusive de la données`` : l’affichage de cette couche masquera automatiquement toutes les autres couches ayant ce paramètre activé
+* :guilabel:`mode avancé` ``Affichage de la données seulement sur la carte`` : Permet de rendre la couche seulement visible sur la carte, et invisible dans les thématiques et la légende.
 * :guilabel:`mode avancé` ``Utiliser un style externe`` : Lien vers un style SLD remplaçant le style du serveur cartographique.
+* :guilabel:`mode avancé` ``Type de légende`` : Lien vers la métadonnée. Ne pas modifier.
+* :guilabel:`mode avancé` ``Adopter la légende selon les données sur la carte`` : Permet d'afficher une légende qui ne contient que les styles des données visualisées sur l'étendu de la carte en cours de consultation.
+* :guilabel:`mode avancé` ``Lien vers une légende personnalisée`` : URL vers un fichier afin d'afficher la légende à partir d'une image.
+* :guilabel:`mode avancé` ``Métadonnées`` : Lien vers la métadonnée. Ne pas modifier.
 * :guilabel:`mode avancé` ``Type de donnée`` : Lien vers la donnée. Ne pas modifier.
 * :guilabel:`mode avancé` ``Métadonnées`` : Lien vers la métadonnée. Ne pas modifier.
-
 
 Onglet filtre statique
 ~~~~~~~~~~~~~~~~~~~~~~~
