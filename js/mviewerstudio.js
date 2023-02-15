@@ -236,7 +236,7 @@ var newConfiguration = function () {
         $("#"+param).val("");
     });
     ["opt-exportpng","opt-zoom","opt-geoloc","opt-mouseposition","opt-studio","opt-measuretools","opt-initialextent","theme-edit-collapsed", "opt-mini", "opt-showhelp", "opt-coordinates",
-        "opt-togglealllayersfromtheme", "SwitchAdressSearch","SwitchAdvanced"].forEach(function (param, id) {
+        "opt-togglealllayersfromtheme", "SwitchAdressSearch", "SwitchCustomBackground", "SwitchAdvanced"].forEach(function (param, id) {
         $("#"+param).prop('checked', false);
     });
    

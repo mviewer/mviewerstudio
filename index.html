@@ -411,6 +411,28 @@
                                                     </div>
                                                 </div>
                                             </li>
+                                            <li class="list-group-item advanced" style="display: none;">
+                                                <div class="list-flex">
+                                                    <p class="strong" i18n="tabs.app.bgcustom.title">Ajouter un fond de plan personnalisé</p>
+                                                    <div class="custom-control custom-switch">
+                                                        <input type="checkbox" class="custom-control-input" id="SwitchCustomBackground">
+                                                        <label class="custom-control-label" for="SwitchCustomBackground"></label>
+                                                    </div>
+                                                </div>
+                                                <div id="AppCustomBackgroundBlock" style="display: none;">
+                                                    <div class="row mb-2" >                                                    
+                                                        <div class="col-md-12">
+                                                            <label for="frm-custombg-type" i18n="tabs.app.bgcustom.type" class="form-label">Type</label>
+                                                            <select class="form-control b" id="frm-bl-custom-type" name="Type of layer" onchange="">
+                                                                <option value="osm" i18n="tabs.app.bgcustom.type_OSM">OSM</option>
+                                                                <option value="wmts" i18n="tabs.app.bgcustom.type_WMTS">WMTS</option>
+                                                                <option value="wms" i18n="tabs.app.bgcustom.type_WMS">WMS</option>
+                                                                <option value="tms" i18n="tabs.app.bgcustom.type_TMS">Vector-TMS</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>                                                
+                                            </li>
                                           </ul>                                        
                                     </div>
                                   </div>
