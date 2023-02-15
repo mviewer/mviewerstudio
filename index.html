@@ -207,7 +207,7 @@
                         </ul>
                         <div class="custom-control custom-switch mt-2" id="btnSwitchAdvanced">
                             <input type="checkbox" class="custom-control-input" id="SwitchAdvanced">
-                            <label class="custom-control-label" for="SwitchAdvanced"><span i18n="studio.toolsbar.advanced">Mode avancé</span></label>
+                            <label class="custom-control-label" for="SwitchAdvanced"><span i18n="studio.toolsbar.advanced" checked="true">Mode avancé</span></label>
                         </div>
                     </div>                    
                     <!--/.TOOLSBAR -->
@@ -428,7 +428,7 @@
                                                                 <option value="osm" i18n="tabs.app.bgcustom.type_OSM">OSM</option>
                                                                 <option value="wmts" i18n="tabs.app.bgcustom.type_WMTS">WMTS</option>
                                                                 <option value="wms" i18n="tabs.app.bgcustom.type_WMS">WMS</option>
-                                                                <option value="tms" i18n="tabs.app.bgcustom.type_TMS">Vector-TMS</option>
+                                                                <option value="vector-tms" i18n="tabs.app.bgcustom.type_TMS">Vector-TMS</option>
                                                             </select>
                                                         </div>
                                                     </div>
@@ -453,27 +453,27 @@
                                                         </div>
                                                         <div class="col-md-6">
                                                             <div class="form-group">
-                                                                <label for="formCustomBaseThumb" class="form-label"><span i18n="tabs.app.bgcustom.base.thumb">Lien vers la vignette</span></label>
+                                                                <label for="formCustomBaseThumb" class="form-label checkedurl"><span i18n="tabs.app.bgcustom.base.thumb">Lien vers la vignette</span></label>
                                                                 <input class="form-control" id="formCustomBaseThumb" placeholder="https://kartenn.region-bretagne.fr/kartoviz/img/basemap/positron.png">
                                                             </div>
                                                         </div>
                                                         <div class="col-md-6">
                                                             <div class="form-group">
-                                                                <label for="formCustomBaseAttribution" class="form-label"><span i18n="tabs.app.bgcustom.base.attribution">URL</span></label>
+                                                                <label for="formCustomBaseAttribution" class="form-label"><span i18n="tabs.app.bgcustom.base.attribution">Attribution</span></label>
                                                                 <input class="form-control" id="formCustomBaseAttribution" placeholder="Map tiles by carto.com - Licence cc 3.0">
                                                             </div>
                                                         </div>   
                                                         <div class="col-md-6">
                                                             <div class="form-group">
-                                                                <label for="formCustomBaseUrl" class="form-label"><span i18n="tabs.app.bgcustom.base.url">URL</span></label>
+                                                                <label for="formCustomBaseUrl" class="form-label checkedurl"><span i18n="tabs.app.bgcustom.base.url">URL</span></label>
                                                                 <input class="form-control" id="formCustomBaseUrl" placeholder="http://{a-c}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png">
                                                             </div>
                                                         </div>   
                                                     </div>
                                                     <div class="row mt-2" >
-                                                        <div class="col-md-6 tms custom-bg-type">
+                                                        <div class="col-md-6 vector-tms custom-bg-type">
                                                             <div class="form-group">
-                                                                <label for="formCustomBaseStyleUrl" class="form-label"><span i18n="tabs.app.bgcustom.base.styleUrl">Lien vers le fichier de style</span></label>
+                                                                <label for="formCustomBaseStyleUrl" class="form-label checkedurl"><span i18n="tabs.app.bgcustom.base.styleUrl">Lien vers le fichier de style</span></label>
                                                                 <input class="form-control" id="formCustomBaseStyleUrl" placeholder="https://wxs.ign.fr/static/vectorTiles/styles/ADMIN_EXPRESS/adminexpress.json">
                                                             </div>
                                                         </div>
@@ -489,13 +489,14 @@
                                                                 <input class="form-control" id="formCustomBaseFormat" placeholder="image/png">
                                                             </div>
                                                         </div>
-                                                        <div class="col-md-6 wmts tms custom-bg-type">
+                                                        <div class="col-md-6 wmts vector-tms custom-bg-type">
                                                             <div class="form-group">
                                                                 <label for="formCustomBaseStyle" class="form-label"><span i18n="tabs.app.bgcustom.base.style">Style</span></label>
                                                                 <input class="form-control" id="formCustomBaseStyle" placeholder="bdtopo">
                                                             </div>
                                                         </div>
                                                     </div>
+                                                    <button type="button" id="addCustomBl" onclick="mv.addBaseLayer()" class="btn btn-primary btn-block" i18n="add">Ajouter</button>
                                                 </div>
                                             </li>
                                           </ul>

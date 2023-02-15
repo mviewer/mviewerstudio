@@ -335,6 +335,12 @@ sortThemes = function () {
     config.themes = orderedThemes;
 };
 
+setConf = (key, value) => {
+    _conf[key] = value
+};
+
+getConf = (key) => _conf[key]
+
 sortLayers = function (fromIndex, toIndex) {
     var themeid = $("#themes-list .active").attr("data-themeid");
     var arr = config.themes[themeid].layers;
@@ -619,7 +625,9 @@ var saveApplicationParameters = function (option) {
     var baseLayers =   [padding(0) + '<baselayers style="'+baseLayersMode+'">'];
     $(".bl input:checked").each(function (i, b) {
         // set first bl visible
-        var baseLayer = _conf.baselayers[$(b).parent().parent().attr("data-layerid")] || savedParameters.baselayers[$(b).parent().parent().attr("data-layerid")];
+        const baseLayerId = $(b).parent().parent().attr("data-layerid");
+        
+        var baseLayer = _conf.baselayers[baseLayerId] || savedParameters.baselayers[baseLayerId] || getConf("customBaseLayers")[baseLayerId];
         var definition = [
             '<baselayer visible="false" ',
             createBaseLayerDef(baseLayer),
@@ -1003,7 +1011,7 @@ $('#input-ogc-filter').keypress(function(event){
     var keycode = (event.keyCode ? event.keyCode : event.which);
     if(keycode == '13'){
         mv.search();
-    }        
+    }
     event.stopPropagation();
 });
 
