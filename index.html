@@ -415,15 +415,16 @@
                                                 <div class="list-flex">
                                                     <p class="strong" i18n="tabs.app.bgcustom.title">Ajouter un fond de plan personnalisé</p>
                                                     <div class="custom-control custom-switch">
-                                                        <input type="checkbox" class="custom-control-input" id="SwitchCustomBackground">
+                                                        <input onchange="mv.changeBaseMapType(this)"type="checkbox" class="custom-control-input" id="SwitchCustomBackground">
                                                         <label class="custom-control-label" for="SwitchCustomBackground"></label>
                                                     </div>
                                                 </div>
-                                                <div id="AppCustomBackgroundBlock" style="display: none;">
+                                                <div id="appCustomBackgroundBlock" class="d-none">
                                                     <div class="row mb-2" >                                                    
                                                         <div class="col-md-12">
                                                             <label for="frm-custombg-type" i18n="tabs.app.bgcustom.type" class="form-label">Type</label>
-                                                            <select class="form-control b" id="frm-bl-custom-type" name="Type of layer" onchange="">
+                                                            <select class="form-control b" id="frmBlCustomType" name="Type of layer" onchange="mv.selectBaseMapTypeValue(this)">
+                                                                <option value="" selected i18n="tabs.app.bgcustom.type_empty">Choisir un type...</option>
                                                                 <option value="osm" i18n="tabs.app.bgcustom.type_OSM">OSM</option>
                                                                 <option value="wmts" i18n="tabs.app.bgcustom.type_WMTS">WMTS</option>
                                                                 <option value="wms" i18n="tabs.app.bgcustom.type_WMS">WMS</option>
@@ -431,13 +432,77 @@
                                                             </select>
                                                         </div>
                                                     </div>
-                                                </div>                                                
+                                                    <div id="customBgCommons" class="row mt-2 custom-bg-commons" >
+                                                        <div class="col-md-6">
+                                                            <div class="form-group">
+                                                                <label for="formCustomBaseId" class="form-label"><span i18n="tabs.app.bgcustom.base.id">Identifiant</span></label>
+                                                                <input class="form-control" id="formCustomBaseId" placeholder="positron">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <div class="form-group">
+                                                                <label for="formCustomBaseLabel" class="form-label"><span i18n="tabs.app.bgcustom.base.label">Libellé</span></label>
+                                                                <input class="form-control" id="formCustomBaseLabel" placeholder="Positron">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <div class="form-group">
+                                                                <label for="formCustomBaseTitle" class="form-label"><span i18n="tabs.app.bgcustom.base.title">Titre</span></label>
+                                                                <input class="form-control" id="formCustomBaseTitle" placeholder="positron">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <div class="form-group">
+                                                                <label for="formCustomBaseThumb" class="form-label"><span i18n="tabs.app.bgcustom.base.thumb">Lien vers la vignette</span></label>
+                                                                <input class="form-control" id="formCustomBaseThumb" placeholder="https://kartenn.region-bretagne.fr/kartoviz/img/basemap/positron.png">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <div class="form-group">
+                                                                <label for="formCustomBaseAttribution" class="form-label"><span i18n="tabs.app.bgcustom.base.attribution">URL</span></label>
+                                                                <input class="form-control" id="formCustomBaseAttribution" placeholder="Map tiles by carto.com - Licence cc 3.0">
+                                                            </div>
+                                                        </div>   
+                                                        <div class="col-md-6">
+                                                            <div class="form-group">
+                                                                <label for="formCustomBaseUrl" class="form-label"><span i18n="tabs.app.bgcustom.base.url">URL</span></label>
+                                                                <input class="form-control" id="formCustomBaseUrl" placeholder="http://{a-c}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png">
+                                                            </div>
+                                                        </div>   
+                                                    </div>
+                                                    <div class="row mt-2" >
+                                                        <div class="col-md-6 tms custom-bg-type">
+                                                            <div class="form-group">
+                                                                <label for="formCustomBaseStyleUrl" class="form-label"><span i18n="tabs.app.bgcustom.base.styleUrl">Lien vers le fichier de style</span></label>
+                                                                <input class="form-control" id="formCustomBaseStyleUrl" placeholder="https://wxs.ign.fr/static/vectorTiles/styles/ADMIN_EXPRESS/adminexpress.json">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-6 wmts wms custom-bg-type">
+                                                            <div class="form-group">
+                                                                <label for="formCustomBaseNameLayers" class="form-label"><span i18n="tabs.app.bgcustom.base.nameLayers">Couches</span></label>
+                                                                <input class="form-control" id="formCustomBaseNameLayers" placeholder="satellite">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-6 wmts wms custom-bg-type">
+                                                            <div class="form-group">
+                                                                <label for="formCustomBaseFormat" class="form-label"><span i18n="tabs.app.bgcustom.base.format">Format</span></label>
+                                                                <input class="form-control" id="formCustomBaseFormat" placeholder="image/png">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-6 wmts tms custom-bg-type">
+                                                            <div class="form-group">
+                                                                <label for="formCustomBaseStyle" class="form-label"><span i18n="tabs.app.bgcustom.base.style">Style</span></label>
+                                                                <input class="form-control" id="formCustomBaseStyle" placeholder="bdtopo">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </li>
-                                          </ul>                                        
+                                          </ul>
                                     </div>
                                   </div>
-                                </div>                                
-                            </div>  
+                                </div>
+                            </div>
                             <!--./Fond de plan-->
 
                             <!--Page d'accueil-->

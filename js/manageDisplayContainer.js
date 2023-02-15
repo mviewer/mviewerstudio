@@ -51,7 +51,7 @@ btnSwitch.addEventListener('change', (event) => {
 
 // Switch list to manage display block
 displaySwitch('SwitchAdressSearch','AppSearchBlock');
-displaySwitch('SwitchCustomBackground','AppCustomBackgroundBlock');
+displaySwitch('SwitchCustomBackground','appCustomBackgroundBlock');
 
 
 //
