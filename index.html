@@ -360,7 +360,7 @@
                                         </li>
                                         <li class="list-group-item">
                                             <div class="list-flex">
-                                                <span i18n="tabs.app.opt_initialextent">Revenir à l'étendue initiale</span>                                           
+                                                <span><span i18n="tabs.app.opt_initialextent">Revenir à l'étendue initiale</span><span class="tooltip-info" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Option permettant d'activer le bouton pour revenir à l'étendue intiale de l'application (initialextenttool)"><i class="ri-information-line"></i></span></span>                                           
                                                 <div class="custom-control custom-switch">
                                                     <input type="checkbox" class="custom-control-input" name="checkboxes" id="opt-initialextent">
                                                     <label class="custom-control-label" for="opt-initialextent"></label>
@@ -452,7 +452,7 @@
                                                 </div>      
                                             </div>    
                                             <div class="form-group">
-                                                <label for="opt-help" i18n="tabs.app.help_link" class="form-label">Lien vers la page d'accueil</label>
+                                                <label for="opt-help" i18n="tabs.app.help_link" class="form-label">Lien vers la page d'accueil</label><span class="tooltip-info" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Lien vers une page .HTML définissant la page d'accueil"><i class="ri-information-line"></i></span>
                                                 <input class="form-control checkedurl" id="opt-help" name="textinput" type="text" placeholder="https://mapage.html">
                                             </div>
                                             <div class="custom-control custom-switch">
@@ -954,7 +954,7 @@
                                                placeholder="nom de la couche" i18n="modal.layer.name.ph">
                                     </div>
                                     <div class="form-group">
-                                        <label for="frm-attribution" i18n="modal.layer.attr">Attributions</label>
+                                        <label for="frm-attribution"><span i18n="modal.layer.attr">Attribution</span><span class="tooltip-info" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Texte permettant de définir la/les source(s) de la donnée"><i class="ri-information-line"></i></label>
                                         <input type="text" class="form-control" id="frm-attribution"
                                                placeholder="Attribution">
                                     </div>
@@ -970,7 +970,7 @@
                                         </div>
                                         <div class="custom-control custom-switch">
                                             <input type="checkbox" class="custom-control-input" id="frm-layer-toplayer">
-                                            <label class="custom-control-label" for="frm-layer-toplayer" i18n="modal.layer.toplayer">Afficher la donnée en première position de la carte</label>
+                                            <label class="custom-control-label" for="frm-layer-toplayer" i18n="modal.layer.toplayer">Afficher la donnée en première position de la carte</label><span class="tooltip-info" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="En activant cette option, la donnée sera toujours en premier plan sur la carte (toplayer)"><i class="ri-information-line"></i>
                                         </div>
                                     </div>
                                     <div class="mt-4">
@@ -979,7 +979,7 @@
                                         <div class="row mt-3" id="frm-lis-styles"></div>
                                     </div>                                    
                                     <div class="form-group">
-                                        <label for="frm-layer-styletitle" i18n="modal.layer.style.title">Libellé de la liste des styles</label>
+                                        <label for="frm-layer-styletitle" ><span i18n="modal.layer.style.title">Libellé de la liste déroulante des styles</span><span class="tooltip-info" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="À renseigner quand plusieurs styles sont sélectionnés | Valeur par défaut : Analyse"><i class="ri-information-line"></i></label>
                                         <input type="text" class="form-control" id="frm-layer-styletitle" placeholder="Libellé de la liste des styles" i18n="modal.layer.style.placeholder">
                                     </div>                               
                                 </div>
@@ -1003,12 +1003,14 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="form-group advanced" style="display: none;">
-                                        <label for="frm-featurecount" i18n="modal.layer.featurecount">Limitation du nombre de réponses</label>
-                                        <input type="number" class="form-control" id="frm-featurecount"
-                                               placeholder="Nombre max d'entités retournées" step="1" min="1"
-                                                i18n="modal.layer.featurecount.ph" max="50" value="5">
-                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group advanced" style="display: none;">
+                                            <label for="frm-featurecount" i18n="modal.layer.featurecount">Limitation du nombre de réponses</label><span class="tooltip-info" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Lors d'un clique sur la carte, cette option permet d'indiquer le nombre maximum d'entités interrogées"><i class="ri-information-line"></i>
+                                            <input type="number" class="form-control" id="frm-featurecount"
+                                                   placeholder="Nombre max d'entités retournées" step="1" min="1"
+                                                    i18n="modal.layer.featurecount.ph" max="50" value="5">
+                                        </div>
+                                    </div>                                    
                                 </div>
                                 <div class="row">
                                     <div class="col-md-12">
@@ -1092,16 +1094,16 @@
                                         <div class="accordion-body">
                                             <div class="row">
                                                 <div class="col-md-4">
-                                                    <label for="frm-layer-index" i18n="modal.layer.index">Index de couche</label>
+                                                    <label for="frm-layer-index"><span i18n="modal.layer.index">Index de couche</span><span class="tooltip-info" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Cette option permet de modifier l'ordre d'apparition d'une donnée par rapport au menu des thématiques. Une couche avec le paramètre index=2 s'affichera en 2e position sur la carte et dans la légende. Pour en savoir plus, consulter la documentation."><i class="ri-information-line"></i></label>
                                                     <input type="number" min="0" class="form-control" id="frm-layer-index" i18n="modal.layer.index"/>
                                                 </div> 
                                                 <div class="col-md-4">
-                                                    <label for="frm-scalemin" i18n="modal.layer.scale.min">Echelle mini</label>
+                                                    <label for="frm-scalemin"><span i18n="modal.layer.scale.min">Echelle mini</span><span class="tooltip-info" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Cette option permet d'activer une échelle minimale de visibilité pour cette donnée."><i class="ri-information-line"></i></label>
                                                     <input type="number" class="form-control" id="frm-scalemin"
                                                         placeholder="Echelle mini" i18n="modal.layer.display.ph.minscale"/>
                                                 </div>
                                                 <div class="col-md-4">
-                                                    <label for="frm-scalemax" i18n="modal.layer.scale.max">Echelle maxi</label>
+                                                    <label for="frm-scalemax"><span i18n="modal.layer.scale.max">Echelle maxi</span><span class="tooltip-info" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Cette option permet d'activer une échelle maximale de visibilité pour cette donnée."><i class="ri-information-line"></i></label>
                                                     <input type="number" class="form-control" id="frm-scalemax"
                                                         placeholder="Echelle maxi" i18n="modal.layer.display.ph.maxscale"/>
                                                 </div>
@@ -1113,15 +1115,15 @@
                                                 </div>
                                                 <div class="custom-control custom-switch">
                                                     <input type="checkbox" class="custom-control-input" id="frm-layer-exclusive">
-                                                    <label class="custom-control-label" for="frm-layer-exclusive" i18n="modal.layer.exclusive">Affichage excluf de la donnée</label>
+                                                    <label class="custom-control-label" for="frm-layer-exclusive" i18n="modal.layer.exclusive">Affichage excluf de la donnée</label><span class="tooltip-info" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="En activant cette option, l'affichage de cette donnée masquera automatiquement toutes les autres données de la carte."><i class="ri-information-line"></i>
                                                 </div>
                                                 <div class="custom-control custom-switch">
                                                     <input type="checkbox" class="custom-control-input" id="frm-layer-showintoc">
-                                                    <label class="custom-control-label" for="frm-layer-showintoc" i18n="modal.layer.showintoc">Affichage de la donnée seulement sur la carte</label>
+                                                    <label class="custom-control-label" for="frm-layer-showintoc" i18n="modal.layer.showintoc">Affichage de la donnée seulement sur la carte</label><span class="tooltip-info" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Cette option permet d'activer l'affichage de la donnée seulement sur la carte et non dans le menu thématique et la légende. Il n'est donc pas possible pour l'utilisateur de modifier les réglages de la donnée (showintoc). Exemple : Donnée permettant de créer un masque pour un territoire."><i class="ri-information-line"></i>
                                                 </div>
                                             </div>
                                             <hr>
-                                            <h6 for="frm-upload-sld-file" i18n="modal.layer.sld.external">Utiliser un style externe</h6>                                        
+                                            <h6 for="frm-upload-sld-file"><span i18n="modal.layer.sld.external">Utiliser un style externe</span><span class="tooltip-info" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Lien vers un fichier au format .SLD définissant le style de la couche"><i class="ri-information-line"></i></h6>                                        
                                             <div class="input-group">
                                                 <input type="text" class="form-control checkedurl" id="frm-upload-sld-file" placeholder="URL SLD externe" i18n="modal.layer.display.ph.external_sld">
                                                 <!--<div class="input-group-append">                                                

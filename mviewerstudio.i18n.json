@@ -153,7 +153,7 @@
         "modal.layer.legendurl.placeholder": "legend.png",
         "modal.layer.id" : "id",
         "modal.layer.url" : "URL",
-        "modal.layer.attr" : "Attributions",
+        "modal.layer.attr" : "Attribution",
         "modal.layer.type.title" : "Type de donnée",
         "modal.layer.metadata.title" : "Métadonnées",
         "modal.layer.access.title" : "Accès à la donnée",
