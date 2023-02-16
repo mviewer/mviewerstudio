@@ -26,3 +26,6 @@ srv/python/mviewerstudio_backend/static
 # pyenv
 .python-version
 ?venv/
+
+# store
+store/
