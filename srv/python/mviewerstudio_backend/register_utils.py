@@ -1,60 +1,17 @@
 import hashlib
 from os import path, mkdir
-from dataclasses import dataclass
 from .models.register import RegisterModel, ConfigModel
-from typing import List
-import logging, uuid, json, hashlib
+import logging, json, hashlib
+import git
 
-
-
-logger = logging.getLogger(__name__)
-
-
-class Config:
-    def __init__(self, data, user, directory) -> None:
-        self.user = user
-        self.data = data.decode("utf-8")
-        self.xml = self.data.replace("anonymous", user.username)
-        self.directory = directory
-
-        # init or create workspace
-        self.get_or_init_workspace(directory)
-        # init repo
-        # self.repo = git.Repo(self.workspace)
-
-    def get_or_init_workspace(self):
-        '''
-        Init or retrieve workspace
-        '''
-        workspace_uuid = str(uuid.uuid4().int)[:10]
-        workspace_path = path.join(self.directory, workspace_uuid)
-        if not path.exists(self.workspace_path):
-            # create directory
-            mkdir(workspace_path)
-            # init git
-            #git.Repo.init(workspace_path)
-        self.workspace = workspace_path
-
-    def create_config(self):
-        # save file
-        with open(self.xml_config_path, "w") as file:
-            file.write(self.xml)
-        # index
-        # commit
-
-    def update_config(self, xml):
-        # replace file
-        # commit
-        return
-        
-        
-
+logger = logging.getLogger(__name__)  
 
 class ConfigRegister:
     def __init__(self, store_directory) -> None:
         self.store_directory = store_directory
         self.name = "register.json"
         self.full_path = path.join(store_directory, self.name)
+        self.register = self.get_or_create_register()
 
     def _create_register(self):
         '''
@@ -74,9 +31,8 @@ class ConfigRegister:
         Get or create register
         '''
         logger.info(self.store_directory)
-        register_path = self.full_path
 
-        if not path.exists(register_path):
+        if not path.exists(self.full_path):
             return self._create_register()
 
         read_json = None

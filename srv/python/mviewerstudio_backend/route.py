@@ -1,5 +1,6 @@
 from flask import Blueprint, jsonify, Response, request, current_app, redirect
 from .login_utils import current_user
+from .config_utils import Config
 import hashlib
 import os.path
 from glob import glob
@@ -39,6 +40,8 @@ def user() -> Response:
 
 @basic_store.route("/srv/store", methods=["POST"])
 def store_mviewer_config() -> Response:
+    config = Config(request.data, current_user, current_app.config["EXPORT_CONF_FOLDER"])
+    
     raw_xml = request.data.decode("utf-8")
     xml_with_replaced_user = raw_xml.replace("anonymous", current_user.username)
     filehash = hashlib.md5()
