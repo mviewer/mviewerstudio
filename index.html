@@ -135,7 +135,16 @@
                                         <p class="subtitle-wizard" i18n="studio.wizard.theme_text">Paramètres des thématiques et des données</p>
                                     </div> 
                                 </a>
-                            </li>   
+                            </li>
+                            <li class="nav-item advanced" id="navWizVersion" style="display: none">
+                                <a class="nav-link" data-bs-toggle="tab" href="#configVersions">
+                                    <i class="ri-git-branch-line"></i>
+                                    <div>
+                                        <p class="title-wizard" i18n="studio.wizard.versions_title">Gérer des versions</p>
+                                        <p class="subtitle-wizard" i18n="studio.wizard.versions_text">Créer, supprimer, tester la version d'une carte</p>
+                                    </div>
+                                </a>
+                            </li>  
                             <li class="nav-item advanced" id="navWizFadv" style="display: none">
                                 <a class="nav-link" data-bs-toggle="tab" href="#fadanced">
                                     <i class="ri-list-settings-line"></i>
@@ -184,6 +193,11 @@
                                     <i class="ri-stack-line"></i> 
                                 </a>
                             </li>
+                            <li class="nav-item advanced" style="display: none">
+                                <a class="nav-link" data-bs-toggle="tab" href="#configVersions">                                
+                                    <i class="ri-git-branch-line"></i>
+                                </a>
+                            </li> 
                             <li class="nav-item advanced" style="display: none">
                                 <a class="nav-link" data-bs-toggle="tab" href="#fadanced">                                
                                     <i class="ri-list-settings-line"></i>
@@ -671,6 +685,20 @@
                             </div>  
                         </div>
                         <!-- /.Thématiques & données -->
+                        <!-- Gestion des versions -->
+                        <div class="tab-pane container fade advanced" id="configVersions" style="display: none">
+                            <h1><i class="ri-git-branch-line"></i> <span i18n="tabs.versions.title">Gérer les versions de la carte</span></h1>
+                            <div class="alert alert-info text-info my-3" role="alert">
+                                <i class="ri-git-branch-line"></i> 
+                                <span i18n="tabs.adv.alert">Le paramétrage de cette section est optionnel.</span>
+                            </div>
+                            
+                            <div class="mt-4">
+                                <a class="btn btn-outline-warning btnPrev"><i class="ri-arrow-left-line"></i> <span i18n="studio.wizard.btn.previous">Précédent</span></a>
+                                <a class="btn btn-warning btnNext"><span i18n="studio.wizard.btn.next">Suivant</span> <i class="ri-arrow-right-line"></i> </a>
+                            </div>  
+                        </div>                       
+                        <!-- / - Gestion des versions -->
                         <!-- Fonctionnalités avancées -->
                         <div class="tab-pane container fade advanced" id="fadanced" style="display: none">
                             <h1><i class="ri-list-settings-line"></i> <span i18n="tabs.adv.title">Fonctionnalités avancées</span></h1>
@@ -758,8 +786,8 @@
                                           </ul>                                        
                                     </div>
                                   </div>
-                                </div>                                
-                            </div>  
+                                </div>                     
+                            </div> 
                             <!--./Recherche ElasticSearch-->
                             
                             <div class="mt-4">

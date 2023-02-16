@@ -5,7 +5,6 @@ from .models.register import RegisterModel, ConfigModel
 from typing import List
 import logging, uuid, json, hashlib
 
-import git
 
 
 logger = logging.getLogger(__name__)
@@ -19,24 +18,36 @@ class Config:
         self.directory = directory
 
         # init or create workspace
-        self.workspace = self.init_workspace(directory)
+        self.get_or_init_workspace(directory)
         # init repo
-        self.repo = git.Repo(self.workspace)
+        # self.repo = git.Repo(self.workspace)
 
-    def init_workspace(self):
+    def get_or_init_workspace(self):
+        '''
+        Init or retrieve workspace
+        '''
         workspace_uuid = str(uuid.uuid4().int)[:10]
         workspace_path = path.join(self.directory, workspace_uuid)
         if not path.exists(self.workspace_path):
             # create directory
             mkdir(workspace_path)
             # init git
-            git.Repo.init(workspace_path)
-        return workspace_path
+            #git.Repo.init(workspace_path)
+        self.workspace = workspace_path
 
-    def save_config(self, directory):
-        file_path = path.join(directory, self.file_name)
-        with open(file_path, "w") as file:
+    def create_config(self):
+        # save file
+        with open(self.xml_config_path, "w") as file:
             file.write(self.xml)
+        # index
+        # commit
+
+    def update_config(self, xml):
+        # replace file
+        # commit
+        return
+        
+        
 
 
 class ConfigRegister:
@@ -46,6 +57,9 @@ class ConfigRegister:
         self.full_path = path.join(store_directory, self.name)
 
     def _create_register(self):
+        '''
+        Create json to follow meta for each last config version
+        '''
         newRegister = RegisterModel(0, [])
         newRegister = {"total": 0, "configs": []}
         first_register_object = json.dumps(newRegister, indent=4)
@@ -55,7 +69,10 @@ class ConfigRegister:
 
         return newRegister
 
-    def get_register(self):
+    def get_or_create_register(self):
+        '''
+        Get or create register
+        '''
         logger.info(self.store_directory)
         register_path = self.full_path
 
@@ -67,11 +84,4 @@ class ConfigRegister:
         with open(json_file_path, "r") as j:
             read_json = json.loads(j.read())
 
-        print(read_json)
-
         return RegisterModel(read_json["total"], read_json["configs"])
-
-    def create_file_name(self, xml_file):
-        filehash = hashlib.md5()
-        filehash.update(xml_file.encode("utf-8"))
-        return f"{filehash.hexdigest()}.xml"
