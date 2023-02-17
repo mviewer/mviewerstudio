@@ -232,7 +232,7 @@ var map2 = new ol.Map({
 });
 var config;
 
-var newConfiguration = function () {
+var newConfiguration = function (uuid) {
     ["opt-title", "opt-logo", "opt-favicon", "opt-help", "opt-home", "theme-edit-icon", "theme-edit-title"].forEach(function (param, id) {
         $("#"+param).val("");
     });
@@ -264,7 +264,8 @@ var newConfiguration = function () {
     config = {
         application: { title: "", logo: "" },
         themes: {},
-        temp : { layers : {}}
+        temp: { layers: {} },
+        id: uuid || mv.uuid()
     };
     //Store des parametres non gérés
     savedParameters = {"application":[], "baselayers": {}};
@@ -552,7 +553,6 @@ var saveApplicationParameters = function (option) {
     var savedProxy = "";
     var olscompletion = "";
     var elasticsearch = "";
-    var savedSearchparameters = "";
     var application = ['<application',
         'title="'+$("#opt-title").val()+'"',
         'logo="'+$("#opt-logo").val()+'"',
@@ -687,7 +687,7 @@ var saveApplicationParameters = function (option) {
             type: "POST",
             url: _conf.upload_service,
             data: conf.join(""),
-            dataType: 'json',
+            dataType: 'text',
             contentType: 'text/xml',
             success: function( data ) {
 
