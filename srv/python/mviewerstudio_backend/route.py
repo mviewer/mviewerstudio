@@ -40,7 +40,12 @@ def user() -> Response:
 
 @basic_store.route("/srv/store", methods=["POST"])
 def store_mviewer_config() -> Response:
-    config = Config(request.data, current_user, current_app.config["EXPORT_CONF_FOLDER"])
+    config = Config(
+        request.data,
+        current_user,
+        current_app.config["EXPORT_CONF_FOLDER"],
+        current_app.register
+    )
     
     raw_xml = request.data.decode("utf-8")
     xml_with_replaced_user = raw_xml.replace("anonymous", current_user.username)
