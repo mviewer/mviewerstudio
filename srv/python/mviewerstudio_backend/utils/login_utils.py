@@ -1,30 +1,10 @@
 from werkzeug.local import LocalProxy
 from flask import has_app_context, request
-from dataclasses import dataclass
-from typing import List, Optional
+from ..models.user import User
+from typing import Optional
 import logging
 
-
 logger = logging.getLogger(__name__)
-
-
-@dataclass
-class User:
-    username: str
-    firstname: str
-    lastname: str
-    organisation: Optional[str]
-    roles: List[str]
-
-    def as_dict(self):
-        return {
-            "user_name": self.username,
-            "first_name": self.firstname,
-            "last_name": self.lastname,
-            "organisation": {"legal_name": self.organisation},
-            "roles": self.roles,
-        }
-
 
 def _get_current_user() -> Optional["User"]:
     if has_app_context():

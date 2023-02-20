@@ -1,5 +1,6 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, replace, field
 from .config import ConfigModel
+from ..enhancers.json import dataclass_to_json
 from typing import List
 import logging
 
@@ -13,7 +14,4 @@ class RegisterModel:
     """
 
     total: int
-    configs: List[ConfigModel]
-
-    def as_dict(self):
-        return {"total": self.total, "configs": self.configs}
+    configs: List[ConfigModel] = field(default_factory=[])
