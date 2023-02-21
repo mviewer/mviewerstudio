@@ -1,15 +1,14 @@
 from flask import Blueprint, jsonify, Response, request, current_app, redirect
 from .utils.login_utils import current_user
 from .utils.config_utils import Config
+from .utils.version_manager_utils import Version_manager
 import hashlib
 from os import path, mkdir
 from shutil import rmtree
-from glob import glob
-import lxml.etree as ET
-from pathlib import Path
 from flask.blueprints import BlueprintSetupState
 from urllib.parse import urlparse
 import requests
+import git
 
 import logging
 
@@ -160,3 +159,15 @@ def proxy() -> Response:
     else:
         response = "Interdit"
     return response
+
+@basic_store.route("/srv/version/<id>", methods=["GET"])
+def create_config_version(id) -> Response:
+    config =  current_app.register.read(id)
+    if config:
+        config = config[0]
+        Version = Version_manager(config, current_app.config["EXPORT_CONF_FOLDER"])
+        Version.create_version()
+    else :
+        return jsonify({"success": True, "message": "This config doesn't exists !"}), 204
+
+    return jsonify({"success": True, "message": "New version created !"})

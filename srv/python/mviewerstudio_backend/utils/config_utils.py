@@ -59,6 +59,8 @@ class Config:
             mkdir(workspace_path)
             # init git
             self.repo = git.Repo.init(workspace_path)
+        else :
+            self.repo = git.Repo(workspace_path)
         return workspace_path
     
     def _get_xml_describe(self):
@@ -68,15 +70,18 @@ class Config:
         xml_parser = ET.fromstring(self.xml)
         return xml_parser.find(".//metadata/{*}RDF/{*}Description")
     
-    def _commit_changes(self, msg):
+    def _commit_changes(self, msg, is_init):
         '''
         Commit changes if needed.
         '''
         # commit file
-        unstaged = [x for x in self.repo.index.diff(None)]
-        if unstaged :
-            self.repo.git.add('*')
-            self.repo.git.commit(m=msg)
+        if is_init:
+            self.repo.git.add("*")
+            self.repo.git.commit("-m", msg)
+        elif self.repo.git.diff("--name-only"):
+            self.repo.git.add("*")
+            self.repo.git.commit("-m", "new changes")
+        print(self.repo)
     
     def create_config(self):
         '''
@@ -90,12 +95,14 @@ class Config:
         # save file
         normalize_file_name = re.sub('[^a-zA-Z0-9  \n\.]', "_", file_name).replace(" ", "_")
         self.full_xml_path = path.join(self.workspace, "%s.xml" % normalize_file_name)
+        is_init = True
         if path.exists(self.full_xml_path):
             self.clean_all_workspace_configs()
+            is_init = False
         with open(self.full_xml_path, "w") as file:
             file.write(self.xml)
             file.close()
-        self._commit_changes("add new file : %s.xml " % normalize_file_name)
+        self._commit_changes("add new file : %s.xml " % normalize_file_name, is_init)
     
     def clean_all_workspace_configs(self):
         for file in glob.glob("%s/*.xml" % self.workspace):

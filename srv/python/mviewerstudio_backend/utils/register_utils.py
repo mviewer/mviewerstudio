@@ -1,7 +1,6 @@
 from os import path, remove
 from ..models.register import RegisterModel, ConfigModel
 import logging, json
-import glob
 
 logger = logging.getLogger(__name__)  
 
