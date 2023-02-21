@@ -28,6 +28,7 @@
         "modal.file.author" : "Auteur",
         "modal.file.deleteallmyapps" : "Supprimer toutes mes applications",
         "studio.toolsbar.save" : "Enregistrer",
+        "studio.toolsbar.delete" : "Supprimer",
         "studio.toolsbar.preview": "Prévisualiser",
         "studio.toolsbar.advanced": "Mode avancé",        
         "studio.wizard.app_title": "Application",
