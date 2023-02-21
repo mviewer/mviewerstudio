@@ -96,7 +96,7 @@ class ConfigRegister:
     def load_configs_from_json(self, configs_json):
             return ConfigModel(
                 id = configs_json["id"],
-                titre = configs_json["titre"],
+                title = configs_json["title"],
                 creator = configs_json["creator"],
                 versions = configs_json["versions"],
                 keywords = configs_json["keywords"],

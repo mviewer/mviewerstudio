@@ -123,7 +123,7 @@ class Config:
         )
         return ConfigModel(
             id = self.uuid,
-            titre = self.meta.find("{*}title").text,
+            title = self.meta.find("{*}title").text,
             creator = self.meta.find("{*}creator").text,
             date = datetime.now().isoformat(),
             versions = list_heads,

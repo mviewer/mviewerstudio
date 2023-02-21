@@ -12,7 +12,7 @@ class ConfigModel:
     To manipulate config data
     """
     id: int
-    titre: str
+    title: str
     creator: str
     versions: List[str]
     keywords: List[str]
@@ -23,7 +23,7 @@ class ConfigModel:
     def as_dict(self):
         return {
             "id": self.id,
-            "titre": self.titre,
+            "title": self.title,
             "creator": self.creator,
             "versions": self.versions,
             "keywords": self.keywords,

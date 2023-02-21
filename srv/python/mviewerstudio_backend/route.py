@@ -3,6 +3,7 @@ from .utils.login_utils import current_user
 from .utils.config_utils import Config
 import hashlib
 from os import path, mkdir
+from shutil import rmtree
 from glob import glob
 import lxml.etree as ET
 from pathlib import Path
@@ -56,8 +57,6 @@ def store_mviewer_config() -> Response:
 
     return response
 
-
-
 @basic_store.route("/srv/list", methods=["GET"])
 def list_stored_mviewer_config() -> Response:
     """
@@ -70,21 +69,44 @@ def list_stored_mviewer_config() -> Response:
     return jsonify(configs)
 
 
-@basic_store.route("/srv/delete", methods=["GET"])
-def delete_mviewer_config() -> Response:
+@basic_store.route("/srv/delete", methods=["POST"])
+def delete_configs_workspace() -> Response:
+    
+    data = request.get_json()
+    
+    if not data["ids"]:
+        return jsonify(message="Nothing to delete !"), 204
+    
+    for id in data:
+        delete_config_workspace(id)
+    
+    return jsonify({"deleted_files": len(data["ids"]), "success": True, "message": "Configs removed !"})
+
+@basic_store.route("/srv/<string:id>", methods=["DELETE"])
+def delete_config_workspace(id) -> Response:
+    """
+    Delete one mviewer config
+    """
+    register = current_app.register
+    # update json
+    register.delete(id)
+    # delete directory
+    workspace = path.join(current_app.config["EXPORT_CONF_FOLDER"], id)
+    rmtree(workspace)
+    return jsonify({"deleted_files": 1})
+  
+@basic_store.route("/srv/clean", methods=["DELETE"])
+def delete_all_mviewer_config() -> Response:
     """
     Delete all the mviewer config of the user logged
     """
-    nb_file_deleted = 0
-    filepath = os.path.join(current_app.config["EXPORT_CONF_FOLDER"], "*.xml")
-    files = glob(filepath)
-    for f in files:
-        xml = ET.parse(f)
-        description = xml.find(".//metadata/{*}RDF/{*}Description")
-        if description.find(".//{*}creator").text == current_user.username:
-            Path(f).unlink()
-            nb_file_deleted += 1
-    return jsonify({"deleted_files": nb_file_deleted})
+    register = current_app.register.register
+    count = 0
+    for config in register.configs :
+        id = config.id
+        delete_config_workspace(id)
+        count += 1
+    return jsonify({"deleted_files": count, "success": True, "message": "Workspace is clean and empty !"})
 
 
 @basic_store.route("/srv/store/style", methods=["POST"])
