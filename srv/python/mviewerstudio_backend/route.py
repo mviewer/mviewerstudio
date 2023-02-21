@@ -2,7 +2,7 @@ from flask import Blueprint, jsonify, Response, request, current_app, redirect
 from .utils.login_utils import current_user
 from .utils.config_utils import Config
 import hashlib
-import os.path
+from os import path, mkdir
 from glob import glob
 import lxml.etree as ET
 from pathlib import Path
@@ -21,11 +21,12 @@ logger = logging.getLogger(__name__)
 
 @basic_store.record_once
 def basic_store_init(state: BlueprintSetupState):
-    p = Path(state.app.config["EXPORT_CONF_FOLDER"])
-    if not p.exists():
-        p.mkdir()
-    if not (p / "styles").exists():
-        (p / "styles").mkdir()
+    p = state.app.config["EXPORT_CONF_FOLDER"]
+    styles_path = path.join(p, "styles")
+    if not path.exists(p):
+        mkdir(p)
+    if not path.exists(styles_path):
+        mkdir(styles_path)
 
 
 @basic_store.route("/")
@@ -47,9 +48,11 @@ def store_mviewer_config() -> Response:
     )
 
     config_data = config.as_data()
-    current_app.register.add(config_data)
+    current_config = current_app.register.read(config_data.id)
+    if not current_config:
+        current_app.register.add(config_data)
 
-    response = jsonify({"success": True, "filepath": config_data.url, "config": config_data.as_dict()})
+    response = jsonify({"success": True, "filepath": config_data.url, "config": config_data})
 
     return response
 
@@ -61,7 +64,10 @@ def list_stored_mviewer_config() -> Response:
     Return all mviewer config created by the current user
     """
 
-    return jsonify(current_app.register.register.configs)
+    configs = current_app.register.as_dict()["configs"]
+    for config in configs:
+        config["url"] = current_app.config["CONF_PATH_FROM_MVIEWER"] + config["url"]
+    return jsonify(configs)
 
 
 @basic_store.route("/srv/delete", methods=["GET"])

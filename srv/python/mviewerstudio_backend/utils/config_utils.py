@@ -22,6 +22,7 @@ class Config:
         self.uuid = None
         self.full_xml_path = None
         self.app = app
+        self.directory = None
         
         self.user = user
         self._read_xml_data(data)
@@ -118,7 +119,7 @@ class Config:
         subject = self.meta.find("{*}subject").text if self.meta.find("{*}subject") is not None else ""
         url = self.full_xml_path.replace(
             self.app.config["EXPORT_CONF_FOLDER"],
-            self.app.config["CONF_PATH_FROM_MVIEWER"],
+            "",
         )
         return ConfigModel(
             id = self.uuid,

@@ -1,5 +1,5 @@
 from os import path, remove
-from ..models.register import RegisterModel
+from ..models.register import RegisterModel, ConfigModel
 import logging, json
 import glob
 
@@ -55,6 +55,9 @@ class ConfigRegister:
             logger.warning("ERROR IN : register.json")
             logger.warning("CREATE NEW : register.json")
         
+        if read_json["configs"]:
+            read_json["configs"] = [self.load_configs_from_json(config) for config in read_json["configs"]]
+
         registerDataClass.total = read_json["total"]
         registerDataClass.configs += read_json["configs"]
         
@@ -89,3 +92,16 @@ class ConfigRegister:
             "total": self.register.total,
             "configs": [config.as_dict() for config in self.register.configs]
         }
+    
+    def load_configs_from_json(self, configs_json):
+            return ConfigModel(
+                id = configs_json["id"],
+                titre = configs_json["titre"],
+                creator = configs_json["creator"],
+                versions = configs_json["versions"],
+                keywords = configs_json["keywords"],
+                url = configs_json["url"],
+                subject = configs_json["subject"],
+                date = configs_json["date"]
+            )
+
