@@ -88,12 +88,17 @@ def delete_config_workspace(id) -> Response:
     Delete one mviewer config
     """
     register = current_app.register
+    
+    configs = register.read(id)
+    if not configs :
+        return jsonify({"deleted_files": 0, "success": False}), 204
+
     # update json
-    register.delete(id)
+    register.delete(configs[0])
     # delete directory
     workspace = path.join(current_app.config["EXPORT_CONF_FOLDER"], id)
     rmtree(workspace)
-    return jsonify({"deleted_files": 1})
+    return jsonify({"deleted_files": 1, "success": True})
   
 @basic_store.route("/srv/clean", methods=["DELETE"])
 def delete_all_mviewer_config() -> Response:

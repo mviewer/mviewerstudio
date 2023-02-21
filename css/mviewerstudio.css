@@ -457,6 +457,11 @@
 	  color: white;
 	  background-color: var(--info);
 	}
+
+	#toolsbarStudio-delete {
+		color: white;
+		background-color: var(--danger);
+	}
 	
 	#btnSwitchAdvanced {
 	  color: var(--info);
