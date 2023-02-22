@@ -1,4 +1,4 @@
-from os import path, mkdir, remove
+from os import path, mkdir, remove, getcwd
 import logging
 import git
 import xml.etree.ElementTree as ET
@@ -7,6 +7,8 @@ import re
 import glob
 
 from ..models.config import ConfigModel
+
+from .git_utils import Git_manager
 
 logger = logging.getLogger(__name__)  
 
@@ -29,12 +31,16 @@ class Config:
         self.register = app.register
 
         # init or create workspace
-        self.workspace = self.get_or_init_workspace()
+        self.workspace = path.join(self.app.config["EXPORT_CONF_FOLDER"], self.uuid)
+        # create or update workspace
+        self.create_workspace()
         # init repo
-        self.repo = git.Repo(self.workspace)
+        self.git = Git_manager(self.workspace)
+        self.repo = self.git.repo
         # save xml and git commit
-        self.create_config()
-    
+        self.create_or_update_config()
+
+  
     def _read_xml_data(self, data):
         '''
         Decode request data body to XML.
@@ -48,20 +54,13 @@ class Config:
         if self.meta.find(".//{*}identifier") is not None:
             self.uuid = self.meta.find(".//{*}identifier").text
 
-    def get_or_init_workspace(self):
+    def create_workspace(self):
         '''
         Init or retrieve workspace
         '''
-        workspace_path = path.join(self.app.config["EXPORT_CONF_FOLDER"], self.uuid)
-
-        if not path.exists(workspace_path):
+        if not path.exists(self.workspace):
             # create directory
-            mkdir(workspace_path)
-            # init git
-            self.repo = git.Repo.init(workspace_path)
-        else :
-            self.repo = git.Repo(workspace_path)
-        return workspace_path
+            mkdir(self.workspace)
     
     def _get_xml_describe(self):
         '''
@@ -70,20 +69,7 @@ class Config:
         xml_parser = ET.fromstring(self.xml)
         return xml_parser.find(".//metadata/{*}RDF/{*}Description")
     
-    def _commit_changes(self, msg, is_init):
-        '''
-        Commit changes if needed.
-        '''
-        # commit file
-        if is_init:
-            self.repo.git.add("*")
-            self.repo.git.commit("-m", msg)
-        elif self.repo.git.diff("--name-only"):
-            self.repo.git.add("*")
-            self.repo.git.commit("-m", "new changes")
-        print(self.repo)
-    
-    def create_config(self):
+    def create_or_update_config(self):
         '''
         Create config workspace and save XML as file.
         Will init git file as version manager.
@@ -95,26 +81,21 @@ class Config:
         # save file
         normalize_file_name = re.sub('[^a-zA-Z0-9  \n\.]', "_", file_name).replace(" ", "_")
         self.full_xml_path = path.join(self.workspace, "%s.xml" % normalize_file_name)
-        is_init = True
-        if path.exists(self.full_xml_path):
-            self.clean_all_workspace_configs()
-            is_init = False
+        
+        # needed if we change config title to clean others XML
+        # if the name is the same, git will just dectect unstaged changes        
+        self.clean_all_workspace_configs()
+
+        # write file
         with open(self.full_xml_path, "w") as file:
             file.write(self.xml)
             file.close()
-        self._commit_changes("add new file : %s.xml " % normalize_file_name, is_init)
+
+        self.git.commit_changes("add new file : %s.xml " % normalize_file_name)
     
     def clean_all_workspace_configs(self):
         for file in glob.glob("%s/*.xml" % self.workspace):
             remove(file)
-
-    def update_config(self, data):
-        '''
-        Read and update XML from request body data
-        '''
-        self._read_xml_data(data)
-        self.clean_all_workspace_configs()
-        self.create_config()
 
     def as_data(self):
         '''
@@ -133,7 +114,7 @@ class Config:
             title = self.meta.find("{*}title").text,
             creator = self.meta.find("{*}creator").text,
             date = datetime.now().isoformat(),
-            versions = list_heads,
+            versions = self.git.get_versions(),
             keywords = self.meta.find("{*}keywords").text,
             url = url,
             subject = subject,

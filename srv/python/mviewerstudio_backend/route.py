@@ -1,14 +1,13 @@
 from flask import Blueprint, jsonify, Response, request, current_app, redirect
 from .utils.login_utils import current_user
 from .utils.config_utils import Config
-from .utils.version_manager_utils import Version_manager
 import hashlib
 from os import path, mkdir
 from shutil import rmtree
 from flask.blueprints import BlueprintSetupState
 from urllib.parse import urlparse
 import requests
-import git
+from .utils.git_utils import Git_manager
 
 import logging
 
@@ -160,14 +159,59 @@ def proxy() -> Response:
         response = "Interdit"
     return response
 
-@basic_store.route("/srv/version/<id>", methods=["GET"])
+@basic_store.route("/srv/version/<id>", methods=["POST"])
 def create_config_version(id) -> Response:
     config =  current_app.register.read(id)
     if config:
-        config = config[0]
-        Version = Version_manager(config, current_app.config["EXPORT_CONF_FOLDER"])
-        Version.create_version()
+        workspace = path.join(current_app.config["EXPORT_CONF_FOLDER"], config[0].id)
+        git = Git_manager(workspace)
+        git.create_version()
+        return jsonify({"success": True, "message": "New version created !"}), 200
     else :
         return jsonify({"success": True, "message": "This config doesn't exists !"}), 204
 
-    return jsonify({"success": True, "message": "New version created !"})
+@basic_store.route("/srv/version/change/<id>/<version>", methods=["POST"])
+def change_config_version(id, version = "1") -> Response:
+    '''
+    Allow to change version to test another
+    '''
+    # read GET params from URL
+    as_new = request.args.get('as_new', default=False, type=bool)
+    config =  current_app.register.read(id)
+    if not version or version == "1":
+        as_new = True
+    if config:
+        workspace = path.join(current_app.config["EXPORT_CONF_FOLDER"], config[0].id)
+        git = Git_manager(workspace)
+        git.switch_version(version, as_new)
+        return jsonify({"success": True, "message": "Version changes !"}), 200
+    else :
+        return jsonify({"success": True, "message": "This config doesn't exists !"}), 204
+
+@basic_store.route("/srv/version/<id>/<version>", methods=["DELETE"])
+def delete_config_version(id, version) -> Response:
+    '''
+    Allow to change version to test another
+    '''
+    config =  current_app.register.read(id)
+    if config:
+        workspace = path.join(current_app.config["EXPORT_CONF_FOLDER"], config[0].id)
+        git = Git_manager(workspace)
+        git.delete_version(version)
+        return jsonify({"success": True, "message": "Version changes !"}), 200
+    else :
+        return jsonify({"success": True, "message": "This config doesn't exists !"}), 204
+
+@basic_store.route("/srv/version/<id>", methods=["DELETE"])
+def delete_all_config_version(id) -> Response:
+    '''
+    Allow to change version to test another
+    '''
+    config =  current_app.register.read(id)
+    if config:
+        workspace = path.join(current_app.config["EXPORT_CONF_FOLDER"], config[0].id)
+        git = Git_manager(workspace)
+        git.delete_versions()
+        return jsonify({"success": True, "message": "Version changes !"}), 200
+    else :
+        return jsonify({"success": True, "message": "This config doesn't exists !"}), 204
