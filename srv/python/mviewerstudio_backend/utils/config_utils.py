@@ -27,18 +27,19 @@ class Config:
         self.directory = None
         
         self.user = user
-        self._read_xml_data(data)
-        self.register = app.register
+        self.xml = self._read_xml_data(data)
+        if self.xml is not None :
+            self.register = app.register
 
-        # init or create workspace
-        self.workspace = path.join(self.app.config["EXPORT_CONF_FOLDER"], self.uuid)
-        # create or update workspace
-        self.create_workspace()
-        # init repo
-        self.git = Git_manager(self.workspace)
-        self.repo = self.git.repo
-        # save xml and git commit
-        self.create_or_update_config()
+            # init or create workspace
+            self.workspace = path.join(self.app.config["EXPORT_CONF_FOLDER"], self.uuid)
+            # create or update workspace
+            self.create_workspace()
+            # init repo
+            self.git = Git_manager(self.workspace)
+            self.repo = self.git.repo
+            # save xml and git commit
+            self.create_or_update_config()
 
   
     def _read_xml_data(self, data):
@@ -48,11 +49,14 @@ class Config:
         '''
         # read xml
         self.data = data.decode("utf-8")
-        self.xml = self.data.replace("anonymous", self.user.username)
+        if not self.data:
+            return None
+        xml = self.data.replace("anonymous", self.user.username)
         # read metadata
         self.meta = self._get_xml_describe()
         if self.meta.find(".//{*}identifier") is not None:
             self.uuid = self.meta.find(".//{*}identifier").text
+        return xml
 
     def create_workspace(self):
         '''

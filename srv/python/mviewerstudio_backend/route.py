@@ -45,15 +45,16 @@ def store_mviewer_config() -> Response:
         current_user,
         current_app
     )
-
+    if not config.xml:
+        return jsonify({"success": False, "filepath": "", "config": "", "message": "ERROR : No XML found in the Request !"}), 204
+    
     config_data = config.as_data()
     current_config = current_app.register.read(config_data.id)
     if not current_config:
         current_app.register.add(config_data)
 
-    response = jsonify({"success": True, "filepath": config_data.url, "config": config_data})
+    return jsonify({"success": True, "filepath": config_data.url, "config": config_data})
 
-    return response
 
 @basic_store.route("/srv/list", methods=["GET"])
 def list_stored_mviewer_config() -> Response:
