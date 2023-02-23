@@ -62,7 +62,7 @@ Cette étape permet de prévisualiser les cartes réalisées dans ``mviewerstudi
 
 .. code-block:: sh
 
-    "mviewer_instance": "http://localhost:5051/",
+    "mviewer_instance": "http://localhost/mviewer/",
     "conf_path_from_mviewer": "apps/store/",
     "mviewer_short_url": {
         "used": true,
