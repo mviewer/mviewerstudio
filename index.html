@@ -437,37 +437,37 @@
                                                         <div class="col-md-6">
                                                             <div class="form-group">
                                                                 <label for="formCustomBaseId" class="form-label"><span i18n="tabs.app.bgcustom.base.id">Identifiant</span></label>
-                                                                <input class="form-control" id="formCustomBaseId" placeholder="positron" required>
+                                                                <input class="form-control" id="formCustomBaseId" placeholder="positron" i18n="tabs.app.bgcustom.base.id.ph" required>
                                                             </div>
                                                         </div>
                                                         <div class="col-md-6">
                                                             <div class="form-group">
                                                                 <label for="formCustomBaseLabel" class="form-label"><span i18n="tabs.app.bgcustom.base.label">Libellé</span></label>
-                                                                <input class="form-control" id="formCustomBaseLabel" placeholder="Positron" required>
+                                                                <input class="form-control" id="formCustomBaseLabel" placeholder="Positron" i18n="tabs.app.bgcustom.base.label.ph" required>
                                                             </div>
                                                         </div>
                                                         <div class="col-md-6">
                                                             <div class="form-group">
                                                                 <label for="formCustomBaseTitle" class="form-label"><span i18n="tabs.app.bgcustom.base.title">Titre</span></label>
-                                                                <input class="form-control" id="formCustomBaseTitle" placeholder="positron" required>
+                                                                <input class="form-control" id="formCustomBaseTitle" placeholder="positron" i18n="tabs.app.bgcustom.base.title.ph">
                                                             </div>
                                                         </div>
                                                         <div class="col-md-6">
                                                             <div class="form-group">
                                                                 <label for="formCustomBaseThumb" class="form-label"><span i18n="tabs.app.bgcustom.base.thumb">Lien vers la vignette</span></label>
-                                                                <input class="form-control checkedurl" id="formCustomBaseThumb" placeholder="https://kartenn.region-bretagne.fr/kartoviz/img/basemap/positron.png" required>
+                                                                <input class="form-control checkedurl" id="formCustomBaseThumb" i18n="tabs.app.bgcustom.base.thumb.ph" placeholder="https://kartenn.region-bretagne.fr/kartoviz/img/basemap/positron.png" required>
                                                             </div>
                                                         </div>
                                                         <div class="col-md-6">
                                                             <div class="form-group">
                                                                 <label for="formCustomBaseAttribution" class="form-label"><span i18n="tabs.app.bgcustom.base.attribution">Attribution</span></label>
-                                                                <input class="form-control" id="formCustomBaseAttribution" placeholder="Map tiles by carto.com - Licence cc 3.0">
+                                                                <input class="form-control" id="formCustomBaseAttribution" i18n="tabs.app.bgcustom.base.attribution.ph" placeholder="Map tiles by carto.com - Licence cc 3.0">
                                                             </div>
                                                         </div>   
                                                         <div class="col-md-6">
                                                             <div class="form-group">
                                                                 <label for="formCustomBaseUrl" class="form-label"><span i18n="tabs.app.bgcustom.base.url">URL</span></label>
-                                                                <input class="form-control checkedurl" id="formCustomBaseUrl" placeholder="http://{a-c}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png" required>
+                                                                <input class="form-control checkedurl" id="formCustomBaseUrl" i18n="tabs.app.bgcustom.base.url.ph" placeholder="http://{a-c}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png" required>
                                                             </div>
                                                         </div>   
                                                     </div>
@@ -475,20 +475,26 @@
                                                         <div class="col-md-6 vector-tms custom-bg-type">
                                                             <div class="form-group">
                                                                 <label for="formCustomBaseStyleUrl" class="form-label"><span i18n="tabs.app.bgcustom.base.styleUrl">Lien vers le fichier de style</span></label>
-                                                                <input class="form-control checkedurl" id="formCustomBaseStyleUrl" placeholder="https://wxs.ign.fr/static/vectorTiles/styles/ADMIN_EXPRESS/adminexpress.json" required>
+                                                                <input class="form-control checkedurl" id="formCustomBaseStyleUrl" i18n="tabs.app.bgcustom.base.styleUrl.ph" placeholder="https://wxs.ign.fr/static/vectorTiles/styles/ADMIN_EXPRESS/adminexpress.json" required>
                                                             </div>
                                                         </div>
                                                         <div class="col-md-6 wmts wms custom-bg-type">
                                                             <div class="form-group">
                                                                 <label for="formCustomBaseNameLayers" class="form-label"><span i18n="tabs.app.bgcustom.base.nameLayers">Couches</span></label>
-                                                                <input class="form-control" id="formCustomBaseNameLayers" placeholder="satellite" required>
+                                                                <input class="form-control" id="formCustomBaseNameLayers" i18n="tabs.app.bgcustom.base.nameLayers.ph" placeholder="satellite" required>
                                                             </div>
                                                         </div>
                                                         <div class="col-md-6 wmts wms custom-bg-type">
-                                                            <div class="form-group">
+                                                            <!-- <div class="form-group">
                                                                 <label for="formCustomBaseFormat" class="form-label"><span i18n="tabs.app.bgcustom.base.format">Format</span></label>
-                                                                <input class="form-control" id="formCustomBaseFormat" placeholder="image/png" required>
-                                                            </div>
+                                                                <input class="form-control" id="formCustomBaseFormat" i18n="tabs.app.bgcustom.base.format.ph" placeholder="image/png" required>
+
+                                                            </div> -->
+                                                            <label for="formCustomBaseFormat" i18n="tabs.app.bgcustom.base.format" class="form-label">Format</label>
+                                                            <select class="form-control" id="formCustomBaseFormat" name="formCustomBaseFormat">
+                                                                <option value="image/png">image/png</option>
+                                                                <option value="image/jpeg">image/jpeg</option>
+                                                            </select>
                                                         </div>
                                                         <div class="col-md-6 wmts vector-tms custom-bg-type">
                                                             <div class="form-group">
