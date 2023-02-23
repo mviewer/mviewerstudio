@@ -10,6 +10,7 @@ Mviewerstudio est une application web développée en HTML / CSS / PHP / Python.
 
 Cette page ne traite que de l'installation du backend avec Python.
 
+
 Prérequis
 ~~~~~~~~~~~~~~
 
@@ -26,6 +27,16 @@ Vous aurez besoin :
 
 Installation
 ~~~~~~~~~~~~~~
+
+.. note::
+    Avant de réaliser l'installation, vous devez avoir connaissance de la différence entre un environnement de 
+    ``production`` et un environnement de ``développements``.
+    
+    ``L’environnement de production`` est la destination finale d’une application web ou d’un site web.
+    C'est l'environnement final qui sera accessible par vos utilisateurs.
+    
+    ``L’environnement de développement`` représente le contexte dans lequel vous allez réaliser des développements, des modifications du code ou des tests
+    avant de réaliser le passage de l'application dans l'environnement de production final.
 
 **1. Téléchargez le script d'installation**
 
