@@ -56,24 +56,24 @@ Cette étape permet de prévisualiser les cartes réalisées dans ``mviewerstudi
 
     ln -s /<full_path>/mviewerstudio/srv/python/mviewerstudio_backend/store /<full_path>/mviewer/apps/store
 
-**3. Ouvrir la configuration frontend ``/srv/python/mviewerstudio_backend/apps/config.json`` et adapter les paramètres**
+**3. Ouvrir la configuration frontend ``/srv/python/mviewerstudio_backend/static/apps/config.json`` et adapter les paramètres**
 
 (Attention : le paramètre ``mviewer_instance`` doit commencer par ``http`` et finir par ``/``)
 
 .. code-block:: sh
 
     "mviewer_instance": "http://localhost:5051/",
-    "conf_path_from_mviewer": "apps/store_dev/",
+    "conf_path_from_mviewer": "apps/store/",
     "mviewer_short_url": {
         "used": true,
-        "apps_folder": "store_dev"
+        "apps_folder": "store"
     },
 
 **4. Ouvrir la configuration backend ``/srv/python/mviewerstudio_backend/settings.py`` et adapter les paramètres**
 
 .. code-block:: sh
     
-    CONF_PATH_FROM_MVIEWER = os.getenv("CONF_PATH_FROM_MVIEWER", "apps/store_dev/")
+    CONF_PATH_FROM_MVIEWER = os.getenv("CONF_PATH_FROM_MVIEWER", "apps/store/")
     EXPORT_CONF_FOLDER = os.getenv("EXPORT_CONF_FOLDER", "./store")
     LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO")
     PROXY_WHITE_LIST = ['geobretagne.fr', 'ows.region-bretagne.fr']
