@@ -9,7 +9,7 @@ from urllib.parse import urlparse
 import requests
 from .utils.git_utils import Git_manager
 
-from werkzeug.exceptions import BadRequest 
+from werkzeug.exceptions import BadRequest, MethodNotAllowed
 
 import logging
 
@@ -18,7 +18,6 @@ basic_store = Blueprint(
 )
 
 logger = logging.getLogger(__name__)
-
 
 @basic_store.record_once
 def basic_store_init(state: BlueprintSetupState):
@@ -29,18 +28,15 @@ def basic_store_init(state: BlueprintSetupState):
     if not path.exists(styles_path):
         mkdir(styles_path)
 
-
 @basic_store.route("/")
 def default_doc():
     return redirect("index.html")
-
 
 @basic_store.route("/srv/user_info", methods=["GET"])
 def user() -> Response:
     return jsonify(current_user.as_dict())
 
-
-@basic_store.route("/srv/store", methods=["POST"])
+@basic_store.route("/srv/config", methods=["POST"])
 def store_mviewer_config() -> Response:
     config = Config(
         request.data,
@@ -70,7 +66,7 @@ def list_stored_mviewer_config() -> Response:
     return jsonify(configs)
 
 
-@basic_store.route("/srv/delete", methods=["POST"])
+@basic_store.route("/srv/list", methods=["DELETE"])
 def delete_configs_workspace() -> Response:
     
     data = request.get_json()
@@ -83,7 +79,7 @@ def delete_configs_workspace() -> Response:
     
     return jsonify({"deleted_files": len(data["ids"]), "success": True, "message": "Configs removed !"})
 
-@basic_store.route("/srv/<string:id>", methods=["DELETE"])
+@basic_store.route("/srv/config/<id>", methods=["DELETE"])
 def delete_config_workspace(id) -> Response:
     """
     Delete one mviewer config
@@ -155,25 +151,14 @@ def proxy() -> Response:
                 headers = {"Content-Type": "application/xml; charset=UTF-8"}
                 response = requests.post(url, data=xml, headers=headers).content
             else:
-                response = "Method Not allowed"
+                raise MethodNotAllowed("Not allowed !")
         else:
-            response = "Not allowed"
+            raise MethodNotAllowed("Not allowed !")
     else:
-        response = "Interdit"
+        raise BadRequest("Missing param : url")
     return response
 
-@basic_store.route("/srv/version/<id>", methods=["POST"])
-def create_config_version(id) -> Response:
-    config =  current_app.register.read(id)
-    if config:
-        workspace = path.join(current_app.config["EXPORT_CONF_FOLDER"], config[0].id)
-        git = Git_manager(workspace)
-        git.create_version()
-        return jsonify({"success": True, "message": "New version created !"}), 200
-    else :
-        raise BadRequest("This config doesn't exists !")
-
-@basic_store.route("/srv/version/change/<id>/<version>", methods=["POST"])
+@basic_store.route("/srv/version/<id>/<version>", methods=["GET"])
 def change_config_version(id, version = "1") -> Response:
     '''
     Allow to change version to test another
@@ -216,5 +201,16 @@ def delete_all_config_version(id) -> Response:
         git = Git_manager(workspace)
         git.delete_versions()
         return jsonify({"success": True, "message": "Version changes !"}), 200
+    else :
+        raise BadRequest("This config doesn't exists !")
+    
+@basic_store.route("/srv/version/<id>", methods=["POST"])
+def create_config_version(id) -> Response:
+    config =  current_app.register.read(id)
+    if config:
+        workspace = path.join(current_app.config["EXPORT_CONF_FOLDER"], config[0].id)
+        git = Git_manager(workspace)
+        git.create_version()
+        return jsonify({"success": True, "message": "New version created !"}), 200
     else :
         raise BadRequest("This config doesn't exists !")
