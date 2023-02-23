@@ -9,6 +9,8 @@ from urllib.parse import urlparse
 import requests
 from .utils.git_utils import Git_manager
 
+from werkzeug.exceptions import BadRequest 
+
 import logging
 
 basic_store = Blueprint(
@@ -46,7 +48,7 @@ def store_mviewer_config() -> Response:
         current_app
     )
     if not config.xml:
-        return jsonify({"success": False, "filepath": "", "config": "", "message": "ERROR : No XML found in the Request !"}), 204
+        raise BadRequest("No XML found in the request body !")
     
     config_data = config.as_data()
     current_config = current_app.register.read(config_data.id)
@@ -74,7 +76,7 @@ def delete_configs_workspace() -> Response:
     data = request.get_json()
     
     if not data["ids"]:
-        return jsonify(message="Nothing to delete !"), 204
+        raise BadRequest("Nothing to delete !")
     
     for id in data:
         delete_config_workspace(id)
@@ -90,7 +92,7 @@ def delete_config_workspace(id) -> Response:
     
     configs = register.read(id)
     if not configs :
-        return jsonify({"deleted_files": 0, "success": False}), 204
+        raise BadRequest("Version's ID does not exists !")
 
     # update json
     register.delete(configs[0])
@@ -169,7 +171,7 @@ def create_config_version(id) -> Response:
         git.create_version()
         return jsonify({"success": True, "message": "New version created !"}), 200
     else :
-        return jsonify({"success": True, "message": "This config doesn't exists !"}), 204
+        raise BadRequest("This config doesn't exists !")
 
 @basic_store.route("/srv/version/change/<id>/<version>", methods=["POST"])
 def change_config_version(id, version = "1") -> Response:
@@ -187,7 +189,7 @@ def change_config_version(id, version = "1") -> Response:
         git.switch_version(version, as_new)
         return jsonify({"success": True, "message": "Version changes !"}), 200
     else :
-        return jsonify({"success": True, "message": "This config doesn't exists !"}), 204
+        raise BadRequest("This config doesn't exists !")
 
 @basic_store.route("/srv/version/<id>/<version>", methods=["DELETE"])
 def delete_config_version(id, version) -> Response:
@@ -201,7 +203,7 @@ def delete_config_version(id, version) -> Response:
         git.delete_version(version)
         return jsonify({"success": True, "message": "Version changes !"}), 200
     else :
-        return jsonify({"success": True, "message": "This config doesn't exists !"}), 204
+        raise BadRequest("This config doesn't exists !")
 
 @basic_store.route("/srv/version/<id>", methods=["DELETE"])
 def delete_all_config_version(id) -> Response:
@@ -215,4 +217,4 @@ def delete_all_config_version(id) -> Response:
         git.delete_versions()
         return jsonify({"success": True, "message": "Version changes !"}), 200
     else :
-        return jsonify({"success": True, "message": "This config doesn't exists !"}), 204
+        raise BadRequest("This config doesn't exists !")
