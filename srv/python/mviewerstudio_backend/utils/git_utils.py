@@ -16,6 +16,9 @@ class Git_manager:
     def init_repo(self):
         # create repo
         self.repo = git.Repo.init(self.workspace)
+        # TODO : rename master to main
+        self.repo.git.checkout("master", "-b", "main")
+        self.repo.git.branch("-D", "master")
 
     def create_version(self):
         # get tag value
@@ -36,10 +39,10 @@ class Git_manager:
 
     def delete_all_branch(self):
         '''
-        delete all branch except master
+        delete all branch except main
         '''
         for head in self.repo.heads:
-            if head.name == "master":
+            if head.name == "main":
                 continue
             self.repo.git.branch("-D", head.name)
 
@@ -52,7 +55,7 @@ class Git_manager:
     def switch_version(self, target, is_start_point):
         target_tags = "tags/%s" % target
         
-        self.repo.git.checkout("master")
+        self.repo.git.checkout("main")
         self.delete_all_branch()
 
         if target not in self.get_versions():
