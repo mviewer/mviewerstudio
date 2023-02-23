@@ -442,6 +442,10 @@
 	#btnSwitchAdvanced {
 	  color: var(--info);
 	}
+
+	#mod-layerOptions .custom-switch {
+		margin-bottom: 5px;
+	}
 	
 	/* APPLICATION  */
 	
