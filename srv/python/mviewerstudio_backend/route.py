@@ -124,20 +124,21 @@ def store_style() -> Response:
         }
     )
 
+
 @basic_store.route("/proxy/", methods=["GET", "POST"])
 def proxy() -> Response:
-    url = request.args.get('url')
+    url = request.args.get("url")
     if url:
-        parsed_url = urlparse(url )
+        parsed_url = urlparse(url)
         origin = parsed_url.netloc
         white_list = current_app.config["PROXY_WHITE_LIST"]
         if origin in white_list:
             headers = request.headers
-            if request.method == 'GET':
+            if request.method == "GET":
                 response = requests.get(url).content
-            elif request.method == 'POST':
+            elif request.method == "POST":
                 xml = request.stream.read()
-                headers={'Content-Type':'application/xml; charset=UTF-8'}
+                headers = {"Content-Type": "application/xml; charset=UTF-8"}
                 response = requests.post(url, data=xml, headers=headers).content
             else:
                 response = "Method Not allowed"
