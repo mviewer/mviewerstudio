@@ -226,12 +226,6 @@
                                 </div>                                
                             </div>  
                             <div class="row">
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="opt-logo" class="form-label"><span i18n="tabs.app.url">Lien vers le logo </span><span class="tooltip-info" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Logo affiché en haut à gauche du mviewer"><i class="ri-information-line"></i></span></label>
-                                        <input class="form-control checkedurl" id="opt-logo" placeholder="https://monlogo.png">
-                                    </div>
-                                </div>   
                                 <div class="col-md-6 advanced" style="display: none;">
                                     <div class="form-group">
                                         <label for="opt-favicon" class="form-label"><span i18n="tabs.app.favicon">Lien vers le favicon </span><span class="tooltip-info" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Logo affiché dans l'onglet du navigateur"><i class="ri-information-line"></i></span></label>
@@ -240,10 +234,16 @@
                                 </div>         
                                 <div class="col-md-6 advanced" style="display: none;">
                                     <div class="form-group">
-                                        <label for="opt-home" class="form-label"><span i18n="tabs.app.home">Lien vers la page principale </span><span class="tooltip-info" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Redirection vers la page indiquée lors du clique sur le logo"><i class="ri-information-line"></i></span></label>
+                                        <label for="opt-home" class="form-label"><span i18n="tabs.app.home">Lien vers site parent </span><span class="tooltip-info" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Redirection vers la page indiquée lors du clique sur le logo"><i class="ri-information-line"></i></span></label>
                                         <input class="form-control checkedurl" id="opt-home" placeholder="https://mapage.fr">
                                     </div>
-                                </div>   
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="opt-logo" class="form-label"><span i18n="tabs.app.url">Lien vers le logo </span><span class="tooltip-info" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Logo affiché en haut à gauche du mviewer"><i class="ri-information-line"></i></span></label>
+                                        <input class="form-control checkedurl" id="opt-logo" placeholder="https://monlogo.png">
+                                    </div>
+                                </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label class="form-label" for="frm-style" ><span i18n="tabs.app.style">Thème de l'application</span><span class="tooltip-info" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Couleur de l'interface du mviewer"><i class="ri-information-line"></i></span></label>
@@ -278,7 +278,7 @@
                                             <div class="list-flex">
                                                 <span i18n="tabs.app.opt_zoom">Outils de zoom</span>
                                                 <div class="custom-control custom-switch">
-                                                    <input type="checkbox" class="custom-control-input" name="checkboxes" id="opt-zoom">
+                                                    <input type="checkbox" class="custom-control-input" checked="true" name="checkboxes" id="opt-zoom">
                                                     <label class="custom-control-label" for="opt-zoom"></label>
                                                 </div>
                                             </div>                                            
@@ -300,6 +300,15 @@
                                                     <label class="custom-control-label" for="opt-exportpng"></label>
                                                 </div>
                                             </div>                                            
+                                        </li>
+                                        <li class="list-group-item">
+                                            <div class="list-flex">
+                                                <span i18n="tabs.app.opt_geoloc">Se géolocaliser</span>                                          
+                                                <div class="custom-control custom-switch">
+                                                    <input type="checkbox" class="custom-control-input" name="checkboxes" id="opt-geoloc">
+                                                    <label class="custom-control-label" for="opt-geoloc"></label>
+                                                </div>
+                                            </div>
                                         </li>
                                         <li class="list-group-item advanced" style="display: none;">
                                             <div class="list-flex">
@@ -328,15 +337,7 @@
                                                 </div>
                                             </div>                                            
                                         </li>
-                                        <li class="list-group-item">
-                                            <div class="list-flex">
-                                                <span i18n="tabs.app.opt_geoloc">Se géolocaliser</span>                                          
-                                                <div class="custom-control custom-switch">
-                                                    <input type="checkbox" class="custom-control-input" name="checkboxes" id="opt-geoloc">
-                                                    <label class="custom-control-label" for="opt-geoloc"></label>
-                                                </div>
-                                            </div>                                            
-                                        </li>
+
                                         <li class="list-group-item advanced" style="display: none;">
                                             <div class="list-flex">
                                                 <span i18n="tabs.app.opt_studio">Ouvrir la carte dans le studio</span>                                          
@@ -1067,7 +1068,7 @@
                                         <h6 i18n="modal.layer.styles">Style(s) de la donnée disponible(s)</h6>
                                         <div class="row mt-3" id="frm-lis-styles"></div>
                                     </div>                                    
-                                    <div class="form-group">
+                                    <div class="form-group d-none" id="formLayerStyleTitle">
                                         <label for="frm-layer-styletitle" ><span i18n="modal.layer.style.title">Libellé de la liste déroulante des styles</span><span class="tooltip-info" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="À renseigner quand plusieurs styles sont sélectionnés | Valeur par défaut : Analyse"><i class="ri-information-line"></i></label>
                                         <input type="text" class="form-control" id="frm-layer-styletitle" placeholder="Libellé de la liste des styles" i18n="modal.layer.style.placeholder">
                                     </div>                               
@@ -1173,13 +1174,13 @@
                                 <div class="accordion mt-2" id="accordionDisplayLayer">
                                     <div class="accordion-item">
                                     <h2 class="accordion-header" >
-                                        <a class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDisplayLayer" aria-expanded="true" aria-controls="collapseDisplayLayer">
+                                        <a class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDisplayLayer" aria-expanded="true" aria-controls="collapseDisplayLayer">
                                         <div>
                                             <span class="title-accordion" i18n="modal.layer.displayoptions.title">Options d'affichage</span>
                                         </div>
                                         </a>
                                     </h2>
-                                    <div id="collapseDisplayLayer" class="accordion-collapse collapse" aria-labelledby="accordionDisplayLayer">
+                                    <div id="collapseDisplayLayer" class="accordion-collapse collapse show" aria-labelledby="accordionDisplayLayer">
                                         <div class="accordion-body">
                                             <div class="row">
                                                 <div class="col-md-4">

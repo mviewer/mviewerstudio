@@ -235,10 +235,17 @@ var newConfiguration = function () {
     ["opt-title", "opt-logo", "opt-favicon", "opt-help", "opt-home", "theme-edit-icon", "theme-edit-title"].forEach(function (param, id) {
         $("#"+param).val("");
     });
-    ["opt-exportpng","opt-zoom","opt-geoloc","opt-mouseposition","opt-studio","opt-measuretools","opt-initialextent","theme-edit-collapsed", "opt-mini", "opt-showhelp", "opt-coordinates",
-        "opt-togglealllayersfromtheme", "SwitchAdressSearch", "SwitchCustomBackground", "SwitchAdvanced"].forEach(function (param, id) {
-        $("#"+param).prop('checked', false);
+
+    // default checked state
+    ["opt-exportpng", "opt-zoom", "opt-geoloc", "opt-mouseposition", "opt-studio", "opt-measuretools", "opt-initialextent", "theme-edit-collapsed", "opt-mini", "opt-showhelp", "opt-coordinates",
+        "opt-togglealllayersfromtheme", "SwitchAdressSearch", "SwitchCustomBackground", "SwitchAdvanced"
+    ].forEach(id => {
+        document.querySelector(`#${ id }`).checked = false;
     });
+    ["opt-zoom", "opt-measuretools"].forEach(id => {
+        document.querySelector(`#${ id }`).checked = true;
+    });
+    
    
     $("#opt-style").val("css/themes/default.css").trigger("change");
     $("#frm-searchlocalities").val("ban").trigger("change");    
@@ -250,7 +257,6 @@ var newConfiguration = function () {
     $("#opt-iconhelp").val(icon);
     $("#opt-iconhelp").siblings('.selected-icon').attr('class', 'selected-icon');
     $("#opt-iconhelp").siblings('.selected-icon').addClass(icon);
-
     
     map.getView().setCenter(_conf.map.center);
     map.getView().setZoom(_conf.map.zoom);

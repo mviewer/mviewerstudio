@@ -45,7 +45,7 @@
         "tabs.app.title": "Application",
         "tabs.app.url": "Lien vers le logo",  
         "tabs.app.favicon": "Lien vers le favicon",      
-        "tabs.app.home": "Lien vers la page principale",      
+        "tabs.app.home": "Lien vers site parent",      
         "tabs.app.style": "Thème de l'application",
         "tabs.app.options_title": "Fonctionnalités",
         "tabs.app.options_text": "Activer les outils que vous souhaitez afficher au sein de votre application",
