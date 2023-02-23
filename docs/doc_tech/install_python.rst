@@ -79,7 +79,7 @@ Cette étape permet de prévisualiser les cartes réalisées dans ``mviewerstudi
     PROXY_WHITE_LIST = ['geobretagne.fr', 'ows.region-bretagne.fr']
         
 
-Mttre en production mviewerstudio
+Mettre en production mviewerstudio
 ~~~~~~~~~~~~~~
 
 **SECTION A COMPLETER AVEC PYTHON SANS DOCKER.**
