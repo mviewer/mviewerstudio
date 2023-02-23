@@ -27,7 +27,7 @@ paths:
           description: not allowed
         '400':
           description: Bad request - url param missing
-  /srv/user_info:
+  /api/user:
     get:
       summary: User informations.
       description: Return informations from header (e.g georchestra header CAS informations)
@@ -40,11 +40,11 @@ paths:
                 type: array
                 items: 
                   type: string
-  /srv/config:
+  /api/app:
     post:
-      summary: Save XML configuration
+      summary: Create new app
       requestBody:
-        description: Save XML file in dedicated directory
+        description: Will save new app in dedicated directory
         content:
           text/xml:
             schema:
@@ -82,54 +82,32 @@ paths:
                   value:
                     name: "Bad Request"
                     description: "No XML found in the request body !"
-  /srv/list:
     get:
-      summary: Return a list of all configs
+      summary: Return all available apps
       responses:
         '200':
           description: successful operation
     delete:
-      summary: Delete many configs
-      description: 'Pass a list of configs ids to delete many configs'
+      summary: To delete apps
+      description: 'Pass a list of apps ids to delete'
       parameters:
         - name: ids
           in: query
-          description: IDs of config to delete
+          description: List of apps to delete
           required: true
           schema:
             $ref: '#/components/schemas/ArrayOfInt'
       responses:
         '400':
           description: ids param missing
-  /srv/config/{id}:
-    delete:
-      summary: Delete a config
-      description: delete a config by ID
-      parameters:
-        - name: id
-          in: path
-          description: 'config UUID used as uniq server directory name'
-          required: true
-          schema:
-            type: string
-      responses:
-        '400':
-          description: Bad request - Incorrect version name
-          content:
-            application/json:
-              examples:
-                badRequest:
-                  value:
-                    name: "Bad Request"
-                    description: "Version does not exists!"
 
-  /srv/version/{id}:
-    get:
-      summary: Create a new version
+  /api/app/{id}/version:
+    post:
+      summary: Create a new app version
       parameters:
         - name: id
           in: path
-          description: IDs of config to create
+          description: Target app ID
           required: true
           schema:
             type: string
@@ -145,10 +123,37 @@ paths:
                   value:
                     name: "Bad Request"
                     description: "This version ID does not exists !'"
-
-  /srv/version/{id}/{version}:
-    get:
-      summary: Change version of current config
+    delete:
+      summary: Delete versions from list
+      description: 'Will delete all release excepted latest'
+      parameters:
+        - name: id
+          in: path
+          description: Target app ID
+          required: true
+          schema:
+            type: string
+        - name: versions
+          in: query
+          description: List of versions to delete
+          required: true
+          schema:
+            $ref: '#/components/schemas/ArrayOfInt'
+      responses:
+        '200':
+          description: successful operation
+        '400':
+          description: Bad request - Incorrect version name
+          content:
+            application/json:
+              examples:
+                badRequest:
+                  value:
+                    name: "Bad Request"
+                    description: "Version does not exists!"
+  /api/app/{id}/version/{version}:
+    put:
+      summary: Change current app version
       parameters:
         - name: id
           in: path
@@ -174,35 +179,9 @@ paths:
                   value:
                     name: "Bad Request"
                     description: "Version does not exists!"
+  /api/app/all:
     delete:
-      summary: Delete a config by number
-      description: 'Will delete a specific version'
-      parameters:
-        - name: id
-          in: path
-          description: IDs of config to delete
-          required: true
-          schema:
-            type: string
-        - name: version
-          in: path
-          description: version number to delete
-          required: true
-          schema:
-            type: integer
-      responses:
-        '400':
-          description: Bad request - Incorrect version name
-          content:
-            application/json:
-              examples:
-                badRequest:
-                  value:
-                    name: "Bad Request"
-                    description: "ID param missing !"
-  /srv/clean:
-    delete:
-      summary: Delete all config directory from store
+      summary: Delete all apps metadata
       description: Will clean store
       responses:
         '200':
