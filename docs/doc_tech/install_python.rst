@@ -190,5 +190,5 @@ Il vous faudra également veiller à bien utiliser la bonne version de python di
 
  .. note::
     Avec VS Code, ouvrez dans une nouvelle fenêtre le répertoire ``srv/python`` et cliquer sur ``Exécuter et déboguer``.
-    Sélectionner ensuite le type ``Python > Flask``
+    Sélectionner ensuite le type ``Python > Flask``.
     Le serveur se lance alors en mode débogue.
