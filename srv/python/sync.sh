@@ -17,7 +17,7 @@ echo "START...."
 if [ -z "$1" ]
 then
         echo "No action param | First arg value 'push' or 'pull' missing"
-        echo "Exemple : echo sh ./sync.sh pull"
+        echo "Exemple : echo sh ./sync.sh pull /home/user/git/mviewerstudio"
         echo "....END."
         exit 0
 fi
