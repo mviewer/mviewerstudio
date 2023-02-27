@@ -16,6 +16,7 @@ document.getElementById("containerStudio").hidden = true;
 $('#mod-closeStudio').modal('hide');
   document.getElementById("containerHome").hidden = false;
   document.querySelector("#toolsbarStudio-delete").classList.add("d-none");
+  document.querySelector("#layerOptionBtn").classList.add("d-none");
 }
 
 function saveStudio() {

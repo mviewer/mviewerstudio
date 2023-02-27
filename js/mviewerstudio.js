@@ -756,6 +756,7 @@ var saveApplicationParameters = function (option) {
                 }
             }
             document.querySelector("#toolsbarStudio-delete").classList.remove("d-none");
+            document.querySelector("#layerOptionBtn").classList.remove("d-none");
         }).catch(err => alert(mviewer.tr('msg.save_failure')));
     } else {
         //alert(mviewer.tr('msg.xml_doc_invalid'));
@@ -841,6 +842,7 @@ var  loadApplicationParametersFromRemoteFile = function (url) {
             mv.parseApplication(data);
             showStudio();
             document.querySelector("#toolsbarStudio-delete").classList.remove("d-none");
+            document.querySelector("#layerOptionBtn").classList.remove("d-none");
         },
         error: function (xhr, ajaxOptions, thrownError) {
             console.error("map file retrieval failed", {
