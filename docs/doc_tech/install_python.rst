@@ -69,7 +69,7 @@ Cette étape permet de prévisualiser les cartes réalisées dans ``mviewerstudi
 
 **3. Ouvrir la configuration frontend ``/srv/python/mviewerstudio_backend/static/apps/config.json`` et adapter les paramètres**
 
-(Attention : le paramètre ``mviewer_instance`` doit commencer par ``http`` et finir par ``/``)
+(Attention : le paramètre ``mviewer_instance`` doit finir par ``/``)
 
 .. code-block:: sh
 
@@ -148,6 +148,24 @@ La configuration backend est localisée dans :
 
 - ``/srv/python/mviewerstudio_backend/settings.py``
 
+La configuration peut également être définie via des variables d'environnement :
+
+.. code-block:: sh
+
+    CONF_PATH_FROM_MVIEWER ( défault = apps/store/)
+    EXPORT_CONF_FOLDER ( défault = ./store/)
+
+Ces variables peuvent aussi être définies lors du lancement du serveur de développement flask :
+
+.. code-block:: sh
+
+    export CONF_PATH_FROM_MVIEWER ( défault = apps/store/)
+    export EXPORT_CONF_FOLDER ( défault = ./store/)
+    flask run
+  
+ .. note::
+    Vérifiez au préalable que le répertoire existe et que le user qui démarre le serveur flask dispose des droits sur ce dossier.
+
 
 Proxy
 ***********************************
@@ -163,9 +181,14 @@ Ce paramètre est accessible dans :
     /srv/python/mviewerstudio_backend/settings.py
 
 
-Debugger
+Déboguer le backend
 ***********************************
 
 Pour debug le backend Python, il est conseillé de créer un nouveau fichier de debug type ``Python > flask`` qui utilisera le fichier ``mviewer_backend/app.py``.
 
 Il vous faudra également veiller à bien utiliser la bonne version de python disponible dans le virtualenv ``srv/python/.venv/bin/python``.
+
+ .. note::
+    Avec VS Code, ouvrez dans une nouvelle fenêtre le répertoire ``srv/python`` et cliquer sur ``Exécuter et déboguer``.
+    Sélectionner ensuite le type ``Python > Flask``
+    Le serveur se lance alors en mode débogue.
