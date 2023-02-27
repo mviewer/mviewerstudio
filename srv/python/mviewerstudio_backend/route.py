@@ -82,7 +82,7 @@ def delete_config_workspace() -> Response:
     """
     app_deleted = 0
 
-    post_data = request.get_json()
+    post_data = request.json
 
     if not post_data["ids"]:
         raise BadRequest("Empty list : no value to delete !")

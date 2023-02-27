@@ -1,7 +1,6 @@
 {
     "app_conf": {
         "studio_title": "Mviewer STudio Megalis",
-        "version_service": "srv/version",
         "api": "api/app",
         "store_style_service": "api/style",
         "mviewer_instance": "/mviewer/",

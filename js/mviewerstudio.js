@@ -547,14 +547,13 @@ var createBaseLayerDef = function (bsl) {
 var deleteApplications = (ids = []) => {
     fetch(`${ _conf.api }`, {
         method: "DELETE",
-        body: JSON.stringify([ids])
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ids: [ids]})
     })
         .then(r => r.json())
     .then(r => r.success && showHome())
-}
-
-var deleteSeomApps = (ids) => { 
-    fetch(_conf.delete_many_service, { method: "POST", body: JSON.stringify({ids: ids}) })
 }
 
 var saveApplicationParameters = function (option) {

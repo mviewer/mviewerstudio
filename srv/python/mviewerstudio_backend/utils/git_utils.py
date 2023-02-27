@@ -17,8 +17,8 @@ class Git_manager:
         # create repo
         self.repo = git.Repo.init(self.workspace)
         # TODO : rename master to main
-        self.repo.git.checkout("master", "-b", "main")
-        self.repo.git.branch("-D", "master")
+        # self.repo.git.checkout("master", "-b", "main")
+        # self.repo.git.branch("-D", "master")
 
     def create_version(self):
         # get tag value

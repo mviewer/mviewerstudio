@@ -53,7 +53,7 @@ class Config:
             return None
         xml = self.data.replace("anonymous", self.user.username)
         # read metadata
-        self.meta = self._get_xml_describe()
+        self.meta = self._get_xml_describe(xml)
         if self.meta.find(".//{*}identifier") is not None:
             self.uuid = self.meta.find(".//{*}identifier").text
         return xml
@@ -66,11 +66,11 @@ class Config:
             # create directory
             mkdir(self.workspace)
     
-    def _get_xml_describe(self):
+    def _get_xml_describe(self, xml):
         '''
         Return metadata from xml DCAT balises
         '''
-        xml_parser = ET.fromstring(self.xml)
+        xml_parser = ET.fromstring(xml)
         return xml_parser.find(".//metadata/{*}RDF/{*}Description")
     
     def create_or_update_config(self):
