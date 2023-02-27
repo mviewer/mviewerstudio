@@ -27,7 +27,7 @@ STATIC_DIR="${MVIEWERSTUDIO_DIR}/srv/python/mviewerstudio_backend/static"
 # Clone repo and change branch if needed
 
 if [ ! -d "${MVIEWERSTUDIO_DIR}" ]; then
-    git clone https://github.com/jdev-org/mviewerstudio.git
+    git clone https://github.com/mviewer/mviewerstudio.git
     if [ "${BRANCH}" ]; then
         cd "${MVIEWERSTUDIO_DIR}"
         git checkout "${BRANCH}"
