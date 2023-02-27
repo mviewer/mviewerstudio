@@ -14,19 +14,20 @@ function goHome() {
 function showHome() {  
 document.getElementById("containerStudio").hidden = true;
 $('#mod-closeStudio').modal('hide');
-document.getElementById("containerHome").hidden = false;
+  document.getElementById("containerHome").hidden = false;
+  document.querySelector("#toolsbarStudio-delete").classList.add("d-none");
 }
 
 function saveStudio() {
-if($("#opt-title").val() == ''){
-  alert(mviewer.tr('msg.give_title_before_save'));
-  $('#mod-closeStudio').modal('hide');
-  $('#opt-title').addClass('is-invalid');
-} else{
-  saveApplicationParameters(0); 
-  showHome();
-  alertCustom('Application enregistrée avec succès !', 'info');
-}  
+  if($("#opt-title").val() == ''){
+    alert(mviewer.tr('msg.give_title_before_save'));
+    $('#mod-closeStudio').modal('hide');
+    $('#opt-title').addClass('is-invalid');
+  } else {
+    saveApplicationParameters(0); 
+    showHome();
+    alertCustom('Application enregistrée avec succès !', 'info');
+  }  
 }
 
 // Manage display of options
