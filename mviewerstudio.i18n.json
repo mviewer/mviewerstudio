@@ -270,6 +270,7 @@
         "modal.exit.save" : "Enregister mon application et quitter le studio",
         "modal.exit.notsave" : "Ne pas sauvegarder mes modifications et quitter le studio",
         "modal.exit.previous" : "Retour",
+        "modal.appversion.title" : "Gérer les versions de l'application",
         "validate" : " Valider",
         "ok": "OK",
         "cancel": "Annuler",

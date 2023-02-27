@@ -31,6 +31,9 @@
     <script src="lib/i18njs/i18n.min.js" type="text/javascript"></script>
     <!--Wizard-->
     <link rel="stylesheet" href="css/wizard.css">    
+    <!--Bootstrap table extension-->
+    <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.21.2/dist/bootstrap-table.min.css">
+    <script src="https://unpkg.com/bootstrap-table@1.21.2/dist/bootstrap-table.min.js"></script>  
 </head>
 
 <body class="h-100" id="content">
@@ -215,7 +218,15 @@
                 <div class="col-xl-8 col-md-12">
                     <!--TOOLSBAR -->
                     <div id="toolsbarStudio">                        
-                        <ul class="nav align-items-center justify-content-end">                            
+                        <ul class="nav align-items-center justify-content-end"> 
+                            <div class="btn-group">
+                                <button type="button" class="nav-link btn btn-outline-info dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                  Options
+                                </button>
+                                <div class="dropdown-menu">
+                                  <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#mod-appversions">Gestion des versions</a>
+                                </div>
+                            </div>                                
                             <a class="nav-link" id="toolsbarStudio-View" onclick="saveApplicationParameters(2);" href="#"><i class="ri-eye-2-line"></i> <span i18n="studio.toolsbar.preview">Prévisualiser</span></a>                          
                             <a class="nav-link" id="toolsbarStudio-Save" onclick="saveApplicationParameters(0);" href="#"><i class="ri-save-line"></i> <span i18n="studio.toolsbar.save">Enregistrer</span></a>
                             <a class="nav-link d-none" id="toolsbarStudio-delete" onclick="deleteApplications([config?.id]);" href="#"><i class="ri-save-line"></i> <span i18n="studio.toolsbar.delete">Supprimer</span></a>
@@ -1718,6 +1729,30 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" id="change-icon" class="btn btn-primary" aria-label="Close"><span i18n="validate"> Valider</span></button>
+                    <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal" aria-label="Close" i18n="cancel">Annuler</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal versionApp-->
+    <div class="modal fade" id="mod-appversions" role="dialog" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="mod-appversions" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" i18n="modal.appversion.title">Gérer les versions de l'application</h5>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body">
+                    <p>Ajouter la table ici</p>                    
+                    <div class="my-4">
+                        <button id="" class="btn btn-info" onclick="">
+                            <i class="bi bi-plus-lg"></i>
+                            <span>Créer une nouvelle version</span>
+                        </button>
+                    </div>   
+                </div>
+                <div class="modal-footer">                    
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Valider</button>
                     <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal" aria-label="Close" i18n="cancel">Annuler</button>
                 </div>
             </div>
