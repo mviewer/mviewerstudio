@@ -550,7 +550,7 @@ var deleteApplications = (ids = []) => {
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ids: [ids]})
+        body: JSON.stringify({ids: ids})
     })
         .then(r => r.json())
     .then(r => r.success && showHome())
