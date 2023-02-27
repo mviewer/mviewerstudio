@@ -556,6 +556,19 @@ var deleteApplications = (ids = []) => {
     .then(r => r.success && showHome())
 }
 
+var deleteAppFromList = (id) => {
+    deleteApplications(id);
+    document.getElementById('liste_applications').innerHTML = "";
+    mv.getListeApplications();    
+}
+
+var previewAppUrl = (id, title) => {
+    var url = "";
+    var title_app = title.replaceAll(' ', '_');
+    url = _conf.mviewer_instance + '?config=' + _conf.conf_path_from_mviewer + id + '/' + title_app + '.xml';
+    window.open(url,'mvs_vizualize');
+}
+
 var saveApplicationParameters = function (option) {
     // option == 0 : save serverside
     // option == 1 : save serverside + download
@@ -995,6 +1008,7 @@ $('a[data-bs-target="#geo_filter"]').on('shown.bs.tab', function (e) {
 $(".checkedurl").change(mv.checkURL);
 
 $("#mod-importfile").on('shown.bs.modal', function () {
+    document.getElementById('liste_applications').innerHTML = "";
     mv.getListeApplications();
 });
 
