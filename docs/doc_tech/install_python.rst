@@ -148,7 +148,8 @@ La configuration backend est localisée dans :
 
 - ``/srv/python/mviewerstudio_backend/settings.py``
 
-La configuration peut également être définie via des variables d'environnement :
+
+La configuration backend peut également être définie via des variables d'environnement pour ces paramètres :
 
 .. code-block:: sh
 
