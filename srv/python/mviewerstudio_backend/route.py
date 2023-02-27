@@ -163,7 +163,7 @@ def create_app_version(id) -> Response:
     git.create_version()
     return jsonify({"success": True, "message": "New version created !"}), 200      
 
-@basic_store.route("/api/app/style", methods=["POST"])
+@basic_store.route("/api/style", methods=["POST"])
 def store_style() -> Response:
     """
     This endpoint stores SLD style locally. it does not verify the content.

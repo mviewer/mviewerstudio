@@ -544,12 +544,11 @@ var createBaseLayerDef = function (bsl) {
     return parameters;
 };
 
-var deleteAllApps = () => {
-    fetch(_conf.delete_all, { method: "DELETE" })
-}
-
-var deleteApplication = (id) => {
-    fetch(`${ _conf.delete_one_service }/${ id }`, { method: "DELETE" })
+var deleteApplications = (ids = []) => {
+    fetch(`${ _conf.api }`, {
+        method: "DELETE",
+        body: JSON.stringify([ids])
+    })
         .then(r => r.json())
     .then(r => r.success && showHome())
 }
@@ -699,7 +698,7 @@ var saveApplicationParameters = function (option) {
     if (mv.validateXML(conf.join(""))) {
 
         // Save the map serverside
-        fetch(_conf.upload_service, {
+        fetch(_conf.api, {
             method: "POST",
             headers: {
                 'Content-Type': 'text/xml'
