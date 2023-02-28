@@ -61,16 +61,35 @@
 	
 	/* Alert */
 	
-	.alert-info {
+	.alert {
 	  display: flex;
 	  align-items: center;
 	  line-height: 1.2;
 	}
 	
-	.alert-info i {
-	  margin-right: 1em;
+	.alert i {
+		margin-right: 0.2em;
+		vertical-align: bottom;
 	}
 	
+	#liveAlertPlaceholder {
+		position: fixed;
+		z-index: 2000;
+		bottom: 1rem;
+		right: 2rem;
+	}
+
+	#liveAlertPlaceholder .alert i {
+		font-size: 1.2rem;
+		vertical-align: middle;
+	}
+
+	#liveAlertPlaceholder .btn-close i {
+		font-size: 1.4rem;
+		margin-left: 2.5rem;
+		margin-right: 0!important;
+	}
+
 	/* Tagsinput */
 	
 	#mod-layerOptions .bootstrap-tagsinput {

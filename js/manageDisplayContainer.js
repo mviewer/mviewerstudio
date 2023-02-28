@@ -25,6 +25,7 @@ if($("#opt-title").val() == ''){
 } else{
   saveApplicationParameters(0); 
   showHome();
+  alertCustom('Application enregistrée avec succès !', 'info');
 }  
 }
 
@@ -66,3 +67,45 @@ $(this).find('.nav-item a:first').tab('show');
 $("#frm-opacity").on("mousemove", function() {
  $('#opacity-value').text($("#frm-opacity").val());
 });
+
+
+// Create a custom alert template 
+
+function alertCustom(message, type, timeout = 5000){
+  const alertPlaceholder = document.getElementById('liveAlertPlaceholder');
+  // Définition de l'icône selon le type d'alerte
+  let iconalert = '';
+  if (type == 'sucess' || type == 'info'){
+    iconalert = '<i class="ri-checkbox-circle-line"></i>';
+  } else if(type == 'danger' || type == 'warning'){
+    iconalert = '<i class="ri-alert-line"></i>';    
+  } else {
+    iconalert = '<i class="ri-information-line"></i>';
+  }
+  //ID unique pour l'alerte 
+  let generateid = () => {
+    return Math.floor((1 + Math.random()) * 0x10000)
+        .toString(16)
+        .substring(1);
+  }
+  let idalert = generateid();
+  const wrapper = document.createElement('div');
+  wrapper.setAttribute("id", idalert);  
+  wrapper.innerHTML = [
+    `<div class="alert alert-${type} fade show" role="alert">
+       <div>${iconalert} ${message}</div>
+       <a type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"><i class="ri-close-line"></i></a>
+    </div>`
+  ].join('');
+
+  alertPlaceholder.append(wrapper);
+
+  // Options to timeout
+  if(timeout){
+    const myalert = document.getElementById(idalert);
+    setTimeout(function(){ 
+      myalert.innerHTML = '';
+    }, timeout);
+  }    
+}
+

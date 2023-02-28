@@ -186,7 +186,8 @@ $(document).ready(function(){
                             ajaxOptions: ajaxOptions,
                             thrownError: thrownError
                         });
-                        alert(mviewer.tr('msg.user_info_retrieval_error'));
+                        //alert(mviewer.tr('msg.user_info_retrieval_error'));
+                        alertCustom(mviewer.tr('msg.user_info_retrieval_error'), 'danger');
                     }
                 });
             } else {
@@ -419,7 +420,7 @@ var importThemes = function () {
 
 var addTheme = function (title, collapsed, themeid, icon, url) {
     if ($("#mod-themeOptions").is(":visible")) {
-        alert(mviewer.tr('msg.save_theme_first'));
+        alert(mviewer.tr('msg.save_theme_first'));        
         return;
     }
     if (url) {
@@ -575,8 +576,9 @@ var saveApplicationParameters = function (option) {
     config.title = $("#opt-title").val();
 
     if(config.title == ''){
-        alert(mviewer.tr('msg.give_title_before_save'));
+        //alert(mviewer.tr('msg.give_title_before_save'));
         $('#opt-title').addClass('is-invalid');
+        alertCustom('Veuillez renseigner un nom à votre application !', 'danger')
         return;
     }
 
@@ -693,7 +695,9 @@ var saveApplicationParameters = function (option) {
 
                 if (option == 0) {
                     // Ok it's been saved and that's it
-                    alert(mviewer.tr('msg.file_saved_on_server') + " (" + data.filepath + ").");
+                    //alert(mviewer.tr('msg.file_saved_on_server') + " (" + data.filepath + ").");
+                    alertCustom(mviewer.tr('msg.file_saved_on_server') + " (" + data.filepath + ").", 'info');
+                    
 
                 } else if (option == 1) {
                     // Download map config file
@@ -737,11 +741,13 @@ var saveApplicationParameters = function (option) {
                     status: status,
                     error: error
                 });
-                alert(mviewer.tr('msg.save_failure'));
+                //alert(mviewer.tr('msg.save_failure'));
+                alertCustom(mviewer.tr('msg.save_failure'), 'danger');
             }
         });
     } else {
-        alert(mviewer.tr('msg.xml_doc_invalid'));
+        //alert(mviewer.tr('msg.xml_doc_invalid'));
+        alertCustom(mviewer.tr('msg.xml_doc_invalid'), 'danger');
     }
 };
 
@@ -784,7 +790,8 @@ var loadApplicationParametersFromFile = function () {
             mv.parseApplication(xml);
         }
         reader.onerror = function (evt) {
-            alert(mviewer.tr('msg.file_read_error'));
+            //alert(mviewer.tr('msg.file_read_error'));
+            alertCustom(mviewer.tr('msg.file_read_error'), 'danger');
         }
         showStudio();
     }
@@ -795,7 +802,8 @@ var deleteMyApplications = function () {
         type: "GET",
         url: _conf.delete_service,
         success: function( data ) {
-            alert(data.deleted_files + mviewer.tr('msg.deleted_apps'));
+            //alert(data.deleted_files + mviewer.tr('msg.deleted_apps'));
+            alertCustom(data.deleted_files + mviewer.tr('msg.deleted_apps'), 'info');
             mv.getListeApplications();
         },
         error: function (xhr, ajaxOptions, thrownError) {
@@ -804,7 +812,8 @@ var deleteMyApplications = function () {
                 ajaxOptions: ajaxOptions,
                 thrownError: thrownError
             });
-            alert(mviewer.tr('msg.delete_req_error'));
+            //alert(mviewer.tr('msg.delete_req_error'));
+            alertCustom(mviewer.tr('msg.delete_req_error'), 'danger');
         }
     });
 };
@@ -826,7 +835,9 @@ var  loadApplicationParametersFromRemoteFile = function (url) {
                 ajaxOptions: ajaxOptions,
                 thrownError: thrownError
             });
-            alert(mviewer.tr('msg.retrieval_req_error'));
+            //alert(mviewer.tr('msg.retrieval_req_error'));
+            alertCustom(mviewer.tr('msg.retrieval_req_error'), 'danger');
+            
         }
     });
 
@@ -846,7 +857,8 @@ var loadApplicationParametersFromWMC = function (url) {
                 ajaxOptions: ajaxOptions,
                 thrownError: thrownError
             });
-            alert(mviewer.tr('msg.retrieval_req_error'));
+            //alert(mviewer.tr('msg.retrieval_req_error'));
+            alertCustom(mviewer.tr('msg.retrieval_req_error'), 'danger');
         }
     });
 
@@ -1006,7 +1018,8 @@ var uploadSldFileToBackend = function(e) {
                 $("#frm-sld").val(finalUrl)
             },
             error: function() {
-                 alert(mviewer.tr('msg.retrieval_req_error'));
+                 //alert(mviewer.tr('msg.retrieval_req_error'));
+                 alertCustom(mviewer.tr('msg.retrieval_req_error'), 'danger');
             }
         })
     });
