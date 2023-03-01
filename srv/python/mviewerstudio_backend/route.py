@@ -92,7 +92,20 @@ def delete_config_workspace() -> Response:
         app_deleted += 1
 
     return jsonify({"deleted_files": app_deleted, "success": True})
-  
+
+@basic_store.route("/api/app/<id>/versions", methods=["GET"])
+def get_all_app_versions(id) -> Response:
+    config =  current_app.register.read(id)
+    if not config:
+        raise BadRequest("This config doesn't exists !")
+    config = config[0]
+    workspace = path.join(current_app.config["EXPORT_CONF_FOLDER"], config.id)
+    git = Git_manager(workspace)
+    versions = git.get_versions()
+    return jsonify({"versions": versions, "config": config.as_dict()})
+    
+
+
 @basic_store.route("/api/app/all", methods=["DELETE"])
 def delete_all_mviewer_config() -> Response:
     """
@@ -127,14 +140,14 @@ def switch_app_version(id, version = "1") -> Response:
     return jsonify({"success": True, "message": "Version changes !"}), 200       
 
 @basic_store.route("/api/app/<id>/version", methods=["DELETE"])
-def delete_app_versions() -> Response:
+def delete_app_versions(id) -> Response:
     '''
     Delete each app versions
     Only keep main active branch
     '''
     version_deleted = 0
 
-    post_data = request.get_json()
+    post_data = request.json
 
     if not post_data["versions"]:
         raise BadRequest("Empty list - Nothing to delete !")
@@ -146,7 +159,7 @@ def delete_app_versions() -> Response:
     workspace = path.join(current_app.config["EXPORT_CONF_FOLDER"], config[0].id)
     git = Git_manager(workspace)
 
-    for version in post_data["version"]:
+    for version in post_data["versions"]:
         git.delete_version(version)
         version_deleted += 1
 

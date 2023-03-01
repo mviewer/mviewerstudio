@@ -22,13 +22,13 @@ class Git_manager:
 
     def create_version(self):
         # get tag value
-        latest_version = 0
-        all_tags = [int(tag.name) for tag in self.repo.tags]
-        if all_tags:
-            latest_version = max(all_tags)
-        new_version = latest_version + 1
+        # latest_version = 0
+        # all_tags = [int(tag.name) for tag in self.repo.tags]
+        # if all_tags:
+        #     latest_version = max(all_tags)
         # create tag
-        self.repo.create_tag(new_version, message=datetime.now().isoformat())
+        # format '2023-02-27-15-37-34'
+        self.repo.create_tag(datetime.now().strftime("%Y-%m-%d-%H-%M-%S"), message="new version")
     
     def delete_version(self, version_name):
         # delete tag
@@ -42,7 +42,7 @@ class Git_manager:
         delete all branch except main
         '''
         for head in self.repo.heads:
-            if head.name == "main":
+            if head.name == "master":
                 continue
             self.repo.git.branch("-D", head.name)
 
@@ -55,7 +55,7 @@ class Git_manager:
     def switch_version(self, target, is_start_point):
         target_tags = "tags/%s" % target
         
-        self.repo.git.checkout("main")
+        self.repo.git.checkout("master")
         self.delete_all_branch()
 
         if target not in self.get_versions():
@@ -79,4 +79,5 @@ class Git_manager:
         return [tag for tag in self.repo.tags if tag.name == name]
 
     def get_versions(self):
-        return [tag.name for tag in self.repo.tags]
+        all_tags = [tag.name for tag in self.repo.tags]
+        return all_tags

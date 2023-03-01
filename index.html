@@ -223,7 +223,7 @@
                                   Options
                                 </button>
                                 <div class="dropdown-menu">
-                                  <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#mod-appversions">Gestion des versions</a>
+                                  <a class="dropdown-item" onclick="mv.getVersionsByApp(this)" data-bs-toggle="modal" data-bs-target="#mod-appversions">Gestion des versions</a>
                                 </div>
                             </div>                                
                             <a class="nav-link" id="toolsbarStudio-View" onclick="saveApplicationParameters(2);" href="#"><i class="ri-eye-2-line"></i> <span i18n="studio.toolsbar.preview">Prévisualiser</span></a>                          
@@ -1742,13 +1742,7 @@
                     <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 </div>
                 <div class="modal-body">
-                    <p>Ajouter la table ici</p>                    
-                    <div class="my-4">
-                        <button id="" class="btn btn-info" onclick="">
-                            <i class="bi bi-plus-lg"></i>
-                            <span>Créer une nouvelle version</span>
-                        </button>
-                    </div>   
+                    <div id="appsListTable"></div>
                 </div>
                 <div class="modal-footer">                    
                     <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Valider</button>
@@ -1766,5 +1760,6 @@
 <script src="lib/icon-picker/icon-picker.js"></script>
 <script src="lib/bootstrap-table/bootstrap-table.min.js"></script>
 <script src="lib/bootstrap-table/bootstrap-table-fr-FR.min.js"></script>
+<script src="lib/moment.js"></script>
 </body>
 </html>

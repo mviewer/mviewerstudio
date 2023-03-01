@@ -831,31 +831,37 @@ var deleteMyApplications = function () {
     });
 };
 
-var  loadApplicationParametersFromRemoteFile = function (url) {
-    $.ajax({
-        type: "GET",
-        url: url,
-        headers: {
-            "Cache-Control": "private, no-store, max-age=0"
-        },
-        success: function( data ) {
-            mv.parseApplication(data);
-            showStudio();
-            document.querySelector("#toolsbarStudio-delete").classList.remove("d-none");
-            document.querySelector("#layerOptionBtn").classList.remove("d-none");
-        },
-        error: function (xhr, ajaxOptions, thrownError) {
-            console.error("map file retrieval failed", {
-                xhr: xhr,
-                ajaxOptions: ajaxOptions,
-                thrownError: thrownError
-            });
-            //alert(mviewer.tr('msg.retrieval_req_error'));
-            alertCustom(mviewer.tr('msg.retrieval_req_error'), 'danger');
-            
+var loadApplicationParametersFromRemoteFile = function (url) {
+    const waitRequests = [
+        fetch(url, {
+            method: "GET",
+            cache: "no-cache"
+        }).then(response => response.text())
+            .then(xmlAsString => new window.DOMParser().parseFromString(xmlAsString, "text/xml"))
+            .catch(r => {
+                console.error("map file retrieval failed", {...r});
+                alert(mviewer.tr('msg.retrieval_req_error'));
+            }),
+        fetch(_conf.api)
+            .then(response => response.json())
+            .then(r => {
+                console.log(r);
+                return r.filter(app => app.id == config.id);
+            })
+            .catch(() => ({}))
+    ];
+    Promise.all(waitRequests).then((values) => {
+        const data = values[0];
+        const appMeta = values[1][0];
+        mv.parseApplication(data);
+        if (appMeta?.versions) {
+            console.log(appMeta.versions);
+            config.versions = appMeta.versions;
         }
+        showStudio();
+        document.querySelector("#toolsbarStudio-delete").classList.remove("d-none");
+        document.querySelector("#layerOptionBtn").classList.remove("d-none");
     });
-
 };
 
 var loadApplicationParametersFromWMC = function (url) {
