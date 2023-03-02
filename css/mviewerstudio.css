@@ -470,6 +470,16 @@
 	#mod-layerOptions .custom-switch {
 		margin-bottom: 5px;
 	}
+	.versionActionsCol a {
+		font-size: 18px;
+	}
+
+	#versionChangeLink {
+		color: var(--info)
+	}
+	#versionDeleteLink {
+		color: var(--danger);
+	}
 	
 	/* APPLICATION  */
 	

@@ -266,6 +266,7 @@ var newConfiguration = function (infos) {
         themes: {},
         temp: { layers: {} },
         id: mv.uuid(),
+        description: "Creation",
         isFile: false,
         ...infos // from reading app
     };
@@ -569,11 +570,7 @@ var previewAppUrl = (id, title) => {
     window.open(url,'mvs_vizualize');
 }
 
-var saveApplicationParameters = function (option) {
-    // option == 0 : save serverside
-    // option == 1 : save serverside + download
-    // option == 2 : save serverside + launch map
-
+var getConfig = () => {
     var padding = function (n) {
         return '\r\n' + " ".repeat(n);
     };
@@ -707,11 +704,16 @@ var saveApplicationParameters = function (option) {
         themes.join(" "),
         padding(0)+ '</config>'];
 
+    return conf
+}
+
+var saveApplicationParameters = function (option) {
+    const conf = getConfig();
     if (mv.validateXML(conf.join(""))) {
 
         // Save the map serverside
-        fetch(_conf.api, {
-            method: "POST",
+        return fetch(_conf.api, {
+            method: config.isFile ? "PUT" : "POST",
             headers: {
                 'Content-Type': 'text/xml'
             },
@@ -719,7 +721,8 @@ var saveApplicationParameters = function (option) {
         }).then(response => response.json()).then(data => {
             if (option == 0) {
                 // Ok it's been saved and that's it
-                alert(mviewer.tr('msg.file_saved_on_server') + " (" + data.filepath + ").");
+                console.log(mviewer.tr('msg.file_saved_on_server') + " (" + data.filepath + ").");
+                return true
 
             } else if (option == 1) {
                 // Download map config file
@@ -757,10 +760,12 @@ var saveApplicationParameters = function (option) {
             }
             document.querySelector("#toolsbarStudio-delete").classList.remove("d-none");
             document.querySelector("#layerOptionBtn").classList.remove("d-none");
+            return true
         }).catch(err => alert(mviewer.tr('msg.save_failure')));
     } else {
         //alert(mviewer.tr('msg.xml_doc_invalid'));
         alertCustom(mviewer.tr('msg.xml_doc_invalid'), 'danger');
+        return
     }
 };
 
