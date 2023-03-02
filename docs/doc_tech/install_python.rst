@@ -3,16 +3,20 @@
 
 .. _install_python:
 
+
 Installer mviewerstudio avec Python
-===================================
+###################################
+
 
 Mviewerstudio est une application web développée en HTML / CSS / PHP / Python. Elle nécessite simplement d'être déployée sur un serveur WEB qui peut être APACHE, NGINX, TOMCAT…
 
 Cette page ne traite que de l'installation du backend avec Python.
 
+Environnement global
+********************
 
 Prérequis
-~~~~~~~~~~~~~~
+=========
 
 Vous aurez besoin :
 
@@ -26,7 +30,7 @@ Vous aurez besoin :
 - d'une instance mviewer fonctionnelle (/mviewer)
 
 Installation
-~~~~~~~~~~~~~~
+============
 
 .. note::
     Avant de réaliser l'installation, vous devez avoir connaissance de la différence entre un environnement de
@@ -90,23 +94,102 @@ Cette étape permet de prévisualiser les cartes réalisées dans ``mviewerstudi
     PROXY_WHITE_LIST = ['geobretagne.fr', 'ows.region-bretagne.fr']
 
 
-Mettre en production mviewerstudio
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Environnement de production sans Docker
+***************************************
 
-**SECTION A COMPLETER AVEC PYTHON SANS DOCKER.**
+**Cette partie décrit l'installation en production de mviewerstudio sur un serveur Linux (Ubuntu / Debian).**
 
-Il vous faudra un serveur wsgi pour servir les pages. Exemple de serveur : gunicorn, waitress,
-uwsgi.
+Prérequis
+=========
 
-A noter aussi que le fichier `docker/Dockerfile-python-backend` propose d'utiliser gunicorn :
+ - Disposer d'un serveur web (Apache ou Nginx)
+ - Disposer d'une instance mviewer sur le même serveur (ex : /var/www/mviewer)
+ - Avoir installé mviewerstudio avec la méthode décrite dans la partie précédante
 
-```
-# Vous pouvez alors installer les requirements, dans un environnements virtuel comme réalisé pour les développements.
-# La méthode dépend de vos besoins mais reste similaire à la méthode utilisée pour l'environnement de développement.
-#
-# lancer le serveur:
-gunicorn mviewerstudio_backend.app:app
-```
+Objectifs
+=========
+
+ - Servir le backend python et le front de studio avec un service Linux
+ - Proxyfier ce service avec Nginx ou Apache
+
+Mode opératoire
+===============
+
+1) Création du dossier store dans le dossier mviewer/apps
+
+ .. code-block:: sh
+   :caption: dossier store
+
+       mkdir /var/www/mviewer/apps/store
+       sudo chown monuser /var/www/mviewer/apps/store
+
+
+2) Création du service et activation du service
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+ .. code-block:: sh
+   :caption: création du fichier mviewerstudio.service
+
+       sudo nano /etc/systemd/system/mviewerstudio.service
+
+avec le contenu suivant
+
+ .. code-block:: sh
+   :caption: fichier mviewerstudio.service
+
+       [Unit]
+        Description=mviewerstudio
+        After=network.target
+
+        [Service]
+        User=monuser
+        Environment="EXPORT_CONF_FOLDER=/var/www/mviewer/apps/store/"
+        WorkingDirectory=/home/monuser/mviewerstudio/srv/python
+        ExecStart=/home/monuser/mviewerstudio/srv/python/.venv/bin/gunicorn -b 127.0.0.1:5007 mviewerstudio_backend.app:app
+
+        [Install]
+        WantedBy=multi-user.target
+
+Notre service tourne sur le port 5007.
+
+
+.. code-block:: sh
+   :caption: Activation et démarrage du service
+
+       sudo systemctl daemon-reload
+       sudo systemctl enable mviewerstudio.service
+       sudo systemctl start mviewerstudio.service
+
+A partir de maintenant, il est possible de stopper, redémarrer ou afficher le service avec les commandes :
+
+.. code-block:: sh
+   :caption: service mviewerstudio
+
+       sudo systemctl stop mviewerstudio
+       sudo systemctl restart mviewerstudio
+       sudo systemctl status mviewerstudio.service
+
+3) Proxyfication nginx du service
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Notre service tourne sur le port 5007. Nous souhaitons que ce service soit accessible sur les ports 80 et 443 à l'adresse **/mviewerstudio/**. Nous allons donc opérer une proxyfication de ce service.
+
+.. code-block::
+   :caption: Configuration nginx
+
+       location /mviewerstudio {
+            proxy_pass http://127.0.0.1:5007/;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+            proxy_set_header X-Forwarded-Host $host;
+        }
+
+
+.. code-block::
+   :caption: Rechargement de la conf nginx
+
+       sudo systemctl reload nginx
+
 
 Développer avec mviewerstudio
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
