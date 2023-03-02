@@ -4,7 +4,7 @@
 .. _install_python:
 
 Installer mviewerstudio avec Python
-==================================
+===================================
 
 Mviewerstudio est une application web développée en HTML / CSS / PHP / Python. Elle nécessite simplement d'être déployée sur un serveur WEB qui peut être APACHE, NGINX, TOMCAT…
 
@@ -29,12 +29,12 @@ Installation
 ~~~~~~~~~~~~~~
 
 .. note::
-    Avant de réaliser l'installation, vous devez avoir connaissance de la différence entre un environnement de 
+    Avant de réaliser l'installation, vous devez avoir connaissance de la différence entre un environnement de
     ``production`` et un environnement de ``développements``.
-    
+
     ``L’environnement de production`` est la destination finale d’une application web ou d’un site web.
     C'est l'environnement final qui sera accessible par vos utilisateurs.
-    
+
     ``L’environnement de développement`` représente le contexte dans lequel vous allez réaliser des développements, des modifications du code ou des tests
     avant de réaliser le passage de l'application dans l'environnement de production final.
 
@@ -83,20 +83,20 @@ Cette étape permet de prévisualiser les cartes réalisées dans ``mviewerstudi
 **4. Ouvrir la configuration backend ``/srv/python/mviewerstudio_backend/settings.py`` et adapter les paramètres**
 
 .. code-block:: sh
-    
+
     CONF_PATH_FROM_MVIEWER = os.getenv("CONF_PATH_FROM_MVIEWER", "apps/store/")
     EXPORT_CONF_FOLDER = os.getenv("EXPORT_CONF_FOLDER", "./store")
     LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO")
     PROXY_WHITE_LIST = ['geobretagne.fr', 'ows.region-bretagne.fr']
-        
+
 
 Mettre en production mviewerstudio
-~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 **SECTION A COMPLETER AVEC PYTHON SANS DOCKER.**
 
 Il vous faudra un serveur wsgi pour servir les pages. Exemple de serveur : gunicorn, waitress,
-uwsgi. 
+uwsgi.
 
 A noter aussi que le fichier `docker/Dockerfile-python-backend` propose d'utiliser gunicorn :
 
@@ -109,7 +109,7 @@ gunicorn mviewerstudio_backend.app:app
 ```
 
 Développer avec mviewerstudio
-~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Serveur de développement
 ***********************************
@@ -130,7 +130,7 @@ Démarrez ensuite le serveur (fichier ``mviewer_backend/app.py``):
 
 Accéder à mviewerstudio à l'adresse par défaut ``localhost:5000``.
 
-Pour modifier le port ``5000`` par le port ``XXXX``, utilisez cette commande avec l'option ``-p`` : 
+Pour modifier le port ``5000`` par le port ``XXXX``, utilisez cette commande avec l'option ``-p`` :
 
 .. code-block:: sh
 
@@ -163,7 +163,7 @@ Ces variables peuvent aussi être définies lors du lancement du serveur de dév
     export CONF_PATH_FROM_MVIEWER ( défault = apps/store/)
     export EXPORT_CONF_FOLDER ( défault = ./store/)
     flask run
-  
+
  .. note::
     Vérifiez au préalable que le répertoire existe et que le user qui démarre le serveur flask dispose des droits sur ce dossier.
 
@@ -175,7 +175,7 @@ Pour utiliser les services types OGC (catalogue ou serveurs cartographiques), vo
 
 Le Proxy utilise un paramètre ``PROXY_WHITE_LIST`` qui doit être complété par tous les domaines (FQDN) des services que vous utiliserez.
 
-Ce paramètre est accessible dans : 
+Ce paramètre est accessible dans :
 
 .. code-block:: sh
 

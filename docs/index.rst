@@ -7,7 +7,7 @@
    contain the root `toctree` directive.
 
 Bienvenue sur la documentation mviewerstudio !
-=============================================
+==============================================
 
 Introduction
 ------------

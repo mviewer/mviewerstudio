@@ -1,10 +1,10 @@
-.. Authors : 
+.. Authors :
 .. mviewer team
 
 .. _config:
 
 Configurer mviewerstudio
-=====================
+========================
 
 La configuration s'effectue dans le fichier config.json (à créer à partir d'une copie de config-sample.json).
 
