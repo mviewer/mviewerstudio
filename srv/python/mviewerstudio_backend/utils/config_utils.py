@@ -40,7 +40,6 @@ class Config:
             self.repo = self.git.repo
             # save xml and git commit
             self.create_or_update_config()
-
   
     def _read_xml_data(self, data):
         '''
@@ -94,8 +93,10 @@ class Config:
         with open(self.full_xml_path, "w") as file:
             file.write(self.xml)
             file.close()
-
-        self.git.commit_changes("add new file : %s.xml " % normalize_file_name)
+        commit_msg = self.meta.find("{*}description").text
+        if not commit_msg:
+            commit_msg = "Creation : %s.xml " % normalize_file_name
+        self.git.commit_changes(commit_msg)
     
     def clean_all_workspace_configs(self):
         for file in glob.glob("%s/*.xml" % self.workspace):
@@ -117,6 +118,7 @@ class Config:
             id = self.uuid,
             title = self.meta.find("{*}title").text,
             creator = self.meta.find("{*}creator").text,
+            description = self.meta.find("{*}description").text,
             date = datetime.now().isoformat(),
             versions = self.git.get_versions(),
             keywords = self.meta.find("{*}keywords").text,

@@ -37,7 +37,7 @@ def user() -> Response:
     return jsonify(current_user.as_dict())
 
 @basic_store.route("/api/app", methods=["POST"])
-def store_mviewer_config() -> Response:
+def save_mviewer_config() -> Response:
     config = Config(
         request.data,
         current_user,
@@ -53,6 +53,25 @@ def store_mviewer_config() -> Response:
 
     return jsonify({"success": True, "filepath": config_data.url, "config": config_data})
 
+
+@basic_store.route("/api/app", methods=["PUT"])
+def update_mviewer_config() -> Response:
+    config = Config(
+        request.data,
+        current_user,
+        current_app
+    )
+    if not config.xml:
+        raise BadRequest("No XML found in the request body !")
+    
+    config_data = config.as_data()
+    current_config = current_app.register.read(config_data.id)
+
+    if not current_config:
+        raise BadRequest("This config does not exists yet ! Use creation POST request instead.")
+
+    current_app.register.update(config_data)
+    return jsonify({"success": True, "filepath": config_data.url, "config": config_data})
 
 @basic_store.route("/api/app", methods=["GET"])
 def list_stored_mviewer_config() -> Response:
@@ -173,7 +192,7 @@ def create_app_version(id) -> Response:
     
     workspace = path.join(current_app.config["EXPORT_CONF_FOLDER"], config[0].id)
     git = Git_manager(workspace)
-    git.create_version()
+    git.create_version(config[0].description)
     return jsonify({"success": True, "message": "New version created !"}), 200      
 
 @basic_store.route("/api/style", methods=["POST"])

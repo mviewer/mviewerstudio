@@ -16,6 +16,7 @@ class ConfigModel:
     creator: str
     versions: List[str]
     keywords: List[str]
+    description: str
     url: int
     subject: str
     date: str
@@ -26,6 +27,7 @@ class ConfigModel:
             "title": self.title,
             "creator": self.creator,
             "versions": self.versions,
+            "description": self.description,
             "keywords": self.keywords,
             "url": self.url,
             "subject": self.subject,

@@ -82,7 +82,10 @@ class ConfigRegister:
         self.update_json()
 
     def delete(self, config):
-        self.register.configs.remove(config)
+        if not config:
+            return
+        oldConfig = [config for config in self.register.configs if config.id == config.id][0]
+        self.register.configs.remove(oldConfig)
         self.register.total = len(self.register.configs)
         self.update_json()
       
@@ -93,11 +96,14 @@ class ConfigRegister:
         }
     
     def load_configs_from_json(self, configs_json):
+            if not "description" in configs_json:
+                configs_json["description"] = ""
             return ConfigModel(
                 id = configs_json["id"],
                 title = configs_json["title"],
                 creator = configs_json["creator"],
                 versions = configs_json["versions"],
+                description = configs_json["description"],
                 keywords = configs_json["keywords"],
                 url = configs_json["url"],
                 subject = configs_json["subject"],

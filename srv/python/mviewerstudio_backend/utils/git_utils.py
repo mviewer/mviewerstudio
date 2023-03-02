@@ -20,15 +20,10 @@ class Git_manager:
         # self.repo.git.checkout("master", "-b", "main")
         # self.repo.git.branch("-D", "master")
 
-    def create_version(self):
-        # get tag value
-        # latest_version = 0
-        # all_tags = [int(tag.name) for tag in self.repo.tags]
-        # if all_tags:
-        #     latest_version = max(all_tags)
+    def create_version(self, msg=""):
         # create tag
         # format '2023-02-27-15-37-34'
-        self.repo.create_tag(datetime.now().strftime("%Y-%m-%d-%H-%M-%S"), message="new version")
+        self.repo.create_tag(datetime.now().strftime("%Y-%m-%d-%H-%M-%S"), message=msg)
     
     def delete_version(self, version_name):
         # delete tag
@@ -70,7 +65,7 @@ class Git_manager:
         if not self.repo.tags:
             self.repo.git.add("*")
             self.repo.git.commit("-m", message)
-            self.create_version()
+            self.create_version(message)
         elif self.repo.git.diff("--name-only"):
             self.repo.git.add("*")
             self.repo.git.commit("-m", message)
@@ -79,5 +74,11 @@ class Git_manager:
         return [tag for tag in self.repo.tags if tag.name == name]
 
     def get_versions(self):
-        all_tags = [tag.name for tag in self.repo.tags]
+        all_tags = []
+        
+        for tag in self.repo.tags:
+            json_tag = {"name": tag.name}
+            if tag.tag and tag.tag.message:
+                json_tag["message"] = tag.tag.message
+            all_tags.append(json_tag)
         return all_tags
