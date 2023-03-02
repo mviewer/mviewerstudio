@@ -155,8 +155,8 @@ def switch_app_version(id, version = "1") -> Response:
     
     workspace = path.join(current_app.config["EXPORT_CONF_FOLDER"], config[0].id)
     git = Git_manager(workspace)
-    git.switch_version(version, as_new)
-    return jsonify({"success": True, "message": "Version changes !"}), 200       
+    is_changed_version = git.switch_version(version, as_new)
+    return jsonify({"success": True, "message": "Version changes !", "detached": is_changed_version}), 200       
 
 @basic_store.route("/api/app/<id>/version", methods=["DELETE"])
 def delete_app_versions(id) -> Response:

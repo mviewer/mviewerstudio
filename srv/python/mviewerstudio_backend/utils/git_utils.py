@@ -31,6 +31,8 @@ class Git_manager:
         if tag:
             # delete version from tag object
             self.repo.delete_tag(tag)
+        if len(self.repo.tags) == 1:
+            self.switch_version(self.repo.tags[0].name, True)
 
     def delete_all_branch(self):
         '''
@@ -53,13 +55,18 @@ class Git_manager:
         self.repo.git.checkout("master")
         self.delete_all_branch()
 
-        if target not in self.get_versions():
+        if target not in [tag.name for tag in self.repo.tags]:
             return
         if is_start_point:
             self.repo.git.reset("--hard", target_tags)
         else:
             # create new branch
-            self.repo.git.checkout(target_tags, "-b", target)
+            commits = list(self.repo.iter_commits(target_tags))
+            if len(commits) > 1:
+                self.repo.git.checkout(target_tags, "-b", target)
+            else:
+                self.repo.git.checkout("master")
+        return self.repo.active_branch.name == "master"
 
     def commit_changes(self, message):
         if not self.repo.tags:
@@ -75,7 +82,6 @@ class Git_manager:
 
     def get_versions(self):
         all_tags = []
-        
         for tag in self.repo.tags:
             json_tag = {"name": tag.name}
             if tag.tag and tag.tag.message:

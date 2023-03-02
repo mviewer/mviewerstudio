@@ -19,7 +19,7 @@ A register given by app.register is use as global configs metadata store.
 DCAT-RDF Metadata are given by front end (see above ConfigModel).
 '''
 class Config:
-    def __init__(self, data, user, app) -> None:
+    def __init__(self, data = "", user = "", app = None, xml = None) -> None:
         
         self.uuid = None
         self.full_xml_path = None
@@ -27,8 +27,11 @@ class Config:
         self.directory = None
         
         self.user = user
-        self.xml = self._read_xml_data(data)
-        if self.xml is not None :
+        if not xml:
+            self.xml = self._read_xml_data(data)
+        else:
+            self.xml = self._read_xml(xml)
+        if self.xml is not None and app.register:
             self.register = app.register
 
             # init or create workspace
@@ -41,6 +44,11 @@ class Config:
             # save xml and git commit
             self.create_or_update_config()
   
+    def _read_xml(self, xml):
+        self.meta = self._get_xml_describe(xml)
+        if self.meta.find(".//{*}identifier") is not None:
+            self.uuid = self.meta.find(".//{*}identifier").text
+        return xml
     def _read_xml_data(self, data):
         '''
         Decode request data body to XML.
@@ -51,11 +59,7 @@ class Config:
         if not self.data:
             return None
         xml = self.data.replace("anonymous", self.user.username)
-        # read metadata
-        self.meta = self._get_xml_describe(xml)
-        if self.meta.find(".//{*}identifier") is not None:
-            self.uuid = self.meta.find(".//{*}identifier").text
-        return xml
+        return self._read_xml(xml)
 
     def create_workspace(self):
         '''
@@ -125,6 +129,6 @@ class Config:
             url = url,
             subject = subject,
         )
-    
+
     def as_dict(self):
         return self.as_data().as_dict()

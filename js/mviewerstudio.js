@@ -560,7 +560,7 @@ var deleteApplications = (ids = []) => {
 var deleteAppFromList = (id) => {
     deleteApplications(id);
     document.getElementById('liste_applications').innerHTML = "";
-    mv.getListeApplications();    
+    mv.getListeApplications();
 }
 
 var previewAppUrl = (id, title) => {
@@ -722,8 +722,6 @@ var saveApplicationParameters = function (option) {
             if (option == 0) {
                 // Ok it's been saved and that's it
                 console.log(mviewer.tr('msg.file_saved_on_server') + " (" + data.filepath + ").");
-                return true
-
             } else if (option == 1) {
                 // Download map config file
                 var element = document.createElement('a');
@@ -760,7 +758,6 @@ var saveApplicationParameters = function (option) {
             }
             document.querySelector("#toolsbarStudio-delete").classList.remove("d-none");
             document.querySelector("#layerOptionBtn").classList.remove("d-none");
-            return true
         }).catch(err => alert(mviewer.tr('msg.save_failure')));
     } else {
         //alert(mviewer.tr('msg.xml_doc_invalid'));
