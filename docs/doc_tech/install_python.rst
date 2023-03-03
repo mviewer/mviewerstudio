@@ -104,6 +104,7 @@ Prérequis
 
  - Disposer d'un serveur web (Apache ou Nginx)
  - Disposer d'une instance mviewer sur le même serveur (ex : /var/www/mviewer)
+ - Disposer des droits sudo
  - Avoir installé mviewerstudio avec la méthode décrite dans la partie précédante
 
 Objectifs
