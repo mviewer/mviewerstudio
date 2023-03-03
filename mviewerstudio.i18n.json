@@ -327,7 +327,7 @@
         "tabs.data.paramspanel.icon": "Icon",
         "tabs.data.paramspanel.icon_pick": "Pick an icon",
         "tabs.data.paramspanel.add_data": "Add some data",
-        "tabs.versions.title": "Gestion des versions",
+        "tabs.versions.title": "Historique des modifications",
         "tabs.bg.title": "Background layers",
         "tabs.bg.displaymode": "Display mode",
         "tabs.bg.display_normal": "Normal",

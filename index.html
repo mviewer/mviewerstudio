@@ -218,7 +218,7 @@
                     <!--TOOLSBAR -->
                     <div id="toolsbarStudio">                        
                         <ul class="nav align-items-center justify-content-end"> 
-                            <div class="btn-group d-none" id="layerOptionBtn">
+                            <div class="btn-group d-none advanced" id="layerOptionBtn">
                                 <button type="button" class="nav-link btn btn-outline-info dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                   Options
                                 </button>
@@ -228,7 +228,7 @@
                             </div>                                
                             <a class="nav-link" id="toolsbarStudio-View" onclick="saveApplicationParameters(2);" href="#"><i class="ri-eye-2-line"></i> <span i18n="studio.toolsbar.preview">Prévisualiser</span></a>                          
                             <a class="nav-link" id="toolsbarStudio-Save" onclick="saveApplicationParameters(0);" href="#"><i class="ri-save-line"></i> <span i18n="studio.toolsbar.save">Enregistrer</span></a>
-                            <a class="nav-link d-none" id="toolsbarStudio-delete" onclick="deleteApplications([config?.id]);" href="#"><i class="ri-save-line"></i> <span i18n="studio.toolsbar.delete">Supprimer</span></a>
+                            <a class="nav-link d-none advanced" id="toolsbarStudio-delete" onclick="deleteApplications([config?.id]);" href="#"><i class="ri-save-line"></i> <span i18n="studio.toolsbar.delete">Supprimer</span></a>
                         </ul>
                         <div class="custom-control custom-switch mt-2" id="btnSwitchAdvanced">
                             <input type="checkbox" class="custom-control-input" id="SwitchAdvanced">
