@@ -1,6 +1,5 @@
-from os import path, mkdir, remove, getcwd
+from os import path, mkdir, remove
 import logging
-import git
 import xml.etree.ElementTree as ET
 from datetime import datetime
 import re
@@ -68,6 +67,7 @@ class Config:
         if not path.exists(self.workspace):
             # create directory
             mkdir(self.workspace)
+            mkdir(path.join(self.workspace, "preview"))
     
     def _get_xml_describe(self, xml):
         '''

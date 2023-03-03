@@ -266,7 +266,7 @@ var newConfiguration = function (infos) {
         themes: {},
         temp: { layers: {} },
         id: mv.uuid(),
-        description: "Creation",
+        description: moment().format("DD-MM-YYYY-HH-mm-ss"),
         isFile: false,
         ...infos // from reading app
     };

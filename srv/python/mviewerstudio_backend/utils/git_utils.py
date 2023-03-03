@@ -50,23 +50,18 @@ class Git_manager:
                 self.repo.delete_tag(tag)
 
     def switch_version(self, target, is_start_point):
-        target_tags = "tags/%s" % target
-        
+
         self.repo.git.checkout("master")
         self.delete_all_branch()
 
-        if target not in [tag.name for tag in self.repo.tags]:
+        if target in [tag.name for tag in self.repo.tags]:
+            target = "tags/%s" % target
+
+        elif not [commit for commit in list(self.repo.iter_commits()) if commit.hexsha == target]:
             return
+
         if is_start_point:
-            self.repo.git.reset("--hard", target_tags)
-        else:
-            # create new branch
-            commits = list(self.repo.iter_commits(target_tags))
-            if len(commits) > 1:
-                self.repo.git.checkout(target_tags, "-b", target)
-            else:
-                self.repo.git.checkout("master")
-        return self.repo.active_branch.name == "master"
+            self.repo.git.reset("--hard", target)
 
     def commit_changes(self, message):
         if not self.repo.tags:
@@ -81,10 +76,33 @@ class Git_manager:
         return [tag for tag in self.repo.tags if tag.name == name]
 
     def get_versions(self):
-        all_tags = []
+        return {
+            "tags": self.get_tags(),
+            "commits": self.get_commits()
+        }
+    
+    def get_tags(self):
+        tags = []
         for tag in self.repo.tags:
             json_tag = {"name": tag.name}
             if tag.tag and tag.tag.message:
                 json_tag["message"] = tag.tag.message
-            all_tags.append(json_tag)
-        return all_tags
+                json_tag["commit"] = tag.tag.object.hexsha
+            tags.append(json_tag)
+        return tags
+    def get_commits(self):
+        commits = []
+        tags_json = self.get_tags()
+        head = self.repo.head
+        for commit in list(self.repo.iter_commits(head)):
+            commit_json = {
+                "message": commit.message,
+                "id": commit.hexsha,
+                "author": commit.author.name,
+                "date": commit.authored_datetime.strftime("%Y-%m-%d-%H-%M-%S")
+            }
+            tag = [tag["name"] for tag in tags_json if tag["commit"] == commit.hexsha]
+            if tag :
+                commit_json["tag"] = tag[0]
+            commits.append(commit_json)
+        return commits

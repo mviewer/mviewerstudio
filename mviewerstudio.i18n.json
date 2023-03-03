@@ -270,7 +270,7 @@
         "modal.exit.save" : "Enregister mon application et quitter le studio",
         "modal.exit.notsave" : "Ne pas sauvegarder mes modifications et quitter le studio",
         "modal.exit.previous" : "Retour",
-        "modal.appversion.title" : "Gérer les versions de l'application",
+        "modal.appversion.title" : "Historique des modifications",
         "validate" : " Valider",
         "ok": "OK",
         "cancel": "Annuler",
@@ -291,7 +291,7 @@
         "msg.delete_req_error": "Echec de la requête de suppression.\nVeuillez consulter votre administrateur.",
         "msg.retrieval_req_error": "Echec de la requête de récupération de l'application.\nVeuillez consulter votre administrateur.",
         "msg.xml_doc_invalid": "Document xml invalide",
-        "version.comment": "Description de la version",
+        "version.comment": "Description de l'état",
         "version.comment.ph": "ex: Version de test sans données"
     },
     "en": {

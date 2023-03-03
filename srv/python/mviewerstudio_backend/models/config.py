@@ -14,7 +14,7 @@ class ConfigModel:
     id: int
     title: str
     creator: str
-    versions: List[str]
+    versions: str
     keywords: List[str]
     description: str
     url: int

@@ -474,11 +474,19 @@
 		font-size: 18px;
 	}
 
-	#versionChangeLink {
+	#versionPreviewLink {
 		color: var(--info)
 	}
 	#versionDeleteLink {
 		color: var(--danger);
+	}
+
+	#versionAsNewLink {
+		color: var(--warning);
+	}
+
+	#versionVersionIcon {
+		color: var(--success);
 	}
 	
 	/* APPLICATION  */

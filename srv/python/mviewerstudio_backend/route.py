@@ -3,7 +3,7 @@ from .utils.login_utils import current_user
 from .utils.config_utils import Config
 import hashlib
 from os import path, mkdir
-from shutil import rmtree
+from shutil import rmtree, copyfile
 from flask.blueprints import BlueprintSetupState
 from urllib.parse import urlparse
 import requests
@@ -144,7 +144,9 @@ def switch_app_version(id, version = "1") -> Response:
     Allow to switch version
     '''
     # read GET params from URL
-    as_new = request.args.get('as_new', default=False, type=bool)
+    as_new = False
+    if 'as_new' in request.json :
+        as_new = request.json["as_new"]
     config =  current_app.register.read(id)
 
     if not version or version == "1":
@@ -155,8 +157,31 @@ def switch_app_version(id, version = "1") -> Response:
     
     workspace = path.join(current_app.config["EXPORT_CONF_FOLDER"], config[0].id)
     git = Git_manager(workspace)
-    is_changed_version = git.switch_version(version, as_new)
-    return jsonify({"success": True, "message": "Version changes !", "detached": is_changed_version}), 200       
+    git.switch_version(version, as_new)
+    return jsonify({"success": True, "message": "Version changes !", "detached": git.repo.active_branch.name != "master"}), 200       
+
+@basic_store.route("/api/app/<id>/version/<version>/preview", methods=["GET"])
+def preview_app_version(id, version) -> Response:
+    config =  current_app.register.read(id)
+    if not config:
+        raise BadRequest("This config doesn't exists !")
+    
+    workspace = path.join(current_app.config["EXPORT_CONF_FOLDER"], config[0].id)
+    git = Git_manager(workspace)
+    git.switch_version(version, False)
+    # copy past file to preview folder
+    app_config = current_app.config
+    src_file = app_config["EXPORT_CONF_FOLDER"] + config[0].url
+    preview_file = path.join(config[0].id, "preview", "%s.xml" % version)
+    path_preview_file = path.join(app_config["EXPORT_CONF_FOLDER"], preview_file)
+    copyfile(src_file, path_preview_file)
+    # restor branch
+    git.repo.git.checkout("master")
+    
+    return jsonify({
+        "success": True,
+        "file": path.join(app_config["CONF_PATH_FROM_MVIEWER"], preview_file)
+    }), 200
 
 @basic_store.route("/api/app/<id>/version", methods=["DELETE"])
 def delete_app_versions(id) -> Response:
@@ -193,7 +218,7 @@ def create_app_version(id) -> Response:
     workspace = path.join(current_app.config["EXPORT_CONF_FOLDER"], config[0].id)
     git = Git_manager(workspace)
     git.create_version(config[0].description)
-    return jsonify({"success": True, "message": "New version created !"}), 200      
+    return jsonify({"success": True, "message": "New version created !"}), 200
 
 @basic_store.route("/api/style", methods=["POST"])
 def store_style() -> Response:
