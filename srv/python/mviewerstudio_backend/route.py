@@ -78,8 +78,13 @@ def list_stored_mviewer_config() -> Response:
     """
     Return all mviewer config created by the current user
     """
-
-    configs = current_app.register.as_dict()["configs"]
+    
+    if "search" in request.args:
+        pattern = request.args.get("search")
+        configs = current_app.register.search_configs(pattern)
+        configs = [config.as_dict() for config in configs]
+    else:
+        configs = current_app.register.as_dict()["configs"]
     for config in configs:
         config["url"] = current_app.config["CONF_PATH_FROM_MVIEWER"] + config["url"]
     return jsonify(configs)
@@ -154,10 +159,14 @@ def switch_app_version(id, version = "1") -> Response:
 
     if not config:
         raise BadRequest("This config doesn't exists !")
-    
-    workspace = path.join(current_app.config["EXPORT_CONF_FOLDER"], config[0].id)
+    config = config[0]
+    workspace = path.join(current_app.config["EXPORT_CONF_FOLDER"], config.id)
     git = Git_manager(workspace)
     git.switch_version(version, as_new)
+    current_app.register.update_json()
+    # Update register
+    config.versions = git.get_versions()
+    current_app.register.update(config)
     return jsonify({"success": True, "message": "Version changes !", "detached": git.repo.active_branch.name != "master"}), 200       
 
 @basic_store.route("/api/app/<id>/version/<version>/preview", methods=["GET"])

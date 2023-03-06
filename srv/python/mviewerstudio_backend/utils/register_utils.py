@@ -37,7 +37,7 @@ class ConfigRegister:
         
     def _delete_register(self):
         remove(self.full_path)
-
+    
     def _configs_files_to_register(self):
         dirs = [
             dir for dir in listdir(self.store_directory) if isdir(path.join(self.store_directory, dir)) and glob.glob("%s/*.xml" % path.join(self.store_directory, dir))
@@ -60,7 +60,6 @@ class ConfigRegister:
         register_file.write(json.dumps(self.as_dict()))
         register_file.close()
         
-
     def add(self, config):
         self.register.configs += [config]
         self.register.total = len(self.register.configs)
@@ -88,4 +87,15 @@ class ConfigRegister:
             "configs": [config.as_dict() for config in self.register.configs]
         }
 
-
+    def search_configs(self, pattern):
+        '''
+        Search pattern inside configs fields (limited list).
+        Parameters:
+            pattern (str): string to search.
+        '''       
+        configs_match = []
+        for config in self.register.configs:
+            fields_value = [config.title, config.creator, config.description, config.keywords, config.subject, config.date]
+            if [v for v in fields_value if pattern in v]:
+                configs_match.append(config)
+        return configs_match

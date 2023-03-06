@@ -847,7 +847,6 @@ var loadApplicationParametersFromRemoteFile = function (url) {
         fetch(_conf.api)
             .then(response => response.json())
             .then(r => {
-                console.log(r);
                 return r.filter(app => app.id == config.id);
             })
             .catch(() => ({}))

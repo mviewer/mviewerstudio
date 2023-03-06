@@ -488,6 +488,11 @@
 	#versionVersionIcon {
 		color: var(--success);
 	}
+
+	.currentVersion {
+		color: black;
+		font-weight: 500;
+	}
 	
 	/* APPLICATION  */
 	

@@ -99,7 +99,8 @@ class Git_manager:
                 "message": commit.message,
                 "id": commit.hexsha,
                 "author": commit.author.name,
-                "date": commit.authored_datetime.strftime("%Y-%m-%d-%H-%M-%S")
+                "date": commit.authored_datetime.strftime("%Y-%m-%d-%H-%M-%S"),
+                "current": commit.hexsha == self.repo.head.commit.hexsha
             }
             tag = [tag["name"] for tag in tags_json if tag["commit"] == commit.hexsha]
             if tag :

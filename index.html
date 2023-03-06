@@ -1008,8 +1008,16 @@
                                 </div>
                             </form>
                             <br>
-                            <p><span i18n="modal.file.selectserverside">Sélectionnez une application :</span></p>
-                            <div class="list-group mb-3" id="liste_applications"></div>
+                            <form class="row mb-2">
+                                <div class="col">
+                                    <span i18n="modal.file.selectserverside">Sélectionner une application :</span>
+                                </div>
+                                <div class="col">
+                                    <input autocomplete="off" onchange="mv.onSearchApp(this)" type="text" class="form-control" id="appListSearch" placeholder="Saisir un nom, un mot clé, une date...">
+                                </div>
+                            </form>
+                            <div class="list-group mb-3" id="liste_applications">
+                            </div>
                         </div>
                         <div class="tab-pane fade" id="local" role="tabpanel" tabindex="0">
                             <label i18n="modal.file.selectlocal">Sélectionner un fichier de configuration .XML :</label>
