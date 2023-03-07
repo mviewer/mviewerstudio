@@ -891,7 +891,6 @@ var loadApplicationParametersFromRemoteFile = function (url) {
         const appMeta = values[1][0];
         mv.parseApplication(data);
         if (appMeta?.versions) {
-            console.log(appMeta.versions);
             config.versions = appMeta.versions;
         }
         showStudio();
