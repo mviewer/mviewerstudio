@@ -1714,14 +1714,14 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" i18n="modal.appversion.title">Historique des modifications</h5>
-                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <button type="button" class="close" onclick="mv.cleanVersionHistoryUI()" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 </div>
                 <div class="modal-body">
                     <div id="appsListTable"></div>
                 </div>
                 <div class="modal-footer d-none">                    
                     <button id="validVersionFooterBtn" onclick="mv.createVersion()" type="button" class="btn btn-primary" data-bs-dismiss="modal">Valider</button>
-                    <button id="cancelVersionFooterBtn" type="button" class="btn btn-outline-primary" data-bs-dismiss="modal" aria-label="Close" i18n="cancel">Annuler</button>
+                    <button id="cancelVersionFooterBtn" onclick="mv.cleanVersionHistoryUI()" type="button" class="btn btn-outline-primary" data-bs-dismiss="modal" aria-label="Close" i18n="cancel">Annuler</button>
                 </div>
             </div>
         </div>
