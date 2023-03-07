@@ -43,14 +43,25 @@ def save_mviewer_config() -> Response:
         current_user,
         current_app
     )
+    config_data = config.as_data()
+
     if not config.xml:
         raise BadRequest("No XML found in the request body !")
-    
-    config_data = config.as_data()
+
+    # clean preview space if not empty
+    app_config = current_app.config
+    preview_dir = path.join(app_config["EXPORT_CONF_FOLDER"], config_data.id, "preview")
+    for (root,dirs,files) in walk(preview_dir):
+        if not files:
+            break
+        for f in files:
+            remove(path.join(preview_dir,f))
+
+    # register config
     current_config = current_app.register.read(config_data.id)
     if not current_config:
         current_app.register.add(config_data)
-
+    # response
     return jsonify({"success": True, "filepath": config_data.url, "config": config_data})
 
 
@@ -192,26 +203,26 @@ def preview_app_version(id, version) -> Response:
 
 @basic_store.route("/api/app/<id>/preview", methods=["POST"])
 def preview_uncommited_app(id) -> Response:
-    # uuid file
-    # store file to preview folder
-    # return url
+    # clean preview
     app_config = current_app.config
     preview_dir = path.join(app_config["EXPORT_CONF_FOLDER"], id, "preview")
     for (root,dirs,files) in walk(preview_dir):
         for f in files:
             remove(path.join(preview_dir,f))
+    # read XML
     xml = request.data.decode("utf-8")
     xml.replace("anonymous", current_user.username)
-    # save file
+    
+    # get file name and path
     file_name = uuid.uuid1()
-
     preview_file = path.join(id, "preview", "%s.xml" % file_name)
     system_path = path.join(app_config["EXPORT_CONF_FOLDER"], preview_file)
 
-    # write file
+    # store file to preview folder
     with open(system_path, "w") as file:
         file.write(xml)
         file.close()
+    # return url
     return jsonify({
         "success": True,
         "file": path.join(app_config["CONF_PATH_FROM_MVIEWER"], preview_file)
