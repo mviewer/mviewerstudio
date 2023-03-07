@@ -48,15 +48,6 @@ def save_mviewer_config() -> Response:
     if not config.xml:
         raise BadRequest("No XML found in the request body !")
 
-    # clean preview space if not empty
-    app_config = current_app.config
-    preview_dir = path.join(app_config["EXPORT_CONF_FOLDER"], config_data.id, "preview")
-    for (root,dirs,files) in walk(preview_dir):
-        if not files:
-            break
-        for f in files:
-            remove(path.join(preview_dir,f))
-
     # register config
     current_config = current_app.register.read(config_data.id)
     if not current_config:
@@ -74,7 +65,15 @@ def update_mviewer_config() -> Response:
     )
     if not config.xml:
         raise BadRequest("No XML found in the request body !")
-    
+    # clean preview space if not empty
+    app_config = current_app.config
+    preview_dir = path.join(app_config["EXPORT_CONF_FOLDER"], config_data.id, "preview")
+    for (root,dirs,files) in walk(preview_dir):
+        if not files:
+            break
+        for f in files:
+            remove(path.join(preview_dir,f))
+
     config_data = config.as_data()
     current_config = current_app.register.read(config_data.id)
 
