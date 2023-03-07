@@ -709,7 +709,7 @@ var getConfig = () => {
 
 let previewAppsWithoutSave = (id) => {
     const confXml = getConfig();
-    if (!mv.validateXML(confXml.join(""))) { 
+    if (!mv.validateXML(confXml.join(""))) {
         return;
     }
     return fetch(`${ _conf.api }/${ id }/preview`, {
@@ -722,10 +722,23 @@ let previewAppsWithoutSave = (id) => {
         .then(response => response.json())
         .then(data => {
             const url = _conf.mviewer_instance + '?config=' + data.file;
-            window.open(url,'mvs_vizualize');
+            window.open(url, 'mvs_vizualize');
         })
         .catch(err => alert(mviewer.tr('msg.xml_doc_invalid')))
-}
+};
+
+const downloadXML = () => {
+    const conf = getConfig();
+    if (mv.validateXML(conf.join(""))) {
+        var element = document.createElement('a');
+        element.setAttribute('href', 'data:text/xml;charset=utf-8,' + encodeURIComponent(conf.join("")));
+        element.setAttribute('download', document.querySelector("#opt-title").value || moment().format("MMDDYYYYhhmmss"));
+        element.style.display = 'none';
+        document.body.appendChild(element);
+        element.click();
+        document.body.removeChild(element);
+    }
+};
 
 var saveApplicationParameters = (option) => {
     // option == 0 : save serverside

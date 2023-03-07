@@ -217,7 +217,7 @@ def preview_app_version(id, version) -> Response:
     path_preview_file = path.join(app_config["EXPORT_CONF_FOLDER"], preview_file)
     copyfile(src_file, path_preview_file)
     # restor branch
-    git.repo.git.checkout("master")
+    git.switch_version("master", False)
 
     return (
         jsonify(

@@ -62,6 +62,8 @@ class Git_manager:
 
         if is_start_point:
             self.repo.git.reset("--hard", target)
+        
+        self.repo.git.checkout(target)
 
     def commit_changes(self, message):
         if not self.repo.tags:
