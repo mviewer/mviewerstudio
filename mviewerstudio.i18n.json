@@ -1,6 +1,7 @@
 {
     "fr": {
         "head.title": "Titre de l'application",
+        "head.keywords": "Mots clés",
         "banner.not_connected": "Non connecté",
         "banner.logout": "Déconnexion",
         "home.welcome_title": "Bienvenue",
@@ -289,11 +290,13 @@
         "msg.delete_req_error": "Echec de la requête de suppression.\nVeuillez consulter votre administrateur.",
         "msg.retrieval_req_error": "Echec de la requête de récupération de l'application.\nVeuillez consulter votre administrateur.",
         "msg.xml_doc_invalid": "Document xml invalide",
-        "version.comment": "Ajouter une étiquette",
+        "msg.xml_save": "Document non sauvegardé. \nVeuillez consulter votre administrateur.",
+        "version.comment": "Ajouter une description",
         "version.comment.ph": "ex: Version de test sans données"
     },
     "en": {
         "head.title": "Application title",
+        "head.keywords": "Keywords",
         "banner.not_connected": "Not connected",
         "banner.load": "Load",
         "banner.save": "Save",

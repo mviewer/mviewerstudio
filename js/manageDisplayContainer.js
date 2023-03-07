@@ -33,9 +33,9 @@ function saveStudio() {
 
 // Manage display of options
 $('#opt-title').change(function() {
-if($("#opt-title").hasClass( "is-invalid")){
-  $("#opt-title").removeClass( "is-invalid")
-}
+  if($("#opt-title").hasClass( "is-invalid")){
+    $("#opt-title").removeClass( "is-invalid")
+  }
 });
 
 // Force update map size 

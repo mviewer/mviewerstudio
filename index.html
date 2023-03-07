@@ -115,8 +115,8 @@
                 <div class="col-xl-3 col-md-12" id="blockWizard">
                     <div class="bg-light">
                         <div class="mb-3">
-                            <h5 class="text-primary">MVIEWER</h5>
-                            <h4 class="text-primary strong" id="nameAppBlock">Mon application</h4>
+                            <h3 class="text-primary strong" id="nameAppBlock">Mon application</h3>
+                            <span class="text-primary" id="detailArea">MVIEWER</span>
                         </div> 
                         <!-- STEP STUDIO -->
                         <ul class="nav nav-pills flex-column mb-5" id="stepStudio">
@@ -234,7 +234,13 @@
                                         <label for="opt-title" i18n="head.title" class="form-label">Titre de l'application</label>
                                         <input class="form-control" id="opt-title" type="text" name="textinput" placeholder="Mon application">
                                     </div>
-                                </div>                                
+                                </div>
+                                <div class="col-md-12 advanced">
+                                    <div class="form-group">
+                                        <label for="optKeywords" i18n="head.keywords" class="form-label">Mots clés</label>
+                                        <input class="form-control" onchange="mv.changeKeyWords(this)" id="optKeywords" type="text" name="textinput" placeholder="ex: carte,rennes,lycées">
+                                    </div>
+                                </div>                            
                             </div>  
                             <div class="row">
                                 <div class="col-md-6 advanced" style="display: none;">
