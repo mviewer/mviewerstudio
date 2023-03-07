@@ -1,7 +1,6 @@
-from os import path, mkdir, remove
+from os import path, mkdir, remove, walk
 import logging
 import xml.etree.ElementTree as ET
-from datetime import datetime
 import re
 import glob
 
@@ -44,10 +43,14 @@ class Config:
             self.create_or_update_config()
   
     def _read_xml(self, xml):
+        '''
+        :parameter xml: str XML config from request
+        '''
         self.meta = self._get_xml_describe(xml)
         if self.meta.find(".//{*}identifier") is not None:
             self.uuid = self.meta.find(".//{*}identifier").text
         return xml
+
     def _read_xml_data(self, data):
         '''
         Decode request data body to XML.
@@ -72,6 +75,7 @@ class Config:
     def _get_xml_describe(self, xml):
         '''
         Return metadata from xml DCAT balises
+        :parameter xml: str
         '''
         xml_parser = ET.fromstring(xml)
         return xml_parser.find(".//metadata/{*}RDF/{*}Description")
@@ -103,6 +107,9 @@ class Config:
         self.git.commit_changes(commit_msg)
     
     def clean_all_workspace_configs(self):
+        '''
+        Remove each XML found in app workspace
+        '''
         for file in glob.glob("%s/*.xml" % self.workspace):
             remove(file)
 
@@ -127,6 +134,9 @@ class Config:
             url = url,
             subject = subject,
         )
-
+    
     def as_dict(self):
+        '''
+        Get config as dict.
+        '''
         return self.as_data().as_dict()

@@ -1,8 +1,9 @@
 from flask import Blueprint, jsonify, Response, request, current_app, redirect
 from .utils.login_utils import current_user
 from .utils.config_utils import Config
+from .utils.commons import clean_preview, init_preview
 import hashlib, uuid
-from os import path, mkdir, walk, remove
+from os import path, mkdir
 from shutil import rmtree, copyfile
 from flask.blueprints import BlueprintSetupState
 from urllib.parse import urlparse
@@ -57,7 +58,6 @@ def save_mviewer_config() -> Response:
         {"success": True, "filepath": config_data.url, "config": config_data}
     )
 
-
 @basic_store.route("/api/app", methods=["PUT"])
 def update_mviewer_config() -> Response:
     config = Config(request.data, current_user, current_app)
@@ -65,13 +65,7 @@ def update_mviewer_config() -> Response:
         raise BadRequest("No XML found in the request body !")
     config_data = config.as_data()
     # clean preview space if not empty
-    app_config = current_app.config
-    preview_dir = path.join(app_config["EXPORT_CONF_FOLDER"], config_data.id, "preview")
-    for (root, dirs, files) in walk(preview_dir):
-        if not files:
-            break
-        for f in files:
-            remove(path.join(preview_dir, f))
+    clean_preview(current_app, config_data.id)
 
     current_config = current_app.register.read(config_data.id)
 
@@ -189,6 +183,8 @@ def switch_app_version(id, version="1") -> Response:
     # Update register
     config.versions = git.get_versions()
     current_app.register.update(config)
+    # clean previews
+    clean_preview(current_app, config.id)
     return (
         jsonify(
             {
@@ -207,6 +203,8 @@ def preview_app_version(id, version) -> Response:
     if not config:
         raise BadRequest("This config doesn't exists !")
 
+    # create preview space
+    init_preview(current_app, config[0].id)
     workspace = path.join(current_app.config["EXPORT_CONF_FOLDER"], config[0].id)
     git = Git_manager(workspace)
     git.switch_version(version, False)
@@ -217,7 +215,7 @@ def preview_app_version(id, version) -> Response:
     path_preview_file = path.join(app_config["EXPORT_CONF_FOLDER"], preview_file)
     copyfile(src_file, path_preview_file)
     # restor branch
-    git.switch_version("master", False)
+    git.repo.git.checkout("master")
 
     return (
         jsonify(
@@ -232,12 +230,8 @@ def preview_app_version(id, version) -> Response:
 
 @basic_store.route("/api/app/<id>/preview", methods=["POST"])
 def preview_uncommited_app(id) -> Response:
-    # clean preview
+    # init preview
     app_config = current_app.config
-    preview_dir = path.join(app_config["EXPORT_CONF_FOLDER"], id, "preview")
-    for (root, dirs, files) in walk(preview_dir):
-        for f in files:
-            remove(path.join(preview_dir, f))
     # read XML
     xml = request.data.decode("utf-8")
     xml.replace("anonymous", current_user.username)

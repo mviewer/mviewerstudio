@@ -31,14 +31,24 @@ class ConfigRegister:
         return registerDataClass
     
     def create_register_from_file_system(self):
+        '''
+        Will read each files on server startup to create json and init register config data class
+        in memory.
+        '''
         self._delete_register()
         self._create_empty_register()
         self._configs_files_to_register()
         
     def _delete_register(self):
+        '''
+        Delete register JSON file
+        '''
         remove(self.full_path)
     
     def _configs_files_to_register(self):
+        '''
+        Will parse all app configs workspace to init class config for each.
+        '''
         dirs = [
             dir for dir in listdir(self.store_directory) if isdir(path.join(self.store_directory, dir)) and glob.glob("%s/*.xml" % path.join(self.store_directory, dir))
         ]
