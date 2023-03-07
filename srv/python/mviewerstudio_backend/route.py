@@ -1,8 +1,8 @@
 from flask import Blueprint, jsonify, Response, request, current_app, redirect
 from .utils.login_utils import current_user
 from .utils.config_utils import Config
-import hashlib
-from os import path, mkdir
+import hashlib, uuid
+from os import path, mkdir, walk, remove
 from shutil import rmtree, copyfile
 from flask.blueprints import BlueprintSetupState
 from urllib.parse import urlparse
@@ -127,8 +127,6 @@ def get_all_app_versions(id) -> Response:
     git = Git_manager(workspace)
     versions = git.get_versions()
     return jsonify({"versions": versions, "config": config.as_dict()})
-    
-
 
 @basic_store.route("/api/app/all", methods=["DELETE"])
 def delete_all_mviewer_config() -> Response:
@@ -187,6 +185,33 @@ def preview_app_version(id, version) -> Response:
     # restor branch
     git.repo.git.checkout("master")
     
+    return jsonify({
+        "success": True,
+        "file": path.join(app_config["CONF_PATH_FROM_MVIEWER"], preview_file)
+    }), 200
+
+@basic_store.route("/api/app/<id>/preview", methods=["POST"])
+def preview_uncommited_app(id) -> Response:
+    # uuid file
+    # store file to preview folder
+    # return url
+    app_config = current_app.config
+    preview_dir = path.join(app_config["EXPORT_CONF_FOLDER"], id, "preview")
+    for (root,dirs,files) in walk(preview_dir):
+        for f in files:
+            remove(path.join(preview_dir,f))
+    xml = request.data.decode("utf-8")
+    xml.replace("anonymous", current_user.username)
+    # save file
+    file_name = uuid.uuid1()
+
+    preview_file = path.join(id, "preview", "%s.xml" % file_name)
+    system_path = path.join(app_config["EXPORT_CONF_FOLDER"], preview_file)
+
+    # write file
+    with open(system_path, "w") as file:
+        file.write(xml)
+        file.close()
     return jsonify({
         "success": True,
         "file": path.join(app_config["CONF_PATH_FROM_MVIEWER"], preview_file)

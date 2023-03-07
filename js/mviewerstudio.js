@@ -707,6 +707,26 @@ var getConfig = () => {
     return conf
 }
 
+let previewAppsWithoutSave = (id) => {
+    const confXml = getConfig();
+    if (!mv.validateXML(confXml.join(""))) { 
+        return;
+    }
+    return fetch(`${ _conf.api }/${ id }/preview`, {
+        method: "POST",
+        headers: {
+            'Content-Type': 'text/xml'
+        },
+        body: confXml.join("")
+    })
+        .then(response => response.json())
+        .then(data => {
+            const url = _conf.mviewer_instance + '?config=' + data.file;
+            window.open(url,'mvs_vizualize');
+        })
+        .catch(err => alert(mviewer.tr('msg.xml_doc_invalid')))
+}
+
 var saveApplicationParameters = function (option) {
     const conf = getConfig();
     if (mv.validateXML(conf.join(""))) {
