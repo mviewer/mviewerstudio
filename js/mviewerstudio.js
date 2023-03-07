@@ -727,7 +727,7 @@ let previewAppsWithoutSave = (id) => {
         .catch(err => alert(mviewer.tr('msg.xml_doc_invalid')))
 }
 
-var saveApplicationParameters
+var saveApplicationParameters = (option) => {
     // option == 0 : save serverside
     // option == 1 : save serverside + download
     // option == 2 : save serverside + launch map    = function (option) {
