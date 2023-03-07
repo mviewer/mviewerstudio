@@ -106,6 +106,6 @@ class ConfigRegister:
         configs_match = []
         for config in self.register.configs:
             fields_value = [config.title, config.creator, config.description, config.keywords, config.subject, config.date]
-            if [v for v in fields_value if pattern in v]:
+            if [v for v in fields_value if pattern.lower() in v.lower()]:
                 configs_match.append(config)
         return configs_match
