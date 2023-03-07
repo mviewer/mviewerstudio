@@ -37,8 +37,6 @@
         "studio.wizard.theme_text": "Paramètres des thématiques et des données",
         "studio.wizard.advanced_title": "Fonctionnalités avancées",
         "studio.wizard.advanced_text": "Paramètres des fonctionnalités supplémentaires",
-        "studio.wizard.versions_title": "Gérer les versions",
-        "studio.wizard.versions_text": "Créer, supprimer, tester la version d'une carte",
         "studio.wizard.publication_title": "Publication",
         "studio.wizard.publication_text": "Finaliser votre application",
         "studio.wizard.help_title": "Besoin d'aide ?",
@@ -291,7 +289,7 @@
         "msg.delete_req_error": "Echec de la requête de suppression.\nVeuillez consulter votre administrateur.",
         "msg.retrieval_req_error": "Echec de la requête de récupération de l'application.\nVeuillez consulter votre administrateur.",
         "msg.xml_doc_invalid": "Document xml invalide",
-        "version.comment": "Description de l'état",
+        "version.comment": "Ajouter une étiquette",
         "version.comment.ph": "ex: Version de test sans données"
     },
     "en": {
@@ -490,7 +488,7 @@
         "msg.delete_req_error": "Deletion request failed.\n Please contact your administrator.",
         "msg.retrieval_req_error": "Application retrieval request failed.\n Please contact your administrator.",
         "msg.xml_doc_invalid": "XML document invalid",
-        "version.comment": "Describe version",
+        "version.comment": "Tag this modification",
         "version.comment.ph": "ex: Test release without data"
     }
 }

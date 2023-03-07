@@ -832,7 +832,6 @@ var deleteMyApplications = function () {
         }
     });
 };
-
 var loadApplicationParametersFromRemoteFile = function (url) {
     const waitRequests = [
         fetch(url, {

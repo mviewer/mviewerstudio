@@ -111,8 +111,6 @@ class Config:
         Index config metadata in register.
         Use to search config by DCAT RDF metadata.
         '''
-        list_heads = [head.name for head in self.repo.heads]
-
         subject = self.meta.find("{*}subject").text if self.meta.find("{*}subject") is not None else ""
         url = self.full_xml_path.replace(
             self.app.config["EXPORT_CONF_FOLDER"],
@@ -123,7 +121,7 @@ class Config:
             title = self.meta.find("{*}title").text,
             creator = self.meta.find("{*}creator").text,
             description = self.meta.find("{*}description").text,
-            date = datetime.now().isoformat(),
+            date = self.meta.find("{*}date").text,
             versions = self.git.get_versions(),
             keywords = self.meta.find("{*}keywords").text,
             url = url,
