@@ -63,6 +63,7 @@ def update_mviewer_config() -> Response:
     config = Config(request.data, current_user, current_app)
     if not config.xml:
         raise BadRequest("No XML found in the request body !")
+    config_data = config.as_data()
     # clean preview space if not empty
     app_config = current_app.config
     preview_dir = path.join(app_config["EXPORT_CONF_FOLDER"], config_data.id, "preview")
@@ -72,7 +73,6 @@ def update_mviewer_config() -> Response:
         for f in files:
             remove(path.join(preview_dir, f))
 
-    config_data = config.as_data()
     current_config = current_app.register.read(config_data.id)
 
     if not current_config:
