@@ -794,7 +794,7 @@
                                                 <i class="ri-download-line" style="font-size: 20px;vertical-align: middle;"></i>
                                             </span>                            
                                             <h5 class="card-title mt-4"><span i18n="tabs.publication.download_title">Télécharger votre application</span></h5>
-                                            <p class="card-text" i18n="tabs.publication.download_text">Télécharger le fichier de configuration .XML et déposer le sur un serveur</p>                              
+                                            <p class="card-text" i18n="tabs.publication.download_text">Télécharger le fichier de configuration .XML</p>                              
                                             </div>
                                         </div>
                                     </a> 
@@ -802,7 +802,7 @@
                                 <!--Download-->
                                 <!--Preview-->
                                 <div style="max-width: 18rem;">
-                                    <a role="button" onclick="saveApplicationParameters(2);" href="#">
+                                    <a role="button" onclick="previewAppsWithoutSave(config?.id)" href="#">
                                         <div class="card border-info p-3 zoomCard h-100" style="max-width: 18rem;">
                                             <div class="card-body mb-5">
                                             <span class="iconCard-finish" style=" background-color: #934de236;">

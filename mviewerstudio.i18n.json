@@ -137,7 +137,7 @@
         "tabs.publication.finish" : "Félicitations !",
         "tabs.publication.subfinish" : "Vous avez terminé la configuration de votre application mviewer.",
         "tabs.publication.download_title" : "Télécharger votre application",
-        "tabs.publication.download_text" : "Télécharger le fichier de configuration .XML et déposer le sur un serveur",
+        "tabs.publication.download_text" : "Télécharger le fichier de configuration .XML",
         "tabs.publication.preview_title" : "Prévisualiser votre application",
         "tabs.publication.preview_text" : "Tester et valider votre configuration en live",
         "tabs.data.title": "Thématiques & données",
