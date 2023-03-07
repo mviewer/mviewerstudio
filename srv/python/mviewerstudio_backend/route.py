@@ -19,6 +19,7 @@ basic_store = Blueprint(
 
 logger = logging.getLogger(__name__)
 
+
 @basic_store.record_once
 def basic_store_init(state: BlueprintSetupState):
     p = state.app.config["EXPORT_CONF_FOLDER"]
@@ -28,21 +29,20 @@ def basic_store_init(state: BlueprintSetupState):
     if not path.exists(styles_path):
         mkdir(styles_path)
 
+
 @basic_store.route("/")
 def default_doc():
     return redirect("index.html")
+
 
 @basic_store.route("/api/user", methods=["GET"])
 def user() -> Response:
     return jsonify(current_user.as_dict())
 
+
 @basic_store.route("/api/app", methods=["POST"])
 def save_mviewer_config() -> Response:
-    config = Config(
-        request.data,
-        current_user,
-        current_app
-    )
+    config = Config(request.data, current_user, current_app)
     config_data = config.as_data()
 
     if not config.xml:
@@ -53,42 +53,45 @@ def save_mviewer_config() -> Response:
     if not current_config:
         current_app.register.add(config_data)
     # response
-    return jsonify({"success": True, "filepath": config_data.url, "config": config_data})
+    return jsonify(
+        {"success": True, "filepath": config_data.url, "config": config_data}
+    )
 
 
 @basic_store.route("/api/app", methods=["PUT"])
 def update_mviewer_config() -> Response:
-    config = Config(
-        request.data,
-        current_user,
-        current_app
-    )
+    config = Config(request.data, current_user, current_app)
     if not config.xml:
         raise BadRequest("No XML found in the request body !")
     # clean preview space if not empty
     app_config = current_app.config
     preview_dir = path.join(app_config["EXPORT_CONF_FOLDER"], config_data.id, "preview")
-    for (root,dirs,files) in walk(preview_dir):
+    for (root, dirs, files) in walk(preview_dir):
         if not files:
             break
         for f in files:
-            remove(path.join(preview_dir,f))
+            remove(path.join(preview_dir, f))
 
     config_data = config.as_data()
     current_config = current_app.register.read(config_data.id)
 
     if not current_config:
-        raise BadRequest("This config does not exists yet ! Use creation POST request instead.")
+        raise BadRequest(
+            "This config does not exists yet ! Use creation POST request instead."
+        )
 
     current_app.register.update(config_data)
-    return jsonify({"success": True, "filepath": config_data.url, "config": config_data})
+    return jsonify(
+        {"success": True, "filepath": config_data.url, "config": config_data}
+    )
+
 
 @basic_store.route("/api/app", methods=["GET"])
 def list_stored_mviewer_config() -> Response:
     """
     Return all mviewer config created by the current user
     """
-    
+
     if "search" in request.args:
         pattern = request.args.get("search")
         configs = current_app.register.search_configs(pattern)
@@ -99,15 +102,17 @@ def list_stored_mviewer_config() -> Response:
         config["url"] = current_app.config["CONF_PATH_FROM_MVIEWER"] + config["url"]
     return jsonify(configs)
 
+
 def delete_workspace(id):
     register = current_app.register
     config = register.read(id)
-    if config :
+    if config:
         # update json
         register.delete(config[0])
         # delete directory
         workspace = path.join(current_app.config["EXPORT_CONF_FOLDER"], id)
         rmtree(workspace)
+
 
 @basic_store.route("/api/app", methods=["DELETE"])
 def delete_config_workspace() -> Response:
@@ -127,9 +132,10 @@ def delete_config_workspace() -> Response:
 
     return jsonify({"deleted_files": app_deleted, "success": True})
 
+
 @basic_store.route("/api/app/<id>/versions", methods=["GET"])
 def get_all_app_versions(id) -> Response:
-    config =  current_app.register.read(id)
+    config = current_app.register.read(id)
     if not config:
         raise BadRequest("This config doesn't exists !")
     config = config[0]
@@ -138,6 +144,7 @@ def get_all_app_versions(id) -> Response:
     versions = git.get_versions()
     return jsonify({"versions": versions, "config": config.as_dict()})
 
+
 @basic_store.route("/api/app/all", methods=["DELETE"])
 def delete_all_mviewer_config() -> Response:
     """
@@ -145,22 +152,29 @@ def delete_all_mviewer_config() -> Response:
     """
     register = current_app.register.register
     count = 0
-    for config in register.configs :
+    for config in register.configs:
         id = config.id
         delete_config_workspace(id)
         count += 1
-    return jsonify({"deleted_files": count, "success": True, "message": "Workspace is clean and empty !"})
+    return jsonify(
+        {
+            "deleted_files": count,
+            "success": True,
+            "message": "Workspace is clean and empty !",
+        }
+    )
+
 
 @basic_store.route("/api/app/<id>/version/<version>", methods=["PUT"])
-def switch_app_version(id, version = "1") -> Response:
-    '''
+def switch_app_version(id, version="1") -> Response:
+    """
     Allow to switch version
-    '''
+    """
     # read GET params from URL
     as_new = False
-    if 'as_new' in request.json :
+    if "as_new" in request.json:
         as_new = request.json["as_new"]
-    config =  current_app.register.read(id)
+    config = current_app.register.read(id)
 
     if not version or version == "1":
         as_new = True
@@ -175,14 +189,24 @@ def switch_app_version(id, version = "1") -> Response:
     # Update register
     config.versions = git.get_versions()
     current_app.register.update(config)
-    return jsonify({"success": True, "message": "Version changes !", "detached": git.repo.active_branch.name != "master"}), 200       
+    return (
+        jsonify(
+            {
+                "success": True,
+                "message": "Version changes !",
+                "detached": git.repo.active_branch.name != "master",
+            }
+        ),
+        200,
+    )
+
 
 @basic_store.route("/api/app/<id>/version/<version>/preview", methods=["GET"])
 def preview_app_version(id, version) -> Response:
-    config =  current_app.register.read(id)
+    config = current_app.register.read(id)
     if not config:
         raise BadRequest("This config doesn't exists !")
-    
+
     workspace = path.join(current_app.config["EXPORT_CONF_FOLDER"], config[0].id)
     git = Git_manager(workspace)
     git.switch_version(version, False)
@@ -194,24 +218,30 @@ def preview_app_version(id, version) -> Response:
     copyfile(src_file, path_preview_file)
     # restor branch
     git.repo.git.checkout("master")
-    
-    return jsonify({
-        "success": True,
-        "file": path.join(app_config["CONF_PATH_FROM_MVIEWER"], preview_file)
-    }), 200
+
+    return (
+        jsonify(
+            {
+                "success": True,
+                "file": path.join(app_config["CONF_PATH_FROM_MVIEWER"], preview_file),
+            }
+        ),
+        200,
+    )
+
 
 @basic_store.route("/api/app/<id>/preview", methods=["POST"])
 def preview_uncommited_app(id) -> Response:
     # clean preview
     app_config = current_app.config
     preview_dir = path.join(app_config["EXPORT_CONF_FOLDER"], id, "preview")
-    for (root,dirs,files) in walk(preview_dir):
+    for (root, dirs, files) in walk(preview_dir):
         for f in files:
-            remove(path.join(preview_dir,f))
+            remove(path.join(preview_dir, f))
     # read XML
     xml = request.data.decode("utf-8")
     xml.replace("anonymous", current_user.username)
-    
+
     # get file name and path
     file_name = uuid.uuid1()
     preview_file = path.join(id, "preview", "%s.xml" % file_name)
@@ -222,17 +252,23 @@ def preview_uncommited_app(id) -> Response:
         file.write(xml)
         file.close()
     # return url
-    return jsonify({
-        "success": True,
-        "file": path.join(app_config["CONF_PATH_FROM_MVIEWER"], preview_file)
-    }), 200
+    return (
+        jsonify(
+            {
+                "success": True,
+                "file": path.join(app_config["CONF_PATH_FROM_MVIEWER"], preview_file),
+            }
+        ),
+        200,
+    )
+
 
 @basic_store.route("/api/app/<id>/version", methods=["DELETE"])
 def delete_app_versions(id) -> Response:
-    '''
+    """
     Delete each app versions
     Only keep main active branch
-    '''
+    """
     version_deleted = 0
 
     post_data = request.json
@@ -240,8 +276,8 @@ def delete_app_versions(id) -> Response:
     if not post_data["versions"]:
         raise BadRequest("Empty list - Nothing to delete !")
 
-    config =  current_app.register.read(id)
-    if not config :
+    config = current_app.register.read(id)
+    if not config:
         raise BadRequest("This config doesn't exists !")
 
     workspace = path.join(current_app.config["EXPORT_CONF_FOLDER"], config[0].id)
@@ -253,16 +289,18 @@ def delete_app_versions(id) -> Response:
 
     return jsonify({"success": True, "deleted": version_deleted})
 
+
 @basic_store.route("/api/app/<id>/version", methods=["POST"])
 def create_app_version(id) -> Response:
-    config =  current_app.register.read(id)
+    config = current_app.register.read(id)
     if not config:
         raise BadRequest("This config doesn't exists !")
-    
+
     workspace = path.join(current_app.config["EXPORT_CONF_FOLDER"], config[0].id)
     git = Git_manager(workspace)
     git.create_version(config[0].description)
     return jsonify({"success": True, "message": "New version created !"}), 200
+
 
 @basic_store.route("/api/style", methods=["POST"])
 def store_style() -> Response:
@@ -286,6 +324,7 @@ def store_style() -> Response:
             ),
         }
     )
+
 
 @basic_store.route("/proxy/", methods=["GET", "POST"])
 def proxy() -> Response:
