@@ -109,15 +109,13 @@ def delete_config_workspace() -> Response:
 
     for id in post_data["ids"]:
         register = current_app.register
-        config = register.read_json(id)
-        if config:
-            # update json
-            register.delete(id)
-            # delete directory
-            workspace = path.join(current_app.config["EXPORT_CONF_FOLDER"], id)
+        workspace = path.join(current_app.config["EXPORT_CONF_FOLDER"], id)
+        # update json
+        register.delete(id)
+        if path.exists(workspace):
             rmtree(workspace)
             app_deleted += 1
-
+        
     return jsonify({"deleted_files": app_deleted, "success": True})
 
 
