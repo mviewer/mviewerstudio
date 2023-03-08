@@ -65,31 +65,36 @@ class ConfigRegister:
                     ).as_data()
                     self.add(config)
 
-    def update_json(self):
+    def update_json(self, json_dict=None):
         register_file = open(self.full_path, "w")
-        register_file.write(json.dumps(self.as_dict()))
+        if json_dict :
+            register_file.write(json.dumps(json_dict))
+        else :
+            register_file.write(json.dumps(self.as_dict()))
         register_file.close()
         
-    def add(self, config):
-        self.register.configs += [config]
-        self.register.total = len(self.register.configs)
-        self.update_json()
+    def read_json(self, id):
+        register_file = open(self.full_path)
+        register_json = json.load(register_file)
+        return [config for config in register_json["configs"] if config["id"] == id]
 
-    def read(self, id):
-        return [config for config in self.register.configs if config.id == id]
+    def add(self, config):
+        register_file = open(self.full_path)
+        register_json = json.load(register_file)
+        register_json["configs"].append(config.as_dict())
+        register_json["total"] = len(register_json["configs"])
+        self.update_json(register_json)
 
     def update(self, config):
-        self.delete(config)
+        self.delete(config.id)
         self.add(config)
         self.update_json()
 
-    def delete(self, config):
-        if not config:
-            return
-        oldConfig = [c for c in self.register.configs if c.id == config.id][0]
-        self.register.configs.remove(oldConfig)
-        self.register.total = len(self.register.configs)
-        self.update_json()
+    def delete(self, id):
+        register_file = open(self.full_path)
+        register_json = json.load(register_file)
+        json_clean = [config for config in register_json["configs"] if config["id"] != id]
+        self.update_json({"total": len(json_clean), "configs": json_clean})
       
     def as_dict(self):
         return {
@@ -104,8 +109,10 @@ class ConfigRegister:
             pattern (str): string to search.
         '''       
         configs_match = []
-        for config in self.register.configs:
-            fields_value = [config.title, config.creator, config.description, config.keywords, config.subject, config.date]
+        register_file = open(self.full_path)
+        register_json = json.load(register_file)
+        for config in register_json["configs"]:
+            fields_value = [config["title"], config["creator"], config["description"], config["keywords"], config["subject"], config["date"]]
             if [v for v in fields_value if v and pattern.lower() in v.lower()]:
                 configs_match.append(config)
         return configs_match

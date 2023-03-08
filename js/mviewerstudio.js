@@ -546,7 +546,7 @@ var createBaseLayerDef = function (bsl) {
 };
 
 var deleteApplications = (ids = []) => {
-    fetch(`${ _conf.api }`, {
+    return fetch(`${ _conf.api }`, {
         method: "DELETE",
         headers: {
             'Content-Type': 'application/json'
@@ -558,9 +558,10 @@ var deleteApplications = (ids = []) => {
 }
 
 var deleteAppFromList = (id) => {
-    deleteApplications(id);
-    document.getElementById('liste_applications').innerHTML = "";
-    mv.getListeApplications();
+    deleteApplications(id).then(r => {
+        document.getElementById('liste_applications').innerHTML = "";
+        mv.getListeApplications();
+    });
 }
 
 var previewAppUrl = (id, title) => {

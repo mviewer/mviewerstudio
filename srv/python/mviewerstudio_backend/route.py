@@ -50,7 +50,7 @@ def save_mviewer_config() -> Response:
         raise BadRequest("No XML found in the request body !")
 
     # register config
-    current_config = current_app.register.read(config_data.id)
+    current_config = current_app.register.read_json(config_data.id)
     if not current_config:
         current_app.register.add(config_data)
     # response
@@ -67,7 +67,7 @@ def update_mviewer_config() -> Response:
     # clean preview space if not empty
     clean_preview(current_app, config_data.id)
 
-    current_config = current_app.register.read(config_data.id)
+    current_config = current_app.register.read_json(config_data.id)
 
     if not current_config:
         raise BadRequest(
@@ -89,24 +89,11 @@ def list_stored_mviewer_config() -> Response:
     if "search" in request.args:
         pattern = request.args.get("search")
         configs = current_app.register.search_configs(pattern)
-        configs = [config.as_dict() for config in configs]
     else:
         configs = current_app.register.as_dict()["configs"]
     for config in configs:
         config["url"] = current_app.config["CONF_PATH_FROM_MVIEWER"] + config["url"]
     return jsonify(configs)
-
-
-def delete_workspace(id):
-    register = current_app.register
-    config = register.read(id)
-    if config:
-        # update json
-        register.delete(config[0])
-        # delete directory
-        workspace = path.join(current_app.config["EXPORT_CONF_FOLDER"], id)
-        rmtree(workspace)
-
 
 @basic_store.route("/api/app", methods=["DELETE"])
 def delete_config_workspace() -> Response:
@@ -121,8 +108,15 @@ def delete_config_workspace() -> Response:
         raise BadRequest("Empty list : no value to delete !")
 
     for id in post_data["ids"]:
-        delete_workspace(id)
-        app_deleted += 1
+        register = current_app.register
+        config = register.read_json(id)
+        if config:
+            # update json
+            register.delete(id)
+            # delete directory
+            workspace = path.join(current_app.config["EXPORT_CONF_FOLDER"], id)
+            rmtree(workspace)
+            app_deleted += 1
 
     return jsonify({"deleted_files": app_deleted, "success": True})
 
@@ -286,11 +280,11 @@ def delete_app_versions(id) -> Response:
 
 @basic_store.route("/api/app/<id>/version", methods=["POST"])
 def create_app_version(id) -> Response:
-    config = current_app.register.read(id)
+    config = current_app.register.read_json(id)
     if not config:
         raise BadRequest("This config doesn't exists !")
 
-    workspace = path.join(current_app.config["EXPORT_CONF_FOLDER"], config[0].id)
+    workspace = path.join(current_app.config["EXPORT_CONF_FOLDER"], config[0]["id"])
     git = Git_manager(workspace, current_user)
     git.create_version(config[0].description)
     return jsonify({"success": True, "message": "New version created !"}), 200
