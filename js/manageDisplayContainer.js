@@ -25,7 +25,7 @@ function saveStudio() {
     $('#mod-closeStudio').modal('hide');
     $('#opt-title').addClass('is-invalid');
   } else {
-    saveApplicationParameters(0); 
+    saveApplicationParameters(); 
     showHome();
     alertCustom('Application enregistrée avec succès !', 'info');
   }  
@@ -71,8 +71,12 @@ $("#frm-opacity").on("mousemove", function() {
 });
 
 
-// Create a custom alert template 
-
+/**
+ * Create customable alert
+ * @param {string} message 
+ * @param {string} type 
+ * @param {integer} timeout 
+ */
 function alertCustom(message, type, timeout = 5000){
   const alertPlaceholder = document.getElementById('liveAlertPlaceholder');
   // Définition de l'icône selon le type d'alerte
