@@ -3,9 +3,10 @@ from os import path
 from datetime import datetime
 
 class Git_manager:
-    def __init__(self, workspace) -> None:
+    def __init__(self, workspace, user) -> None:
         self.workspace = workspace
         self.repo = None
+        self.user = user
         self.init_or_get_repo()
     
     def init_or_get_repo(self):
@@ -24,6 +25,9 @@ class Git_manager:
         '''
         # create repo
         self.repo = git.Repo.init(self.workspace)
+        # init git author
+        actor = self.user.username if self.user else "anonymous"
+        git.Actor(actor, "anonymous@example.com")
         # gitignore
         ignorefile = path.join(self.workspace, ".gitignore")
         f = open(ignorefile, "w")

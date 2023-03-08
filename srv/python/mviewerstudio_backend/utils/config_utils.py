@@ -37,7 +37,7 @@ class Config:
             # create or update workspace
             self.create_workspace()
             # init repo
-            self.git = Git_manager(self.workspace)
+            self.git = Git_manager(self.workspace, self.user)
             self.repo = self.git.repo
             # save xml and git commit
             self.create_or_update_config()
