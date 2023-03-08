@@ -6,6 +6,7 @@ class Git_manager:
     def __init__(self, workspace, user) -> None:
         self.workspace = workspace
         self.repo = None
+        # init git author
         self.user = user
         self.init_or_get_repo()
     
@@ -25,13 +26,13 @@ class Git_manager:
         '''
         # create repo
         self.repo = git.Repo.init(self.workspace)
-        # init git author
-        actor = self.user.username if self.user else "anonymous"
-        git.Actor(actor, "anonymous@example.com")
         # gitignore
         ignorefile = path.join(self.workspace, ".gitignore")
         f = open(ignorefile, "w")
         f.write("preview/")
+        # set user global config
+        self.repo.git.config("--global", "user.name", self.user.username)
+        self.repo.git.config("--global", "user.email", "fake@email.org")
 
     def create_version(self, msg=""):
         '''
