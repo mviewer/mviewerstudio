@@ -111,7 +111,9 @@ def delete_config_workspace() -> Response:
         register = current_app.register
         workspace = path.join(current_app.config["EXPORT_CONF_FOLDER"], id)
         # update json
-        register.delete(id)
+        config = current_app.register.read_json(id)
+        if config :
+            register.delete(id)
         if path.exists(workspace):
             rmtree(workspace)
             app_deleted += 1
@@ -121,34 +123,14 @@ def delete_config_workspace() -> Response:
 
 @basic_store.route("/api/app/<id>/versions", methods=["GET"])
 def get_all_app_versions(id) -> Response:
-    config = current_app.register.read(id)
+    config = current_app.register.read_json(id)
     if not config:
         raise BadRequest("This config doesn't exists !")
     config = config[0]
-    workspace = path.join(current_app.config["EXPORT_CONF_FOLDER"], config.id)
+    workspace = path.join(current_app.config["EXPORT_CONF_FOLDER"], config["id"])
     git = Git_manager(workspace, current_user)
     versions = git.get_versions()
-    return jsonify({"versions": versions, "config": config.as_dict()})
-
-
-@basic_store.route("/api/app/all", methods=["DELETE"])
-def delete_all_mviewer_config() -> Response:
-    """
-    Delete all the mviewer config of the user logged
-    """
-    register = current_app.register.register
-    count = 0
-    for config in register.configs:
-        id = config.id
-        delete_config_workspace(id)
-        count += 1
-    return jsonify(
-        {
-            "deleted_files": count,
-            "success": True,
-            "message": "Workspace is clean and empty !",
-        }
-    )
+    return jsonify({"versions": versions, "config": config})
 
 
 @basic_store.route("/api/app/<id>/version/<version>", methods=["PUT"])
@@ -160,7 +142,7 @@ def switch_app_version(id, version="1") -> Response:
     as_new = False
     if "as_new" in request.json:
         as_new = request.json["as_new"]
-    config = current_app.register.read(id)
+    config = current_app.register.read_json(id)
 
     if not version or version == "1":
         as_new = True
@@ -168,15 +150,15 @@ def switch_app_version(id, version="1") -> Response:
     if not config:
         raise BadRequest("This config doesn't exists !")
     config = config[0]
-    workspace = path.join(current_app.config["EXPORT_CONF_FOLDER"], config.id)
+    workspace = path.join(current_app.config["EXPORT_CONF_FOLDER"], config["id"])
     git = Git_manager(workspace, current_user)
     git.switch_version(version, as_new)
     current_app.register.update_json()
     # Update register
-    config.versions = git.get_versions()
-    current_app.register.update(config)
+    config["versions"] = git.get_versions()
+    current_app.register.update(config, True)
     # clean previews
-    clean_preview(current_app, config.id)
+    clean_preview(current_app, config["id"])
     return (
         jsonify(
             {
@@ -191,19 +173,20 @@ def switch_app_version(id, version="1") -> Response:
 
 @basic_store.route("/api/app/<id>/version/<version>/preview", methods=["GET"])
 def preview_app_version(id, version) -> Response:
-    config = current_app.register.read(id)
+    config = current_app.register.read_json(id)
     if not config:
         raise BadRequest("This config doesn't exists !")
 
     # create preview space
-    init_preview(current_app, config[0].id)
-    workspace = path.join(current_app.config["EXPORT_CONF_FOLDER"], config[0].id)
+    config = config[0]
+    init_preview(current_app, config["id"])
+    workspace = path.join(current_app.config["EXPORT_CONF_FOLDER"], config["id"])
     git = Git_manager(workspace, current_user)
     git.switch_version(version, False)
     # copy past file to preview folder
     app_config = current_app.config
-    src_file = app_config["EXPORT_CONF_FOLDER"] + config[0].url
-    preview_file = path.join(config[0].id, "preview", "%s.xml" % version)
+    src_file = app_config["EXPORT_CONF_FOLDER"] + config["url"]
+    preview_file = path.join(config["id"], "preview", "%s.xml" % version)
     path_preview_file = path.join(app_config["EXPORT_CONF_FOLDER"], preview_file)
     copyfile(src_file, path_preview_file)
     # restor branch
@@ -262,11 +245,11 @@ def delete_app_versions(id) -> Response:
     if not post_data["versions"]:
         raise BadRequest("Empty list - Nothing to delete !")
 
-    config = current_app.register.read(id)
+    config = current_app.register.read_json(id)
     if not config:
         raise BadRequest("This config doesn't exists !")
-
-    workspace = path.join(current_app.config["EXPORT_CONF_FOLDER"], config[0].id)
+    config = config[0]
+    workspace = path.join(current_app.config["EXPORT_CONF_FOLDER"], config["id"])
     git = Git_manager(workspace, current_user)
 
     for version in post_data["versions"]:
@@ -282,9 +265,10 @@ def create_app_version(id) -> Response:
     if not config:
         raise BadRequest("This config doesn't exists !")
 
-    workspace = path.join(current_app.config["EXPORT_CONF_FOLDER"], config[0]["id"])
+    config = config[0]
+    workspace = path.join(current_app.config["EXPORT_CONF_FOLDER"], config["id"])
     git = Git_manager(workspace, current_user)
-    git.create_version(config[0].description)
+    git.create_version(config["description"])
     return jsonify({"success": True, "message": "New version created !"}), 200
 
 
