@@ -557,8 +557,16 @@ var deleteApplications = (ids = []) => {
     .then(r => r.success && showHome())
 }
 
+var deleteApplication = (id) => {
+    return fetch(`${_conf.api}/${id}`, {
+        method: "DELETE"
+    })
+    .then(r => r.json())
+    .then(r => r.success && showHome())
+}
+
 var deleteAppFromList = (id) => {
-    deleteApplications(id).then(r => {
+    deleteApplication(id).then(r => {
         document.getElementById('liste_applications').innerHTML = "";
         mv.getListeApplications();
     });

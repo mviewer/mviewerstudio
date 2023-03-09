@@ -95,35 +95,32 @@ def list_stored_mviewer_config() -> Response:
         config["url"] = current_app.config["CONF_PATH_FROM_MVIEWER"] + config["url"]
     return jsonify(configs)
 
-@basic_store.route("/api/app", methods=["DELETE"])
-def delete_config_workspace() -> Response:
+@basic_store.route("/api/app/<id>", methods=["DELETE"])
+def delete_config_workspace(id = None) -> Response:
     """
     Delete one mviewer config
     """
     app_deleted = 0
 
-    post_data = request.json
-
-    if not post_data["ids"]:
+    if id is None:
         logger.debug("DELETE : ERROR - NO ID TO DELETE")
         raise BadRequest("Empty list : no value to delete !")
 
-    for id in post_data["ids"]:
-        logger.debug("START DELETE CONFIG : %s" % id)
-        register = current_app.register
-        workspace = path.join(current_app.config["EXPORT_CONF_FOLDER"], id)
-        # update json
-        config = current_app.register.read_json(id)
-        if not config or not path.exists(workspace):
-            logger.debug("DELETE : ERROR - ID OR DIRECTORY NOT EXISTS :")
-            return jsonify({"deleted_files": 0, "success": False})
-        # delete in json
-        register.delete(id)
-        logger.debug("DELETE IN JSON : SUCCESS")
-        # delete dir
-        logger.debug("DELETE DIRECTORY : SUCCESS")
-        rmtree(workspace)
-        app_deleted += 1
+    logger.debug("START DELETE CONFIG : %s" % id)
+    register = current_app.register
+    workspace = path.join(current_app.config["EXPORT_CONF_FOLDER"], id)
+    # update json
+    config = current_app.register.read_json(id)
+    if not config or not path.exists(workspace):
+        logger.debug("DELETE : ERROR - ID OR DIRECTORY NOT EXISTS :")
+        return jsonify({"deleted_files": 0, "success": False})
+    # delete in json
+    register.delete(id)
+    logger.debug("DELETE IN JSON : SUCCESS")
+    # delete dir
+    logger.debug("DELETE DIRECTORY : SUCCESS")
+    rmtree(workspace)
+    app_deleted += 1
         
     return jsonify({"deleted_files": app_deleted, "success": True})
 
