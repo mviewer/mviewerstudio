@@ -45,6 +45,18 @@ class ConfigRegister:
         '''
         remove(self.full_path)
     
+    def from_xml_path(self, xml_path):
+        config = None
+        with open(xml_path) as f:
+            xml_read = f.read()
+            config = Config(
+                "",
+                current_user,
+                self.app,
+                xml_read
+            ).as_data()
+        return config
+    
     def _configs_files_to_register(self):
         '''
         Will parse all app configs workspace to init class config for each.
@@ -55,22 +67,14 @@ class ConfigRegister:
         
         for dir in dirs:
             for xml in glob.glob("%s/*.xml" % path.join(self.store_directory, dir)):
-                with open(xml) as f:
-                    xml_read = f.read()
-                    config = Config(
-                        "",
-                        current_user,
-                        self.app,
-                        xml_read
-                    ).as_data()
-                    self.add(config)
+                config = self.from_xml_path(xml)
+                if config :
+                    self.add(config.as_dict())
 
-    def update_json(self, json_dict=None):
+    def update_register(self, json_dict=None):
         register_file = open(self.full_path, "w")
         if json_dict :
             register_file.write(json.dumps(json_dict))
-        else :
-            register_file.write(json.dumps(self.as_dict()))
         register_file.close()
         
     def read_json(self, id):
@@ -78,23 +82,30 @@ class ConfigRegister:
         register_json = json.load(register_file)
         return [config for config in register_json["configs"] if config["id"] == id]
 
-    def add(self, config):
+    def add(self, config_dict):
         register_file = open(self.full_path)
         register_json = json.load(register_file)
-        register_json["configs"].append(config.as_dict())
+        register_json["configs"].append(config_dict)
         register_json["total"] = len(register_json["configs"])
-        self.update_json(register_json)
+        self.update_register(register_json)
+
+    def update_from_id(self, id):
+        xml_path = glob.glob("%s/*.xml" % path.join(self.store_directory, id))
+        if xml_path:
+            config = self.from_xml_path(xml_path[0])
+            config_dict = config.as_dict()
+            self.update(config_dict)
+
 
     def update(self, config):
-        self.delete(config.id)
+        self.delete(config["id"])
         self.add(config)
-        self.update_json()
 
     def delete(self, id):
         register_file = open(self.full_path)
         register_json = json.load(register_file)
         json_clean = [config for config in register_json["configs"] if config["id"] != id]
-        self.update_json({"total": len(json_clean), "configs": json_clean})
+        self.update_register({"total": len(json_clean), "configs": json_clean})
       
     def as_dict(self):
         return {

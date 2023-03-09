@@ -52,7 +52,7 @@ def save_mviewer_config() -> Response:
     # register config
     current_config = current_app.register.read_json(config_data.id)
     if not current_config:
-        current_app.register.add(config_data)
+        current_app.register.add(config_data.as_dict())
     # response
     return jsonify(
         {"success": True, "filepath": config_data.url, "config": config_data}
@@ -74,7 +74,7 @@ def update_mviewer_config() -> Response:
             "This config does not exists yet ! Use creation POST request instead."
         )
 
-    current_app.register.update(config_data)
+    current_app.register.update(config_data.as_dict())
     return jsonify(
         {"success": True, "filepath": config_data.url, "config": config_data}
     )
@@ -157,10 +157,10 @@ def switch_app_version(id, version="1") -> Response:
     workspace = path.join(current_app.config["EXPORT_CONF_FOLDER"], config["id"])
     git = Git_manager(workspace, current_user)
     git.switch_version(version, as_new)
-    current_app.register.update_json()
-    # Update register
-    config["versions"] = git.get_versions()
-    current_app.register.update(config, True)
+    current_app.register.update_from_id(config["id"])
+    # # Update register
+    # config["versions"] = git.get_versions()
+    # current_app.register.update(config, True)
     # clean previews
     clean_preview(current_app, config["id"])
     return (
