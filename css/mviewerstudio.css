@@ -898,6 +898,16 @@
 	}
 	
 	/*  Modal LayerOptions */
+
+	#layerTypeLabel {
+		background-color: var(--info);
+		color: white;
+		padding: 0.5em 0.7em;
+		border-radius: 1em;
+		text-transform: uppercase;
+		font-size: 0.9em;
+		margin-left: 1em;
+	}	
 	
 	#opacity-value {
 		margin: 0.7rem;
@@ -1118,6 +1128,7 @@
 	  background-color: #060024;
 	  color: white;
 	  padding: 1rem 0.5rem;
+	  width: 100%;
 	}
 	
 	/* Scrollbar */

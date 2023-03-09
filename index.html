@@ -1031,8 +1031,9 @@
     <div class="modal fade" id="mod-layerOptions" role="dialog" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="mod-layerOptions" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
-                <div class="modal-header">
+                <div class="modal-header align-items-center">
                     <h5 class="modal-title" i18n="modal.layer.edit">Paramètres de la donnée</h5>
+                    <span id="layerTypeLabel"></span>
                     <button type="button" class="close" data-bs-target="#mod-themeOptions" data-bs-toggle="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 </div>
                 <div class="modal-body">
@@ -1052,17 +1053,17 @@
                             Interrogation
                           </a>
                         </li>
-                        <li class="nav-item advanced" role="presentation" style="display: none;">
+                        <li class="nav-item advanced layerOption-wms" role="presentation" style="display: none;">
                           <a class="nav-link" data-bs-toggle="pill" data-bs-target="#layer_conf4" type="button" role="tab" aria-controls="pills-layer_conf4" aria-selected="false" i18n="modal.layer.edit.filter">
                             Filtre statique
                           </a>
                         </li>
-                        <li class="nav-item" role="presentation">
+                        <li class="nav-item layerOption-wms" role="presentation">
                           <a class="nav-link" data-bs-toggle="pill" data-bs-target="#layer_conf5" type="button" role="tab" aria-controls="pills-layer_conf5" aria-selected="false" i18n="modal.layer.edit.choices">
                             Filtre dynamique
                           </a>
                         </li>
-                        <li class="nav-item advanced" role="presentation" style="display: none;">
+                        <li class="nav-item advanced layerOption-wms" role="presentation" style="display: none;">
                           <a class="nav-link" data-bs-toggle="pill" data-bs-target="#layer_conf6" type="button" role="tab" aria-controls="pills-layer_conf6" aria-selected="false" i18n="modal.layer.edit.search">
                             Recherche
                           </a>
@@ -1097,15 +1098,30 @@
                                             <label class="custom-control-label" for="frm-layer-toplayer" i18n="modal.layer.toplayer">Afficher la donnée en première position de la carte</label><span class="tooltip-info" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="En activant cette option, la donnée sera toujours en premier plan sur la carte (toplayer)"><i class="ri-information-line"></i>
                                         </div>
                                     </div>
-                                    <div class="mt-4">
-                                        <p><small><span i18n="modal.layer.styles.note">Si plusieurs styles sont sélectionnés, indiquer les libéllés des styles qui apparaîtront dans la liste déroulante.</span></small></p>
+                                    <div class="mt-4 layerOption-wms d-none">                                        
                                         <h6 i18n="modal.layer.styles">Style(s) de la donnée disponible(s)</h6>
-                                        <div class="row mt-3" id="frm-lis-styles"></div>
+                                        <p><small><span i18n="modal.layer.styles.note">Si plusieurs styles sont sélectionnés, indiquer les libéllés des styles qui apparaîtront dans la liste déroulante.</span></small></p>
+                                        <div class="row mt-3" id="frm-lis-styles"></div>                                        
                                     </div>                                    
-                                    <div class="form-group d-none" id="formLayerStyleTitle">
+                                    <div class="form-group layerOption-wms d-none" id="formLayerStyleTitle">
                                         <label for="frm-layer-styletitle" ><span i18n="modal.layer.style.title">Libellé de la liste déroulante des styles</span><span class="tooltip-info" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="À renseigner quand plusieurs styles sont sélectionnés | Valeur par défaut : Analyse"><i class="ri-information-line"></i></label>
                                         <input type="text" class="form-control" id="frm-layer-styletitle" placeholder="Libellé de la liste des styles" i18n="modal.layer.style.placeholder">
-                                    </div>                               
+                                    </div>  
+                                    <div class="mt-4 layerOption-tms d-none">                                        
+                                        <h6>Style de la donnée</h6>  
+                                        <div class="form-group">
+                                            <label for="frm-layertms-styleurl" i18n="modal.layer.new.param.tms.styleurl">Lien vers le fichier de style (JSON)</label>
+                                            <input type="text" class="form-control" id="frm-layertms-styleurl" placeholder="Url vers le fichier de style">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="frm-layertms-stylename"><span i18n="modal.layer.new.param.tms.style">Nom du style</span><span class="tooltip-info" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Le style correspond à la valeur indiquée en tant que première clé de la propriété « sources » du fichier de style au format JSON"><i class="ri-information-line"></i></label>
+                                            <input type="text" class="form-control" id="frm-layertms-stylename" placeholder="BD Topo">
+                                        </div>    
+                                        <div class="form-group">
+                                            <label for="frm-layertms-filterstyle"><span i18n="modal.layertms.filterstyle">Indiquer le nom des couches à masquer dans le style</span><span class="tooltip-info" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Séparé par une virgule et sans espace (voir documentation mviewer)"><i class="ri-information-line"></i></label>
+                                            <input type="text" class="form-control" id="frm-layertms-filterstyle" placeholder="BD Topo">
+                                        </div>                                    
+                                    </div>                              
                                 </div>
                             </form>                            
                         </div>
@@ -1117,7 +1133,7 @@
                                         <label class="custom-control-label" for="frm-queryable"><span i18n="modal.layer.queryable">Activer l'interrogation de la donnée au clic sur la carte</span></label>
                                     </div>
                                 </div>
-                                <div class="row">                                    
+                                <div class="row layerOption-wms d-none">                                    
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label class="control-label" for="frm-infopanel" i18n="modal.layer.info.position">Position de la fiche d'information</label>
@@ -1136,7 +1152,7 @@
                                         </div>
                                     </div>                                    
                                 </div>
-                                <div class="row">
+                                <div class="row layerOption-wms d-none">
                                     <div class="col-md-12">
                                         <div class="form-group">
                                             <label class="control-label" for="frm-infoformat" i18n="modal.layer.infoformat">Format de la fiche
@@ -1149,7 +1165,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div id="query-parameters">       
+                                <div id="query-parameters" class="layerOption-wms d-none">       
                                     <!--LayerTempl-->
                                     <div class="accordion mt-2" id="accordionLayerTempl">
                                         <div class="accordion-item">
@@ -1221,12 +1237,12 @@
                                                     <label for="frm-layer-index"><span i18n="modal.layer.index">Index de couche</span><span class="tooltip-info" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Cette option permet de modifier l'ordre d'apparition d'une donnée par rapport au menu des thématiques. Une couche avec le paramètre index=2 s'affichera en 2e position sur la carte et dans la légende. Pour en savoir plus, consulter la documentation."><i class="ri-information-line"></i></label>
                                                     <input type="number" min="0" class="form-control" id="frm-layer-index" i18n="modal.layer.index"/>
                                                 </div> 
-                                                <div class="col-md-4">
+                                                <div class="col-md-4 layerOption-wms d-none">
                                                     <label for="frm-scalemin"><span i18n="modal.layer.scale.min">Echelle mini</span><span class="tooltip-info" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Cette option permet d'activer une échelle minimale de visibilité pour cette donnée."><i class="ri-information-line"></i></label>
                                                     <input type="number" class="form-control" id="frm-scalemin"
                                                         placeholder="Echelle mini" i18n="modal.layer.display.ph.minscale"/>
                                                 </div>
-                                                <div class="col-md-4">
+                                                <div class="col-md-4 layerOption-wms d-none">
                                                     <label for="frm-scalemax"><span i18n="modal.layer.scale.max">Echelle maxi</span><span class="tooltip-info" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Cette option permet d'activer une échelle maximale de visibilité pour cette donnée."><i class="ri-information-line"></i></label>
                                                     <input type="number" class="form-control" id="frm-scalemax"
                                                         placeholder="Echelle maxi" i18n="modal.layer.display.ph.maxscale"/>
@@ -1239,28 +1255,30 @@
                                                 </div>
                                                 <div class="custom-control custom-switch">
                                                     <input type="checkbox" class="custom-control-input" id="frm-layer-exclusive">
-                                                    <label class="custom-control-label" for="frm-layer-exclusive" i18n="modal.layer.exclusive">Affichage excluf de la donnée</label><span class="tooltip-info" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="En activant cette option, l'affichage de cette donnée masquera automatiquement toutes les autres données de la carte."><i class="ri-information-line"></i>
+                                                    <label class="custom-control-label" for="frm-layer-exclusive" i18n="modal.layer.exclusive">Affichage exclusif de la donnée</label><span class="tooltip-info" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="En activant cette option, l'affichage de cette donnée masquera automatiquement toutes les autres données de la carte."><i class="ri-information-line"></i>
                                                 </div>
                                                 <div class="custom-control custom-switch">
                                                     <input type="checkbox" class="custom-control-input" id="frm-layer-showintoc">
                                                     <label class="custom-control-label" for="frm-layer-showintoc" i18n="modal.layer.showintoc">Affichage de la donnée seulement sur la carte</label><span class="tooltip-info" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Cette option permet d'activer l'affichage de la donnée seulement sur la carte et non dans le menu thématique et la légende. Il n'est donc pas possible pour l'utilisateur de modifier les réglages de la donnée (showintoc). Exemple : Donnée permettant de créer un masque pour un territoire."><i class="ri-information-line"></i>
                                                 </div>
-                                            </div>
-                                            <hr>
-                                            <h6 for="frm-upload-sld-file"><span i18n="modal.layer.sld.external">Utiliser un style externe</span><span class="tooltip-info" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Lien vers un fichier au format .SLD définissant le style de la couche"><i class="ri-information-line"></i></h6>                                        
-                                            <div class="input-group">
-                                                <input type="text" class="form-control checkedurl" id="frm-upload-sld-file" placeholder="URL SLD externe" i18n="modal.layer.display.ph.external_sld">
-                                                <!--<div class="input-group-append">                                                
-                                                    <button type="button" class="btn btn-outline-info" i18n="modal.layer.uploadsldfile" onclick="document.getElementById('frm-upload-sld-file').click()">Téléverser un SLD</button>
-                                                    <button type="button" class="btn btn-info">
-                                                        <span
-                                                                data-toggle="tooltip"
-                                                                data-placement="top"
-                                                                title="Vous pouvez insérer une URL vers un SLD. Si votre couche provient d'un geoserver, vous pouvez specifier uniquement le nom du SLD dans geoserver (ex: un_entrepot:mon_sld)"
-                                                                i18n="modal.layer.uploadsld.tooltips"
-                                                            ><i class="bi bi-info-circle"></i></span>                                                
-                                                    </button>
-                                                </div>   --> 
+                                            </div>                                            
+                                            <div class="layerOption-wms d-none">   
+                                                <hr>                                         
+                                                <h6 for="frm-upload-sld-file"><span i18n="modal.layer.sld.external">Utiliser un style externe</span><span class="tooltip-info" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Lien vers un fichier au format .SLD définissant le style de la couche"><i class="ri-information-line"></i></h6>                                        
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control checkedurl" id="frm-upload-sld-file" placeholder="URL SLD externe" i18n="modal.layer.display.ph.external_sld">
+                                                    <!--<div class="input-group-append">                                                
+                                                        <button type="button" class="btn btn-outline-info" i18n="modal.layer.uploadsldfile" onclick="document.getElementById('frm-upload-sld-file').click()">Téléverser un SLD</button>
+                                                        <button type="button" class="btn btn-info">
+                                                            <span
+                                                                    data-toggle="tooltip"
+                                                                    data-placement="top"
+                                                                    title="Vous pouvez insérer une URL vers un SLD. Si votre couche provient d'un geoserver, vous pouvez specifier uniquement le nom du SLD dans geoserver (ex: un_entrepot:mon_sld)"
+                                                                    i18n="modal.layer.uploadsld.tooltips"
+                                                                ><i class="bi bi-info-circle"></i></span>                                                
+                                                        </button>
+                                                    </div>   --> 
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -1268,7 +1286,7 @@
                                 </div>  
                                 <!--./Affichage-->
                                 <!--Type de légende-->
-                                <div class="accordion mt-2" id="accordionOptionsLegend">
+                                <div class="accordion mt-2 layerOption-wms d-none" id="accordionOptionsLegend">
                                     <div class="accordion-item">
                                     <h2 class="accordion-header" >
                                         <a class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOptionsLegend" aria-expanded="true" aria-controls="collapseOptionsLegend">
@@ -1322,6 +1340,7 @@
                                                     <select id="frm-type" name="type" class="form-control"
                                                             onchange="mv.changeLayerType(this.value);">
                                                         <option value="wms" i18n="modal.layer.type.wms">WMS</option>
+                                                        <option value="vector-tms">Vector-TMS</option>
                                                         <option value="geojson" i18n="modal.layer.type.geojson" disabled>GeoJSON</option>
                                                         <option value="kml" i18n="modal.layer.type.kml" disabled>KML</option>
                                                         <option value="customlayer" i18n="modal.layer.type.custom" disabled>Customlayer</option>
@@ -1646,49 +1665,119 @@
                     <button type="button" class="close" data-bs-target="#mod-themeOptions" data-bs-toggle="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 </div>
                 <div class="modal-body">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <h6 i18n="modal.layer.new.searchdata.title">Rechercher une données</h6>
-                            <div class="input-group my-3">
-                                <input type="text" id="input-ogc-filter" class="form-control" aria-label="..." placeholder="Rechercher..." i18n="modal.layer.new.searchdata.ph">
-                                <div class="input-group-append">
-                                    <button id="providers_dropdown" class="btn btn-outline-info dropdown-toggle noborderradius" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Catalogue de données</button>   
-                                    <ul class="dropdown-menu dropdown-menu-end" id="providers_list"></ul>                     
-                                    <button class="btn btn-info" id="provider_search_btn" type="button" disabled="enabled" onclick="mv.search()"><i class="bi bi-search"></i></button>
-                                </div> 
+                    <ul class="nav nav-pills mb-4" id="pills-tab-layers" role="tablist">
+                        <li class="nav-item" role="presentation">
+                              <a class="nav-link active" data-bs-toggle="pill" data-bs-target="#newlayer-catalog" type="button" role="tab" aria-controls="pills-newlayer-catalog" aria-selected="true">
+                                    <span i18n="modal.layer.new.catalog">Depuis un catalogue</span> 
+                              </a>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                              <a class="nav-link" data-bs-toggle="pill" data-bs-target="#newlayer-param" type="button" role="tab" aria-controls="pills-newlayer-param" aria-selected="false">
+                                <span i18n="modal.layer.new.param">Via des paramètres</span> 
+                              </a>
+                        </li>
+                    </ul>
+                    <!-- Depuis un catalogue -->
+                    <div class="tab-content mb-4">
+                        <div class="tab-pane fade show active" id="newlayer-catalog" role="tabpanel" tabindex="0">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <h6 i18n="modal.layer.new.searchdata.title">Rechercher une données</h6>
+                                    <div class="input-group my-3">
+                                        <input type="text" id="input-ogc-filter" class="form-control" aria-label="..." placeholder="Rechercher..." i18n="modal.layer.new.searchdata.ph">
+                                        <div class="input-group-append">
+                                            <button id="providers_dropdown" class="btn btn-outline-info dropdown-toggle noborderradius" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Catalogue de données</button>   
+                                            <ul class="dropdown-menu dropdown-menu-end" id="providers_list"></ul>                     
+                                            <button class="btn btn-info" id="provider_search_btn" type="button" disabled="enabled" onclick="mv.search()"><i class="bi bi-search"></i></button>
+                                        </div> 
+                                    </div>
+                                </div>
+                            </div>  
+                            <div class="row" style="padding: 1rem;" id="search-message" i18n="modal.layer.new.provider.noneselected">
+                                Sélectionner un catalogue de données
                             </div>
-                        </div>
-                    </div>  
-                    <div class="row" style="padding: 1rem;" id="search-message" i18n="modal.layer.new.provider.noneselected">
-                        Sélectionner un catalogue de données
-                    </div>
-                    <div class="row ogc-results" id="csw-results" style="display: none;"></div>
-                    <div class="row ogc-results" id="wms-results" style="display: none;"></div>
-                    <div class="row ogc-results" id="wfs-results" style="display: none;"></div>
-                    
-                    <div class="advanced" style="display:none;">   
-                        <hr>                    
-                        <div class="row">                             
-                            <div class="col-md-12">
-                                <h6 i18n="modal.layer.new.provider.add">Ajouter un catalogue de données</h6>
-                                <div class="input-group my-3" id="addCatalogData">
-                                    <input type="text" class="form-control custom-title" aria-label="..." placeholder="Nom" oninput="updateAddProviderButtonState(this);">
-                                    <input type="text" class="form-control custom-url" aria-label="..." i18n="modal.layer.new.provider.ph" placeholder="URL du fournisseur" oninput="updateAddProviderButtonState(this);" >
-                                    <select class="form-control">
-                                        <option value="csw" i18n="modal.layer.new.provider.csw">CSW</option>
-                                        <option value="wms" i18n="modal.layer.new.provider.wms">WMS</option>
-                                      </select>
-                                    <div class="input-group-append">                    
-                                        <button class="btn btn-info" type="button" id="add_provider_btn" disabled onclick="addNewProvider(this);"><i class="bi bi-plus-lg"></i> <span i18n="add">Ajouter</span> </button> 
-                                    </div> 
+                            <div class="row ogc-results" id="csw-results" style="display: none;"></div>
+                            <div class="row ogc-results" id="wms-results" style="display: none;"></div>
+                            <div class="row ogc-results" id="wfs-results" style="display: none;"></div>
+                            
+                            <div class="advanced" style="display:none;">   
+                                <hr>                    
+                                <div class="row">                             
+                                    <div class="col-md-12">
+                                        <h6 i18n="modal.layer.new.provider.add">Ajouter un catalogue de données</h6>
+                                        <div class="input-group my-3" id="addCatalogData">
+                                            <input type="text" class="form-control custom-title" aria-label="..." placeholder="Nom" oninput="updateAddProviderButtonState(this);">
+                                            <input type="text" class="form-control custom-url" aria-label="..." i18n="modal.layer.new.provider.ph" placeholder="URL du fournisseur" oninput="updateAddProviderButtonState(this);" >
+                                            <select class="form-control">
+                                                <option value="csw" i18n="modal.layer.new.provider.csw">CSW</option>
+                                                <option value="wms" i18n="modal.layer.new.provider.wms">WMS</option>
+                                            </select>
+                                            <div class="input-group-append">                    
+                                                <button class="btn btn-info" type="button" id="add_provider_btn" disabled onclick="addNewProvider(this);"><i class="bi bi-plus-lg"></i> <span i18n="add">Ajouter</span> </button> 
+                                            </div> 
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                         
+                    </div> 
+                    <!-- Via des paramètres -->
+                    <div class="tab-content mb-4">
+                        <div class="tab-pane fade" id="newlayer-param" role="tabpanel" tabindex="0">
+                                <h6 i18n="modal.layer.new.param.title">Paramètres de la nouvelle donnée</h6>
+                                <div class="mt-3" id="newLayerByParam">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label class="control-label" for="newlayer-type" i18n="modal.layer.new.param.type">Type de la donnée</label>
+                                                <select id="newlayer-type" name="infoformat" class="form-control" onchange="mv.selectNewDataTypeValue(this)">
+                                                    <option value="" selected>Choisir un type</option>
+                                                    <option value="wms">WMS</option>
+                                                    <option value="vector-tms" >Vector-TMS</option>
+                                                </select>
+                                            </div>                                    
+                                        </div> 
+                                    </div>                                       
+                                    <div class="row" id="commonParamType">
+                                        <div class="col-md-6 d-none">
+                                            <div class="form-group">
+                                                <label class="control-label" for="newlayer-id" i18n="modal.layer.new.param.id">Identifiant</label>
+                                                <input type="text" class="form-control" id="newlayer-id" placeholder="bdtopo">
+                                            </div>                                    
+                                        </div>
+                                        <div class="col-md-6 d-none">
+                                            <div class="form-group">
+                                                <label class="control-label" for="newlayer-name" i18n="modal.layer.new.param.name">Nom</label>
+                                                <input type="text" class="form-control" id="newlayer-name" placeholder="BD Topo">
+                                            </div>                                    
+                                        </div>
+                                        <div class="col-md-12 d-none">
+                                            <div class="form-group">
+                                                <label class="control-label" for="newlayer-url" i18n="modal.layer.new.param.url">URL</label>
+                                                <input type="text" class="form-control" id="newlayer-url" placeholder="Lien vers la donnée">
+                                            </div>                                    
+                                        </div>
+                                    </div>
+                                    <div class="row">   
+                                        <div class="col-md-6 d-none vector-tms-type param-type">
+                                            <div class="form-group">
+                                                <label class="control-label" for="newlayer-tms-styleurl" i18n="modal.layer.new.param.tms.styleurl">Lien vers le fichier de style (JSON)</label>
+                                                <input type="text" class="form-control" id="newlayer-tms-styleurl" placeholder="Lien vers la donnée">
+                                            </div>                                    
+                                        </div>
+                                        <div class="col-md-6 d-none vector-tms-type param-type">
+                                            <div class="form-group">
+                                                <label class="control-label" for="newlayer-tms-style" i18n="modal.layer.new.param.tms.style">Nom du style</label>
+                                                <input type="text" class="form-control" id="newlayer-tms-style" placeholder="Lien vers la donnée">
+                                            </div>                                    
+                                        </div>
+                                    </div>
+                                </div>     
+                        </div>
+                    </div>                         
                 </div>
                 <div class="modal-footer">                    
-                    <button type="button" class="btn btn-primary" data-bs-target="#mod-themeOptions" data-bs-toggle="modal" onclick="mv.getConfLayers();" i18n="select">Sélectionner</button>
+                    <button type="button" class="btn btn-primary" onclick="mv.getConfLayers();" i18n="select">Sélectionner</button>
                     <button type="button" class="btn btn-outline-primary" data-bs-target="#mod-themeOptions" data-bs-toggle="modal" i18n="close">Fermer</button>
                 </div>
             </div>
