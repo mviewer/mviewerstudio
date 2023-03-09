@@ -1,10 +1,15 @@
 {
     "app_conf": {
         "studio_title": "GéoBretagne mviewer studio",
-        "upload_service": "srv/store.php",
-        "delete_service": "srv/delete.php",
-        "list_service": "srv/list.php",
-        "store_style_service": "srv/store/style.php",
+        "is_php": "true",
+        "php": {
+            "upload_service": "srv/php/store.php",
+            "delete_service": "srv/php/delete.php",
+            "list_service": "srv/php/list.php",
+            "store_style_service": "srv/php/store/style.php"
+        },
+        "api": "api/app",
+        "store_style_service": "api/style",
         "mviewer_instance": "http://172.16.10.30/mviewer/",
         "conf_path_from_mviewer": "apps/store/",
         "mviewer_short_url": {

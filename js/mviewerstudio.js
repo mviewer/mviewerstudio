@@ -545,17 +545,27 @@ var createBaseLayerDef = function (bsl) {
     return parameters;
 };
 
-var deleteApplications = (ids = []) => {
-    return fetch(`${ _conf.api }`, {
-        method: "DELETE",
-        headers: {
-            'Content-Type': 'application/json'
+var deleteMyApplications = function () {
+    if (!_conf?.php?.delete_service) {
+        return alert("Erreur de la configuration : contactez un administrateur !");
+    }
+    $.ajax({
+        type: "GET",
+        url: _conf.php.delete_service,
+        success: function( data ) {
+            alert(data.deleted_files + mviewer.tr('msg.deleted_apps'));
+            mv.getListeApplications();
         },
-        body: JSON.stringify({ids: ids})
-    })
-        .then(r => r.json())
-    .then(r => r.success && showHome())
-}
+        error: function (xhr, ajaxOptions, thrownError) {
+            console.error("map files deletion failed", {
+                xhr: xhr,
+                ajaxOptions: ajaxOptions,
+                thrownError: thrownError
+            });
+            alert(mviewer.tr('msg.delete_req_error'));
+        }
+    });
+};
 
 var deleteApplication = (id) => {
     return fetch(`${_conf.api}/${id}`, {
@@ -716,13 +726,55 @@ var getConfig = () => {
     return conf
 }
 
+let previewWithPhp = (conf) => {
+    if (!_conf?.php?.upload_service) {
+        alertCustom("Erreur de configuration : contactez un administrateur !", 'error');
+    }
+    // Save the map serverside
+    $.ajax({
+        type: "POST",
+        url: _conf.php.upload_service,
+        data: conf.join(""),
+        dataType: 'json',
+        contentType: 'text/xml',
+        success: function (data) {
+            // Preview the map
+            var url = "";
+            if (data.success && data.filepath) {
+                // Build a short and readable URL for the map
+                if (_conf.mviewer_short_url && _conf.mviewer_short_url.used) {
+                    var filePathWithNoXmlExtension = "";
+                    //Get path from mviewer/apps eg store for mviewer/apps/store
+                    if (_conf.mviewer_short_url.apps_folder) {
+                        filePathWithNoXmlExtension = [_conf.mviewer_short_url.apps_folder, data.filepath].join("/");
+                    } else {
+                        filePathWithNoXmlExtension = data.filepath;
+                    }
+                    if (filePathWithNoXmlExtension.endsWith(".xml")) {
+                        filePathWithNoXmlExtension = filePathWithNoXmlExtension.substring(0, filePathWithNoXmlExtension.length-4);
+                    }
+                    url = _conf.mviewer_instance + '#' + filePathWithNoXmlExtension;
+                } else {
+                    // Build a classic URL for the map
+                    url = _conf.mviewer_instance + '?config=' + _conf.conf_path_from_mviewer + data.filepath;
+                }
+                window.open(url, 'mvs_vizualize');
+                alertCustom("Téléchargement terminé !", 'success');
+            }
+        }
+    })
+}
+
 let previewAppsWithoutSave = (id) => {
+    const confXml = getConfig();
+    if (!confXml || (confXml && !mv.validateXML(confXml.join("")))) {
+        return alertCustom("XML invalide !", 'danger');
+    }
+    if (_conf.is_php) {
+        return previewWithPhp(confXml)
+    }
     if (!id || !config.isFile) {
         return alertCustom(mviewer.tr('msg.preview_no_save'), 'danger');
-    }
-    const confXml = getConfig();
-    if (!mv.validateXML(confXml.join(""))) {
-        return;
     }
     return fetch(`${ _conf.api }/${ id }/preview`, {
         method: "POST",
@@ -752,10 +804,26 @@ const downloadXML = () => {
     }
 };
 
+var saveAppWithPhp = (conf) => {
+    $.ajax({
+        type: "POST",
+        url: _conf.php.upload_service,
+        data: conf.join(""),
+        dataType: 'json',
+        contentType: 'text/xml',
+        success: function (data) {
+            alert(mviewer.tr('msg.file_saved_on_server') + " (" + data.filepath + ").");
+        }
+    })
+}
+
 var saveApplicationParameters = () => {
     const conf = getConfig();
     if (!mv.validateXML(conf.join(""))) {
         return alertCustom(mviewer.tr('msg.xml_doc_invalid'), 'danger');
+    }
+    if (_conf.is_php) {
+        return saveAppWithPhp(conf)
     }
     // Save the map serverside
     fetch(_conf.api, {
@@ -765,9 +833,14 @@ var saveApplicationParameters = () => {
         },
         body: conf.join("")
     }).then(response => response.json()).then(data => {
-        config.isFile = true;
-        document.querySelector("#toolsbarStudio-delete").classList.remove("d-none");
-        document.querySelector("#layerOptionBtn").classList.remove("d-none");
+        if (!_conf.is_php) {
+            // don't execute this code with php backend
+            config.isFile = true;
+            document.querySelector("#toolsbarStudio-delete").classList.remove("d-none");
+            document.querySelector("#layerOptionBtn").classList.remove("d-none");   
+        } else {
+            config.isFile = false;
+        }
         alertCustom(mviewer.tr('msg.file_saved_on_server'), 'success');
     }).catch(err => alertCustom(mviewer.tr('msg.save_failure'), 'danger'));
 };
@@ -818,26 +891,6 @@ var loadApplicationParametersFromFile = function () {
     }
 };
 
-var deleteMyApplications = function () {
-    $.ajax({
-        type: "GET",
-        url: _conf.delete_service,
-        success: function( data ) {
-            //alert(data.deleted_files + mviewer.tr('msg.deleted_apps'));
-            alertCustom(data.deleted_files + mviewer.tr('msg.deleted_apps'), 'info');
-            mv.getListeApplications();
-        },
-        error: function (xhr, ajaxOptions, thrownError) {
-            console.error("map files deletion failed", {
-                xhr: xhr,
-                ajaxOptions: ajaxOptions,
-                thrownError: thrownError
-            });
-            //alert(mviewer.tr('msg.delete_req_error'));
-            alertCustom(mviewer.tr('msg.delete_req_error'), 'danger');
-        }
-    });
-};
 var loadApplicationParametersFromRemoteFile = function (url) {
     const waitRequests = [
         fetch(url, {
@@ -848,24 +901,33 @@ var loadApplicationParametersFromRemoteFile = function (url) {
             .catch(r => {
                 console.error("map file retrieval failed", {...r});
                 alert(mviewer.tr('msg.retrieval_req_error'));
-            }),
-        fetch(_conf.api)
+            })
+    ];
+    if (!_conf.is_php) {
+        waitRequests.push(
+            fetch(_conf.api)
             .then(response => response.json())
             .then(r => {
                 return r.filter(app => app.id == config.id);
             })
             .catch(() => ({}))
-    ];
+        );
+    }
     Promise.all(waitRequests).then((values) => {
         const data = values[0];
-        const appMeta = values[1][0];
         mv.parseApplication(data);
-        if (appMeta?.versions) {
-            config.versions = appMeta.versions;
+        if (!_conf.is_php && values[1]) {
+            const appMeta = values[1][0];
+            if (appMeta?.versions) {
+                config.versions = appMeta.versions;
+            }
         }
         showStudio();
-        document.querySelector("#toolsbarStudio-delete").classList.remove("d-none");
-        document.querySelector("#layerOptionBtn").classList.remove("d-none");
+        if (!_conf.is_php) {
+            // don't execute this code with php backend
+            document.querySelector("#toolsbarStudio-delete").classList.remove("d-none");
+            document.querySelector("#layerOptionBtn").classList.remove("d-none");   
+        }
     });
 };
 
@@ -1028,8 +1090,9 @@ $("#mod-importfile").on('shown.bs.modal', function () {
 
 var uploadSldFileToBackend = function(e) {
     var reader = new FileReader()
-    e.files[0].text().then(function(sldFile){
-        $.ajax(_conf.store_style_service, {
+    e.files[0].text().then(function (sldFile) {
+        const url = _conf.is_php ? _conf.php.store_style_service : _conf.store_style_service;
+        $.ajax(url, {
             data: sldFile,
             method: 'POST',
             processData: false,

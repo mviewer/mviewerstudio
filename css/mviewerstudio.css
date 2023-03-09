@@ -791,10 +791,6 @@
 	  color: var(--info) !important;
 	}
 	
-	#liste_applications a:hover {
-	  
-	}
-	
 	/* Modal - Features value */
 	
 	#distinct_values {
