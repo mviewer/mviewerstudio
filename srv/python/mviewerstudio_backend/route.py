@@ -49,6 +49,9 @@ def save_mviewer_config() -> Response:
     if not config.xml:
         raise BadRequest("No XML found in the request body !")
 
+    # commit changes
+    config.git.commit_changes("Creation")
+
     # register config
     current_config = current_app.register.read_json(config_data.id)
     if not current_config:
@@ -63,6 +66,12 @@ def update_mviewer_config() -> Response:
     config = Config(request.data, current_user, current_app)
     if not config.xml:
         raise BadRequest("No XML found in the request body !")
+    # commit changes
+    description = config.meta.find("{*}description").text
+    if not description:
+        description = "Change XML"
+    config.git.commit_changes(description)
+    # get config as class model data
     config_data = config.as_data()
     # clean preview space if not empty
     clean_preview(current_app, config_data.id)
@@ -157,10 +166,8 @@ def switch_app_version(id, version="1") -> Response:
     workspace = path.join(current_app.config["EXPORT_CONF_FOLDER"], config["id"])
     git = Git_manager(workspace, current_user)
     git.switch_version(version, as_new)
+    # Update register
     current_app.register.update_from_id(config["id"])
-    # # Update register
-    # config["versions"] = git.get_versions()
-    # current_app.register.update(config, True)
     # clean previews
     clean_preview(current_app, config["id"])
     return (

@@ -1,4 +1,4 @@
-from os import path, mkdir, remove, walk
+from os import path, mkdir, remove
 import logging
 import xml.etree.ElementTree as ET
 import re
@@ -18,7 +18,6 @@ DCAT-RDF Metadata are given by front end (see above ConfigModel).
 '''
 class Config:
     def __init__(self, data = "", user = "", app = None, xml = None) -> None:
-        
         self.uuid = None
         self.full_xml_path = None
         self.app = app
@@ -32,11 +31,11 @@ class Config:
         if self.xml is not None and app.register:
             self.register = app.register
 
-            # init or create workspace
+            # target workspace path
             self.workspace = path.join(self.app.config["EXPORT_CONF_FOLDER"], self.uuid)
             # create or update workspace
             self.create_workspace()
-            # init repo
+            # init or get repo
             self.git = Git_manager(self.workspace, self.user)
             self.repo = self.git.repo
             # save xml and git commit
@@ -92,19 +91,14 @@ class Config:
         # save file
         normalize_file_name = re.sub('[^a-zA-Z0-9  \n\.]', "_", file_name).replace(" ", "_")
         self.full_xml_path = path.join(self.workspace, "%s.xml" % normalize_file_name)
-        
+            
         # needed if we change config title to clean others XML
-        # if the name is the same, git will just dectect unstaged changes        
+        # if the name is the same, git will just dectect unstaged changes
         self.clean_all_workspace_configs()
-
         # write file
         with open(self.full_xml_path, "w") as file:
             file.write(self.xml)
             file.close()
-        commit_msg = self.meta.find("{*}description").text
-        if not commit_msg:
-            commit_msg = "Creation : %s.xml " % normalize_file_name
-        self.git.commit_changes(commit_msg)
     
     def clean_all_workspace_configs(self):
         '''

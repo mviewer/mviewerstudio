@@ -54,7 +54,7 @@ class ConfigRegister:
                 current_user,
                 self.app,
                 xml_read
-            ).as_data()
+            )
         return config
     
     def _configs_files_to_register(self):
