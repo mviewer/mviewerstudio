@@ -49,10 +49,11 @@ class Config:
         '''
         :param xml: str XML config from request
         '''
-        self.meta = self._get_xml_describe(xml)
+        xml_parser = ET.fromstring(xml)
+        self.meta = self._get_xml_describe(xml_parser)
         if self.meta.find(".//{*}identifier") is not None:
             self.uuid = self.meta.find(".//{*}identifier").text
-        return xml
+        return xml_parser
 
     def _read_xml_data(self, data):
         '''
@@ -62,10 +63,11 @@ class Config:
         '''
         # read xml
         self.data = data.decode("utf-8")
-        if not self.data:
+        if not data:
             return None
-        xml = self.data.replace("anonymous", current_user.username)
-        return self._read_xml(xml)
+
+        # keep meta in memory and get UUID app
+        return self._read_xml(self.data)
 
     def create_workspace(self):
         '''
@@ -81,8 +83,17 @@ class Config:
         Return metadata from xml DCAT balises
         :param xml: str
         '''
-        xml_parser = ET.fromstring(xml)
-        return xml_parser.find(".//metadata/{*}RDF/{*}Description")
+        meta_root = xml.find(".//metadata/{*}RDF/{*}Description")
+        # replace anonymous infos by user and org infos
+        if current_user and current_user.username:
+            self._edit_xml_string(meta_root, "creator", current_user.username)
+        if current_user and current_user.organisation:
+            self._edit_xml_string(meta_root, "org", current_user.organisation)
+        return meta_root
+    
+    def _edit_xml_string(self, root, attribute, value):
+        attr = root.find(".//{*}%s" % attribute)
+        attr.text = value
     
     def create_or_update_config(self):
         '''
@@ -101,8 +112,9 @@ class Config:
         # if the name is the same, git will just dectect unstaged changes
         self.clean_all_workspace_configs()
         # write file
+        xml_to_string = ET.tostring(self.xml).decode("utf-8")
         with open(self.full_xml_path, "w") as file:
-            file.write(self.xml)
+            file.write(xml_to_string)
             file.close()
     
     def clean_all_workspace_configs(self):
