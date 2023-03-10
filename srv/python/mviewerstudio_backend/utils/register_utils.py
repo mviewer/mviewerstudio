@@ -23,7 +23,6 @@ class ConfigRegister:
         self.name = "register.json"
         self.full_path = path.join(self.store_directory, self.name)
         self.register = self._create_empty_register()
-        self.user = current_user
 
     def _create_empty_register(self):
         '''
@@ -63,7 +62,6 @@ class ConfigRegister:
             xml_read = f.read()
             config = Config(
                 "",
-                current_user,
                 self.app,
                 xml_read
             )

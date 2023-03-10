@@ -5,7 +5,7 @@ import re
 import glob
 
 from ..models.config import ConfigModel
-
+from .login_utils import current_user
 from .git_utils import Git_manager
 
 logger = logging.getLogger(__name__)  
@@ -17,7 +17,7 @@ A register from store/register.json is use as global configs metadata store.
 DCAT-RDF Metadata are given by front end (see above ConfigModel).
 '''
 class Config:
-    def __init__(self, data = "", user = "", app = None, xml = None) -> None:
+    def __init__(self, data = "", app = None, xml = None) -> None:
         '''
         :param data: xml as data from request.data
         :param user: user object from authent infos
@@ -28,8 +28,6 @@ class Config:
         self.full_xml_path = None
         self.app = app
         self.directory = None
-        
-        self.user = user
         if not xml:
             self.xml = self._read_xml_data(data)
         else:
@@ -42,7 +40,7 @@ class Config:
             # create or update workspace
             self.create_workspace()
             # init or get repo
-            self.git = Git_manager(self.workspace, self.user)
+            self.git = Git_manager(self.workspace)
             self.repo = self.git.repo
             # save xml and git commit
             self.create_or_update_config()
@@ -66,7 +64,7 @@ class Config:
         self.data = data.decode("utf-8")
         if not self.data:
             return None
-        xml = self.data.replace("anonymous", self.user.username)
+        xml = self.data.replace("anonymous", current_user.username)
         return self._read_xml(xml)
 
     def create_workspace(self):

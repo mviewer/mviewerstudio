@@ -49,11 +49,10 @@ def checkout(repo, target, hard = False):
     
 
 class Git_manager:
-    def __init__(self, workspace, user) -> None:
+    def __init__(self, workspace) -> None:
         self.workspace = workspace
         self.repo = None
         # init git author
-        self.user = user
         self.repo = init_or_get_repo(workspace)
     
     def get_repo(self):

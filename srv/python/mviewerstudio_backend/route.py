@@ -53,7 +53,7 @@ def save_mviewer_config() -> Response:
     '''
     Save XML on first creation.
     '''
-    config = Config(request.data, current_user, current_app)
+    config = Config(request.data, current_app)
 
     if not config.xml:
         raise BadRequest("No XML found in the request body !")
@@ -75,7 +75,7 @@ def update_mviewer_config() -> Response:
     '''
     Read UUID from XML and update register and local file system if exists.
     '''
-    config = Config(request.data, current_user, current_app)
+    config = Config(request.data, current_app)
     if not config.xml:
         raise BadRequest("No XML found in the request body !")
     # commit changes
@@ -108,6 +108,7 @@ def list_stored_mviewer_config() -> Response:
     :param search: request args from query param.
     """
 
+    logger.info(current_user)
     if "search" in request.args:
         pattern = request.args.get("search")
         configs = current_app.register.search_configs(pattern)
