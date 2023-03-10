@@ -12,12 +12,18 @@ logger = logging.getLogger(__name__)
 
 
 '''
-This class ease CRUD + versioning configs operations.
-A register given by app.register is use as global configs metadata store.
+This class ease git repo manipulations.
+A register from store/register.json is use as global configs metadata store.
 DCAT-RDF Metadata are given by front end (see above ConfigModel).
 '''
 class Config:
     def __init__(self, data = "", user = "", app = None, xml = None) -> None:
+        '''
+        :param data: xml as data from request.data
+        :param user: user object from authent infos
+        :param app: current app context
+        :param xml: xml as string
+        '''
         self.uuid = None
         self.full_xml_path = None
         self.app = app
@@ -43,7 +49,7 @@ class Config:
   
     def _read_xml(self, xml):
         '''
-        :parameter xml: str XML config from request
+        :param xml: str XML config from request
         '''
         self.meta = self._get_xml_describe(xml)
         if self.meta.find(".//{*}identifier") is not None:
@@ -54,6 +60,7 @@ class Config:
         '''
         Decode request data body to XML.
         Then, will replace user info if exists.
+        :param data: string xml from flask request.data
         '''
         # read xml
         self.data = data.decode("utf-8")
@@ -74,7 +81,7 @@ class Config:
     def _get_xml_describe(self, xml):
         '''
         Return metadata from xml DCAT balises
-        :parameter xml: str
+        :param xml: str
         '''
         xml_parser = ET.fromstring(xml)
         return xml_parser.find(".//metadata/{*}RDF/{*}Description")

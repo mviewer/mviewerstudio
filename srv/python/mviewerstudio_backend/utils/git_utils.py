@@ -6,6 +6,8 @@ def init_repo(workspace, username = ""):
     '''
     Create app git repo.
     Will creat preview directory to stock temporary preview files for each application.
+    :param workspace: string workspace absolute path
+    :param username: string authent username
     '''
     # create repo
     repo = git.Repo.init(workspace)
@@ -22,6 +24,7 @@ def init_repo(workspace, username = ""):
 def init_or_get_repo(workspace):
     '''
     Get or init Git app repo.
+    :param workspace: strin workspace absolute path
     '''
     repo = None
     try:
@@ -32,6 +35,13 @@ def init_or_get_repo(workspace):
     return repo
 
 def checkout(repo, target, hard = False):
+    '''
+    checkout repo to targeted branch, tag, commit ref.
+    Hard allow to reset hard.
+    :param repo: GitPython repo object
+    :param target: string ref
+    :param hard: boolean
+    '''
     if hard:
         repo.git.reset("--hard", target)
     else:
@@ -47,13 +57,16 @@ class Git_manager:
         self.repo = init_or_get_repo(workspace)
     
     def get_repo(self):
+        '''
+        Return current repository
+        '''
         return init_or_get_repo(self.workspace)
 
     def create_version(self, msg=""):
         '''
         Create a tag.
         By default, tag name is formated as '2023-02-27-15-37-34'.
-        :parameter msg: str tag message
+        :param msg: str tag message
         '''
         self.repo.create_tag(datetime.now().strftime("%Y-%m-%d-%H-%M-%S"), message=msg)
     
@@ -106,6 +119,7 @@ class Git_manager:
     def commit_changes(self, message):
         '''
         Commit config changes on each save.
+        :param message: string message to insert in commit or tag
         '''
         if not self.repo.tags:
             self.repo.git.add("*")
@@ -116,6 +130,10 @@ class Git_manager:
             self.repo.git.commit("-m", message)
 
     def get_version(self, name):
+        '''
+        Return a tag name.
+        :param name: return readable tag full name
+        '''
         return [tag for tag in self.repo.tags if tag.name == name]
 
     def get_versions(self):

@@ -33,16 +33,26 @@ def basic_store_init(state: BlueprintSetupState):
 
 @basic_store.route("/")
 def default_doc():
+    '''
+    Return home page.
+    '''
     return redirect("index.html")
 
 
 @basic_store.route("/api/user", methods=["GET"])
 def user() -> Response:
+    '''
+    Return current authentified user.
+    Actually works with sec-proxy only.
+    '''
     return jsonify(current_user.as_dict())
 
 
 @basic_store.route("/api/app", methods=["POST"])
 def save_mviewer_config() -> Response:
+    '''
+    Save XML on first creation.
+    '''
     config = Config(request.data, current_user, current_app)
 
     if not config.xml:
@@ -62,6 +72,9 @@ def save_mviewer_config() -> Response:
 
 @basic_store.route("/api/app", methods=["PUT"])
 def update_mviewer_config() -> Response:
+    '''
+    Read UUID from XML and update register and local file system if exists.
+    '''
     config = Config(request.data, current_user, current_app)
     if not config.xml:
         raise BadRequest("No XML found in the request body !")
@@ -92,6 +105,7 @@ def update_mviewer_config() -> Response:
 def list_stored_mviewer_config() -> Response:
     """
     Return all mviewer config created by the current user
+    :param search: request args from query param.
     """
 
     if "search" in request.args:
@@ -107,6 +121,7 @@ def list_stored_mviewer_config() -> Response:
 def delete_config_workspace(id = None) -> Response:
     """
     Delete one mviewer config
+    :param id: app UUID
     """
     app_deleted = 0
 
@@ -135,6 +150,10 @@ def delete_config_workspace(id = None) -> Response:
 
 @basic_store.route("/api/app/<id>/versions", methods=["GET"])
 def get_all_app_versions(id) -> Response:
+    '''
+    Gets all tags and comit for a given UUID application.
+    :param id: app UUID
+    '''
     config = current_app.register.read_json(id)
     if not config:
         raise BadRequest("This config doesn't exists !")
@@ -149,6 +168,8 @@ def get_all_app_versions(id) -> Response:
 def switch_app_version(id, version="1") -> Response:
     """
     Allow to switch version
+    :param id: app UUID
+    :param version: 1 by default to witch to master git branch.
     """
     # read GET params from URL
     as_new = False
@@ -183,6 +204,13 @@ def switch_app_version(id, version="1") -> Response:
 
 @basic_store.route("/api/app/<id>/version/<version>/preview", methods=["GET"])
 def preview_app_version(id, version) -> Response:
+    '''
+    Allow to copy XML specific version to preview directory.
+    :param id: app UUID
+    :param version: version to preview as git commit or git tag ref.
+
+    Return file URL to preview.
+    '''
     config = current_app.register.read_json(id)
     if not config:
         raise BadRequest("This config doesn't exists !")
@@ -215,6 +243,15 @@ def preview_app_version(id, version) -> Response:
 
 @basic_store.route("/api/app/<id>/preview", methods=["POST"])
 def preview_uncommited_app(id) -> Response:
+    '''
+    Allow to copy create a xml from request.data without save changes.
+    This route will create XML in preview directory with random UUID.
+
+    :param id: app UUID
+    :param version: version to preview as git commit or git tag ref.
+
+    Return file URL to preview.
+    '''
     # init preview
     app_config = current_app.config
     # read XML
@@ -245,8 +282,10 @@ def preview_uncommited_app(id) -> Response:
 @basic_store.route("/api/app/<id>/version", methods=["DELETE"])
 def delete_app_versions(id) -> Response:
     """
-    Delete each app versions
-    Only keep main active branch
+    Delete each app versions except master branch.
+
+    :param id: app UUID
+    
     """
     version_deleted = 0
 
@@ -271,6 +310,10 @@ def delete_app_versions(id) -> Response:
 
 @basic_store.route("/api/app/<id>/version", methods=["POST"])
 def create_app_version(id) -> Response:
+    '''
+    Create a tag for a given UUID application.
+    :param id: app UUID
+    '''
     config = current_app.register.read_json(id)
     if not config:
         raise BadRequest("This config doesn't exists !")
@@ -285,7 +328,7 @@ def create_app_version(id) -> Response:
 @basic_store.route("/api/style", methods=["POST"])
 def store_style() -> Response:
     """
-    This endpoint stores SLD style locally. it does not verify the content.
+    This endpoint stores SLD style locally. It does not verify the content.
     """
     raw_style = request.data.decode("utf-8")
     filehash = hashlib.sha256()
@@ -308,6 +351,10 @@ def store_style() -> Response:
 
 @basic_store.route("/proxy/", methods=["GET", "POST"])
 def proxy() -> Response:
+    '''
+    Proxy service.
+    :param url: string url to proxify.
+    '''
     url = request.args.get("url")
     if url:
         parsed_url = urlparse(url)

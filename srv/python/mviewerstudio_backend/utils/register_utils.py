@@ -9,8 +9,15 @@ from .git_utils import init_or_get_repo, checkout
 
 logger = logging.getLogger(__name__)  
 
+'''
+This class ease config manipulations as creation, read, write from XML.
+This class is usefull to convert XML or XML's directory to register JSON file (and vice versa).
+'''
 class ConfigRegister:
     def __init__(self, app) -> None:
+        '''
+        :param app: application context as object
+        '''
         self.app = app
         self.store_directory = app.config["EXPORT_CONF_FOLDER"]
         self.name = "register.json"
@@ -47,6 +54,10 @@ class ConfigRegister:
         remove(self.full_path)
     
     def from_xml_path(self, xml_path):
+        '''
+        This func allow to create Config class data from XML path directory.
+        :param xml_path: string absolute xml path
+        '''
         config = None
         with open(xml_path) as f:
             xml_read = f.read()
@@ -78,17 +89,29 @@ class ConfigRegister:
                     self.update(config.as_dict())
 
     def update_register(self, json_dict=None):
+        '''
+        Replace register json file by a given json content.
+        :param json_dict: dict to insert as new json content.
+        '''
         register_file = open(self.full_path, "w")
         if json_dict :
             register_file.write(json.dumps(json_dict))
         register_file.close()
         
     def read_json(self, id):
+        '''
+        Return config from json register file by ID.
+        :param id: string uuid use as unique directory name
+        '''
         register_file = open(self.full_path)
         register_json = json.load(register_file)
         return [config for config in register_json["configs"] if config["id"] == id]
 
     def add(self, config_dict):
+        '''
+        Insert a config to json register file.
+        :param config_dict: config class data as dict
+        '''
         register_file = open(self.full_path)
         register_json = json.load(register_file)
         register_json["configs"].append(config_dict)
@@ -96,24 +119,40 @@ class ConfigRegister:
         self.update_register(register_json)
 
     def update_from_id(self, id):
+        '''
+        Read UUID app directory from file system, get XML and
+        update json register file with XML.
+        This allow to change XML manually and update register automatically on service startup.
+        :param id: string uuid use as unique directory name
+        '''
         xml_path = glob.glob("%s/*.xml" % path.join(self.store_directory, id))
         if xml_path:
             config = self.from_xml_path(xml_path[0])
             config_dict = config.as_dict()
             self.update(config_dict)
 
-
-    def update(self, config):
-        self.delete(config["id"])
-        self.add(config)
+    def update(self, config_dict):
+        '''
+        Update register json file from config dict.
+        :param config_dict: config class data as dict
+        '''
+        self.delete(config_dict["id"])
+        self.add(config_dict)
 
     def delete(self, id):
+        '''
+        Delete a config to json register file.
+        :param id: string uuid use as unique directory name
+        '''
         register_file = open(self.full_path)
         register_json = json.load(register_file)
         json_clean = [config for config in register_json["configs"] if config["id"] != id]
         self.update_register({"total": len(json_clean), "configs": json_clean})
       
     def as_dict(self):
+        '''
+        Register 
+        '''
         return {
             "total": self.register.total,
             "configs": [config.as_dict() for config in self.register.configs]
@@ -122,8 +161,7 @@ class ConfigRegister:
     def search_configs(self, pattern):
         '''
         Search pattern inside configs fields (limited list).
-        Parameters:
-            pattern (str): string to search.
+        :param pattern: string to search.
         '''       
         configs_match = []
         register_file = open(self.full_path)
