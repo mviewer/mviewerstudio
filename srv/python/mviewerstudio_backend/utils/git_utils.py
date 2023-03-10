@@ -19,6 +19,7 @@ def init_repo(workspace):
     # set user global config
     repo.git.config("--global", "user.name", current_user.username)
     repo.git.config("--global", "user.email", "fake@email.org")
+    repo.git.config("--global", "--add", "save.directory", workspace)
 
 def init_or_get_repo(workspace):
     '''
