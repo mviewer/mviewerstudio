@@ -2,37 +2,52 @@ import git
 from os import path
 from datetime import datetime
 
+def init_repo(workspace, username = ""):
+    '''
+    Create app git repo.
+    Will creat preview directory to stock temporary preview files for each application.
+    '''
+    # create repo
+    repo = git.Repo.init(workspace)
+    # gitignore
+    ignorefile = path.join(workspace, ".gitignore")
+    f = open(ignorefile, "w")
+    f.write("preview/")
+    # set user global config
+    if not username :
+        username = "anonymous"
+    repo.git.config("--global", "user.name", username)
+    repo.git.config("--global", "user.email", "fake@email.org")
+
+def init_or_get_repo(workspace):
+    '''
+    Get or init Git app repo.
+    '''
+    repo = None
+    try:
+        repo = git.Repo(workspace)
+    except git.exc.GitError:
+        init_repo()
+        repo = git.Repo(workspace)
+    return repo
+
+def checkout(repo, target, hard = False):
+    if hard:
+        repo.git.reset("--hard", target)
+    else:
+        repo.git.checkout(target)
+    
+
 class Git_manager:
     def __init__(self, workspace, user) -> None:
         self.workspace = workspace
         self.repo = None
         # init git author
         self.user = user
-        self.init_or_get_repo()
+        self.repo = init_or_get_repo(workspace)
     
-    def init_or_get_repo(self):
-        '''
-        Get or init Git app repo.
-        '''
-        try:
-            self.repo = git.Repo(self.workspace)
-        except git.exc.GitError:
-            self.init_repo()
-
-    def init_repo(self):
-        '''
-        Create app git repo.
-        Will creat preview directory to stock temporary preview files for each application.
-        '''
-        # create repo
-        self.repo = git.Repo.init(self.workspace)
-        # gitignore
-        ignorefile = path.join(self.workspace, ".gitignore")
-        f = open(ignorefile, "w")
-        f.write("preview/")
-        # set user global config
-        self.repo.git.config("--global", "user.name", self.user.username)
-        self.repo.git.config("--global", "user.email", "fake@email.org")
+    def get_repo(self):
+        return init_or_get_repo(self.workspace)
 
     def create_version(self, msg=""):
         '''
@@ -83,13 +98,9 @@ class Git_manager:
             target = "tags/%s" % target
         elif not [commit for commit in list(self.repo.iter_commits()) if commit.hexsha == target]:
             return
-        
         self.clean_branch()
 
-        if hard:
-            self.repo.git.reset("--hard", target)
-        else:
-            self.repo.git.checkout(target)
+        checkout(self.workspace, self.repo, hard)
 
 
     def commit_changes(self, message):

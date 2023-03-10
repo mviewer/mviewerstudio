@@ -1,10 +1,11 @@
 from os import path, remove, listdir
 from os.path import isdir
-from ..models.register import RegisterModel, ConfigModel
+from ..models.register import RegisterModel
 import logging, json
 from .config_utils import Config
 import glob
 from .login_utils import current_user
+from .git_utils import init_or_get_repo, checkout
 
 logger = logging.getLogger(__name__)  
 
@@ -66,7 +67,12 @@ class ConfigRegister:
         ]
         
         for dir in dirs:
-            for xml in glob.glob("%s/*.xml" % path.join(self.store_directory, dir)):
+            app_path = path.join(self.store_directory, dir)
+            for xml in glob.glob("%s/*.xml" % app_path):
+                repo = init_or_get_repo(app_path)
+                # to be sur each app is in master branch
+                checkout(repo, "master", True)
+                # will return config as class data
                 config = self.from_xml_path(xml)
                 if config :
                     self.update(config.as_dict())
