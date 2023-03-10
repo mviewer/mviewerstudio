@@ -819,7 +819,7 @@ var saveAppWithPhp = (conf) => {
 
 var saveApplicationParameters = () => {
     const conf = getConfig();
-    if (!mv.validateXML(conf.join(""))) {
+    if (!conf || !mv.validateXML(conf.join(""))) {
         return alertCustom(mviewer.tr('msg.xml_doc_invalid'), 'danger');
     }
     if (_conf.is_php) {
