@@ -32,9 +32,16 @@ function saveStudio() {
 }
 
 // Manage display of options
-$('#opt-title').change(function() {
-  if($("#opt-title").hasClass( "is-invalid")){
-    $("#opt-title").removeClass( "is-invalid")
+$('#opt-title').change(function () {
+  const inputEl = document.querySelector("#opt-title");
+  const btnSave = document.querySelector("#toolsbarStudio-Save");
+  if(inputEl.value){
+    inputEl.classList.remove("is-invalid")
+    btnSave.classList.remove("disabled");
+  }
+  if (!inputEl.value) {
+    btnSave.classList.add("disabled");
+    inputEl.classList.add("is-invalid")
   }
 });
 
