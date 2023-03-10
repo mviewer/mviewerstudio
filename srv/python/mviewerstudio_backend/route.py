@@ -44,14 +44,13 @@ def user() -> Response:
 @basic_store.route("/api/app", methods=["POST"])
 def save_mviewer_config() -> Response:
     config = Config(request.data, current_user, current_app)
-    config_data = config.as_data()
 
     if not config.xml:
         raise BadRequest("No XML found in the request body !")
-
     # commit changes
     config.git.commit_changes("Creation")
-
+    # get data
+    config_data = config.as_data()
     # register config
     current_config = current_app.register.read_json(config_data.id)
     if not current_config:
