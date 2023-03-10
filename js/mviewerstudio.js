@@ -261,12 +261,14 @@ var newConfiguration = function (infos) {
     
     map.getView().setCenter(_conf.map.center);
     map.getView().setZoom(_conf.map.zoom);
+    const newDate = moment()
     config = {
         application: { title: "", logo: "" },
         themes: {},
+        date: newDate.toISOString(),
         temp: { layers: {} },
         id: mv.uuid(),
-        description: moment().format("DD-MM-YYYY-HH-mm-ss"),
+        description: newDate.format("DD-MM-YYYY-HH-mm-ss"),
         isFile: false,
         ...infos // from reading app
     };

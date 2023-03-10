@@ -165,7 +165,7 @@ def get_all_app_versions(id) -> Response:
         raise BadRequest("This config doesn't exists !")
     config = config[0]
     workspace = path.join(current_app.config["EXPORT_CONF_FOLDER"], config["id"])
-    git = Git_manager(workspace, current_user)
+    git = Git_manager(workspace)
     versions = git.get_versions()
     return jsonify({"versions": versions, "config": config})
 
@@ -190,7 +190,7 @@ def switch_app_version(id, version="1") -> Response:
         raise BadRequest("This config doesn't exists !")
     config = config[0]
     workspace = path.join(current_app.config["EXPORT_CONF_FOLDER"], config["id"])
-    git = Git_manager(workspace, current_user)
+    git = Git_manager(workspace)
     git.switch_version(version, as_new)
     # Update register
     current_app.register.update_from_id(config["id"])
@@ -225,7 +225,7 @@ def preview_app_version(id, version) -> Response:
     config = config[0]
     init_preview(current_app, config["id"])
     workspace = path.join(current_app.config["EXPORT_CONF_FOLDER"], config["id"])
-    git = Git_manager(workspace, current_user)
+    git = Git_manager(workspace)
     git.switch_version(version, False)
     # copy past file to preview folder
     app_config = current_app.config
@@ -305,7 +305,7 @@ def delete_app_versions(id) -> Response:
         raise BadRequest("This config doesn't exists !")
     config = config[0]
     workspace = path.join(current_app.config["EXPORT_CONF_FOLDER"], config["id"])
-    git = Git_manager(workspace, current_user)
+    git = Git_manager(workspace)
 
     for version in post_data["versions"]:
         git.delete_version(version)
@@ -326,7 +326,7 @@ def create_app_version(id) -> Response:
 
     config = config[0]
     workspace = path.join(current_app.config["EXPORT_CONF_FOLDER"], config["id"])
-    git = Git_manager(workspace, current_user)
+    git = Git_manager(workspace)
     git.create_version(config["description"])
     return jsonify({"success": True, "message": "New version created !"}), 200
 
