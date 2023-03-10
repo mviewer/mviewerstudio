@@ -107,13 +107,15 @@ def list_stored_mviewer_config() -> Response:
     Return all mviewer config created by the current user
     :param search: request args from query param.
     """
-
-    logger.info(current_user)
+    logger.debug("LIST CONFIGS FOR USER : %s " % current_user.username)
     if "search" in request.args:
         pattern = request.args.get("search")
         configs = current_app.register.search_configs(pattern)
     else:
         configs = current_app.register.as_dict()["configs"]
+    
+    configs = [config for config in configs if config["creator"] == current_user.username]
+    
     for config in configs:
         config["url"] = current_app.config["CONF_PATH_FROM_MVIEWER"] + config["url"]
     return jsonify(configs)
@@ -131,20 +133,23 @@ def delete_config_workspace(id = None) -> Response:
         raise BadRequest("Empty list : no value to delete !")
 
     logger.debug("START DELETE CONFIG : %s" % id)
-    register = current_app.register
     workspace = path.join(current_app.config["EXPORT_CONF_FOLDER"], id)
     # update json
     config = current_app.register.read_json(id)
     if not config or not path.exists(workspace):
         logger.debug("DELETE : ERROR - ID OR DIRECTORY NOT EXISTS :")
         return jsonify({"deleted_files": 0, "success": False})
+
+    # control if alowed
+    if config[0]["creator"] not in [current_user.username, "anonymous"] :
+        logger.debug("DELETE : NOT ALLOWED")
+        return MethodNotAllowed("Not allowed !")
     # delete in json
-    register.delete(id)
-    logger.debug("DELETE IN JSON : SUCCESS")
+    current_app.register.delete(id)
     # delete dir
-    logger.debug("DELETE DIRECTORY : SUCCESS")
     rmtree(workspace)
     app_deleted += 1
+    logger.debug("DELETE CONFIG : SUCCESS")
         
     return jsonify({"deleted_files": app_deleted, "success": True})
 
