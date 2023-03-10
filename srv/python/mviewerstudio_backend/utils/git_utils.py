@@ -112,7 +112,7 @@ class Git_manager:
             return
         self.clean_branch()
 
-        checkout(self.workspace, self.repo, hard)
+        checkout(self.repo, target, hard)
 
 
     def commit_changes(self, message):
