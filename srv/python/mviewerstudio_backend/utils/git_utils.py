@@ -1,8 +1,9 @@
 import git
 from os import path
 from datetime import datetime
+from .login_utils import current_user
 
-def init_repo(workspace, username = ""):
+def init_repo(workspace):
     '''
     Create app git repo.
     Will creat preview directory to stock temporary preview files for each application.
@@ -16,9 +17,7 @@ def init_repo(workspace, username = ""):
     f = open(ignorefile, "w")
     f.write("preview/")
     # set user global config
-    if not username :
-        username = "anonymous"
-    repo.git.config("--global", "user.name", username)
+    repo.git.config("--global", "user.name", current_user.username)
     repo.git.config("--global", "user.email", "fake@email.org")
 
 def init_or_get_repo(workspace):
@@ -30,7 +29,7 @@ def init_or_get_repo(workspace):
     try:
         repo = git.Repo(workspace)
     except git.exc.GitError:
-        init_repo()
+        init_repo(workspace)
         repo = git.Repo(workspace)
     return repo
 
