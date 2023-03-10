@@ -69,7 +69,7 @@ class ConfigRegister:
             for xml in glob.glob("%s/*.xml" % path.join(self.store_directory, dir)):
                 config = self.from_xml_path(xml)
                 if config :
-                    self.add(config.as_dict())
+                    self.update(config.as_dict())
 
     def update_register(self, json_dict=None):
         register_file = open(self.full_path, "w")
