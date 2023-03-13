@@ -678,9 +678,9 @@ var getConfig = () => {
         'coordinates="'+($('#opt-coordinates').prop('checked')=== true)+'"',
         'measuretools="'+($('#opt-measuretools').prop('checked')=== true)+'"',
         'mouseposition="'+($('#opt-mouseposition').prop('checked')=== true)+'"',
-        'geoloc="'+($('#opt-geoloc').prop('checked')=== true)+'"',
-        'studio="'+studioUrl+'"',        
-        'togglealllayersfromtheme="'+($('#opt-togglealllayersfromtheme').prop('checked')=== true)+'"'];
+        'geoloc="' + ($('#opt-geoloc').prop('checked') === true) + '"',
+        'studio="' + studiourl + '"',
+        'togglealllayersfromtheme="' + ($('#opt-togglealllayersfromtheme').prop('checked') === true) + '"'];
 
     config.title = $("#opt-title").val();
 
