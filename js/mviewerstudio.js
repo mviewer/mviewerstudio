@@ -238,12 +238,12 @@ var newConfiguration = function (infos) {
     });
 
     // default checked state
-    ["opt-exportpng", "opt-zoom", "opt-geoloc", "opt-mouseposition", "opt-studio", "opt-measuretools", "opt-initialextent", "theme-edit-collapsed", "opt-mini", "opt-showhelp", "opt-coordinates",
+    ["opt-exportpng", "opt-zoomtools", "opt-geoloc", "opt-mouseposition", "opt-studio", "opt-measuretools", "opt-initialextenttool", "theme-edit-collapsed", "opt-mini", "opt-showhelp", "opt-coordinates",
         "opt-togglealllayersfromtheme", "SwitchAdressSearch", "SwitchCustomBackground", "SwitchAdvanced"
     ].forEach(id => {
         document.querySelector(`#${ id }`).checked = false;
     });
-    ["opt-zoom", "opt-measuretools"].forEach(id => {
+    ["opt-zoomtools", "opt-measuretools", "opt-initialextenttool"].forEach(id => {
         document.querySelector(`#${ id }`).checked = true;
     });
     
@@ -598,6 +598,12 @@ var getConfig = () => {
     var savedProxy = "";
     var olscompletion = "";
     var elasticsearch = "";
+    // Url du studio
+    if ($('#opt-studio').prop('checked')=== true){
+        var studiourl = window.location.href;
+    } else {
+        var studiourl = 'false';
+    }
     var application = ['<application',
         'title="'+$("#opt-title").val()+'"',
         'logo="'+$("#opt-logo").val()+'"',
@@ -607,15 +613,15 @@ var getConfig = () => {
         'iconhelp="'+$("#opt-iconhelp").val()+'"',
         'home="'+$("#opt-home").val()+'"',
         'style="'+$("#opt-style").val()+'"',
-        'zoomtools="'+($('#opt-zoom').prop('checked')=== true)+'"',
-        'initialextenttool="'+($('#opt-initialextent').prop('checked')=== true)+'"',
+        'zoomtools="'+($('#opt-zoomtools').prop('checked')=== true)+'"',
+        'initialextenttool="'+($('#opt-initialextenttool').prop('checked')=== true)+'"',
         'exportpng="'+($('#opt-exportpng').prop('checked')=== true)+'"',        
         'showhelp="'+($('#opt-showhelp').prop('checked')=== true)+'"',
         'coordinates="'+($('#opt-coordinates').prop('checked')=== true)+'"',
         'measuretools="'+($('#opt-measuretools').prop('checked')=== true)+'"',
         'mouseposition="'+($('#opt-mouseposition').prop('checked')=== true)+'"',
         'geoloc="'+($('#opt-geoloc').prop('checked')=== true)+'"',
-        'studio="'+($('#opt-studio').prop('checked')=== true)+'"',        
+        'studio="'+studiourl+'"',        
         'togglealllayersfromtheme="'+($('#opt-togglealllayersfromtheme').prop('checked')=== true)+'"'];
 
     config.title = $("#opt-title").val();
