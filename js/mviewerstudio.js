@@ -194,8 +194,8 @@ const getUser = () => {
     })
         .then(r => r.json())
         .then(data => {
-            var userGroupFullName;
-            var userGroupSlugName;
+            var userGroupFullName = "";
+            var userGroupSlugName = "";
             var selectGroupPopup = false;
             if (data) {
                 if (data.organisation && data.organisation.legal_name) {
@@ -222,11 +222,10 @@ const getUser = () => {
                         userGroupFullName
                     )
                 }
-                if (_conf.user_info_visible) {
+                if (_conf.user_info_visible && data.user_name != "anonymous") {
                     $("#user_connected").text('Connecté en tant que ' + data.first_name + ' (' + userGroupFullName + ')');   
-                } else {
-                    $("#user_connected").hide();
-                    $("#menu_user_logout").hide();
+                    document.querySelector("#user_connected").classList.remove("d-none");
+                    document.querySelector("#menu_user_logout").classList.remove("d-none");
                 }
             }
         })
@@ -716,7 +715,7 @@ var getConfig = () => {
     
     const mviewerVersion = _conf?.mviewer_version || "";
 
-    var conf = ['<?xml version="1.0" encoding="UTF-8"?>\r\n<config mviewerversion="'+ mviewerVersion +'" mviewerstudioversion="'+ VERSION +'">\r\n',
+    var conf = ['<?xml version="1.0" encoding="UTF-8"?>\r\n<config mviewerversion="'+ mviewerVersion +'" mviewerstudioversion="'+ _conf?.mviewerstudio_version +'">\r\n',
         '<metadata>\r\n'+mv.createDublinCore(config)+'\r\n</metadata>\r\n',
         application,
         mapoptions,
