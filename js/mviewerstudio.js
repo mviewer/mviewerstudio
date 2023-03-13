@@ -17,11 +17,11 @@ $(document).ready(function(){
         dataType: "json",
         contentType: "application/json",
         success: function (data) {
-            const VERSION =  _conf.mviewerstudio_version
             //Mviewer Studio version
-            console.log("MviewerStudio version " + VERSION);
             console.groupCollapsed("init app from config");
             _conf = data.app_conf;
+            const VERSION =  _conf.mviewerstudio_version
+            console.log("MviewerStudio version " + VERSION);
             if (_conf.proxy === undefined) {
                 _conf.proxy = "../proxy/?url=";
             }
