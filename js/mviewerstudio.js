@@ -1,13 +1,9 @@
 var _conf;
 var API = {};
-var VERSION = "3.2";
 
 var mviewer = {};
 
 $(document).ready(function(){
-
-    //Mviewer Studio version
-    console.log("MviewerStudio version " + VERSION);
 
 
     //Get URL Parameters
@@ -21,6 +17,9 @@ $(document).ready(function(){
         dataType: "json",
         contentType: "application/json",
         success: function (data) {
+            const VERSION =  _conf.mviewerstudio_version
+            //Mviewer Studio version
+            console.log("MviewerStudio version " + VERSION);
             console.groupCollapsed("init app from config");
             _conf = data.app_conf;
             if (_conf.proxy === undefined) {
@@ -145,54 +144,7 @@ $(document).ready(function(){
             }
 
             // Get user info
-            if (_conf.user_info_visible) {
-                $.ajax({
-                    type: "GET",
-                    url: _conf.user_info,
-                    dataType: "json",
-                    contentType: "application/json",
-                    success: function (data) {
-                        var userGroupFullName;
-                        var userGroupSlugName;
-                        var selectGroupPopup = false;
-                        if (data) {
-                            if (data.organisation && data.organisation.legal_name) {
-                                userGroupFullName = data.organisation.legal_name;
-                            } else if (data && data.user_groups ) {
-                                if (data.user_groups.length > 1) {
-                                    selectGroupPopup = true;
-                                } else {
-                                    userGroupFullName = data.user_groups[0].full_name;
-                                    userGroupSlugName = data.user_groups[0].slug_name;
-                                }
-                            }
-
-                            if (selectGroupPopup) {
-                                mv.updateUserGroupList(data);
-                                $("#mod-groupselection").modal( {
-                                    backdrop: 'static',
-                                    keyboard: false});
-                            } else {
-                                if (!userGroupSlugName) {
-                                    userGroupSlugName = slugify(userGroupFullName);
-                                }
-                                mv.updateUserInfo(data.first_name + ' ' + data.last_name, userGroupSlugName, userGroupFullName);
-                            }
-                        }
-                    },
-                    error: function (xhr, ajaxOptions, thrownError) {
-                        console.error("user info retrieval failed", {
-                            xhr: xhr,
-                            ajaxOptions: ajaxOptions,
-                            thrownError: thrownError
-                        });
-                        //alert(mviewer.tr('msg.user_info_retrieval_error'));
-                        alertCustom(mviewer.tr('msg.user_info_retrieval_error'), 'danger');
-                    }
-                });
-            } else {
-                mv.hideUserInfo();
-            }
+            getUser();
             console.groupEnd("init app from config");
         }
     });
@@ -231,6 +183,55 @@ var map2 = new ol.Map({
     target: 'map_filter'
 });
 var config;
+
+const getUser = () => {
+    if (!_conf.user_info) return;
+    fetch(_conf.user_info, {
+        method: "GET",
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+        .then(r => r.json())
+        .then(data => {
+            var userGroupFullName;
+            var userGroupSlugName;
+            var selectGroupPopup = false;
+            if (data) {
+                if (data.organisation && data.organisation.legal_name) {
+                    userGroupFullName = data.organisation.legal_name;
+                } else if (data && data.user_groups ) {
+                    if (data.user_groups.length > 1) {
+                        selectGroupPopup = true;
+                    } else {
+                        userGroupFullName = data.user_groups[0].full_name;
+                        userGroupSlugName = data.user_groups[0].slug_name;
+                    }
+                }
+
+                if (selectGroupPopup) {
+                    mv.updateUserGroupList(data);
+                    $("#mod-groupselection").modal({
+                        backdrop: 'static',
+                        keyboard: false
+                    });
+                } else {
+                    mv.updateUserInfo(
+                        `${ data.first_name } ${ data.last_name }`,
+                        userGroupSlugName || slugify(userGroupFullName),
+                        userGroupFullName
+                    )
+                }
+                if (_conf.user_info_visible) {
+                    $("#user_connected").text('Connecté en tant que ' + data.first_name + ' (' + userGroupFullName + ')');   
+                } else {
+                    $("#user_connected").hide();
+                    $("#menu_user_logout").hide();
+                }
+            }
+        })
+        .catch(err => alertCustom(mviewer.tr('msg.user_info_retrieval_error'), 'danger'))
+}
 
 var newConfiguration = function (infos) {
     ["opt-title", "opt-logo", "opt-favicon", "opt-help", "opt-home", "theme-edit-icon", "theme-edit-title"].forEach(function (param, id) {
@@ -711,9 +712,11 @@ var getConfig = () => {
             themes.push(padding(4)+'</theme>');
             }
     });
-    themes.push(padding(0)+'</themes>');
+    themes.push(padding(0) + '</themes>');
+    
+    const mviewerVersion = _conf?.mviewer_version || "";
 
-    var conf = ['<?xml version="1.0" encoding="UTF-8"?>\r\n<config mviewerstudioversion="'+VERSION+'">\r\n',
+    var conf = ['<?xml version="1.0" encoding="UTF-8"?>\r\n<config mviewerversion="'+ mviewerVersion +'" mviewerstudioversion="'+ VERSION +'">\r\n',
         '<metadata>\r\n'+mv.createDublinCore(config)+'\r\n</metadata>\r\n',
         application,
         mapoptions,
