@@ -3,7 +3,7 @@ from .utils.login_utils import current_user
 from .utils.config_utils import Config
 from .utils.commons import clean_preview, init_preview
 import hashlib, uuid
-from os import path, mkdir
+from os import path, mkdir, remove
 from shutil import rmtree, copyfile
 from flask.blueprints import BlueprintSetupState
 from urllib.parse import urlparse
@@ -119,6 +119,44 @@ def list_stored_mviewer_config() -> Response:
     for config in configs:
         config["url"] = current_app.config["CONF_PATH_FROM_MVIEWER"] + config["url"]
     return jsonify(configs)
+
+@basic_store.route("/api/app/<id>/publish", methods=["GET"])
+def publish_mviewer_config(id) -> Response:
+    """
+    Will put online a config.
+    This route will copy / past XML to publication directory.
+    :param id: configuration UUID
+    """
+    logger.debug("PUBLISH : %s " % id)
+
+    config = current_app.register.read_json(id)
+    if not config:
+        raise BadRequest("This config doesn't exists !")
+
+    # create preview space
+    config = config[0]
+
+    if not path.exists(current_app.config["MVIEWERSTUDIO_PUBLISH_PATH"]):
+        return BadRequest("Publish path does not exists !")
+
+    copy_file = current_app.config["EXPORT_CONF_FOLDER"] + config["url"]
+    past_file = current_app.config["MVIEWERSTUDIO_PUBLISH_PATH"] + "%s.xml" % id
+
+    # TODO - add publish info in XML
+
+    copyfile(copy_file, past_file)
+    return jsonify({"file": past_file})
+
+@basic_store.route("/api/app/<id>/publish", methods=["DELETE"])
+def unpublish_mviewer_config(id) -> Response:
+        publish_file = current_app.config["MVIEWERSTUDIO_PUBLISH_PATH"] + "%s.xml" % id
+
+        logger.debug("DELETE PUBLISH FILE : %s" % publish_file)
+
+        if not path.exists(publish_file):
+            return BadRequest("No file to delete - This file does not exsits !")
+        remove(publish_file)
+        return jsonify({"success": True})
 
 @basic_store.route("/api/app/<id>", methods=["DELETE"])
 def delete_config_workspace(id = None) -> Response:

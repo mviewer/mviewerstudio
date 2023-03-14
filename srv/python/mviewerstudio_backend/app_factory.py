@@ -1,4 +1,5 @@
 from flask import Flask
+from os import path, mkdir
 import logging
 from .error_handlers import ERROR_HANDLERS
 from .route import basic_store
@@ -21,6 +22,12 @@ def load_error_handlers(app: Flask) -> None:
 def load_blueprint(app: Flask) -> None:
     app.register_blueprint(basic_store)
 
+def init_publish_directory(app: Flask) -> None:
+    if "MVIEWERSTUDIO_PUBLISH_PATH" not in app.config:
+        return
+    publish_path = app.config["MVIEWERSTUDIO_PUBLISH_PATH"]
+    if not path.exists(publish_path) and publish_path:
+        mkdir(publish_path)
 
 def create_app() -> Flask:
     app = Flask("mviewerstudio")
@@ -28,4 +35,5 @@ def create_app() -> Flask:
     load_error_handlers(app)
     load_blueprint(app)
     setup_logging(app)
+    init_publish_directory(app)
     return app
