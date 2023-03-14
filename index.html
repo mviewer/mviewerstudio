@@ -798,6 +798,21 @@
                             <h1 i18n="tabs.publication.finish">Félicitations !</h1>
                             <h4 class="text-primary" i18n="tabs.publication.subfinish">Vous avez terminé la configuration de votre application mviewer.</h4>  
                             <div id="cardsPublication" class="my-5">
+                                <!--Publish-->
+                                <div style="max-width: 18rem;">
+                                    <a role="button" onclick="publish(config?.id)" href="#">
+                                        <div class="card border-info p-3 zoomCard h-100" style="max-width: 18rem; background-color: #f5ae54; color: white;">
+                                            <div class="card-body mb-5">
+                                            <span class="iconCard-finish">
+                                                <i class="ri-play-line" style="font-size: 20px;vertical-align: middle;"></i>
+                                            </span>                            
+                                            <h5 class="card-title mt-4"><span i18n="tabs.publication.publish_title">Publier votre application</span></h5>
+                                            <p class="card-text" i18n="tabs.publication.publish_text">Mettre en ligne votre application et obtenez un lien de partage</p>                              
+                                            </div>
+                                        </div>
+                                    </a> 
+                                </div>
+                                <!--Publish-->
                                 <!--Download-->
                                 <div style="max-width: 18rem;">
                                     <a role="button" onclick="downloadXML();" href="#">
@@ -828,21 +843,6 @@
                                     </a> 
                                 </div>                                
                                 <!--Preview-->
-                                <!--Publish-->
-                                <!-- <div style="max-width: 18rem;">
-                                    <a role="button" onclick="publish(config?.id)" href="#">
-                                        <div class="card border-info p-3 zoomCard h-100" style="max-width: 18rem;">
-                                            <div class="card-body mb-5">
-                                            <span class="iconCard-finish" style="background-color: #f5ae54;">
-                                                <i class="ri-eye-2-line" style="font-size: 20px;vertical-align: middle;"></i>
-                                            </span>                            
-                                            <h5 class="card-title mt-4"><span i18n="tabs.publication.preview_title">Publier votre application</span></h5>
-                                            <p class="card-text" i18n="tabs.publication.preview_text">Mettre en ligne votre application et obtenez un lien de partage</p>                              
-                                            </div>
-                                        </div>
-                                    </a> 
-                                </div> -->
-                                <!--Publish-->
                             </div>                          
                             <div class="mt-4">
                                 <a class="btn btn-outline-warning btnPrev"><i class="ri-arrow-left-line"></i> <span i18n="studio.wizard.btn.previous">Précédent</span></a>
