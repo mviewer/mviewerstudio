@@ -86,6 +86,8 @@
         "tabs.app.bgcustom.base.format": "Format d'image",
         "tabs.app.bgcustom.base.nameLayers": "Identifiant technique de la couche",
         "tabs.app.bgcustom.base.styleUrl": "Lien vers le fichier de style (JSON)",
+        "tabs.app.bgcustom.base.matrixset": "Matrixset",
+        "tabs.app.bgcustom.base.fromcapacity": "Construire la couche à partir des capacités du service",
         "tabs.app.bgcustom.base.id.ph": "ortho",
         "tabs.app.bgcustom.base.label.ph": "Orthophoto",
         "tabs.app.bgcustom.base.title.ph": "Orthophotographie France",

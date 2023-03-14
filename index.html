@@ -465,15 +465,15 @@
                                                         </div>
                                                         <div class="col-md-6">
                                                             <div class="form-group">
-                                                                <label for="formCustomBaseTitle" class="form-label"><span i18n="tabs.app.bgcustom.base.title">Sous-titre</span><span class="tooltip-info" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Information complémentaire comme le producteur"><i class="ri-information-line"></i></span></label>
-                                                                <input class="form-control" id="formCustomBaseTitle" placeholder="positron" i18n="tabs.app.bgcustom.base.title.ph">
-                                                            </div>
+                                                                <label for="formCustomBaseUrl" class="form-label"><span i18n="tabs.app.bgcustom.base.url">URL</span><span class="tooltip-info" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Lien vers le service web"><i class="ri-information-line"></i></span></label>
+                                                                <input class="form-control checkedurl" type="url" id="formCustomBaseUrl" i18n="tabs.app.bgcustom.base.url.ph" placeholder="http://{a-c}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png" required>
+                                                            </div>                                                            
                                                         </div>
                                                         <div class="col-md-6">
                                                             <div class="form-group">
-                                                                <label for="formCustomBaseThumb" class="form-label"><span i18n="tabs.app.bgcustom.base.thumb">Lien vers la vignette</span><span class="tooltip-info" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Image permettant de visualiser l'aperçu du fond de plan"><i class="ri-information-line"></i></span></label>
-                                                                <input class="form-control checkedurl" type="url" id="formCustomBaseThumb" i18n="tabs.app.bgcustom.base.thumb.ph" placeholder="https://kartenn.region-bretagne.fr/kartoviz/img/basemap/positron.png" required>
-                                                            </div>
+                                                                <label for="formCustomBaseNameLayers" class="form-label"><span i18n="tabs.app.bgcustom.base.nameLayers">Couches</span><span class="tooltip-info" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Identifiant technique de la couche à utiliser"><i class="ri-information-line"></i></span></label>
+                                                                <input class="form-control" id="formCustomBaseNameLayers" i18n="tabs.app.bgcustom.base.nameLayers.ph" placeholder="satellite" required>
+                                                            </div>                                                            
                                                         </div>
                                                         <div class="col-md-6">
                                                             <div class="form-group">
@@ -483,40 +483,47 @@
                                                         </div>   
                                                         <div class="col-md-6">
                                                             <div class="form-group">
-                                                                <label for="formCustomBaseUrl" class="form-label"><span i18n="tabs.app.bgcustom.base.url">URL</span><span class="tooltip-info" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Lien vers le service web"><i class="ri-information-line"></i></span></label>
-                                                                <input class="form-control checkedurl" type="url" id="formCustomBaseUrl" i18n="tabs.app.bgcustom.base.url.ph" placeholder="http://{a-c}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png" required>
-                                                            </div>
+                                                                <label for="formCustomBaseTitle" class="form-label"><span i18n="tabs.app.bgcustom.base.title">Sous-titre</span><span class="tooltip-info" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Information complémentaire comme le producteur"><i class="ri-information-line"></i></span></label>
+                                                                <input class="form-control" id="formCustomBaseTitle" placeholder="positron" i18n="tabs.app.bgcustom.base.title.ph">
+                                                            </div>                                                            
                                                         </div>   
                                                     </div>
-                                                    <div class="row mt-2" >
-                                                        <div class="col-md-6 vector-tms custom-bg-type">
+                                                    <div class="row mt-2" >                                                        
+                                                        <div class="col-md-6 wmts wms custom-bg-type">
                                                             <div class="form-group">
-                                                                <label for="formCustomBaseStyleUrl" class="form-label"><span i18n="tabs.app.bgcustom.base.styleUrl">Lien vers le fichier de style</span><span class="tooltip-info" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Fichier JSON permettant de définir le style du fond de plan"><i class="ri-information-line"></i></span></label>
-                                                                <input class="form-control checkedurl" type="url" id="formCustomBaseStyleUrl" i18n="tabs.app.bgcustom.base.styleUrl.ph" placeholder="https://wxs.ign.fr/static/vectorTiles/styles/ADMIN_EXPRESS/adminexpress.json" required>
+                                                                <label for="formCustomBaseThumb" class="form-label"><span i18n="tabs.app.bgcustom.base.thumb">Lien vers la vignette</span><span class="tooltip-info" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Image permettant de visualiser l'aperçu du fond de plan"><i class="ri-information-line"></i></span></label>
+                                                                <input class="form-control checkedurl" type="url" id="formCustomBaseThumb" i18n="tabs.app.bgcustom.base.thumb.ph" placeholder="https://kartenn.region-bretagne.fr/kartoviz/img/basemap/positron.png" required>
                                                             </div>
                                                         </div>
                                                         <div class="col-md-6 wmts wms custom-bg-type">
-                                                            <div class="form-group">
-                                                                <label for="formCustomBaseNameLayers" class="form-label"><span i18n="tabs.app.bgcustom.base.nameLayers">Couches</span><span class="tooltip-info" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Identifiant technique de la couche à utiliser"><i class="ri-information-line"></i></span></label>
-                                                                <input class="form-control" id="formCustomBaseNameLayers" i18n="tabs.app.bgcustom.base.nameLayers.ph" placeholder="satellite" required>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-md-6 wmts wms custom-bg-type">
-                                                            <!-- <div class="form-group">
-                                                                <label for="formCustomBaseFormat" class="form-label"><span i18n="tabs.app.bgcustom.base.format">Format</span></label>
-                                                                <input class="form-control" id="formCustomBaseFormat" i18n="tabs.app.bgcustom.base.format.ph" placeholder="image/png" required>
-
-                                                            </div> -->
                                                             <label for="formCustomBaseFormat"  class="form-label"><span i18n="tabs.app.bgcustom.base.format">Format</span><span class="tooltip-info" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Format de l'image retournée par le serveur"><i class="ri-information-line"></i></span></label>
                                                             <select class="form-control" id="formCustomBaseFormat" name="formCustomBaseFormat">
                                                                 <option value="image/png">image/png</option>
                                                                 <option value="image/jpeg">image/jpeg</option>
                                                             </select>
                                                         </div>
+                                                        <div class="col-md-6 vector-tms custom-bg-type">
+                                                            <div class="form-group">
+                                                                <label for="formCustomBaseStyleUrl" class="form-label"><span i18n="tabs.app.bgcustom.base.styleUrl">Lien vers le fichier de style</span><span class="tooltip-info" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Fichier JSON permettant de définir le style du fond de plan"><i class="ri-information-line"></i></span></label>
+                                                                <input class="form-control checkedurl" type="url" id="formCustomBaseStyleUrl" i18n="tabs.app.bgcustom.base.styleUrl.ph" placeholder="https://wxs.ign.fr/static/vectorTiles/styles/ADMIN_EXPRESS/adminexpress.json" required>
+                                                            </div>
+                                                        </div>
                                                         <div class="col-md-6 wmts vector-tms custom-bg-type">
                                                             <div class="form-group">
                                                                 <label for="formCustomBaseStyle" class="form-label"><span i18n="tabs.app.bgcustom.base.style">Style</span><span class="tooltip-info" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Nom du style à associer à la couche | TMS : voir la documentation mviewer"><i class="ri-information-line"></i></span></label>
                                                                 <input class="form-control" id="formCustomBaseStyle" placeholder="bdtopo" required>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-6 wmts custom-bg-type">
+                                                            <div class="form-group">
+                                                                <label for="formCustomBaseMatrixset" class="form-label"><span i18n="tabs.app.bgcustom.base.matrixset">Matrixset</span><span class="tooltip-info" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Nom de la pyramide d'images | Voir la documentation mviewer"><i class="ri-information-line"></i></span></label>
+                                                                <input class="form-control" id="formCustomBaseMatrixset" placeholder="PM">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-6 wmts custom-bg-type">
+                                                            <div class="form-group">
+                                                                <label for="formCustomBaseFromcapacity" class="form-label"><span i18n="tabs.app.bgcustom.base.fromcapacity">Construire la couche à partir des capacités du service</span></label>
+                                                                <input class="form-control" id="formCustomBaseFromcapacity" placeholder="false">
                                                             </div>
                                                         </div>
                                                     </div>
