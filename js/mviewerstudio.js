@@ -265,12 +265,11 @@ var newConfiguration = function (infos) {
     config = {
         application: { title: "", logo: "" },
         themes: {},
-        date: newDate.toISOString(),
+        date: infos?.date || newDate.toISOString(),
         temp: { layers: {} },
-        id: mv.uuid(),
+        id: infos?.id || mv.uuid(),
         description: newDate.format("DD-MM-YYYY-HH-mm-ss"),
-        isFile: false,
-        ...infos // from reading app
+        isFile: !!infos?.id,
     };
     //Store des parametres non gérés
     savedParameters = {"application":[], "baselayers": {}};
@@ -600,7 +599,7 @@ var getConfig = () => {
     var elasticsearch = "";
     // Url du studio
     var studioUrl = $('#opt-studio').prop('checked') ? window.location.href || "" : "";
-   
+
     var application = ['<application',
         'title="'+$("#opt-title").val()+'"',
         'logo="'+$("#opt-logo").val()+'"',

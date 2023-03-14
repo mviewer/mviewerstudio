@@ -22,7 +22,7 @@
             "used": false,
             "url": "https://geobretagne.fr/minicatalog/csv"
         },
-        "user_info": "srv/user_info.php",
+        "user_info": "api/user",
         "export_conf_folder": "/var/www/htdocs/mviewer/apps/store/",
         "proxy": "../proxy/?url=",
         "user_info_visible": false,

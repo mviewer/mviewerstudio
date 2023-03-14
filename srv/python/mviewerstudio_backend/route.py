@@ -49,9 +49,9 @@ def user() -> Response:
 
 
 @basic_store.route("/api/app", methods=["POST"])
-def save_mviewer_config() -> Response:
+def create_mviewer_config() -> Response:
     '''
-    Save XML on first creation.
+    Create XML.
     '''
     config = Config(request.data, current_app)
 

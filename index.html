@@ -213,7 +213,7 @@
                                 </div>
                             </div>                                
                             <a class="nav-link" id="toolsbarStudio-View" onclick="previewAppsWithoutSave(config.id);" href="#"><i class="ri-eye-2-line"></i> <span i18n="studio.toolsbar.preview">Prévisualiser</span></a>                          
-                            <a class="nav-link" id="toolsbarStudio-Save" onclick="saveApplicationParameters();" href="#"><i class="ri-save-line"></i> <span i18n="studio.toolsbar.save">Enregistrer</span></a>
+                            <a class="nav-link" id="toolsbarStudio-Save" onclick="saveStudio();" href="#"><i class="ri-save-line"></i> <span i18n="studio.toolsbar.save">Enregistrer</span></a>
                             <a class="nav-link d-none" id="toolsbarStudio-delete" onclick="deleteApplication(config.id);" href="#"><i class="ri-save-line"></i> <span i18n="studio.toolsbar.delete">Supprimer</span></a>
                         </ul>
                         <div class="custom-control custom-switch mt-2" id="btnSwitchAdvanced">
@@ -467,13 +467,13 @@
                                                             <div class="form-group">
                                                                 <label for="formCustomBaseUrl" class="form-label"><span i18n="tabs.app.bgcustom.base.url">URL</span><span class="tooltip-info" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Lien vers le service web"><i class="ri-information-line"></i></span></label>
                                                                 <input class="form-control checkedurl" type="url" id="formCustomBaseUrl" i18n="tabs.app.bgcustom.base.url.ph" placeholder="http://{a-c}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png" required>
-                                                            </div>                                                            
+                                                            </div>
                                                         </div>
                                                         <div class="col-md-6">
                                                             <div class="form-group">
                                                                 <label for="formCustomBaseNameLayers" class="form-label"><span i18n="tabs.app.bgcustom.base.nameLayers">Couches</span><span class="tooltip-info" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Identifiant technique de la couche à utiliser"><i class="ri-information-line"></i></span></label>
                                                                 <input class="form-control" id="formCustomBaseNameLayers" i18n="tabs.app.bgcustom.base.nameLayers.ph" placeholder="satellite" required>
-                                                            </div>                                                            
+                                                            </div>
                                                         </div>
                                                         <div class="col-md-6">
                                                             <div class="form-group">
@@ -485,7 +485,7 @@
                                                             <div class="form-group">
                                                                 <label for="formCustomBaseTitle" class="form-label"><span i18n="tabs.app.bgcustom.base.title">Sous-titre</span><span class="tooltip-info" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Information complémentaire comme le producteur"><i class="ri-information-line"></i></span></label>
                                                                 <input class="form-control" id="formCustomBaseTitle" placeholder="positron" i18n="tabs.app.bgcustom.base.title.ph">
-                                                            </div>                                                            
+                                                            </div>
                                                         </div>   
                                                     </div>
                                                     <div class="row mt-2" >                                                        
@@ -811,7 +811,7 @@
                                             </div>
                                         </div>
                                     </a> 
-                                </div>                                
+                                </div>
                                 <!--Download-->
                                 <!--Preview-->
                                 <div style="max-width: 18rem;">
@@ -827,7 +827,22 @@
                                         </div>
                                     </a> 
                                 </div>                                
-                                <!--Download-->
+                                <!--Preview-->
+                                <!--Publish-->
+                                <!-- <div style="max-width: 18rem;">
+                                    <a role="button" onclick="publish(config?.id)" href="#">
+                                        <div class="card border-info p-3 zoomCard h-100" style="max-width: 18rem;">
+                                            <div class="card-body mb-5">
+                                            <span class="iconCard-finish" style="background-color: #f5ae54;">
+                                                <i class="ri-eye-2-line" style="font-size: 20px;vertical-align: middle;"></i>
+                                            </span>                            
+                                            <h5 class="card-title mt-4"><span i18n="tabs.publication.preview_title">Publier votre application</span></h5>
+                                            <p class="card-text" i18n="tabs.publication.preview_text">Mettre en ligne votre application et obtenez un lien de partage</p>                              
+                                            </div>
+                                        </div>
+                                    </a> 
+                                </div> -->
+                                <!--Publish-->
                             </div>                          
                             <div class="mt-4">
                                 <a class="btn btn-outline-warning btnPrev"><i class="ri-arrow-left-line"></i> <span i18n="studio.wizard.btn.previous">Précédent</span></a>
