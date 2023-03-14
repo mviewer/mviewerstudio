@@ -599,11 +599,8 @@ var getConfig = () => {
     var olscompletion = "";
     var elasticsearch = "";
     // Url du studio
-    if ($('#opt-studio').prop('checked')=== true){
-        var studiourl = window.location.href;
-    } else {
-        var studiourl = 'false';
-    }
+    var studioUrl = $('#opt-studio').prop('checked') ? window.location.href || "" : "";
+   
     var application = ['<application',
         'title="'+$("#opt-title").val()+'"',
         'logo="'+$("#opt-logo").val()+'"',
@@ -621,7 +618,7 @@ var getConfig = () => {
         'measuretools="'+($('#opt-measuretools').prop('checked')=== true)+'"',
         'mouseposition="'+($('#opt-mouseposition').prop('checked')=== true)+'"',
         'geoloc="'+($('#opt-geoloc').prop('checked')=== true)+'"',
-        'studio="'+studiourl+'"',        
+        'studio="'+studioUrl+'"',        
         'togglealllayersfromtheme="'+($('#opt-togglealllayersfromtheme').prop('checked')=== true)+'"'];
 
     config.title = $("#opt-title").val();
