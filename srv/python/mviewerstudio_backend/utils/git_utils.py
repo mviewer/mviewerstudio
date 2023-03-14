@@ -17,9 +17,9 @@ def init_repo(workspace):
     f = open(ignorefile, "w")
     f.write("preview/")
     # set user global config
-    repo.git.config("--global", "user.name", current_user.username)
-    repo.git.config("--global", "user.email", "fake@email.org")
-    repo.git.config("--global", "--add", "save.directory", workspace)
+    repo.git.config("user.name", current_user.username)
+    repo.git.config("user.email", "fake@email.org")
+    repo.git.config("--add", "save.directory", workspace)
 
 def init_or_get_repo(workspace):
     '''
