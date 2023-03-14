@@ -579,8 +579,34 @@ var deleteApplication = (id) => {
         method: "DELETE"
     })
     .then(r => r.ok ? r.json() : Promise.reject(r))
-    .then(r => r.success && showHome())
+    .then(r => r.success && showHome())    
+    .then(alertCustom('Application supprimée avec succès !', 'info'))
     .catch(err => alertCustom("Suppression impossible.", "danger"))
+};
+
+var showAlertDelApp = (id) => {
+    genericModalContent.innerHTML = "";
+    genericModalContent.innerHTML = `
+                <div class="modal-header">
+                    <h5 class="modal-title" i18n="modal.exit.title">Attention</h5>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body">
+                    <p>
+                    Êtes-vous sûr de vouloir supprimer votre application définitivement ?
+                    </p>
+                    <a class="cardsClose save-close zoomCard" data-bs-dismiss="modal" onclick="deleteApplication('${ id }');">
+                        <i class="ri-delete-bin-2-line"></i>
+                        <span>Supprimer mon application et retourner à l'accueil</span>
+                    </a>
+                    <a class="cardsClose notsave-close zoomCard" class="close" data-bs-dismiss="modal" aria-label="Close">
+                        <i class="ri-arrow-go-back-line"></i>
+                        <span>Annuler</span>
+                    </a>
+                    <a class="returnConf-close" class="close" data-bs-dismiss="modal" aria-label="Close"><i class="ri-arrow-left-line"></i> <span i18n="modal.exit.previous">Retour</span></a>                    
+                </div>
+            `;
+    $("#genericModal").modal('show');
 }
 
 var deleteAppFromList = (id) => {
@@ -853,7 +879,7 @@ var saveApplicationParameters = () => {
         } else {
             config.isFile = false;
         }
-        alertCustom(mviewer.tr('msg.file_saved_on_server'), 'success');
+        alertCustom(mviewer.tr('msg.file_saved_on_server'), 'info');
     }).catch(err => alertCustom(mviewer.tr('msg.save_failure'), 'danger'));
 };
 
