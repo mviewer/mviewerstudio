@@ -11,6 +11,16 @@ from .git_utils import Git_manager
 logger = logging.getLogger(__name__)  
 
 
+def edit_xml_string(root, attribute, value):
+    attr = root.find(".//{*}%s" % attribute)
+    attr.text = value
+
+def write_file(xml, xml_path):
+    xml_to_string = ET.tostring(xml).decode("utf-8")
+    file = open(xml_path, "w")
+    file.write(xml_to_string)
+    file.close()
+
 '''
 This class ease git repo manipulations.
 A register from store/register.json is use as global configs metadata store.
@@ -86,14 +96,13 @@ class Config:
         meta_root = xml.find(".//metadata/{*}RDF/{*}Description")
         # replace anonymous infos by user and org infos
         if current_user and current_user.username:
-            self._edit_xml_string(meta_root, "creator", current_user.username)
+            edit_xml_string(meta_root, "creator", current_user.username)
         if current_user and current_user.organisation:
-            self._edit_xml_string(meta_root, "org", current_user.organisation)
+            edit_xml_string(meta_root, "org", current_user.organisation)
         return meta_root
-    
-    def _edit_xml_string(self, root, attribute, value):
-        attr = root.find(".//{*}%s" % attribute)
-        attr.text = value
+
+    def write(self):
+        write_file(self.xml, self.full_xml_path)
     
     def create_or_update_config(self):
         '''
@@ -112,10 +121,7 @@ class Config:
         # if the name is the same, git will just dectect unstaged changes
         self.clean_all_workspace_configs()
         # write file
-        xml_to_string = ET.tostring(self.xml).decode("utf-8")
-        with open(self.full_xml_path, "w") as file:
-            file.write(xml_to_string)
-            file.close()
+        self.write()
     
     def clean_all_workspace_configs(self):
         '''
@@ -144,6 +150,7 @@ class Config:
             keywords = self.meta.find("{*}keywords").text,
             url = url,
             subject = subject,
+            publish = self.xml.get("publish")
         )
     
     def as_dict(self):

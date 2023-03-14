@@ -20,6 +20,7 @@ class ConfigModel:
     url: int
     subject: str
     date: str
+    publish: bool
 
     def as_dict(self):
         return {
@@ -31,5 +32,6 @@ class ConfigModel:
             "keywords": self.keywords,
             "url": self.url,
             "subject": self.subject,
-            "date": self.date
+            "date": self.date,
+            "publish": self.publish
         }

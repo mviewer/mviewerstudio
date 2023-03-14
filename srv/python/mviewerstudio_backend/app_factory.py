@@ -28,6 +28,7 @@ def init_publish_directory(app: Flask) -> None:
     publish_path = app.config["MVIEWERSTUDIO_PUBLISH_PATH"]
     if not path.exists(publish_path) and publish_path:
         mkdir(publish_path)
+    app.publish_path = publish_path
 
 def create_app() -> Flask:
     app = Flask("mviewerstudio")

@@ -13,6 +13,22 @@ logger = logging.getLogger(__name__)
 This class ease config manipulations as creation, read, write from XML.
 This class is usefull to convert XML or XML's directory to register JSON file (and vice versa).
 '''
+
+def from_xml_path(app, xml_path):
+    '''
+    This func allow to create Config class data from XML path directory.
+    :param xml_path: string absolute xml path
+    '''
+    config = None
+    with open(xml_path) as f:
+        xml_read = f.read()
+        config = Config(
+            "",
+            app,
+            xml_read
+        )
+    return config
+
 class ConfigRegister:
     def __init__(self, app) -> None:
         '''
@@ -51,28 +67,14 @@ class ConfigRegister:
         Delete register JSON file
         '''
         remove(self.full_path)
-    
-    def from_xml_path(self, xml_path):
-        '''
-        This func allow to create Config class data from XML path directory.
-        :param xml_path: string absolute xml path
-        '''
-        config = None
-        with open(xml_path) as f:
-            xml_read = f.read()
-            config = Config(
-                "",
-                self.app,
-                xml_read
-            )
-        return config
-    
+       
     def _configs_files_to_register(self):
         '''
         Will parse all app configs workspace to init class config for each.
         '''
+        publish_path = self.app.config["MVIEWERSTUDIO_PUBLISH_PATH"]
         dirs = [
-            dir for dir in listdir(self.store_directory) if isdir(path.join(self.store_directory, dir)) and glob.glob("%s/*.xml" % path.join(self.store_directory, dir))
+            dir for dir in listdir(self.store_directory) if isdir(path.join(self.store_directory, dir)) and dir != publish_path and glob.glob("%s/*.xml" % path.join(self.store_directory, dir))
         ]
         
         for dir in dirs:
@@ -82,7 +84,7 @@ class ConfigRegister:
                 # to be sur each app is in master branch
                 checkout(repo, "master", True)
                 # will return config as class data
-                config = self.from_xml_path(xml)
+                config = from_xml_path(self.app, xml)
                 if config :
                     self.update(config.as_dict())
 
@@ -125,7 +127,7 @@ class ConfigRegister:
         '''
         xml_path = glob.glob("%s/*.xml" % path.join(self.store_directory, id))
         if xml_path:
-            config = self.from_xml_path(xml_path[0])
+            config = from_xml_path(self.app, xml_path[0])
             config_dict = config.as_dict()
             self.update(config_dict)
 
