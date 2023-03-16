@@ -746,6 +746,15 @@
 	#cardsPublication div {
 	  margin-right: 7px;
 	}
+
+	.badge-publish {
+		color: white;
+		background-color: var(--warning);
+	}
+	.badge-draft {
+		color: white;
+		background-color: #934ae4;
+	}
 	
 	/*
 	-- MODALS 

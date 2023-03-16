@@ -291,6 +291,8 @@
         "modal.appversion.title" : "Historique des modifications",
         "validate" : " Valider",
         "ok": "OK",
+        "publish": "En ligne",
+        "draft": "Brouillon",
         "cancel": "Annuler",
         "close": "Fermer",
         "save": "Enregistrer",
@@ -515,6 +517,8 @@
         "version.comment": "Tag this modification",
         "version.comment.ph": "ex: Test release without data",
         "tabs.publication.publish_title" : "Publish application",
-        "tabs.publication.publish_text" : "Put your application online."
+        "tabs.publication.publish_text" : "Put your application online.",
+        "publish": "online",
+        "draft": "draft"
     }
 }

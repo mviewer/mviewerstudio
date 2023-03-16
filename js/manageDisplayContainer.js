@@ -21,22 +21,28 @@ $('#mod-closeStudio').modal('hide');
 
 function saveStudio() {
   const saveModal = document.querySelector("#mod-closeStudio").classList.contains("show");
-
-  if (saveModal) {
-    if ($("#opt-title").val() == '') {
-      alertCustom(mviewer.tr('msg.give_title_before_save'), "danger");
-      $('#mod-closeStudio').modal('hide');
-      $('#opt-title').addClass('is-invalid');
-    } else {
-      saveApplicationParameters(); 
-      showHome();
-      alertCustom('Application enregistrée avec succès !', 'success');
-    } 
+  const titleApp = $("#opt-title").val();
+  if (!titleApp) {
+    alertCustom(mviewer.tr('msg.give_title_before_save'), "danger");
+    $('#mod-closeStudio').modal('hide');
+    $('#opt-title').addClass('is-invalid');
     return;
   }
-  else if(config.id) {
-    return saveApplicationParameters();
+
+  // confirm modal is open
+  if (saveModal) {
+    saveApplicationParameters(); 
+    showHome();
+    return;
   }
+  
+  // confirm modal is hidden and user click onto save button
+  if (config.id) {
+    saveApplicationParameters();
+    return;
+  }
+
+  // error appear
   alertCustom(mviewer.tr("msg.save_failure"), 'danger');
 }
 

@@ -625,15 +625,12 @@ var getConfig = () => {
     config.title = $("#opt-title").val();
 
     if(config.title == ''){
-        //alert(mviewer.tr('msg.give_title_before_save'));
         $('#opt-title').addClass('is-invalid');
         alertCustom('Veuillez renseigner un nom à votre application !', 'danger')
-        return;
     }
 
     savedParameters.application.forEach(function(parameter, id){
         $.each(parameter,function(prop,val) {
-            console.log(prop, val)
             application.push(prop+'="'+val+'"');
         });
     });

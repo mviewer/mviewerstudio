@@ -54,7 +54,10 @@ def create_mviewer_config() -> Response:
     '''
     Create XML.
     '''
-    config = Config(request.data, current_app)
+    try:
+        config = Config(request.data, current_app)       
+    except:
+        raise BadRequest("XML seems not correct !")
 
     if not config.xml:
         raise BadRequest("No XML found in the request body !")
