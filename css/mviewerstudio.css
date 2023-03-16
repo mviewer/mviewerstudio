@@ -462,6 +462,11 @@
 		color: white;
 		background-color: var(--danger);
 	}
+
+	#toolsbarStudio-unpublish {
+		color: #934ae4;
+		background-color: var(--warning);
+	}
 	
 	#btnSwitchAdvanced {
 	  color: var(--info);
@@ -754,6 +759,10 @@
 	.badge-draft {
 		color: white;
 		background-color: #934ae4;
+	}
+
+	.badge-title {
+		font-size: 15px;
 	}
 	
 	/*

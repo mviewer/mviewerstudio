@@ -271,6 +271,7 @@ var newConfiguration = function (infos) {
         id: infos?.id || mv.uuid(),
         description: newDate.format("DD-MM-YYYY-HH-mm-ss"),
         isFile: !!infos?.id,
+        publish: infos?.publish == 'true'
     };
     //Store des parametres non gérés
     savedParameters = {"application":[], "baselayers": {}};
@@ -844,7 +845,7 @@ var saveApplicationParameters = () => {
             // don't execute this code with php backend
             config.isFile = true;
             document.querySelector("#toolsbarStudio-delete").classList.remove("d-none");
-            document.querySelector("#layerOptionBtn").classList.remove("d-none");   
+            document.querySelector("#layerOptionBtn").classList.remove("d-none");
         } else {
             config.isFile = false;
         }
@@ -936,7 +937,7 @@ var loadApplicationParametersFromRemoteFile = function (url) {
         if (!_conf.is_php) {
             // don't execute this code with php backend
             document.querySelector("#toolsbarStudio-delete").classList.remove("d-none");
-            document.querySelector("#layerOptionBtn").classList.remove("d-none");   
+            document.querySelector("#layerOptionBtn").classList.remove("d-none");
         }
     });
 };

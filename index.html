@@ -212,6 +212,7 @@
                                   <a class="dropdown-item" onclick="mv.getVersionsByApp(this)" data-bs-toggle="modal" data-bs-target="#mod-appversions">Historique des modifications</a>
                                 </div>
                             </div>                                
+                            <a class="nav-link d-none" id="toolsbarStudio-unpublish" onclick="mv.unpublish(config.id);" href="#"><i class="ri-eye-off-fill"></i> <span i18n="studio.toolsbar.unpublish">Dépublier</span></a>
                             <a class="nav-link" id="toolsbarStudio-View" onclick="previewAppsWithoutSave(config.id);" href="#"><i class="ri-eye-2-line"></i> <span i18n="studio.toolsbar.preview">Prévisualiser</span></a>                          
                             <a class="nav-link" id="toolsbarStudio-Save" onclick="saveStudio();" href="#"><i class="ri-save-line"></i> <span i18n="studio.toolsbar.save">Enregistrer</span></a>
                             <a class="nav-link d-none" id="toolsbarStudio-delete" onclick="deleteApplication(config.id);" href="#"><i class="ri-save-line"></i> <span i18n="studio.toolsbar.delete">Supprimer</span></a>
@@ -227,7 +228,12 @@
                         <!-- Application -->
                         <div class="tab-pane container active" id="app">
                             <form>
-                            <h1><i class="ri-equalizer-line"></i> <span i18n="tabs.app.title">Application</span></h1>         
+                            <h1>
+                                <i class="ri-equalizer-line"></i> 
+                                <span i18n="tabs.app.title">Application</span> 
+                                <span class="badge badge-publish badge-title d-none" i18n="publish">En ligne</span>
+                                <span class="badge badge-draft badge-title d-none" i18n="draft">Brouillon</span>
+                            </h1>         
                             <div class="row mt-4">
                                 <div class="col-md-12">
                                     <div class="form-group">

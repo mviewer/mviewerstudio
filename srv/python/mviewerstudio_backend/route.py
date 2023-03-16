@@ -133,6 +133,10 @@ def publish_mviewer_config(id) -> Response:
     """
     logger.debug("PUBLISH : %s " % id)
 
+    publish_dir = current_app.config["MVIEWERSTUDIO_PUBLISH_PATH"]
+    if not publish_dir or not path.exists(publish_dir):
+        return BadRequest("Publish directory does not exists !")
+
     workspace = path.join(current_app.config["EXPORT_CONF_FOLDER"], id)
 
     if not path.exists(workspace):
@@ -148,9 +152,6 @@ def publish_mviewer_config(id) -> Response:
 
     past_file = path.join(current_app.publish_path, "%s.xml" % id)
 
-    if not path.exists(current_app.publish_path):
-        return BadRequest("Publish path does not exists !")
-
     # add publish info in XML
     if request.method == "GET":
         config.xml.set("publish", "true")
@@ -158,8 +159,6 @@ def publish_mviewer_config(id) -> Response:
 
     # add unpublish info in XML
     if request.method == "DELETE":
-        if not path.exists(past_file):
-            return BadRequest("File does not exsits : Nothing to unpublish.")
         config.xml.set("publish", "false")
         message = "Unpublish"
 
@@ -171,15 +170,17 @@ def publish_mviewer_config(id) -> Response:
     # update JSON
     config.register.update_from_id(id)
 
+    if path.exists(past_file):
+        remove(past_file)
+
     # move to publish directory
     if request.method == "GET":
         copyfile(copy_file, past_file)
 
-    # or delete from publis directory
     if request.method == "DELETE":
-        remove(past_file)
-
-    return jsonify({"file": past_file})
+        past_file=None
+    draft_file = current_app.config["CONF_PATH_FROM_MVIEWER"] + config.as_dict()["url"]
+    return jsonify({"online_file": past_file, "draft_file": draft_file})
 
 @basic_store.route("/api/app/<id>", methods=["DELETE"])
 def delete_config_workspace(id = None) -> Response:

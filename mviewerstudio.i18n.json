@@ -31,6 +31,7 @@
         "studio.toolsbar.save" : "Enregistrer",
         "studio.toolsbar.delete" : "Supprimer",
         "studio.toolsbar.preview": "Prévisualiser",
+        "studio.toolsbar.unpublish": "Dépublier",
         "studio.toolsbar.advanced": "Mode avancé",        
         "studio.wizard.app_title": "Application",
         "studio.wizard.app_text": "Paramètres globaux de l'application",
@@ -280,6 +281,7 @@
         "modal.iconhelp.list" : "Icône du bouton vers la fenêtre d'aide",
         "modal.exit.title" : "Attention",
         "modal.publish.title": "Publiée avec succés !",
+        "modal.unpublish.title": "Dépubliée avec succés !",
         "modal.publish.shareLabel": "Lien de partage",
         "modal.publish.iframeLabel": "Intégration en iframe",
         "modal.exit.subtitle" : "Êtes-vous sûr de vouloir quitter votre projet en cours ?",
@@ -496,6 +498,8 @@
         "modal.layer.new.provider.add" : "Add a provider",
         "modal.icon.list" : "Icons list",
         "modal.icon.use" : " Use the selected icon",
+        "modal.publish.title": "Publish success !",
+        "modal.unpublish.title": "Unpublish success !",
         "ok": "OK",
         "cancel": "Cancel",
         "close": "Close",
@@ -516,9 +520,8 @@
         "msg.xml_doc_invalid": "XML document invalid",
         "version.comment": "Tag this modification",
         "version.comment.ph": "ex: Test release without data",
+        "studio.toolsbar.unpublish": "Unpublish",
         "tabs.publication.publish_title" : "Publish application",
-        "tabs.publication.publish_text" : "Put your application online.",
-        "publish": "online",
-        "draft": "draft"
+        "tabs.publication.publish_text" : "Put your application online."
     }
 }

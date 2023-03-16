@@ -17,6 +17,9 @@ $('#mod-closeStudio').modal('hide');
   document.getElementById("containerHome").hidden = false;
   document.querySelector("#toolsbarStudio-delete").classList.add("d-none");
   document.querySelector("#layerOptionBtn").classList.add("d-none");
+  document.querySelector("#toolsbarStudio-unpublish").classList.add("d-none");
+  document.querySelector(".badge-draft").classList.add("d-none");
+  document.querySelector(".badge-publish").classList.add("d-none");
 }
 
 function saveStudio() {
