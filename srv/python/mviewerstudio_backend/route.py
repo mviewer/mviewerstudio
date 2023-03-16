@@ -143,8 +143,7 @@ def publish_mviewer_config(id) -> Response:
     copy_file = current_app.config["EXPORT_CONF_FOLDER"] + config[0]["url"]
     config = from_xml_path(current_app, copy_file)
 
-    public_path = path.join(current_app.publish_path, "%s.xml" % id)
-    past_file = path.join(current_app.config["EXPORT_CONF_FOLDER"], public_path)
+    past_file = path.join(current_app.publish_path, "%s.xml" % id)
 
     if not path.exists(current_app.publish_path):
         return BadRequest("Publish path does not exists !")
@@ -177,7 +176,7 @@ def publish_mviewer_config(id) -> Response:
     if request.method == "DELETE":
         remove(past_file)
 
-    return jsonify({"file": public_path})
+    return jsonify({"file": past_file})
 
 @basic_store.route("/api/app/<id>", methods=["DELETE"])
 def delete_config_workspace(id = None) -> Response:

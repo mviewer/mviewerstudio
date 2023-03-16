@@ -286,6 +286,8 @@
         "modal.exit.save" : "Enregistrer mon application et retour à l'accueil",
         "modal.exit.notsave" : "Ne pas enregistrer mes modifications et retour à l'accueil",
         "modal.exit.previous" : "Retour",
+        "modal.exit.goHome" : "Retour à l'accueil",
+        "modal.exit.nextChange" : "Poursuivre mes modifications",
         "modal.appversion.title" : "Historique des modifications",
         "validate" : " Valider",
         "ok": "OK",
