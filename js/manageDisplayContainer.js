@@ -93,7 +93,7 @@ $("#frm-opacity").on("mousemove", function() {
  * @param {string} type 
  * @param {integer} timeout 
  */
-function alertCustom(message, type, timeout = 5000){
+function alertCustom(message = "", type = "info", timeout = 5000){
   const alertPlaceholder = document.getElementById('liveAlertPlaceholder');
   // Définition de l'icône selon le type d'alerte
   let iconalert = '';
