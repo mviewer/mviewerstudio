@@ -1,6 +1,5 @@
 from dataclasses import dataclass, replace, field
 from .config import ConfigModel
-from ..enhancers.json import dataclass_to_json
 from typing import List
 import logging
 

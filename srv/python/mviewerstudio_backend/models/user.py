@@ -1,6 +1,5 @@
 from dataclasses import dataclass
 from typing import List, Optional
-from ..enhancers.json import dataclass_to_json
 
 @dataclass
 class User:

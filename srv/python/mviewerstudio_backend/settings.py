@@ -7,3 +7,4 @@ class Config:
     LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO")
     PROXY_WHITE_LIST = ["geobretagne.fr", "ows.region-bretagne.fr"]
     MVIEWERSTUDIO_PUBLISH_PATH =  os.getenv("MVIEWERSTUDIO_PUBLISH_PATH", "public")
+    DEFAULT_ORG = os.getenv("DEFAULT_ORG", "public")

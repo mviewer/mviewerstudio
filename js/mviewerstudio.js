@@ -220,11 +220,12 @@ const getUser = () => {
                         keyboard: false
                     });
                 } else {
-                    mv.updateUserInfo(
-                        `${ data.first_name } ${ data.last_name }`,
-                        userGroupSlugName || slugify(userGroupFullName),
-                        userGroupFullName
-                    )
+                    mv.updateUserInfo({
+                        userName: data.user_name,
+                        name: `${ data.first_name } ${ data.last_name }`,
+                        groupSlugName: userGroupSlugName || slugify(userGroupFullName),
+                        groupFullName: userGroupFullName
+                    });
                 }
                 if (_conf.user_info_visible && data.user_name != "anonymous") {
                     $("#user_connected").text('Connecté en tant que ' + data.first_name + ' (' + userGroupFullName + ')');   

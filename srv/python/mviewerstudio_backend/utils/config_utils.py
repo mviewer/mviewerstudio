@@ -98,7 +98,7 @@ class Config:
         if current_user and current_user.username:
             edit_xml_string(meta_root, "creator", current_user.username)
         if current_user and current_user.organisation:
-            edit_xml_string(meta_root, "org", current_user.organisation)
+            edit_xml_string(meta_root, "organisation", current_user.organisation)
         return meta_root
 
     def write(self):
@@ -148,6 +148,7 @@ class Config:
             date = self.meta.find("{*}date").text,
             versions = self.git.get_versions(),
             keywords = self.meta.find("{*}keywords").text,
+            organisation = self.meta.find("{*}organisation").text,
             url = url,
             subject = subject,
             publish = self.xml.get("publish")

@@ -111,15 +111,14 @@ def list_stored_mviewer_config() -> Response:
     Return all mviewer config created by the current user
     :param search: request args from query param.
     """
-    logger.debug("LIST CONFIGS FOR USER : %s " % current_user.username)
+    logger.debug("LIST CONFIGS FOR USER'S ORG OR ALL IF ANONYMOUS : %s " % current_user.username)
     if "search" in request.args:
         pattern = request.args.get("search")
         configs = current_app.register.search_configs(pattern)
     else:
         configs = current_app.register.as_dict()["configs"]
     
-    configs = [config for config in configs if config["creator"] == current_user.username]
-    
+    configs = [config for config in configs if config["organisation"] == current_user.organisation]
     for config in configs:
         config["url"] = current_app.config["CONF_PATH_FROM_MVIEWER"] + config["url"]
     return jsonify(configs)
