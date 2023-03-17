@@ -202,9 +202,14 @@ def delete_config_workspace(id = None) -> Response:
         return jsonify({"deleted_files": 0, "success": False})
 
     # control if alowed
-    if config[0]["creator"] not in [current_user.username, "anonymous"] :
-        logger.debug("DELETE : NOT ALLOWED")
+    if current_user.username != "anonymous" and config[0]["creator"] != current_user.username :
+        logger.debug("DELETE : NOT ALLOWED - ONLY THE OWNER CAN DELETE THIS APP")
         return MethodNotAllowed("Not allowed !")
+    # control if org is default org
+    if current_user.username == "anonymous" and config[0]["organisation"] != current_app.config["DEFAULT_ORG"]:
+        logger.debug("DELETE : NOT ALLOWED FOR THIS ANONYMOUS USER - ORG IS NOT DEFAULT")
+        return MethodNotAllowed("Not allowed !")
+        
     # delete in json
     current_app.register.delete(id)
     # delete dir
