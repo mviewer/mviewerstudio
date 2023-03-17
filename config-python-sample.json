@@ -5,6 +5,7 @@
         "store_style_service": "api/style",
         "mviewer_instance": "/mviewer/",
         "conf_path_from_mviewer": "apps/store/",
+        "mviewer_publish": "apps/public"
         "mviewer_short_url": {
             "used": true,
             "apps_folder": "store"
@@ -13,7 +14,7 @@
             "used": true,
             "url": "https://geobretagne.fr/minicatalog/csv"
         },
-        "user_info": "srv/user_info",
+        "user_info": "api/user",
         "export_conf_folder": "/home/debian/mviewer/apps/store/",
         "proxy": "proxy/?url=",
         "user_info_visible": false,
