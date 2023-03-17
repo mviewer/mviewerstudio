@@ -16,139 +16,142 @@ $(document).ready(function(){
             contentType: "application/json"
         }
     })
-        .then(r => r.ok ? r.json() : Promise.reject(r))
-        .catch(err => alertCustom("Impossible de récupérer la configuration. Veuillez contacter un administrateur.", "danger"))
+        .then(r => r.json())
         .then(data => {
-        //Mviewer Studio version
-        console.groupCollapsed("init app from config");
-        _conf = data.app_conf;
-        const VERSION =  _conf.mviewerstudio_version
-        console.log("MviewerStudio version " + VERSION);
-        if (_conf.proxy === undefined) {
-            _conf.proxy = "../proxy/?url=";
-        }
+            //Mviewer Studio version
+            console.groupCollapsed("init app from config");
+            _conf = data.app_conf;
+            const VERSION =  _conf.mviewerstudio_version
+            console.log("MviewerStudio version " + VERSION);
+            if (_conf.proxy === undefined) {
+                _conf.proxy = "../proxy/?url=";
+            }
 
-        if (_conf.logout_url) {
-            $("#menu_user_logout a").attr("href", _conf.logout_url);
-        }
+            if (_conf.logout_url) {
+                $("#menu_user_logout a").attr("href", _conf.logout_url);
+            }
 
-        // Update web page title and title in the brand navbar
-        document.title = _conf.studio_title;
-        $("#studio-title").text(_conf.studio_title);
+            // Update web page title and title in the brand navbar
+            document.title = _conf.studio_title;
+            $("#studio-title").text(_conf.studio_title);
 
-        // Base layers
-        mv.showBaseLayers(_conf.baselayers, "default-bl");
-        // Sélection par défaut des 2 1er baselayers
-        $("#frm-bl .bl input").slice(0,2).prop("checked",true).trigger('change');
-        $("#frm-bl-visible").val($("#frm-bl-visible option:not(:disabled)").first().val());
+            // Base layers
+            mv.showBaseLayers(_conf.baselayers, "default-bl");
+            // Sélection par défaut des 2 1er baselayers
+            $("#frm-bl .bl input").slice(0,2).prop("checked",true).trigger('change');
+            $("#frm-bl-visible").val($("#frm-bl-visible option:not(:disabled)").first().val());
 
-        // Map extent
-        map2.getView().setCenter(_conf.map.center);
-        map2.getView().setZoom(_conf.map.zoom);
+            // Map extent
+            map2.getView().setCenter(_conf.map.center);
+            map2.getView().setZoom(_conf.map.zoom);
 
-        // Form placeholders
-        $("#opt-title").attr("placeholder", _conf.app_form_placeholders.app_title);
-        $("#opt-logo").attr("placeholder", _conf.app_form_placeholders.logo_url);
-        $("#opt-help").attr("placeholder", _conf.app_form_placeholders.help_file);
+            // Form placeholders
+            $("#opt-title").attr("placeholder", _conf.app_form_placeholders.app_title);
+            $("#opt-logo").attr("placeholder", _conf.app_form_placeholders.logo_url);
+            $("#opt-help").attr("placeholder", _conf.app_form_placeholders.help_file);
 
-        // translate
-        _initTranslate();
+            // translate
+            _initTranslate();
 
-        // Thematic layers providers
-        var csw_providers = [];
-        var wms_providers = [];
-        if (_conf.external_themes && _conf.external_themes.used && _conf.external_themes.url) {
-                $.ajax({
-                type: "GET",
-                url: _conf.external_themes.url,
-                success: function (csv) {
-                    _conf.external_themes.data = Papa.parse(csv, {
-                        header: true
-                    }).data;
-                    var html = [];
-                    _conf.external_themes.data.forEach(function(mv, id) {
-                        if (mv.xml && mv.id) {
-                            var url = mv.xml;
-                            var themeid = mv.id;
-                            if (url && themeid) {
-                                html.push(['<div class="checkbox list-group-item">',
-                                    '<div class="custom-control custom-checkbox">',
-                                        '<input type="checkbox" class="custom-control-input" data-url="'+url+'" data-theme-label="'+mv.title+'" data-theme-id="'+themeid+'" name="checkboxes" id="import-theme-'+themeid+id+'">',
-                                        '<label class="custom-control-label" for="import-theme-'+themeid+id+'">'+mv.title+'</label>',
-                                    '</div>',
-                                '</div>'].join(""));
+            // Thematic layers providers
+            var csw_providers = [];
+            var wms_providers = [];
+            if (_conf.external_themes && _conf.external_themes.used && _conf.external_themes.url) {
+                    $.ajax({
+                    type: "GET",
+                    url: _conf.external_themes.url,
+                    success: function (csv) {
+                        _conf.external_themes.data = Papa.parse(csv, {
+                            header: true
+                        }).data;
+                        var html = [];
+                        _conf.external_themes.data.forEach(function(mv, id) {
+                            if (mv.xml && mv.id) {
+                                var url = mv.xml;
+                                var themeid = mv.id;
+                                if (url && themeid) {
+                                    html.push(['<div class="checkbox list-group-item">',
+                                        '<div class="custom-control custom-checkbox">',
+                                            '<input type="checkbox" class="custom-control-input" data-url="'+url+'" data-theme-label="'+mv.title+'" data-theme-id="'+themeid+'" name="checkboxes" id="import-theme-'+themeid+id+'">',
+                                            '<label class="custom-control-label" for="import-theme-'+themeid+id+'">'+mv.title+'</label>',
+                                        '</div>',
+                                    '</div>'].join(""));
+                                }
                             }
-                        }
+                        });
+                        $("#mod-themesview .list-group").append(html);
+                    }
                     });
-                    $("#mod-themesview .list-group").append(html);
-                }
+            } else {
+                $("#btn-importTheme").remove();
+            }
+
+            nb_providers = 0
+
+            if (_conf.data_providers && _conf.data_providers.csw) {
+                _conf.data_providers.csw.forEach(function(provider, id) {
+                    var cls = "active";
+                    if (nb_providers > 0) {
+                        cls ="";
+                    }
+                    csw_provider_html = '<li class="' + cls + '">';
+                    csw_provider_html += '<a onclick="setActiveProvider(this);" href="#" class="dropdown-item"';
+                    csw_provider_html += ' data-providertype="csw" data-provider="' + provider.url + '"';
+                    if (provider.baseref) {
+                        csw_provider_html += ' data-metadata-app="' + provider.baseref + '"';
+                    }
+                    csw_provider_html += '>' + provider.title + '</a></li>';
+                    csw_providers.push(csw_provider_html);
+                    nb_providers ++;
                 });
-        } else {
-            $("#btn-importTheme").remove();
-        }
-
-        nb_providers = 0
-
-        if (_conf.data_providers && _conf.data_providers.csw) {
-            _conf.data_providers.csw.forEach(function(provider, id) {
-                var cls = "active";
-                if (nb_providers > 0) {
-                    cls ="";
+                $("#providers_list").append(csw_providers.join(" "));
+                if (_conf.data_providers.csw.length > 0) {
+                    $("#providers_list").append('<li role="separator" class="divider"></li>');
                 }
-                csw_provider_html = '<li class="' + cls + '">';
-                csw_provider_html += '<a onclick="setActiveProvider(this);" href="#" class="dropdown-item"';
-                csw_provider_html += ' data-providertype="csw" data-provider="' + provider.url + '"';
-                if (provider.baseref) {
-                    csw_provider_html += ' data-metadata-app="' + provider.baseref + '"';
-                }
-                csw_provider_html += '>' + provider.title + '</a></li>';
-                csw_providers.push(csw_provider_html);
-                nb_providers ++;
-            });
-            $("#providers_list").append(csw_providers.join(" "));
-            if (_conf.data_providers.csw.length > 0) {
-                $("#providers_list").append('<li role="separator" class="divider"></li>');
             }
-        }
 
-        if (_conf.data_providers && _conf.data_providers.wms) {
-            _conf.data_providers.wms.forEach(function(provider, id) {
-                var cls = "active";
-                if (nb_providers > 0) {
-                    cls ="";
+            if (_conf.data_providers && _conf.data_providers.wms) {
+                _conf.data_providers.wms.forEach(function(provider, id) {
+                    var cls = "active";
+                    if (nb_providers > 0) {
+                        cls ="";
+                    }
+                    wms_providers.push('<li class="' + cls + '">' +
+                        '<a onclick="setActiveProvider(this);" data-providertype="wms" class="dropdown-item"' +
+                        ' data-provider="' + provider.url + '" href="#">' +
+                        provider.title + '</a></li>');
+                    nb_providers ++;
+                });
+
+                $("#providers_list").append(wms_providers.join(" "));
+                if(_conf.data_providers.wms.length > 0) {
+                    $("#providers_list").append('<li role="separator" class="divider"></li>');
                 }
-                wms_providers.push('<li class="' + cls + '">' +
-                    '<a onclick="setActiveProvider(this);" data-providertype="wms" class="dropdown-item"' +
-                    ' data-provider="' + provider.url + '" href="#">' +
-                    provider.title + '</a></li>');
-                nb_providers ++;
-            });
-
-            $("#providers_list").append(wms_providers.join(" "));
-            if(_conf.data_providers.wms.length > 0) {
-                $("#providers_list").append('<li role="separator" class="divider"></li>');
             }
-        }
 
-        if (API.xml) {
-            loadApplicationParametersFromRemoteFile(API.xml);
-        } else if (API.wmc) {
-            loadApplicationParametersFromWMC(API.wmc);
-        } else {
-            newConfiguration();
-        }
+            if (API.xml) {
+                loadApplicationParametersFromRemoteFile(API.xml);
+            } else if (API.wmc) {
+                loadApplicationParametersFromWMC(API.wmc);
+            } else {
+                newConfiguration();
+            }
 
-        updateProviderSearchButtonState();
+            updateProviderSearchButtonState();
 
-        // Default params for layers
-        if (_conf.default_params && _conf.default_params.layer) {
-            mv.setDefaultLayerProperties(_conf.default_params.layer);
-        }
+            // Default params for layers
+            if (_conf.default_params && _conf.default_params.layer) {
+                mv.setDefaultLayerProperties(_conf.default_params.layer);
+            }
 
-        // Get user info
-        getUser();
-        console.groupEnd("init app from config");
-    });
+            // Get user info
+            getUser();
+            console.groupEnd("init app from config");
+        })
+        .catch(err => {
+            console.log(err);
+            alertCustom("Impossible de récupérer la configuration. Veuillez contacter un administrateur.", "danger")
+        });
 });
 
 //EPSG:2154
