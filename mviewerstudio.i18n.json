@@ -216,7 +216,7 @@
         "modal.layer.query.fields" : "Champs",
         "modal.layer.tiled" : "Affichage tuilé",
         "modal.layer.exclusive" : "Affichage exclusif de la donnée",
-        "modal.layer.showintoc" : "Affichage de la donnée seulement sur la carte",
+        "modal.layer.showintoc" : "Ne pas afficher la donnée dans la légende",
         "modal.layer.visibleonstart" : "Afficher la donnée au démarrage de l'application",
         "modal.layer.display.ph.external_sld" : "URL SLD externe",
         "modal.layer.display.ph.legend_image_url" : "URL vers Image légende",
