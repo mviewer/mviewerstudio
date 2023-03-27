@@ -212,7 +212,6 @@ const getUser = () => {
                         userGroupSlugName = data.user_groups[0].slug_name;
                     }
                 }
-
                 if (selectGroupPopup) {
                     mv.updateUserGroupList(data);
                     $("#mod-groupselection").modal({
@@ -228,7 +227,8 @@ const getUser = () => {
                     });
                 }
                 if (_conf.user_info_visible && data.user_name != "anonymous") {
-                    $("#user_connected").text('Connecté en tant que ' + data.first_name + ' (' + userGroupFullName + ')');   
+                    let connectText = `Connecté en tant que ${ data.first_name } ${ data.last_name } (${userGroupFullName})`
+                    $("#user_connected").text(connectText);
                     document.querySelector("#user_connected").classList.remove("d-none");
                     document.querySelector("#menu_user_logout").classList.remove("d-none");
                 }
@@ -862,7 +862,8 @@ var saveApplicationParameters = () => {
         return saveAppWithPhp(conf)
     }
     // Save the map serverside
-    fetch(_conf.api, {
+    const url = config.isFile ? `${ _conf.api }/${ config.id }` : _conf.api;
+    fetch(url, {
         method: config.isFile ? "PUT" : "POST",
         headers: {
             'Content-Type': 'text/xml'
