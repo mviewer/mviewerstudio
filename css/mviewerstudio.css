@@ -498,6 +498,22 @@
 		color: black;
 		font-weight: 500;
 	}
+
+	.custom-tooltip-table>span {
+		display: none;
+		color: white;
+		background-color: #585858;
+		font-size: small;
+		padding: 5px;
+		border-radius: 5px;
+		font-weight: normal;
+		position: absolute;
+		margin-left: 10px;
+	}
+
+	.custom-tooltip-table:hover>span {
+		display: block!important;
+	}
 	
 	/* APPLICATION  */
 	
