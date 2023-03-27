@@ -74,14 +74,17 @@ def create_mviewer_config() -> Response:
         {"success": True, "filepath": config_data.url, "config": config_data}
     )
 
-@basic_store.route("/api/app", methods=["PUT"])
-def update_mviewer_config() -> Response:
+@basic_store.route("/api/app/<id>", methods=["PUT"])
+def update_mviewer_config(id) -> Response:
     '''
-    Read UUID from XML and update register and local file system if exists.
+    Read XML UUID and update register and local file system if exists.
+    :param id: app UUID
     '''
-    config = Config(request.data, current_app)
-    if not config.xml:
+    if not request.data:
         raise BadRequest("No XML found in the request body !")
+    config = Config(request.data, current_app)
+    if not config:
+        raise BadRequest("This XML UUID doesn't exists !")
     # commit changes
     description = config.meta.find("{*}description").text
     if not description:

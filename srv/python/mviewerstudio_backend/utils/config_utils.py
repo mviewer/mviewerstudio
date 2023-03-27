@@ -53,7 +53,8 @@ class Config:
             self.git = Git_manager(self.workspace)
             self.repo = self.git.repo
             # save xml and git commit
-            self.create_or_update_config()
+            file = app.register.read_json(self.uuid)
+            self.create_or_update_config(file)
   
     def _read_xml(self, xml):
         '''
@@ -104,22 +105,24 @@ class Config:
     def write(self):
         write_file(self.xml, self.full_xml_path)
     
-    def create_or_update_config(self):
+    def create_or_update_config(self, file):
         '''
         Create config workspace and save XML as file.
         Will init git file as version manager.
         '''
-        # get meta info from XML
-        if self.meta.find(".//{*}identifier"):
-            self.uuid = self.meta.find(".//{*}identifier").text
-        file_name = self.meta.find("{*}title").text
-        # save file
-        normalize_file_name = re.sub('[^a-zA-Z0-9  \n\.]', "_", file_name).replace(" ", "_")
-        self.full_xml_path = path.join(self.workspace, "%s.xml" % normalize_file_name)
-            
-        # needed if we change config title to clean others XML
-        # if the name is the same, git will just dectect unstaged changes
-        self.clean_all_workspace_configs()
+        if file and file[0]["url"]:
+            # file already exists
+            # we keep xml file name
+            self.uuid = file[0]["id"]
+            self.full_xml_path = self.app.config["EXPORT_CONF_FOLDER"] + file[0]["url"]
+        else:
+            # get meta info from XML
+            if self.meta.find(".//{*}identifier"):
+                self.uuid = self.meta.find(".//{*}identifier").text
+            file_name = self.meta.find("{*}title").text
+            # save file
+            normalize_file_name = re.sub('[^a-zA-Z0-9  \n\.]', "_", file_name).replace(" ", "_")
+            self.full_xml_path = path.join(self.workspace, "%s.xml" % normalize_file_name)
         # write file
         self.write()
     
