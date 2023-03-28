@@ -641,10 +641,8 @@ var deleteAppFromList = (id) => {
     });
 }
 
-var previewAppUrl = (id, title) => {
-    var url = "";
-    var title_app = title.replaceAll(' ', '_');
-    url = _conf.mviewer_instance + '?config=' + _conf.conf_path_from_mviewer + id + '/' + title_app + '.xml';
+var previewAppUrl = (xmlFileUrl) => {
+    let url = _conf.mviewer_instance + '?config=' + xmlFileUrl;
     window.open(url,'mvs_vizualize');
 }
 
