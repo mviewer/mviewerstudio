@@ -609,6 +609,31 @@ var showAlertDelApp = (id) => {
     $("#genericModal").modal('show');
 }
 
+var showAlertDelAppFromList = (id) => {
+    genericModalContent.innerHTML = "";
+    genericModalContent.innerHTML = `
+        <div class="modal-header">
+            <h5 class="modal-title" i18n="modal.exit.title">Attention</h5>
+            <button type="button" class="close" data-bs-toggle="modal" data-bs-target="#mod-importfile" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        </div>
+        <div class="modal-body">
+            <p>
+            Êtes-vous sûr de vouloir supprimer cette application définitivement ?
+            </p>
+            <a class="cardsClose save-close zoomCard" data-bs-toggle="modal" data-bs-target="#mod-importfile" onclick="deleteAppFromList('${ id }');">
+                <i class="ri-delete-bin-2-line"></i>
+                <span>Supprimer cette application</span>
+            </a>
+            <a class="cardsClose notsave-close zoomCard" class="close" data-bs-toggle="modal" data-bs-target="#mod-importfile" aria-label="Close">
+                <i class="ri-arrow-go-back-line"></i>
+                <span>Annuler</span>
+            </a>
+            <a class="returnConf-close" class="close" data-bs-toggle="modal" data-bs-target="#mod-importfile" aria-label="Close"><i class="ri-arrow-left-line"></i> <span i18n="modal.exit.previous">Retour</span></a>                    
+        </div>
+    `;
+    $("#genericModal").modal('show');
+}
+
 var deleteAppFromList = (id) => {
     deleteApplication(id).then(r => {
         document.getElementById('liste_applications').innerHTML = "";
