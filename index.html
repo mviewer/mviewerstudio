@@ -1003,24 +1003,26 @@
                         </li>
                       </ul>
                       <div class="tab-content mb-4">
-                        <div class="tab-pane fade show active" id="serverside" role="tabpanel" tabindex="0">                            
-                            <form class="row ">
-                                <div class="col-md-6" style="display: none;">
-                                    <label for="apps_group_list" i18n="modal.file.group">Groupe</label>
-                                    <select class="form-control" id="apps_group_list" onchange="mv.filterApplications()"></select>
-                                </div>
-                                <div class="col-md-6" style="display: none;">
-                                    <label for="apps_creator_list" i18n="modal.file.author">Auteur</label>
-                                    <select class="form-control" id="apps_creator_list" onchange="mv.filterApplications()"></select>
-                                </div>
-                            </form>
-                            <br>
+                        <div class="tab-pane fade show active" id="serverside" role="tabpanel" tabindex="0">
+                            <div id="applicationsListFilters">
+                                <form class="row">
+                                    <div class="col-md-6 pb-2" style="display: none;">
+                                        <label for="apps_group_list" i18n="modal.file.group">Groupe</label>
+                                        <select class="form-control" id="apps_group_list" onchange="mv.onSearchApp(this)"></select>
+                                    </div>
+                                    <div class="col-md-12 pb-2" style="display: none;">
+                                        <label for="apps_creator_list" i18n="modal.file.author">Auteur</label>
+                                        <select class="form-control" id="apps_creator_list" onchange="mv.onSearchApp(this)"></select>
+                                    </div>
+                                    <div class="col-md-12 pb-2">
+                                        <label i18n="modal.file.selectserverside">Filtrer par description:</label>
+                                        <input autocomplete="off" onchange="mv.onSearchApp(this)" type="text" class="form-control" id="appListSearch" placeholder="Saisir un nom, un mot clé, une date...">
+                                    </div>
+                                </form>
+                            </div>
                             <form class="row mb-2">
-                                <div class="col">
-                                    <span i18n="modal.file.selectserverside">Sélectionner une application :</span>
-                                </div>
-                                <div class="col">
-                                    <input autocomplete="off" onchange="mv.onSearchApp(this)" type="text" class="form-control" id="appListSearch" placeholder="Saisir un nom, un mot clé, une date...">
+                                <div class="col-md-12">
+                                    <strong i18n="modal.list.selectapp">Sélectionner une application :</strong>
                                 </div>
                             </form>
                             <div class="list-group mb-3" id="liste_applications">
