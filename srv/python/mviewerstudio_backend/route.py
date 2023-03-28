@@ -93,7 +93,7 @@ def update_mviewer_config(id) -> Response:
     # get config as class model data
     config_data = config.as_data()
     # clean preview space if not empty
-    clean_preview(current_app, config_data.id)
+    clean_preview(current_app, config_data.url)
 
     current_config = current_app.register.read_json(config_data.id)
 
@@ -139,7 +139,7 @@ def publish_mviewer_config(id) -> Response:
     if not publish_dir or not path.exists(publish_dir):
         return BadRequest("Publish directory does not exists !")
 
-    workspace = path.join(current_app.config["EXPORT_CONF_FOLDER"], id)
+    workspace = path.join(current_app.config["EXPORT_CONF_FOLDER"], current_user.organisation, id)
 
     if not path.exists(workspace):
         return BadRequest("Application does not exists !")
@@ -197,7 +197,7 @@ def delete_config_workspace(id = None) -> Response:
         raise BadRequest("Empty list : no value to delete !")
 
     logger.debug("START DELETE CONFIG : %s" % id)
-    workspace = path.join(current_app.config["EXPORT_CONF_FOLDER"], id)
+    workspace = path.join(current_app.config["EXPORT_CONF_FOLDER"], current_user.organisation, id)
     # update json
     config = current_app.register.read_json(id)
     if not config or not path.exists(workspace):
@@ -233,7 +233,8 @@ def get_all_app_versions(id) -> Response:
     if not config:
         raise BadRequest("This config doesn't exists !")
     config = config[0]
-    workspace = path.join(current_app.config["EXPORT_CONF_FOLDER"], config["id"])
+    org = current_user.organisation if current_user else current_app.config["DEFAULT_ORG"]
+    workspace = path.join(current_app.config["EXPORT_CONF_FOLDER"], org, config["id"])
     git = Git_manager(workspace)
     versions = git.get_versions()
     return jsonify({"versions": versions, "config": config})
@@ -258,13 +259,13 @@ def switch_app_version(id, version="1") -> Response:
     if not config:
         raise BadRequest("This config doesn't exists !")
     config = config[0]
-    workspace = path.join(current_app.config["EXPORT_CONF_FOLDER"], config["id"])
+    workspace = path.join(current_app.config["EXPORT_CONF_FOLDER"], current_user.organisation, config["id"])
     git = Git_manager(workspace)
     git.switch_version(version, as_new)
     # Update register
     current_app.register.update_from_id(config["id"])
     # clean previews
-    clean_preview(current_app, config["id"])
+    clean_preview(current_app, config["url"])
     return (
         jsonify(
             {
@@ -293,14 +294,14 @@ def preview_app_version(id, version) -> Response:
     # create preview space
     config = config[0]
     init_preview(current_app, config["id"])
-    workspace = path.join(current_app.config["EXPORT_CONF_FOLDER"], config["id"])
+    workspace = path.join(current_app.config["EXPORT_CONF_FOLDER"], current_user.organisation, config["id"])
     git = Git_manager(workspace)
     git.switch_version(version, False)
     # copy past file to preview folder
     app_config = current_app.config
     src_file = app_config["EXPORT_CONF_FOLDER"] + config["url"]
     preview_file = path.join(config["id"], "preview", "%s.xml" % version)
-    path_preview_file = path.join(app_config["EXPORT_CONF_FOLDER"], preview_file)
+    path_preview_file = path.join(app_config["EXPORT_CONF_FOLDER"], config["organisation"], preview_file)
     copyfile(src_file, path_preview_file)
     # restor branch
     git.repo.git.checkout("master")
@@ -309,7 +310,7 @@ def preview_app_version(id, version) -> Response:
         jsonify(
             {
                 "success": True,
-                "file": path.join(app_config["CONF_PATH_FROM_MVIEWER"], preview_file),
+                "file": path.join(app_config["CONF_PATH_FROM_MVIEWER"], config["organisation"], preview_file),
             }
         ),
         200,
@@ -336,8 +337,8 @@ def preview_uncommited_app(id) -> Response:
     # get file name and path
     file_name = uuid.uuid1()
     preview_file = path.join(id, "preview", "%s.xml" % file_name)
-    system_path = path.join(app_config["EXPORT_CONF_FOLDER"], preview_file)
-
+    system_path = path.join(app_config["EXPORT_CONF_FOLDER"], current_user.organisation, preview_file)
+    clean_preview(current_app, path.join(current_user.organisation, id))
     # store file to preview folder
     with open(system_path, "w") as file:
         file.write(xml)
@@ -347,7 +348,7 @@ def preview_uncommited_app(id) -> Response:
         jsonify(
             {
                 "success": True,
-                "file": path.join(app_config["CONF_PATH_FROM_MVIEWER"], preview_file),
+                "file": path.join(app_config["CONF_PATH_FROM_MVIEWER"], current_user.organisation, preview_file),
             }
         ),
         200,

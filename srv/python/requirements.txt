@@ -3,3 +3,4 @@ gunicorn>20,<21
 lxml>=4.9.2
 GitPython>=3
 requests
+Unidecode

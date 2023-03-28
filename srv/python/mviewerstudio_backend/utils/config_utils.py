@@ -1,4 +1,5 @@
-from os import path, mkdir, remove
+from os import path, makedirs
+from unidecode import unidecode
 import logging
 import xml.etree.ElementTree as ET
 import re
@@ -10,6 +11,9 @@ from .git_utils import Git_manager
 
 logger = logging.getLogger(__name__)  
 
+
+def getWorkspace(app, path_id = ""):
+    return path.join(app.config["EXPORT_CONF_FOLDER"], path_id)
 
 def edit_xml_string(root, attribute, value):
     attr = root.find(".//{*}%s" % attribute)
@@ -44,9 +48,13 @@ class Config:
             self.xml = self._read_xml(xml)
         if self.xml is not None and app.register:
             self.register = app.register
-
+            # read org
+            if not current_user and xml:
+                org = self.meta.find("{*}organisation").text
+            else :
+                org = current_user.organisation if current_user else app.config["DEFAULT_ORG"]
             # target workspace path
-            self.workspace = path.join(self.app.config["EXPORT_CONF_FOLDER"], self.uuid)
+            self.workspace = unidecode(getWorkspace(app, path.join(org, self.uuid)))
             # create or update workspace
             self.create_workspace()
             # init or get repo
@@ -86,8 +94,8 @@ class Config:
         '''
         if not path.exists(self.workspace):
             # create directory
-            mkdir(self.workspace)
-            mkdir(path.join(self.workspace, "preview"))
+            makedirs(self.workspace)
+            makedirs(path.join(self.workspace, "preview"))
     
     def _get_xml_describe(self, xml):
         '''
@@ -121,18 +129,13 @@ class Config:
                 self.uuid = self.meta.find(".//{*}identifier").text
             file_name = self.meta.find("{*}title").text
             # save file
-            normalize_file_name = re.sub('[^a-zA-Z0-9  \n\.]', "_", file_name).replace(" ", "_")
+            decode_file_name = unidecode(file_name)
+            normalize_file_name = re.sub('[^a-zA-Z0-9  \n\.]', "_", decode_file_name).replace(" ", "_")
             self.full_xml_path = path.join(self.workspace, "%s.xml" % normalize_file_name)
+            
         # write file
         self.write()
     
-    def clean_all_workspace_configs(self):
-        '''
-        Remove each XML found in app workspace
-        '''
-        for file in glob.glob("%s/*.xml" % self.workspace):
-            remove(file)
-
     def as_data(self):
         '''
         Index config metadata in register.

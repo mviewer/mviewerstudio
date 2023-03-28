@@ -1,11 +1,12 @@
 from os import walk, remove, path, mkdir
-def clean_preview(app, id):
+def clean_preview(app, app_dir):
     '''
     Will remove each XML files in config preview directory
     '''
-    if not app or not id:
+    if not app_dir:
         return
-    preview_dir = path.join(app.config["EXPORT_CONF_FOLDER"], id, "preview")
+    
+    preview_dir = path.join(app.config["EXPORT_CONF_FOLDER"], app_dir, "preview")
     for (root, dirs, files) in walk(preview_dir):
         if not files:
             break
