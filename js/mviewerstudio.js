@@ -259,7 +259,8 @@ var newConfiguration = function (infos) {
         id: infos?.id || mv.uuid(),
         description: newDate.format("DD-MM-YYYY-HH-mm-ss"),
         isFile: !!infos?.id,
-        publish: infos?.publish == 'true'
+        publish: infos?.publish == 'true',
+        relation: infos?.relation
     };
     //Store des parametres non gérés
     savedParameters = {"application":[], "baselayers": {}};
