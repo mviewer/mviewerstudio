@@ -50,7 +50,7 @@ class Config:
             self.register = app.register
             # read org
             if not current_user and xml:
-                org = self.meta.find("{*}organisation").text
+                org = self.meta.find("{*}publisher").text
             else :
                 org = current_user.organisation if current_user else app.config["DEFAULT_ORG"]
             # target workspace path
@@ -107,7 +107,11 @@ class Config:
         if current_user and current_user.username:
             edit_xml_string(meta_root, "creator", current_user.username)
         if current_user and current_user.organisation:
-            edit_xml_string(meta_root, "organisation", current_user.organisation)
+            edit_xml_string(meta_root, "publisher", current_user.organisation)
+        if meta_root.find(".//{*}relation") is not None:
+            decode_file_name = unidecode(meta_root.find(".//{*}relation").text)
+            normalize_file_name = re.sub('[^a-zA-Z0-9  \n\.]', "_", decode_file_name).replace(" ", "_")
+            edit_xml_string(meta_root, "relation", normalize_file_name)
         return meta_root
 
     def write(self):
@@ -127,11 +131,9 @@ class Config:
             # get meta info from XML
             if self.meta.find(".//{*}identifier"):
                 self.uuid = self.meta.find(".//{*}identifier").text
-            file_name = self.meta.find("{*}title").text
+            file_name = self.meta.find("{*}relation").text
             # save file
-            decode_file_name = unidecode(file_name)
-            normalize_file_name = re.sub('[^a-zA-Z0-9  \n\.]', "_", decode_file_name).replace(" ", "_")
-            self.full_xml_path = path.join(self.workspace, "%s.xml" % normalize_file_name)
+            self.full_xml_path = path.join(self.workspace, "%s.xml" % file_name)
             
         # write file
         self.write()
@@ -154,7 +156,7 @@ class Config:
             date = self.meta.find("{*}date").text,
             versions = self.git.get_versions(),
             keywords = self.meta.find("{*}keywords").text,
-            organisation = self.meta.find("{*}organisation").text,
+            publisher = self.meta.find("{*}publisher").text,
             url = url,
             subject = subject,
             publish = self.xml.get("publish")

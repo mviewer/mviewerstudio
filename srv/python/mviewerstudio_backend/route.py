@@ -121,7 +121,7 @@ def list_stored_mviewer_config() -> Response:
     else:
         configs = current_app.register.as_dict()["configs"]
     
-    configs = [config for config in configs if config["organisation"] == current_user.organisation]
+    configs = [config for config in configs if config["publisher"] == current_user.organisation]
     for config in configs:
         config["url"] = current_app.config["CONF_PATH_FROM_MVIEWER"] + config["url"]
     return jsonify(configs)
@@ -209,7 +209,7 @@ def delete_config_workspace(id = None) -> Response:
         logger.debug("DELETE : NOT ALLOWED - ONLY THE OWNER CAN DELETE THIS APP")
         return MethodNotAllowed("Not allowed !")
     # control if org is default org
-    if current_user.username == "anonymous" and config[0]["organisation"] != current_app.config["DEFAULT_ORG"]:
+    if current_user.username == "anonymous" and config[0]["publisher"] != current_app.config["DEFAULT_ORG"]:
         logger.debug("DELETE : NOT ALLOWED FOR THIS ANONYMOUS USER - ORG IS NOT DEFAULT")
         return MethodNotAllowed("Not allowed !")
         
@@ -301,7 +301,7 @@ def preview_app_version(id, version) -> Response:
     app_config = current_app.config
     src_file = app_config["EXPORT_CONF_FOLDER"] + config["url"]
     preview_file = path.join(config["id"], "preview", "%s.xml" % version)
-    path_preview_file = path.join(app_config["EXPORT_CONF_FOLDER"], config["organisation"], preview_file)
+    path_preview_file = path.join(app_config["EXPORT_CONF_FOLDER"], config["publisher"], preview_file)
     copyfile(src_file, path_preview_file)
     # restor branch
     git.repo.git.checkout("master")
@@ -310,7 +310,7 @@ def preview_app_version(id, version) -> Response:
         jsonify(
             {
                 "success": True,
-                "file": path.join(app_config["CONF_PATH_FROM_MVIEWER"], config["organisation"], preview_file),
+                "file": path.join(app_config["CONF_PATH_FROM_MVIEWER"], config["publisher"], preview_file),
             }
         ),
         200,
