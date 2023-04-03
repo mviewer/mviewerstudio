@@ -53,7 +53,55 @@ $(document).ready(function(){
             // translate
             _initTranslate();
 
-            // Thematic layers providers
+            // Thematic layers providers        
+            var getThemeTable = function (theme) {
+                if (document.querySelector("#tableTheme")) {
+                    document.querySelector("#themesListTable").innerHTML = "";
+                }
+                let data = theme;                   
+                function filterThema(obj) {
+                    if (obj.observations === 'OK' && obj.id !== '') 
+                    {
+                      return true
+                    } 
+                    return false;
+                }
+                data = data.filter(filterThema);
+                data = data.map((v, i) => ({
+                    number: i, 
+                    id: v.id,
+                    title: v.title,
+                    description: v.description,
+                    publisher: v.publisher,
+                    xml: v.xml
+                }));
+                mv.getApps = () => theme;                
+                const tableDom = `                
+                    <table
+                        id="tableThemaExt"
+                        data-toggle="table"
+                        data-search="true"
+                        data-pagination="true"
+                        data-click-to-select="true"
+                        data-page-size="5"
+                        data-row-attributes="mv.rowAttributesThematicExt"
+                    >
+                        <thead>
+                            <tr class="paddingTable">
+                                <th data-field="state" data-checkbox="true" class="checkCustom custom-control custom-checkbox"></th>
+                                <th data-field="title" class="titleThema">Titre</th>
+                                <th data-field="description" class="descriptionThema">Description</th>
+                                <th data-field="publisher" class="publisherThema">Publisher</th>
+                                <th data-field="identifier" class="urlThema">identifier</th>
+                                <th data-field="id" class="idThema">id</th>
+                            </tr>
+                        </thead>
+                    </table>
+                `;    
+                $('#themesListTable').append(tableDom);
+                const $table = $("#tableThemaExt");
+                $table.bootstrapTable({data: data})
+            };
             var csw_providers = [];
             var wms_providers = [];
             if (_conf.external_themes && _conf.external_themes.used && _conf.external_themes.url) {
@@ -64,22 +112,7 @@ $(document).ready(function(){
                         _conf.external_themes.data = Papa.parse(csv, {
                             header: true
                         }).data;
-                        var html = [];
-                        _conf.external_themes.data.forEach(function(mv, id) {
-                            if (mv.xml && mv.id) {
-                                var url = mv.xml;
-                                var themeid = mv.id;
-                                if (url && themeid) {
-                                    html.push(['<div class="checkbox list-group-item">',
-                                        '<div class="custom-control custom-checkbox">',
-                                            '<input type="checkbox" class="custom-control-input" data-url="'+url+'" data-theme-label="'+mv.title+'" data-theme-id="'+themeid+'" name="checkboxes" id="import-theme-'+themeid+id+'">',
-                                            '<label class="custom-control-label" for="import-theme-'+themeid+id+'">'+mv.title+'</label>',
-                                        '</div>',
-                                    '</div>'].join(""));
-                                }
-                            }
-                        });
-                        $("#mod-themesview .list-group").append(html);
+                        getThemeTable(_conf.external_themes.data);
                     }
                     });
             } else {
@@ -419,7 +452,7 @@ var editLayer = function (item) {
 var importThemes = function () {
     console.groupCollapsed("importThemes");
     console.log("external theme to import", _conf.external_themes.data);
-    $("#importedThemes input:checked").each(function (id, item) {
+    $("#tableThemaExt .selected").each(function (id, item) {
         var url = $(item).attr("data-url");
         var id  = $(item).attr("data-theme-id");
         var label  = $(item).attr("data-theme-label");
