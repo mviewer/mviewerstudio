@@ -147,6 +147,8 @@
         "tabs.publication.preview_title" : "Prévisualiser votre application",
         "tabs.publication.preview_text" : "Tester et valider votre configuration en live",
         "tabs.publication.publish_title" : "Publier votre application",
+        "tabs.publication.publish_retry" : "Publier avec ce nouveau nom",
+        "tabs.publication.publish_replace": "Remplacer",
         "tabs.publication.publish_text" : "Mettre en ligne votre application et obtenez un lien de partage",
         "tabs.data.title": "Thématiques & données",
         "tabs.data.themespanel.title": "Panneau des thématiques",
@@ -530,6 +532,8 @@
         "version.comment.ph": "ex: Test release without data",
         "studio.toolsbar.unpublish": "Unpublish",
         "tabs.publication.publish_title" : "Publish application",
-        "tabs.publication.publish_text" : "Put your application online."
+        "tabs.publication.publish_text" : "Put your application online.",
+        "tabs.publication.publish_retry": "Retry with this new name",
+        "tabs.publication.publish_replace": "Replace"
     }
 }

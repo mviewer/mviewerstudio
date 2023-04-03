@@ -21,7 +21,7 @@ class ConfigModel:
     publisher: str
     subject: str
     date: str
-    publish: bool
+    relation: str
 
     def as_dict(self):
         return {
@@ -35,5 +35,5 @@ class ConfigModel:
             "url": self.url,
             "subject": self.subject,
             "date": self.date,
-            "publish": self.publish
+            "relation": self.relation
         }

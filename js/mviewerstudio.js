@@ -259,7 +259,6 @@ var newConfiguration = function (infos) {
         id: infos?.id || mv.uuid(),
         description: newDate.format("DD-MM-YYYY-HH-mm-ss"),
         isFile: !!infos?.id,
-        publish: infos?.publish == 'true',
         relation: infos?.relation
     };
     //Store des parametres non gérés
@@ -915,6 +914,7 @@ var saveApplicationParameters = () => {
             config.isFile = true;
             document.querySelector("#toolsbarStudio-delete").classList.remove("d-none");
             document.querySelector("#layerOptionBtn").classList.remove("d-none");
+            mv.manageDraftBadge(config.relation);
         } else {
             config.isFile = false;
         }

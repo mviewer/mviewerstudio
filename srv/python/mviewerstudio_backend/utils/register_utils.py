@@ -131,7 +131,7 @@ class ConfigRegister:
         This allow to change XML manually and update register automatically on service startup.
         :param id: string uuid use as unique directory name
         '''
-        xml_path = glob.glob("%s/*.xml" % path.join(self.store_directory, id))
+        xml_path = glob.glob("%s/*.xml" % path.join(self.store_directory, current_user.organisation, id))
         if xml_path:
             config = from_xml_path(self.app, xml_path[0])
             config_dict = config.as_dict()

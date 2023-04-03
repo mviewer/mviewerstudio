@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify, Response, request, current_app, redirect
 from .utils.login_utils import current_user
-from .utils.config_utils import Config
+from .utils.config_utils import Config, edit_xml_string, read_xml_file_content
 from .utils.commons import clean_preview, init_preview
 import hashlib, uuid
 from os import path, mkdir, remove
@@ -11,7 +11,7 @@ import requests
 from .utils.git_utils import Git_manager
 from .utils.register_utils import from_xml_path
 
-from werkzeug.exceptions import BadRequest, MethodNotAllowed
+from werkzeug.exceptions import BadRequest, MethodNotAllowed, Conflict
 
 import logging
 
@@ -126,8 +126,8 @@ def list_stored_mviewer_config() -> Response:
         config["url"] = current_app.config["CONF_PATH_FROM_MVIEWER"] + config["url"]
     return jsonify(configs)
 
-@basic_store.route("/api/app/<id>/publish", methods=["GET", "DELETE"])
-def publish_mviewer_config(id) -> Response:
+@basic_store.route("/api/app/<id>/publish/<name>", methods=["GET", "DELETE"])
+def publish_mviewer_config(id, name) -> Response:
     """
     Will put online a config.
     This route will copy / past XML to publication directory or delete to unpublish.
@@ -135,35 +135,58 @@ def publish_mviewer_config(id) -> Response:
     """
     logger.debug("PUBLISH : %s " % id)
 
+    xml_publish_name = name
+
+    # control publish directory exists
     publish_dir = current_app.config["MVIEWERSTUDIO_PUBLISH_PATH"]
     if not publish_dir or not path.exists(publish_dir):
         return BadRequest("Publish directory does not exists !")
+    # create or get org parent directory from publication path
+    org_publish_dir = path.join(current_app.publish_path, current_user.organisation)
+    if not path.exists(org_publish_dir):
+        mkdir(org_publish_dir)
+    
+    # control file to create or replace
+    past_file = path.join(org_publish_dir, "%s.xml" % xml_publish_name)
+    if path.exists(past_file) and request.method == "GET":
+        # read file to replace
+        content = read_xml_file_content(past_file)
+        org = content.find(".//metadata/{*}RDF/{*}Description//{*}publisher").text
+        creator = content.find(".//metadata/{*}RDF/{*}Description//{*}creator").text
+        identifier = content.find(".//metadata/{*}RDF/{*}Description//{*}identifier").text
+        lastRelation = content.find(".//metadata/{*}RDF/{*}Description//{*}relation").text
+        # detect conflict
+        if lastRelation != xml_publish_name or org != current_user.organisation or creator != current_user.username or identifier != id:
+            return Conflict("Already exists !")
+        # replace safely or return bad request
+        remove(past_file)
 
+    # control that workspace to copy exists
     workspace = path.join(current_app.config["EXPORT_CONF_FOLDER"], current_user.organisation, id)
-
     if not path.exists(workspace):
         return BadRequest("Application does not exists !")
-    
-    config = current_app.register.read_json(id)
 
+    # read config if exists
+    config = current_app.register.read_json(id)
     if not config:
         raise BadRequest("This config doesn't exists !")
 
     copy_file = current_app.config["EXPORT_CONF_FOLDER"] + config[0]["url"]
     config = from_xml_path(current_app, copy_file)
 
-    past_file = path.join(current_app.publish_path, "%s.xml" % id)
-
     # add publish info in XML
     if request.method == "GET":
-        config.xml.set("publish", "true")
+        edit_xml_string(config.meta, "relation", xml_publish_name)
         message = "publish"
 
     # add unpublish info in XML
     if request.method == "DELETE":
-        config.xml.set("publish", "false")
+        edit_xml_string(config.meta, "relation", "")
+        remove(past_file)
         message = "Unpublish"
+        past_file = None
 
+    # will update XML with correct relation value to map publish and draft files
     config.write()
 
     # commit to track this action
@@ -172,15 +195,10 @@ def publish_mviewer_config(id) -> Response:
     # update JSON
     config.register.update_from_id(id)
 
-    if path.exists(past_file):
-        remove(past_file)
-
     # move to publish directory
     if request.method == "GET":
         copyfile(copy_file, past_file)
 
-    if request.method == "DELETE":
-        past_file=None
     draft_file = current_app.config["CONF_PATH_FROM_MVIEWER"] + config.as_dict()["url"]
     return jsonify({"online_file": past_file, "draft_file": draft_file})
 
@@ -212,7 +230,13 @@ def delete_config_workspace(id = None) -> Response:
     if current_user.username == "anonymous" and config[0]["publisher"] != current_app.config["DEFAULT_ORG"]:
         logger.debug("DELETE : NOT ALLOWED FOR THIS ANONYMOUS USER - ORG IS NOT DEFAULT")
         return MethodNotAllowed("Not allowed !")
-        
+    # delete publish
+    if "relation" in config[0] and config[0]["relation"]:
+        org_publish_dir = path.join(current_app.publish_path, current_user.organisation)
+        publish_file = path.join(org_publish_dir, "%s.xml" % config[0]["relation"])
+        if path.exists(publish_file):
+            remove(publish_file)
+
     # delete in json
     current_app.register.delete(id)
     # delete dir
