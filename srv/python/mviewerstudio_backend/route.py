@@ -4,7 +4,7 @@ from .utils.config_utils import Config, edit_xml_string, control_relation
 from .utils.commons import clean_preview, init_preview
 import hashlib, uuid
 from os import path, mkdir, remove
-from shutil import rmtree, copyfile
+from shutil import rmtree, copyfile, copytree
 from flask.blueprints import BlueprintSetupState
 from urllib.parse import urlparse
 import requests
@@ -148,12 +148,16 @@ def publish_mviewer_config(id, name) -> Response:
     
     # control file to create or replace
     past_file = path.join(org_publish_dir, "%s.xml" % xml_publish_name)
+    past_dir = path.join(org_publish_dir, xml_publish_name)
+
     if path.exists(past_file) and request.method == "GET":     
         # detect conflict
         if not control_relation(past_file, xml_publish_name, id):
             return Conflict("Already exists !")
         # replace safely or return bad request
         remove(past_file)
+        if path.exists(past_dir):
+            rmtree(past_dir)
 
     # control that workspace to copy exists
     workspace = path.join(current_app.config["EXPORT_CONF_FOLDER"], current_user.organisation, id)
@@ -166,6 +170,7 @@ def publish_mviewer_config(id, name) -> Response:
         raise BadRequest("This config doesn't exists !")
 
     copy_file = current_app.config["EXPORT_CONF_FOLDER"] + config[0]["url"]
+    copy_dir = copy_file.replace(".xml", "")
     config = from_xml_path(current_app, copy_file)
 
     # add publish info in XML
@@ -177,6 +182,7 @@ def publish_mviewer_config(id, name) -> Response:
     if request.method == "DELETE":
         edit_xml_string(config.meta, "relation", "")
         remove(past_file)
+        rmtree(past_dir)
         message = "Unpublish"
         past_file = None
 
@@ -192,6 +198,9 @@ def publish_mviewer_config(id, name) -> Response:
     # move to publish directory
     if request.method == "GET":
         copyfile(copy_file, past_file)
+        if path.exists(past_dir):
+            rmtree(past_dir)
+        copytree(copy_dir, past_dir)
 
     draft_file = current_app.config["CONF_PATH_FROM_MVIEWER"] + config.as_dict()["url"]
     return jsonify({"online_file": past_file, "draft_file": draft_file})
@@ -228,13 +237,15 @@ def delete_config_workspace(id = None) -> Response:
     # control org and creator not only org - to delete the correct publish file
     map_relation = False
     if "relation" in config and config["relation"]:
+        publish_name = config["relation"]
         org_publish_dir = path.join(current_app.publish_path, current_user.organisation)
-        publish_file = path.join(org_publish_dir, "%s.xml" % config["relation"])
-        map_relation = control_relation(publish_file, config["relation"], id)
+        publish_file = path.join(org_publish_dir, "%s.xml" % publish_name)
+        map_relation = control_relation(publish_file, publish_name, id)
         if path.exists(publish_file) and map_relation:
             # delete published file
             remove(publish_file)
-            map_relation = config["relation"]
+            rmtree(path.join(org_publish_dir, publish_name))
+            map_relation = publish_name
 
     # delete in json
     current_app.register.delete(id)

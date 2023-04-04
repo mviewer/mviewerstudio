@@ -1,4 +1,4 @@
-from os import path, makedirs, remove
+from os import path, makedirs, remove, mkdir
 from unidecode import unidecode
 import logging
 import xml.etree.ElementTree as ET
@@ -194,7 +194,16 @@ class Config:
             normalized_file_name = unidecode(re.sub('[^a-zA-Z0-9  \n\.]', "_", app_name).replace(" ", "_")).lower()
             # save file
             self.full_xml_path = path.join(self.workspace, "%s.xml" % normalized_file_name)
-            
+            # create resources dir to save mst, customs, etc.
+            app_dir = path.join(self.workspace, normalized_file_name)
+            if not path.exists(app_dir):
+                mkdir(app_dir)
+                mkdir(path.join(app_dir, "img"))
+                mkdir(path.join(app_dir, "css"))
+                mkdir(path.join(app_dir, "customlayers"))
+                mkdir(path.join(app_dir, "customcontrols"))
+                mkdir(path.join(app_dir, "templates"))
+
         # write file
         self.write()
     
