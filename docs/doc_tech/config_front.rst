@@ -39,7 +39,7 @@ Python - Structure du fichier de configuration
 			"store_style_service": "api/style",
 			"mviewer_instance": "/mviewer/",
 			"conf_path_from_mviewer": "apps/store/",
-			"mviewer_publish": "apps/public"
+			"publish_folder": "apps/public"
 			"mviewer_short_url": {
 				"used": true,
 				"apps_folder": "store"
@@ -452,6 +452,7 @@ Ces paramètres sont à renseigner dans tous les cas.
 - ``mviewerstudio_version``: version compatible de mviewerstudio (laisser la valeur par défaut)
 - ``mviewer_version``: version compatible mviewer (laisser la valeur par défaut)
 - ``mviewer_instance`` : URL de l'instance mviewer utilisée (par exemple http://localhost/mviewer/).
+- ``mviewer_publish`` : URL de publication à utiliser (par exemple https//public-map/). Si besoin, Apache devra avoir une règle pour orienter cette URL vers le répertoire de publication (voir settings.py - MVIEWERSTUDIO_PUBLISH_PATH).
 - ``conf_path_from_mviewer`` : Chemin permettant de charger le fichier de configuration généré depuis le mviewer. Le chemin peut être relatif (par exemple ../mviewer/conf/).
 - ``mviewer_short_url`` : Utilisation du système d'URL courtes (mviewer/#monappli au lieu de mviewer/?config=apps/monappli.xml).
 	- ``used`` : true | false.
