@@ -44,7 +44,7 @@ Cette partie est dédiée aux personnes qui ont vocation à déployer et configu
 
    doc_tech/install
    doc_tech/install_python
-   doc_tech/config
+   doc_tech/config_front
 
 
 Documentation contributeur

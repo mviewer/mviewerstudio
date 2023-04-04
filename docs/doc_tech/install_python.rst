@@ -73,12 +73,19 @@ Cette étape permet de prévisualiser les cartes réalisées dans ``mviewerstudi
 
 **3. Ouvrir la configuration frontend ``/srv/python/mviewerstudio_backend/static/apps/config.json`` et adapter les paramètres**
 
-(Attention : le paramètre ``mviewer_instance`` doit finir par ``/``)
+.. warning::
+    Le paramètre ``mviewer_instance`` doit finir par ``/``
+
+.. note::
+   Le paramètre ``user_info_visible`` est à utiliser si vous instance est sécurisée (avec geOrchestra par exemple).
 
 .. code-block:: sh
 
     "mviewer_instance": "http://localhost/mviewer/",
     "conf_path_from_mviewer": "apps/store/",
+    "api": "api/app",
+    "user_info": "api/user",
+    "user_info_visible": false,
     "mviewer_short_url": {
         "used": true,
         "apps_folder": "store"
@@ -92,6 +99,20 @@ Cette étape permet de prévisualiser les cartes réalisées dans ``mviewerstudi
     EXPORT_CONF_FOLDER = os.getenv("EXPORT_CONF_FOLDER", "./store")
     LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO")
     PROXY_WHITE_LIST = ['geobretagne.fr', 'ows.region-bretagne.fr']
+    MVIEWERSTUDIO_PUBLISH_PATH =  os.getenv("MVIEWERSTUDIO_PUBLISH_PATH", "public")
+    DEFAULT_ORG = os.getenv("DEFAULT_ORG", "public")
+
+Pour les chemins relatifs, la racine sera en général pour Flask ``/srv/python/mviewerstudiobackend``. 
+Avec gunicorn (e.g pour la mise en production), vous devez utiliser des chemin absolus.
+
+- ``CONF_PATH_FROM_MVIEWER``: répertoire d'accès à partir de l'instance mviewer.
+- ``EXPORT_CONF_FOLDER``: répertoire d'accès à partir de l'instance mviewer.
+- ``LOG_LEVEL``: Niveau logs (voir https://docs.python.org/3/library/logging.html)
+- ``PROXY_WHITE_LIST``: Liste des noms de domaine laissé passé par le proxy en mode développement.
+- ``MVIEWERSTUDIO_PUBLISH_PATH``: Répertoire de publication lors du passage du mode brouillon au mode publié.
+- ``DEFAULT_ORG``: Nom de l'organisation par défaut à utiliser pour un usage non sécurisé (e.g en dehors d'un georchestra, ANONYMOUS).
+
+
 
 
 Environnement de production sans Docker
