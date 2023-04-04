@@ -39,14 +39,30 @@ En cliquant sur le bouton créer, une fenêtre de paramétrage de la thématique
 
 - ``Icône`` : sélectionner l'icône illustrant la thématique. Pour rechercher un mot clé en anglais, utiliser la recherche du navigateur (taper CRTL+F).
 
-Option - Importer une thématique une thématique
+Option - Importer une thématique externe
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-En cliquant sur Importer, possibilité d'importer une·des thématique·s existante·s (voir option external_themes dans :ref:`config`).
+En cliquant sur Importer, vous pouvez importer une·des thématique·s existante·s (voir option external_themes dans :ref:`config`).
 
 .. image:: ../_images/user/mviewerstudio_2_thematiques_importer.png
               :alt: Import thématique
               :align: center
+
+Il est possible de filtrer les thématiques à l'aide de la barre de recherche en saisissant un mot clé (thème, organisme) et de gérer l'affichage des thématiques grâce au sustème de pagination.
+
+Les thématiques importées ne sont pas configurables, elles sont visibles dans l'application comme elles sont définies dans l'application source (nom, icône, données et options des données).
+Il est toutefois possible de gérer certains paramètres. Dans la liste des thématiques, cliquez sur le le bouton |ajout_donnees|.
+
+.. |ajout_donnees| image:: ../_images/user/mviewerstudio_2_thematiques_bouton_ajouter_donnees.png
+              :alt: Ajouter une donnée 
+	      :width: 100 pt
+
+.. image:: ../_images/user/mviewerstudio_2_thematiques_options.png
+              :alt: Options thématique externe
+              :align: center
+
+Une nouvelle fenêtre s'ouvre avec les options suivantes : 
+- ``Affichage des données de la thématique`` : Option permettant de gérer l'affichage des données de la thématique lors du démarrage de l'application.
 
 
 Paramétrer ses données
