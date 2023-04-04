@@ -203,8 +203,7 @@ def publish_mviewer_config(id, name) -> Response:
         copytree(copy_dir, past_dir)
 
     draft_file = path.join(current_app.config["CONF_PATH_FROM_MVIEWER"], config.as_dict()["url"])
-    online_file = path.join(current_app.config["CONF_PATH_FROM_MVIEWER"], past_file)
-    return jsonify({"online_file": online_file, "draft_file": draft_file})
+    return jsonify({"online_file": past_file, "draft_file": draft_file})
 
 @basic_store.route("/api/app/<id>", methods=["DELETE"])
 def delete_config_workspace(id = None) -> Response:
