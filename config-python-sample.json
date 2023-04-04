@@ -5,7 +5,7 @@
         "store_style_service": "api/style",
         "mviewer_instance": "/mviewer/",
         "conf_path_from_mviewer": "apps/store/",
-        "mviewer_publish": "apps/public"
+        "mviewer_publish": "apps/public",
         "mviewer_short_url": {
             "used": true,
             "apps_folder": "store"
