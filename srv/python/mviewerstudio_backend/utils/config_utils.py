@@ -63,13 +63,28 @@ def read_xml_file_content(path, node = ""):
     else:
         return xml_parser
 
-def control_relation(path, relation):
+def control_relation(path, relation, id):
+    '''
+    Ease mapping verification between draft and publish xmls
+    :param path: string xml publish path
+    :param relation: string publish xml file name
+    :param id: xml UUID
+    '''
     content = read_xml_file_content(path)
     org = content.find(".//metadata/{*}RDF/{*}Description//{*}publisher").text
     creator = content.find(".//metadata/{*}RDF/{*}Description//{*}creator").text
     identifier = content.find(".//metadata/{*}RDF/{*}Description//{*}identifier").text
     lastRelation = content.find(".//metadata/{*}RDF/{*}Description//{*}relation").text
-    
+
+    if current_user.organisation != org:
+        return False
+    if current_user.username != creator:
+        return False
+    if relation != lastRelation:
+        return False
+    if identifier != id:
+        return False
+    return True
 
 '''
 This class ease git repo manipulations.

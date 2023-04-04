@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify, Response, request, current_app, redirect
 from .utils.login_utils import current_user
-from .utils.config_utils import Config, edit_xml_string, read_xml_file_content
+from .utils.config_utils import Config, edit_xml_string, read_xml_file_content, control_relation
 from .utils.commons import clean_preview, init_preview
 import hashlib, uuid
 from os import path, mkdir, remove
@@ -148,15 +148,9 @@ def publish_mviewer_config(id, name) -> Response:
     
     # control file to create or replace
     past_file = path.join(org_publish_dir, "%s.xml" % xml_publish_name)
-    if path.exists(past_file) and request.method == "GET":
-        # read file to replace
-        content = read_xml_file_content(past_file)
-        org = content.find(".//metadata/{*}RDF/{*}Description//{*}publisher").text
-        creator = content.find(".//metadata/{*}RDF/{*}Description//{*}creator").text
-        identifier = content.find(".//metadata/{*}RDF/{*}Description//{*}identifier").text
-        lastRelation = content.find(".//metadata/{*}RDF/{*}Description//{*}relation").text
+    if path.exists(past_file) and request.method == "GET":     
         # detect conflict
-        if lastRelation != xml_publish_name or org != current_user.organisation or creator != current_user.username or identifier != id:
+        if not control_relation(past_file, xml_publish_name, id):
             return Conflict("Already exists !")
         # replace safely or return bad request
         remove(past_file)
@@ -222,20 +216,25 @@ def delete_config_workspace(id = None) -> Response:
         logger.debug("DELETE : ERROR - ID OR DIRECTORY NOT EXISTS :")
         return jsonify({"deleted_files": 0, "success": False})
 
+    config = config[0]
     # control if alowed
-    if current_user.username != "anonymous" and config[0]["creator"] != current_user.username :
+    if current_user.username != "anonymous" and config["creator"] != current_user.username :
         logger.debug("DELETE : NOT ALLOWED - ONLY THE OWNER CAN DELETE THIS APP")
         return MethodNotAllowed("Not allowed !")
     # control if org is default org
-    if current_user.username == "anonymous" and config[0]["publisher"] != current_app.config["DEFAULT_ORG"]:
+    if current_user.username == "anonymous" and config["publisher"] != current_app.config["DEFAULT_ORG"]:
         logger.debug("DELETE : NOT ALLOWED FOR THIS ANONYMOUS USER - ORG IS NOT DEFAULT")
         return MethodNotAllowed("Not allowed !")
-    # delete publish
-    if "relation" in config[0] and config[0]["relation"]:
+    # control org and creator not only org - to delete the correct publish file
+    map_relation = False
+    if "relation" in config and config["relation"]:
         org_publish_dir = path.join(current_app.publish_path, current_user.organisation)
-        publish_file = path.join(org_publish_dir, "%s.xml" % config[0]["relation"])
-        if path.exists(publish_file):
+        publish_file = path.join(org_publish_dir, "%s.xml" % config["relation"])
+        map_relation = control_relation(publish_file, config["relation"], id)
+        if path.exists(publish_file) and map_relation:
+            # delete published file
             remove(publish_file)
+            map_relation = config["relation"]
 
     # delete in json
     current_app.register.delete(id)
@@ -243,8 +242,7 @@ def delete_config_workspace(id = None) -> Response:
     rmtree(workspace)
     app_deleted += 1
     logger.debug("DELETE CONFIG : SUCCESS")
-        
-    return jsonify({"deleted_files": app_deleted, "success": True})
+    return jsonify({"deleted_files": app_deleted, "success": True, "deleted_publish": map_relation})
 
 
 @basic_store.route("/api/app/<id>/versions", methods=["GET"])
