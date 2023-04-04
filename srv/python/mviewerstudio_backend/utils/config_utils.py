@@ -115,7 +115,7 @@ class Config:
             else :
                 org = current_user.organisation if current_user else app.config["DEFAULT_ORG"]
             # target workspace path
-            self.workspace = unidecode(getWorkspace(app, path.join(org, self.uuid)))
+            self.workspace = getWorkspace(app, path.join(org, self.uuid))
             # create or update workspace
             self.create_workspace()
             # init or get repo
@@ -191,8 +191,7 @@ class Config:
             
             # normalize file name
             app_name = self.meta.find("{*}title").text[:20]
-            decode_file_name = unidecode(app_name)
-            normalized_file_name = re.sub('[^a-zA-Z0-9  \n\.]', "_", decode_file_name).replace(" ", "_")
+            normalized_file_name = unidecode(re.sub('[^a-zA-Z0-9  \n\.]', "_", app_name).replace(" ", "_")).lower()
             # save file
             self.full_xml_path = path.join(self.workspace, "%s.xml" % normalized_file_name)
             

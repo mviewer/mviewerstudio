@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify, Response, request, current_app, redirect
 from .utils.login_utils import current_user
-from .utils.config_utils import Config, edit_xml_string, read_xml_file_content, control_relation
+from .utils.config_utils import Config, edit_xml_string, control_relation
 from .utils.commons import clean_preview, init_preview
 import hashlib, uuid
 from os import path, mkdir, remove
