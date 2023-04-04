@@ -451,18 +451,18 @@ var editLayer = function (item) {
 
 var importThemes = function () {
     console.groupCollapsed("importThemes");
-    console.log("external theme to import", _conf.external_themes.data);
+    //console.log("external theme to import", _conf.external_themes.data);
     $("#tableThemaExt .selected").each(function (id, item) {
         var url = $(item).attr("data-url");
         var id  = $(item).attr("data-theme-id");
         var label  = $(item).attr("data-theme-label");
-        addTheme(label, true, id, false, url);
+        addTheme(label, true, id, false, url, "default");
     });
     console.groupEnd("importThemes");
     $("#mod-themesview").modal('hide');
 };
 
-var addTheme = function (title, collapsed, themeid, icon, url) {
+var addTheme = function (title, collapsed, themeid, icon, url, layersvisibility) {
     if ($("#mod-themeOptions").is(":visible")) {
         alert(mviewer.tr('msg.save_theme_first'));        
         return;
@@ -470,13 +470,14 @@ var addTheme = function (title, collapsed, themeid, icon, url) {
     if (url) {
         //external theme
          $("#themes-list").append([
-        '<div class="list-group-item list-group-item themes-list-item" data-theme-url="'+url+'" data-theme="'+title+'" data-themeid="'+themeid+'" data-theme-collapsed="'+collapsed+'" data-theme-icon="'+icon+'">',
+        '<div class="list-group-item list-group-item themes-list-item" data-theme-url="'+url+'" data-theme="'+title+'" data-themeid="'+themeid+'" data-theme-collapsed="'+collapsed+'" data-theme-icon="'+icon+'" data-theme-layersvisibility="'+layersvisibility+'">',
             '<div class="theme-infos">',
                 '<span class="theme-name moveList">'+title+'</span><span class="theme-infos-layer">Ext.</span>',
             '</div>',
             '<div class="theme-options-btn">',
                 '<button class="btn btn-sm btn-secondary" ><span class="theme-move moveList" title="Déplacer"><i class="bi bi-arrows-move"></i></span></button>',
                 '<button class="btn btn-sm btn-secondary" onclick="deleteThemeItem(this);" ><span class="theme-remove" title="Supprimer"><i class="bi bi-x-circle"></i></span></button>',
+                '<button class="btn btn-sm btn-info" onclick="editThemeExt(this);"><span class="theme-edit" title="Editer ce thème"><i class="bi bi-gear-fill"></i></span></button>',
             '</div>',
         '</div>'].join(""));
     } else {
@@ -492,13 +493,12 @@ var addTheme = function (title, collapsed, themeid, icon, url) {
             '</div>',
         '</div>'].join(""));
     }
-
-
     config.themes[themeid] = {
         title:title,
         id: themeid,
         icon: icon,
         collapsed: collapsed,
+        layersvisibility: layersvisibility,
         url: url,
         layers: []
     };
@@ -554,6 +554,34 @@ var saveTheme = function () {
     config.themes[themeid].id = themeid;
     config.themes[themeid].collapsed = collapsed;
     config.themes[themeid].icon = icon;
+};
+
+var editThemeExt = function (item) {    
+    $("#themes-list .list-group-item").removeClass("active");
+    $(item).parent().parent().addClass("active");
+    var themeid = $(item).parent().parent().attr("data-themeid");
+    $("#themeExt-edit").attr("data-themeid", themeid);
+    document.getElementById("nameThemeExt").innerHTML = "";
+    var title = $(item).parent().parent().attr("data-theme");
+    var titleBlock = document.getElementById("nameThemeExt");
+    titleBlock.append(title);
+    var layersvisibility = $(item).parent().parent().attr("data-theme-layersvisibility");
+    $("#themeext-layersvisibility").val(layersvisibility);
+    $("#mod-themeExtOptions").modal('show');
+};
+
+var saveThemeExt = function () {
+    //get active item in left panel
+    var theme = $("#themes-list .active");
+    //get edited values
+    var themeid = $("#themeExt-edit").attr("data-themeid");
+    var layersvisibility = $("#themeext-layersvisibility").val();
+    theme.attr("data-theme-layersvisibility", layersvisibility);    
+    //save theme locally
+    config.themes[themeid].layersvisibility = layersvisibility;
+    //deactivate theme edition
+    $("#themes-list .list-group-item").removeClass("active");
+    $("#mod-themeExtOptions").modal('hide');
 };
 
 var deleteTheme = function (themeid) {
@@ -787,7 +815,7 @@ var getConfig = () => {
             var t = config.themes[themeid];
             var theme = [];
             if (t.url) {
-                theme = [padding(4)+'<theme id="'+t.id+'" url="'+t.url+'" name="'+t.title+'" collapsed="'+t.collapsed+'" icon="'+t.icon+'">'];
+                theme = [padding(4)+'<theme id="'+t.id+'" url="'+t.url+'" name="'+t.title+'" collapsed="'+t.collapsed+'" icon="'+t.icon+'" layersvisibility="'+t.layersvisibility+'">'];
             } else {
                 theme = [padding(4)+'<theme id="'+t.id+'" name="'+t.title+'" collapsed="'+t.collapsed+'" icon="'+t.icon+'">'];
             }

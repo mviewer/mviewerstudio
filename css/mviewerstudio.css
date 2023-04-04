@@ -983,6 +983,13 @@
 		-ms-transform: rotate(45deg);
 		transform: rotate(45deg);
 	}
+
+	/* Modal Theme externe - Param */
+
+	#nameThemeExt {
+		font-size: 16px;
+		font-weight: 500;
+	}
 	
 	/* Modal - Ajout d'une couche */
 	

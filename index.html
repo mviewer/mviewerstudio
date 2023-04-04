@@ -910,6 +910,42 @@
         </div>
     </div>
 
+    <!-- Modal theme options-->
+    <div class="modal fade" id="mod-themeExtOptions" role="dialog" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="mod-themeExtOptions" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" i18n="modal.theme.paramspanel.title">Paramètres de la thématique sélectionnée</h5>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body" id="themeExt-edit" data-themeid="">
+                    <div class="row" > 
+                        <div class="col-md-12">
+                            <div>
+                                <span class="titleExtModal" id="nameThemeExt"></span>
+                                <span class="theme-infos-layer">Ext.</span>
+                            </div>                                                     
+                        </div>                                                   
+                        <div class="col-md-12 mt-3">
+                            <label for="themeext-layersvisibility" class="form-label" i18n="modal.themeEx.paramspanel.layervisibility">Affichage des données de la thématique au démarrage de l'application :</label>
+                            <select id="themeext-layersvisibility" class="form-control">
+                                <option value="default" i18n="modal.themeEx.paramspanel.default">Par défaut (comme défini dans l'application source)</option>
+                                <option value="all" i18n="modal.themeEx.paramspanel.all">Toutes les données sont affichées</option>
+                                <option value="none" i18n="modal.themeEx.paramspanel.none">Aucune donnée n'est affichée</option>
+                            </select>
+                        </div>
+                    </div>                                
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal" i18n="cancel">Annuler</button>
+                    <button id="btn-saveTheme" class="btn btn btn-primary" onclick="saveThemeExt();">
+                        <span i18n="validate">Valider</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Modal Credits-->
     <div class="modal fade" id="modalCredits" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="modalCredits" aria-hidden="true">
         <div class="modal-dialog ">
