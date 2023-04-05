@@ -526,12 +526,6 @@
                                                                 <input class="form-control" id="formCustomBaseMatrixset" placeholder="PM">
                                                             </div>
                                                         </div>
-                                                        <div class="col-md-6 wmts custom-bg-type">
-                                                            <div class="custom-control custom-switch mb-3">
-                                                                <input type="checkbox" class="custom-control-input" id="formCustomBaseFromcapacity">
-                                                                <label class="custom-control-label" for="formCustomBaseFromcapacity"><span i18n="tabs.app.bgcustom.base.fromcapacity">Construire la couche à partir des capacités du service</span></label>
-                                                            </div>
-                                                        </div>
                                                     </div>
                                                     <div id="BasemapAlertPlaceholder"></div>
                                                     <button type="button" id="addCustomBl" onclick="mv.validateFormBaseLayer(this)" class="btn btn-info d-none" ><i class="bi bi-plus-lg"></i><span i18n="add"> Ajouter</span></button>
@@ -1004,21 +998,31 @@
                       </ul>
                       <div class="tab-content mb-4">
                         <div class="tab-pane fade show active" id="serverside" role="tabpanel" tabindex="0">
-                            <div id="applicationsListFilters">
-                                <form class="row">
-                                    <div class="col-md-6 pb-2" style="display: none;">
-                                        <label for="apps_group_list" i18n="modal.file.group">Groupe</label>
-                                        <select class="form-control" id="apps_group_list" onchange="mv.onSearchApp(this)"></select>
+                            <div id="applicationsListFilters" class="row">
+                                <div class="col-md-6 pb-2" style="display: none;">
+                                    <label for="apps_group_list" i18n="modal.file.group">Groupe</label>
+                                    <select class="form-control" id="apps_group_list" onchange="mv.onSearchApp(this)"></select>
+                                </div>
+                                <div class="col-md-12 pb-2" style="display: none;">
+                                    <label for="apps_creator_list" i18n="modal.file.author">Auteur</label>
+                                    <select class="form-control" id="apps_creator_list" onchange="mv.onSearchApp(this)"></select>
+                                </div>
+                                <!-- <div class="col-md-12 pb-2" id="searchBydescriptionInput">
+                                    <label i18n="modal.file.selectserverside">Filtrer par description:</label>
+                                    <div class="input-group my-3">
+                                        <input autocomplete="off" onchange="mv.onSearchApp(this)" type="text" class="form-control col-11" id="appListSearch" placeholder="Saisir un nom, un mot clé, une date...">
+                                        <button onclick="mv.onSearchApp(appListSearch)" class="btn btn-primary ml-1"><i class="ri-search-2-line"></i></button>
                                     </div>
-                                    <div class="col-md-12 pb-2" style="display: none;">
-                                        <label for="apps_creator_list" i18n="modal.file.author">Auteur</label>
-                                        <select class="form-control" id="apps_creator_list" onchange="mv.onSearchApp(this)"></select>
-                                    </div>
-                                    <div class="col-md-12 pb-2" id="searchBydescriptionInput">
-                                        <label i18n="modal.file.selectserverside">Filtrer par description:</label>
+                                </div> -->
+                                <div class="col-md-12 pb-2" id="searchBydescriptionInput">
+                                <label i18n="modal.file.selectserverside">Filtrer par description:</label>
+                                    <div class="input-group">
                                         <input autocomplete="off" onchange="mv.onSearchApp(this)" type="text" class="form-control" id="appListSearch" placeholder="Saisir un nom, un mot clé, une date...">
+                                        <div class="input-group-append">
+                                            <button onclick="mv.onSearchApp(appListSearch)" class="btn btn-info"><i class="ri-search-2-line"></i></button>
+                                        </div>
                                     </div>
-                                </form>
+                                </div>
                             </div>
                             <form class="row mb-2">
                                 <div class="col-md-12">
