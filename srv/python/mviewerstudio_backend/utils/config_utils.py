@@ -183,7 +183,7 @@ class Config:
             # file already exists
             # we keep xml file name
             self.uuid = file[0]["id"]
-            self.full_xml_path = self.app.config["EXPORT_CONF_FOLDER"] + file[0]["url"]
+            self.full_xml_path = path.join(self.app.config["EXPORT_CONF_FOLDER"], file[0]["url"])
         else:
             # get meta info from XML
             if self.meta.find(".//{*}identifier"):
@@ -214,7 +214,7 @@ class Config:
         '''
         subject = self.meta.find("{*}subject").text if self.meta.find("{*}subject") is not None else ""
         url = self.full_xml_path.replace(
-            self.app.config["EXPORT_CONF_FOLDER"],
+            self.app.config["EXPORT_CONF_FOLDER"] + "/",
             "",
         )
         return ConfigModel(

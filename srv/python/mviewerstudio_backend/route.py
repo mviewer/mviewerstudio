@@ -169,7 +169,7 @@ def publish_mviewer_config(id, name) -> Response:
     if not config:
         raise BadRequest("This config doesn't exists !")
 
-    copy_file = current_app.config["EXPORT_CONF_FOLDER"] + config[0]["url"]
+    copy_file = path.join(current_app.config["EXPORT_CONF_FOLDER"], config[0]["url"])
     copy_dir = copy_file.replace(".xml", "")
     config = from_xml_path(current_app, copy_file)
 
