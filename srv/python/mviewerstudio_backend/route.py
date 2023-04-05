@@ -123,7 +123,7 @@ def list_stored_mviewer_config() -> Response:
     
     configs = [config for config in configs if config["publisher"] == current_user.organisation]
     for config in configs:
-        config["url"] = current_app.config["CONF_PATH_FROM_MVIEWER"] + config["url"]
+        config["url"] = path.join(current_app.config["CONF_PATH_FROM_MVIEWER"], config["url"])
     return jsonify(configs)
 
 @basic_store.route("/api/app/<id>/publish/<name>", methods=["GET", "DELETE"])
