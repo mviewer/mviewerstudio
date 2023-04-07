@@ -428,7 +428,7 @@ Ces paramètres sont obligatoires avec un backend Python.
 - ``api``: URL vers le service (API) du backend Python. Valeur par défaut : ``api/app``.
 - ``user_info``: URL vers le service (API) permettant de récupérer les informations de l'utilisateur connecté. Valeur par défaut ``api/user``.
 - ``store_style_service`` : URL vers le service (API) à utiliser pour sauvegarder un style. Valeur par défaut ``api/style``.
-
+- ``publish_url`` : URL de publication à utiliser (par exemple https//public-map/). Si besoin, Apache devra avoir une règle pour orienter cette URL vers le répertoire de publication (voir settings.py - MVIEWERSTUDIO_PUBLISH_PATH).
 
 Paramètres obligatoires avec PHP
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -452,7 +452,6 @@ Ces paramètres sont à renseigner dans tous les cas.
 - ``mviewerstudio_version``: version compatible de mviewerstudio (laisser la valeur par défaut)
 - ``mviewer_version``: version compatible mviewer (laisser la valeur par défaut)
 - ``mviewer_instance`` : URL de l'instance mviewer utilisée (par exemple http://localhost/mviewer/).
-- ``mviewer_publish`` : URL de publication à utiliser (par exemple https//public-map/). Si besoin, Apache devra avoir une règle pour orienter cette URL vers le répertoire de publication (voir settings.py - MVIEWERSTUDIO_PUBLISH_PATH).
 - ``conf_path_from_mviewer`` : Chemin permettant de charger le fichier de configuration généré depuis le mviewer. Le chemin peut être relatif (par exemple ../mviewer/conf/).
 - ``mviewer_short_url`` : Utilisation du système d'URL courtes (mviewer/#monappli au lieu de mviewer/?config=apps/monappli.xml).
 	- ``used`` : true | false.
