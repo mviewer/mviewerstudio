@@ -659,6 +659,12 @@ var previewAppUrl = (xmlFileUrl) => {
     window.open(url,'mvs_vizualize');
 }
 
+var previewPublish = () => {
+    const org = mv.getAuthentUserInfos("groupFullName");
+    const url = `${ _conf.publish_url }${ org }/${ config.relation }.xml`;
+    return window.open(url, 'mvs_vizualize');
+}
+
 var getConfig = () => {
     var padding = function (n) {
         return '\r\n' + " ".repeat(n);
@@ -838,7 +844,10 @@ let previewWithPhp = (conf) => {
     })
 }
 
-let previewAppsWithoutSave = (id) => {
+let previewAppsWithoutSave = (id, showPublish) => {
+    if (config.relation && _conf.publish_url && showPublish) {
+        return previewPublish()
+    }
     const confXml = getConfig();
     if (!confXml || (confXml && !mv.validateXML(confXml.join("")))) {
         return alertCustom("XML invalide !", 'danger');
