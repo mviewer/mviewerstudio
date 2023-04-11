@@ -53,55 +53,6 @@ $(document).ready(function(){
             // translate
             _initTranslate();
 
-            // Thematic layers providers        
-            var getThemeTable = function (theme) {
-                if (document.querySelector("#tableTheme")) {
-                    document.querySelector("#themesListTable").innerHTML = "";
-                }
-                let data = theme;                   
-                function filterThema(obj) {
-                    if (obj.observations === 'OK' && obj.id !== '') 
-                    {
-                      return true
-                    } 
-                    return false;
-                }
-                data = data.filter(filterThema);
-                data = data.map((v, i) => ({
-                    number: i, 
-                    id: v.id,
-                    title: v.title,
-                    description: v.description,
-                    publisher: v.publisher,
-                    xml: v.xml
-                }));
-                mv.getApps = () => theme;                
-                const tableDom = `                
-                    <table
-                        id="tableThemaExt"
-                        data-toggle="table"
-                        data-search="true"
-                        data-pagination="true"
-                        data-click-to-select="true"
-                        data-page-size="5"
-                        data-row-attributes="mv.rowAttributesThematicExt"
-                    >
-                        <thead>
-                            <tr class="paddingTable">
-                                <th data-field="state" data-checkbox="true" class="checkCustom custom-control custom-checkbox"></th>
-                                <th data-field="title" class="titleThema">Titre</th>
-                                <th data-field="description" class="descriptionThema">Description</th>
-                                <th data-field="publisher" class="publisherThema">Publisher</th>
-                                <th data-field="identifier" class="urlThema">identifier</th>
-                                <th data-field="id" class="idThema">id</th>
-                            </tr>
-                        </thead>
-                    </table>
-                `;    
-                $('#themesListTable').append(tableDom);
-                const $table = $("#tableThemaExt");
-                $table.bootstrapTable({data: data})
-            };
             var csw_providers = [];
             var wms_providers = [];
             if (_conf.external_themes && _conf.external_themes.used && _conf.external_themes.url) {
@@ -112,7 +63,7 @@ $(document).ready(function(){
                         _conf.external_themes.data = Papa.parse(csv, {
                             header: true
                         }).data;
-                        getThemeTable(_conf.external_themes.data);
+                        mv.getThemeTable(_conf.external_themes.data);
                     }
                     });
             } else {
@@ -271,7 +222,7 @@ const getUser = () => {
 }
 
 var newConfiguration = function (infos) {
-    ["opt-title", "opt-logo", "opt-favicon", "opt-help", "opt-home", "theme-edit-icon", "theme-edit-title"].forEach(function (param, id) {
+    ["opt-title", "opt-logo", "optProxyUrl", "opt-favicon", "opt-help", "opt-home", "theme-edit-icon", "theme-edit-title"].forEach(function (param, id) {
         $("#"+param).val("");
     });
 
@@ -469,17 +420,18 @@ var addTheme = function (title, collapsed, themeid, icon, url, layersvisibility)
     }
     if (url) {
         //external theme
-         $("#themes-list").append([
-        '<div class="list-group-item list-group-item themes-list-item" data-theme-url="'+url+'" data-theme="'+title+'" data-themeid="'+themeid+'" data-theme-collapsed="'+collapsed+'" data-theme-icon="'+icon+'" data-theme-layersvisibility="'+layersvisibility+'">',
-            '<div class="theme-infos">',
-                '<span class="theme-name moveList">'+title+'</span><span class="theme-infos-layer">Ext.</span>',
-            '</div>',
-            '<div class="theme-options-btn">',
-                '<button class="btn btn-sm btn-secondary" ><span class="theme-move moveList" title="Déplacer"><i class="bi bi-arrows-move"></i></span></button>',
-                '<button class="btn btn-sm btn-secondary" onclick="deleteThemeItem(this);" ><span class="theme-remove" title="Supprimer"><i class="bi bi-x-circle"></i></span></button>',
-                '<button class="btn btn-sm btn-info" onclick="editThemeExt(this);"><span class="theme-edit" title="Editer ce thème"><i class="bi bi-gear-fill"></i></span></button>',
-            '</div>',
-        '</div>'].join(""));
+        $("#themes-list").append(`
+            <div class="list-group-item list-group-item themes-list-item" data-theme-url="${url}" data-theme="${title}" data-themeid="${themeid}" data-theme-collapsed="${collapsed}" data-theme-icon="${icon}" data-theme-layersvisibility="${layersvisibility}">
+                <div class="theme-infos">
+                    <span class="theme-name moveList">${title}</span><span class="theme-infos-layer">Ext.</span>
+                </div>
+                <div class="theme-options-btn">
+                    <button class="btn btn-sm btn-secondary" ><span class="theme-move moveList" title="Déplacer"><i class="bi bi-arrows-move"></i></span></button>
+                    <button class="btn btn-sm btn-secondary" onclick="deleteThemeItem(this);" ><span class="theme-remove" title="Supprimer"><i class="bi bi-x-circle"></i></span></button>
+                    <button class="btn btn-sm btn-info" onclick="editThemeExt(this);"><span class="theme-edit" title="Editer ce thème"><i class="bi bi-gear-fill"></i></span></button>
+                </div>
+            </div>`
+        );
     } else {
          $("#themes-list").append([
         '<div class="list-group-item themes-list-item" data-theme="'+title+'" data-themeid="'+themeid+'" data-theme-collapsed="'+collapsed+'" data-theme-icon="'+icon+'">',   
@@ -750,8 +702,8 @@ var getConfig = () => {
         });
     });
     application = application.join(padding(4)) + '>'+padding(0)+'</application>';
-    if ( _conf.proxy ) {
-        savedProxy = padding(0) + "<proxy url='" + _conf.proxy + "'/>";
+    if ( _conf.proxy || $("#optProxyUrl").val()) {
+        savedProxy = padding(0) + "<proxy url='" + optProxyUrl || _conf.proxy + "'/>";
     }
     var search_params = {"bbox":false, "localities": false, "features":false, "static":false};
     if ( $("#frm-searchlocalities").val() !="false"  ) {
@@ -824,8 +776,8 @@ var getConfig = () => {
                 theme.push(layer);
             });
             themes.push(theme.join(" "));
-            themes.push(padding(4)+'</theme>');
-            }
+            themes.push(padding(4) + '</theme>');
+        }
     });
     themes.push(padding(0) + '</themes>');
     

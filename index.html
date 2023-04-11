@@ -241,12 +241,18 @@
                                         <input class="form-control" id="opt-title" type="text" name="textinput" placeholder="Mon application">
                                     </div>
                                 </div>
-                                <div class="col-md-12 advanced">
+                                <div class="col-md-6 advanced">
                                     <div class="form-group">
                                         <label for="optKeywords" i18n="head.keywords" class="form-label">Mots clés</label>
                                         <input class="form-control" onchange="mv.changeKeyWords(this)" id="optKeywords" type="text" name="textinput" placeholder="ex: carte,rennes,lycées">
                                     </div>
-                                </div>                            
+                                </div>
+                                <div class="col-md-6 advanced">
+                                    <div class="form-group">
+                                        <label for="optProxyUrl" i18n="head.proxyurl" class="form-label">URL du proxy</label>
+                                        <input class="form-control checkedurl" id="optProxyUrl" type="text" name="textinput" placeholder="https://proxy.fr">
+                                    </div>
+                                </div>
                             </div>  
                             <div class="row">
                                 <div class="col-md-6 advanced" style="display: none;">

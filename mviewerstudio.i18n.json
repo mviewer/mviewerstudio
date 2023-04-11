@@ -1,6 +1,7 @@
 {
     "fr": {
         "head.title": "Titre de l'application",
+        "head.proxyurl": "URL du proxy",
         "head.keywords": "Mots clés",
         "banner.not_connected": "Non connecté",
         "banner.logout": "Déconnexion",
@@ -326,6 +327,7 @@
     },
     "en": {
         "head.title": "Application title",
+        "head.proxyurl": "Proxy URL",
         "head.keywords": "Keywords",
         "banner.not_connected": "Not connected",
         "banner.load": "Load",
