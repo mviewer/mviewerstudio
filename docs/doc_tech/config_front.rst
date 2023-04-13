@@ -458,7 +458,7 @@ Ces paramètres sont à renseigner dans tous les cas.
 - ``mviewer_short_url`` : Utilisation du système d'URL courtes (mviewer/#monappli au lieu de mviewer/?config=apps/monappli.xml).
 	- ``used`` : true | false.
 	- ``apps_folder`` : chemin d'accès depuis le répertoire apps (exemple store pour apps/store).
-	- ``public_folder`` : chemin d'accès depuis le répertoire apps pour les éléments publiés (exemple store pour apps/public).
+	- ``public_folder`` : (pour backend Python seulement) - chemin d'accès depuis le répertoire apps pour les éléments publiés (exemple store pour apps/public).
 - ``external_themes`` : Utilisation du mécanisme d'import de thématiques externes (présentes dans d'autres mviewers).
 - ``proxy`` : Chemin du proxy par lequel les requêtes envoyées par mviewerstudio passeront. Valeur par défaut si ce paramètre est absent ../proxy/?url=.
 - ``used`` : Booléen -> Utiliser ``"true"`` pour permettre le chargement et l'utilisation des thématiques externes.
