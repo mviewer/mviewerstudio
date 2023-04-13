@@ -123,7 +123,7 @@ def list_stored_mviewer_config() -> Response:
     
     configs = [config for config in configs if config["publisher"] == current_user.organisation]
     for config in configs:
-        config["url"] = path.join(current_app.config["CONF_PATH_FROM_MVIEWER"], config["url"])
+        config["link"] = path.join(current_app.config["CONF_PATH_FROM_MVIEWER"], config["url"])
     return jsonify(configs)
 
 @basic_store.route("/api/app/<id>/publish/<name>", methods=["GET", "DELETE"])
@@ -322,6 +322,7 @@ def preview_app_version(id, version) -> Response:
 
     Return file URL to preview.
     '''
+    is_short_url = request.args("short") == "true"
     config = current_app.register.read_json(id)
     if not config:
         raise BadRequest("This config doesn't exists !")
@@ -340,12 +341,16 @@ def preview_app_version(id, version) -> Response:
     copyfile(src_file, path_preview_file)
     # restor branch
     git.repo.git.checkout("master")
+    
+    preview_url = path.join(config["publisher"], preview_file)
+    if not is_short_url:
+        preview_url = path.join(app_config["CONF_PATH_FROM_MVIEWER"], config["publisher"], preview_file)
 
     return (
         jsonify(
             {
                 "success": True,
-                "file": path.join(app_config["CONF_PATH_FROM_MVIEWER"], config["publisher"], preview_file),
+                "file": preview_url,
             }
         ),
         200,
@@ -379,11 +384,12 @@ def preview_uncommited_app(id) -> Response:
         file.write(xml)
         file.close()
     # return url
+    file_path = path.join(current_user.organisation, preview_file)
     return (
         jsonify(
             {
                 "success": True,
-                "file": path.join(app_config["CONF_PATH_FROM_MVIEWER"], current_user.organisation, preview_file),
+                "file": file_path,
             }
         ),
         200,

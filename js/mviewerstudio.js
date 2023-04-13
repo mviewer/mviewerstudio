@@ -654,17 +654,6 @@ var deleteAppFromList = (id) => {
     });
 }
 
-var previewAppUrl = (xmlFileUrl) => {
-    let url = _conf.mviewer_instance + '?config=' + xmlFileUrl;
-    window.open(url,'mvs_vizualize');
-}
-
-var previewPublish = () => {
-    const org = mv.getAuthentUserInfos("groupFullName");
-    const url = `${ _conf.publish_url }${ org }/${ config.relation }.xml`;
-    return window.open(url, 'mvs_vizualize');
-}
-
 var getConfig = () => {
     var padding = function (n) {
         return '\r\n' + " ".repeat(n);
@@ -673,7 +662,12 @@ var getConfig = () => {
     var olscompletion = "";
     var elasticsearch = "";
     // Url du studio
-    var studioUrl = $('#opt-studio').prop('checked') ? window.location.href || "" : "";
+    var studioUrl = "";
+
+    if ($('#opt-studio').prop('checked')) {
+        let readURL = new URL(window.location.href);
+        studioUrl = readURL.origin + readURL.pathname;
+    }
 
     var application = ['<application',
         'title="'+$("#opt-title").val()+'"',
@@ -821,22 +815,7 @@ let previewWithPhp = (conf) => {
             var url = "";
             if (data.success && data.filepath) {
                 // Build a short and readable URL for the map
-                if (_conf.mviewer_short_url && _conf.mviewer_short_url.used) {
-                    var filePathWithNoXmlExtension = "";
-                    //Get path from mviewer/apps eg store for mviewer/apps/store
-                    if (_conf.mviewer_short_url.apps_folder) {
-                        filePathWithNoXmlExtension = [_conf.mviewer_short_url.apps_folder, data.filepath].join("/");
-                    } else {
-                        filePathWithNoXmlExtension = data.filepath;
-                    }
-                    if (filePathWithNoXmlExtension.endsWith(".xml")) {
-                        filePathWithNoXmlExtension = filePathWithNoXmlExtension.substring(0, filePathWithNoXmlExtension.length-4);
-                    }
-                    url = _conf.mviewer_instance + '#' + filePathWithNoXmlExtension;
-                } else {
-                    // Build a classic URL for the map
-                    url = _conf.mviewer_instance + '?config=' + _conf.conf_path_from_mviewer + data.filepath;
-                }
+                let url = mv.produceUrl(data.filePath);
                 window.open(url, 'mvs_vizualize');
                 alertCustom("Téléchargement terminé !", 'success');
             }
@@ -846,7 +825,9 @@ let previewWithPhp = (conf) => {
 
 let previewAppsWithoutSave = (id, showPublish) => {
     if (config.relation && _conf.publish_url && showPublish) {
-        return previewPublish()
+        const filePath = `${ mv.getAuthentUserInfos().groupFullName }/${ config.relation }`;
+        const previewUrl = mv.produceUrl(filePath, true);
+        return window.open(previewUrl, 'mvs_vizualize');
     }
     const confXml = getConfig();
     if (!confXml || (confXml && !mv.validateXML(confXml.join("")))) {
@@ -867,7 +848,7 @@ let previewAppsWithoutSave = (id, showPublish) => {
     })
         .then(r => r.ok ? r.json() : Promise.reject(r))
         .then(data => {
-            const url = _conf.mviewer_instance + '?config=' + data.file;
+            const url = mv.produceUrl(data.file, config.relation && config.showPublish);
             window.open(url, 'mvs_vizualize');
         })
         .catch(err => alertCustom(mviewer.tr('msg.xml_doc_invalid'), 'error'))
