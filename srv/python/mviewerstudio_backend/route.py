@@ -436,7 +436,7 @@ def create_app_version(id) -> Response:
         raise BadRequest("This config doesn't exists !")
 
     config = config[0]
-    workspace = path.join(current_app.config["EXPORT_CONF_FOLDER"], config["id"])
+    workspace = path.join(current_app.config["EXPORT_CONF_FOLDER"], current_user.organisation, config["id"])
     git = Git_manager(workspace)
     git.create_version(config["description"])
     return jsonify({"success": True, "message": "New version created !"}), 200
