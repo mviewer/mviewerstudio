@@ -34,24 +34,26 @@ Python - Structure du fichier de configuration
        :linenos:
 	{
 		"app_conf": {
-			"studio_title": "Mviewer STudio Megalis",
+			"studio_title": "Mviewer Studio Megalis",
+			"mviewer_version":  "3.9",
+			"mviewerstudio_version":  "3.2",
 			"api": "api/app",
 			"store_style_service": "api/style",
-			"mviewer_instance": "/mviewer/",
+			"mviewer_instance": "http://127.0.0.1:5051/",
+			"publish_url": "http://127.0.0.1:5051/?config=apps/public/{{config}}.xml",
 			"conf_path_from_mviewer": "apps/store/",
-			"publish_folder": "apps/public"
 			"mviewer_short_url": {
 				"used": true,
-				"apps_folder": "store"
+				"apps_folder": "store",
+				"public_folder": "public"
 			},
 			"external_themes": {
 				"used": true,
 				"url": "https://geobretagne.fr/minicatalog/csv"
 			},
 			"user_info": "api/user",
-			"export_conf_folder": "/home/debian/mviewer/apps/store/",
 			"proxy": "proxy/?url=",
-			"user_info_visible": false,
+			"user_info_visible": true,
 			"app_form_placeholders": {
 				"app_title": "Kartenn",
 				"logo_url": "https://geobretagne.fr/pub/logo/region-bretagne.jpg",
@@ -456,6 +458,7 @@ Ces paramètres sont à renseigner dans tous les cas.
 - ``mviewer_short_url`` : Utilisation du système d'URL courtes (mviewer/#monappli au lieu de mviewer/?config=apps/monappli.xml).
 	- ``used`` : true | false.
 	- ``apps_folder`` : chemin d'accès depuis le répertoire apps (exemple store pour apps/store).
+	- ``public_folder`` : chemin d'accès depuis le répertoire apps pour les éléments publiés (exemple store pour apps/public).
 - ``external_themes`` : Utilisation du mécanisme d'import de thématiques externes (présentes dans d'autres mviewers).
 - ``proxy`` : Chemin du proxy par lequel les requêtes envoyées par mviewerstudio passeront. Valeur par défaut si ce paramètre est absent ../proxy/?url=.
 - ``used`` : Booléen -> Utiliser ``"true"`` pour permettre le chargement et l'utilisation des thématiques externes.
