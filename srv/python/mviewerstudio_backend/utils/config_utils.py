@@ -101,6 +101,7 @@ class Config:
         '''
         self.uuid = None
         self.full_xml_path = None
+        self.url = None
         self.app = app
         self.directory = None
         if not xml:
@@ -184,6 +185,7 @@ class Config:
             # we keep xml file name
             self.uuid = file[0]["id"]
             self.full_xml_path = path.join(self.app.config["EXPORT_CONF_FOLDER"], file[0]["url"])
+            self.url = file[0]["url"]
         else:
             # get meta info from XML
             if self.meta.find(".//{*}identifier"):
@@ -193,7 +195,12 @@ class Config:
             app_name = self.meta.find("{*}title").text[:20]
             normalized_file_name = unidecode(re.sub('[^a-zA-Z0-9  \n\.]', "_", app_name).replace(" ", "_")).lower()
             # save file
-            self.full_xml_path = path.join(self.workspace, "%s.xml" % normalized_file_name)
+            normalized_xml_file_name = "%s.xml" % normalized_file_name
+            self.full_xml_path = path.join(self.workspace, normalized_xml_file_name)
+            if not current_user:
+                self.url = path.join(self.meta.find("{*}publisher").text, self.uuid, normalized_xml_file_name)
+            else:
+                self.url = path.join(current_user.organisation, self.uuid, normalized_xml_file_name)
             # create resources dir to save mst, customs, etc.
             app_dir = path.join(self.workspace, normalized_file_name)
             if not path.exists(app_dir):
@@ -213,10 +220,6 @@ class Config:
         Use to search config by DCAT RDF metadata.
         '''
         subject = self.meta.find("{*}subject").text if self.meta.find("{*}subject") is not None else ""
-        url = self.full_xml_path.replace(
-            self.app.config["EXPORT_CONF_FOLDER"] + "/",
-            "",
-        )
         return ConfigModel(
             id = self.uuid,
             title = self.meta.find("{*}title").text,
@@ -226,7 +229,7 @@ class Config:
             versions = self.git.get_versions(),
             keywords = self.meta.find("{*}keywords").text,
             publisher = self.meta.find("{*}publisher").text,
-            url = url,
+            url = self.url,
             subject = subject,
             relation = self.meta.find("{*}relation").text if self.meta.find("{*}relation").text else ""
         )
