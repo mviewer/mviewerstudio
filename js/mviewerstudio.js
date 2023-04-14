@@ -130,7 +130,14 @@ $(document).ready(function(){
 
             // Get user info
             getUser();
-            console.groupEnd("init app from config");
+
+            // TODO : delete on issue-160 finish and before PR merge
+            fetch("https://ows.region-bretagne.fr/geoserver/rb/wfs?SERVICE=WFS&VERSION=1.1.0&REQUEST=GetFeature&TYPENAME=rb:lycee&outputFormat=application/json")
+                .then(r => r.json())
+                .then(r => {
+                    templateGenerator = new TemplateGenerator(r);
+                });
+            
         })
         .catch(err => {
             console.log(err);
