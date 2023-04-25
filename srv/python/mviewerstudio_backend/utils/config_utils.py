@@ -1,5 +1,4 @@
 from os import path, makedirs, remove, mkdir
-from unidecode import unidecode
 import logging
 import xml.etree.ElementTree as ET
 import re
@@ -193,7 +192,7 @@ class Config:
             
             # normalize file name
             app_name = self.meta.find("{*}title").text[:20]
-            normalized_file_name = unidecode(re.sub('[^a-zA-Z0-9  \n\.]', "_", app_name).replace(" ", "_")).lower()
+            normalized_file_name = re.sub('[^A-Za-z0-9 \n\.]+', "_", app_name).replace(" ", "_").lower()
             # save file
             normalized_xml_file_name = "%s.xml" % normalized_file_name
             self.full_xml_path = path.join(self.workspace, normalized_xml_file_name)
