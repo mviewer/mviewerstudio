@@ -330,7 +330,6 @@ def preview_app_version(id, version) -> Response:
 
     Return file URL to preview.
     '''
-    is_short_url = request.args("short") == "true"
     config = current_app.register.read_json(id)
     if not config:
         raise BadRequest("This config doesn't exists !")
@@ -343,7 +342,7 @@ def preview_app_version(id, version) -> Response:
     git.switch_version(version, False)
     # copy past file to preview folder
     app_config = current_app.config
-    src_file = app_config["EXPORT_CONF_FOLDER"] + config["url"]
+    src_file = path.join(app_config["EXPORT_CONF_FOLDER"], config["url"])
     preview_file = path.join(config["id"], "preview", "%s.xml" % version)
     path_preview_file = path.join(app_config["EXPORT_CONF_FOLDER"], config["publisher"], preview_file)
     copyfile(src_file, path_preview_file)
@@ -351,8 +350,6 @@ def preview_app_version(id, version) -> Response:
     git.repo.git.checkout("master")
     
     preview_url = path.join(config["publisher"], preview_file)
-    if not is_short_url:
-        preview_url = path.join(app_config["CONF_PATH_FROM_MVIEWER"], config["publisher"], preview_file)
 
     return (
         jsonify(
