@@ -325,7 +325,8 @@
         "msg.xml_doc_invalid": "Document xml invalide",
         "msg.xml_save": "Document non sauvegardé. \nVeuillez consulter votre administrateur.",
         "version.comment": "Ajouter une description à cette version",
-        "version.comment.ph": "Exemple : Version de test sans données"
+        "version.comment.ph": "Exemple : Version de test sans données",
+        "publish.message": "Version publiée"
     },
     "en": {
         "head.title": "Application title",
@@ -534,6 +535,7 @@
         "tabs.publication.publish_title" : "Publish application",
         "tabs.publication.publish_text" : "Put your application online.",
         "tabs.publication.publish_retry": "Retry with this new name",
-        "tabs.publication.publish_replace": "Replace"
+        "tabs.publication.publish_replace": "Replace",
+        "publish.message": "Publish version"
     }
 }

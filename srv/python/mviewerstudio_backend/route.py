@@ -10,6 +10,7 @@ from urllib.parse import urlparse
 import requests
 from .utils.git_utils import Git_manager
 from .utils.register_utils import from_xml_path
+from datetime import datetime
 
 from werkzeug.exceptions import BadRequest, MethodNotAllowed, Conflict
 
@@ -50,7 +51,7 @@ def user() -> Response:
 
 
 @basic_store.route("/api/app", methods=["POST"])
-def create_mviewer_config() -> Response:
+def create_config() -> Response:
     '''
     Create XML.
     '''
@@ -74,12 +75,13 @@ def create_mviewer_config() -> Response:
         {"success": True, "filepath": config_data.url, "config": config_data}
     )
 
-@basic_store.route("/api/app/<id>", methods=["PUT"])
-def update_mviewer_config(id) -> Response:
+@basic_store.route("/api/app", methods=["PUT"])
+def update_config() -> Response:
     '''
     Read XML UUID and update register and local file system if exists.
     :param id: app UUID
     '''
+    message = request.args.get("message")
     if not request.data:
         raise BadRequest("No XML found in the request body !")
     config = Config(request.data, current_app)
@@ -87,6 +89,8 @@ def update_mviewer_config(id) -> Response:
         raise BadRequest("This XML UUID doesn't exists !")
     # commit changes
     description = config.meta.find("{*}description").text
+    if message :
+        description = message
     if not description:
         description = "Change XML"
     config.git.commit_changes(description)
@@ -109,7 +113,7 @@ def update_mviewer_config(id) -> Response:
 
 
 @basic_store.route("/api/app", methods=["GET"])
-def list_stored_mviewer_config() -> Response:
+def list_stored_configs() -> Response:
     """
     Return all mviewer config created by the current user
     :param search: request args from query param.
@@ -126,8 +130,8 @@ def list_stored_mviewer_config() -> Response:
         config["link"] = path.join(current_app.config["CONF_PATH_FROM_MVIEWER"], config["url"])
     return jsonify(configs)
 
-@basic_store.route("/api/app/<id>/publish/<name>", methods=["GET", "DELETE"])
-def publish_mviewer_config(id, name) -> Response:
+@basic_store.route("/api/app/<id>/publish/<name>", methods=["POST", "DELETE"])
+def publish_config(id, name) -> Response:
     """
     Will put online a config.
     This route will copy / past XML to publication directory or delete to unpublish.
@@ -136,6 +140,9 @@ def publish_mviewer_config(id, name) -> Response:
     logger.debug("PUBLISH : %s " % id)
 
     xml_publish_name = name
+
+    if not request.data:
+        return BadRequest("Empty request POST data !")
 
     # control publish directory exists
     publish_dir = current_app.config["MVIEWERSTUDIO_PUBLISH_PATH"]
@@ -165,38 +172,39 @@ def publish_mviewer_config(id, name) -> Response:
         return BadRequest("Application does not exists !")
 
     # read config if exists
-    config = current_app.register.read_json(id)
+    config = Config(request.data, current_app)
     if not config:
         raise BadRequest("This config doesn't exists !")
 
-    copy_file = path.join(current_app.config["EXPORT_CONF_FOLDER"], config[0]["url"])
+    copy_file = path.join(current_app.config["EXPORT_CONF_FOLDER"], config.url)
     copy_dir = copy_file.replace(".xml", "")
-    config = from_xml_path(current_app, copy_file)
 
     # add publish info in XML
-    if request.method == "GET":
+    if request.method == "POST":
         edit_xml_string(config.meta, "relation", xml_publish_name)
-        message = "publish"
+        edit_xml_string(config.meta, "date", datetime.now().strftime("%Y-%m-%d-%H-%M-%S"))
+        message = "publication"
 
     # add unpublish info in XML
     if request.method == "DELETE":
         edit_xml_string(config.meta, "relation", "")
         remove(past_file)
         rmtree(past_dir)
-        message = "Unpublish"
+        message = "draft"
         past_file = None
 
     # will update XML with correct relation value to map publish and draft files
+    # date meta will be update on each publication to
     config.write()
 
     # commit to track this action
-    config.git.commit_changes(message)
+    config.git.create_publication_commit(message)
 
     # update JSON
     config.register.update_from_id(id)
 
-    # move to publish directory
-    if request.method == "GET":
+    # copy to publish directory
+    if request.method == "POST":
         copyfile(copy_file, past_file)
         if path.exists(past_dir):
             rmtree(past_dir)

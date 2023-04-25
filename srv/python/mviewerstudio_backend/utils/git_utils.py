@@ -127,6 +127,11 @@ class Git_manager:
         elif self.repo.git.diff("--name-only"):
             self.repo.git.add("*")
             self.repo.git.commit("-m", message)
+    
+    def create_publication_commit(self, message):
+        self.repo.git.add("*")
+        self.repo.git.commit("-m", message)
+        self.create_version(message)
 
     def get_version(self, name):
         '''
@@ -170,7 +175,8 @@ class Git_manager:
                 "id": commit.hexsha,
                 "author": commit.author.name,
                 "date": commit.authored_datetime.strftime("%Y-%m-%d-%H-%M-%S"),
-                "current": commit.hexsha == self.repo.head.commit.hexsha
+                "current": commit.hexsha == self.repo.head.commit.hexsha,
+                "publication": "true" if "publication" in commit.message else "false"
             }
             tag = [tag["name"] for tag in tags_json if tag["commit"] == commit.hexsha]
             if tag :

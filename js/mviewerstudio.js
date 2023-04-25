@@ -880,7 +880,7 @@ var saveAppWithPhp = (conf) => {
     })
 }
 
-var saveApplicationParameters = () => {
+var saveApplicationParameters = (message = "") => {
     const conf = getConfig();
     if (!conf || !mv.validateXML(conf.join(""))) {
         return alertCustom(mviewer.tr('msg.xml_doc_invalid'), 'danger');
@@ -889,8 +889,8 @@ var saveApplicationParameters = () => {
         return saveAppWithPhp(conf)
     }
     // Save the map serverside
-    const url = config.isFile ? `${ _conf.api }/${ config.id }` : _conf.api;
-    fetch(url, {
+    const url = message ? `${ _conf.api }?message=${message}` : _conf.api;
+    return fetch(url, {
         method: config.isFile ? "PUT" : "POST",
         headers: {
             'Content-Type': 'text/xml'

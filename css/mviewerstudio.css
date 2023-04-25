@@ -494,7 +494,11 @@
 		color: var(--success);
 	}
 
-	.currentVersion {
+	.publishedVersion {
+		color: var(--warning);
+		font-weight: 500;
+	}
+	.published {
 		color: black;
 		font-weight: 500;
 	}
