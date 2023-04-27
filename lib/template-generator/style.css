@@ -146,3 +146,24 @@
 	.component-form {
 		margin-bottom: 10px;
 	}
+
+	.subcomponents span.badge {
+		color: white;
+		background-color: var(--info) !important;
+		font-size: 12px;
+	}
+	.subcomponents .dropdown-item {
+		color: black;
+		background-color: white !important;
+	}
+	.subcomponents .dropdown-item:hover {
+		color:white;
+		background-color: var(--info) !important;
+	}
+	.subcomponents .dropdown {
+		height: auto;
+	}
+	.activeMultiSelectTag {
+		color:white;
+		background-color: var(--info) !important;
+	}

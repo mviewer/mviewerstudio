@@ -19,7 +19,7 @@ $(document).ready(function(){
         .then(r => r.json())
         .then(data => {
             //Mviewer Studio version
-            console.groupCollapsed("init app from config");
+            // console.groupCollapsed("init app from config");
             _conf = data.app_conf;
             const VERSION =  _conf.mviewerstudio_version
             console.log("MviewerStudio version " + VERSION);
