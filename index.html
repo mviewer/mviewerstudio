@@ -98,12 +98,12 @@
                         </a> 
                         <!--New config-->
                         <!--TODO : to remove - issuee-160-->
-                        <a onclick="templateGenerator.show()" data-bs-toggle="modal" data-bs-target="#templageGeneratorModal">
+                        <a data-bs-toggle="modal" data-bs-target="#templageGeneratorModal">
                             <div class="card text-white bg-info p-3 m-2 zoomCard h-100 noborder" style="max-width: 18rem;">
                                 <div class="card-body mb-5">
                                 <span class="iconCard-home">
                                     <i class="bi bi-file-earmark-plus" style="font-size: 20px;vertical-align: revert;"></i>
-                                </span>                            
+                                </span>
                                 <h5 class="card-title mt-4"><span>Générateur de template</span></h5>
                                 <p class="card-text"><span>Click</span></p>
                                 </div>
@@ -119,7 +119,7 @@
                         <a class="nav-item m-3" data-bs-toggle="modal" data-bs-target="#modalCredits" i18n="home.navlink_credits">Crédits</a>
                     </div>
                 </nav>
-            </div>                        
+            </div>
         </div>    
         <!--/HOME-->   
         <!-- MODULES STUDIO-->   
@@ -1931,50 +1931,66 @@
     <!-- Modal -->
     <div class="modal fade" id="templageGeneratorModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="templageGeneratorModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" >Générateur de template</h5>
-                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            </div>
-            <div class="modal-body">
-                <div class="row ">
-                    <div class="col-md-12 mb-2 d-flex align-items-center badgeOptions"></div>
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" >Générateur de template</h5>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 </div>
-                <div class="row">
-                    <div class="col-md-12 mb-2 d-flex justify-content-between align-items-center">
-                        <h6 class="m-0">Configurer le template</h6>
-                        <div>
-                            <button type="button" class="btn text-info">
-                                <i class="ri-eye-2-line"></i> <span i18n="studio.toolsbar.preview">Prévisualiser</span>
-                            </button>
-                        </div>                            
+                <div class="modal-body" id="templateConfigurator">
+                    <div class="row ">
+                        <div class="col-md-12 mb-2 d-flex align-items-center badgeOptions"></div>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-6">      
-                        <div id="generatorComponents" class="card" style="height: 630px; padding: 10px;">
-                            <div class="card addComponent border-info text-info">
-                                <h6><i class="ri-add-line"></i></h6>    
-                                <h6>Ajouter un composant</h6>
+                    <div class="row">
+                        <div class="col-md-12 mb-2 d-flex justify-content-between align-items-center">
+                            <h6 class="m-0">Configurer le template</h6>
+                            <div>
+                                <button type="button" class="btn text-info">
+                                    <i class="ri-eye-2-line"></i> <span i18n="studio.toolsbar.preview">Prévisualiser</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div id="generatorComponents" class="card" style="height: 630px; padding: 10px;">
+                                <div id="cardAddComponent" class="card addComponent border-info text-info" onclick="mv.templateGenerator.componentSelector.load()" data-bs-toggle="modal" data-bs-target="#templageGeneratorSelector">
+                                    <h6><i class="ri-add-line"></i></h6>
+                                    <h6>Ajouter un composant</h6>
+                                </div>
                                 <div id="generatorComponentsDDArea"><!-- insert components here --></div>
-                            </div>                         
-                        </div>                     
-                    </div>
-                    <div class="col-md-6">  
-                        <div id="generatorPreview" class="card" style="height: 630px;"> 
-                            <div class="previewMess">
-                                <h6><i class="ri-search-eye-line"></i></h6>
-                                <h6>Aperçu</h6>
-                            </div>                       
-                        </div>                      
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div id="generatorPreview" class="card" style="height: 630px;"> 
+                                <div class="previewMess">
+                                    <h6><i class="ri-search-eye-line"></i></h6>
+                                    <h6>Aperçu</h6>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="modal-footer">                    
-                <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="" i18n="validate">Valider</button>
-                <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal" i18n="close">Fermer</button>
+                <div class="modal-footer">                    
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" i18n="validate">Valider</button>
+                    <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal" i18n="close">Fermer</button>
+                </div>
             </div>
         </div>
+    </div>
+    <div class="modal fade" id="templageGeneratorSelector" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="templageGeneratorModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" >Générateur de template</h5>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body" id="modalTemplateGeneratorBody">
+                </div>
+                <div class="modal-footer">                    
+                    <button type="button" id="templateSelectorAddBtn" onclick="mv.templateGenerator.componentSelector.onValid()" class="btn btn-primary d-none" data-bs-toggle="modal" data-bs-target="#templageGeneratorModal" onclick="" i18n="validate">Valider</button>
+                    <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#templageGeneratorModal" i18n="close">Fermer</button>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -1987,6 +2003,6 @@
 <script src="lib/bootstrap-table/bootstrap-table.min.js"></script>
 <script src="lib/bootstrap-table/bootstrap-table-fr-FR.min.js"></script>
 <script src="lib/moment.js"></script>
-<script src="lib/template-generator/main.js"></script>
+<script type="module" src="lib/template-generator/main.js"></script>
 </body>
 </html>
