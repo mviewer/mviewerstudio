@@ -142,3 +142,7 @@
 	.blockComp.selected {
 		outline: 2px solid var(--info);
 	}
+
+	.component-form {
+		margin-bottom: 10px;
+	}
