@@ -90,7 +90,6 @@
 	.addComponent {
 		text-align: center;
 		padding: 1rem;
-		margin-bottom: 10px;
 	}
 
 	.addComponent:hover {
@@ -167,3 +166,8 @@
 		color:white;
 		background-color: var(--info) !important;
 	}
+
+	/* generatorComponentsDDArea*/
+	#generatorComponentsDDArea {
+		overflow: auto;
+	} 
