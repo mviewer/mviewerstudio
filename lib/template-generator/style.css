@@ -170,4 +170,5 @@
 	/* generatorComponentsDDArea*/
 	#generatorComponentsDDArea {
 		overflow: auto;
+		height: 100% !important;
 	} 

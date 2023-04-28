@@ -1963,9 +1963,11 @@
                         </div>
                         <div class="col-md-6">
                             <div id="generatorPreview" class="card" style="height: 630px;"> 
-                                <div class="previewMess">
+                                <div class="previewMess" id="generatorPreviewEmptyMsg">
                                     <h6><i class="ri-search-eye-line"></i></h6>
                                     <h6>Aperçu</h6>
+                                </div>
+                                <div id="generatorPreviewContent">
                                 </div>
                             </div>
                         </div>
@@ -2004,6 +2006,7 @@
 <script src="lib/bootstrap-table/bootstrap-table.min.js"></script>
 <script src="lib/bootstrap-table/bootstrap-table-fr-FR.min.js"></script>
 <script src="lib/moment.js"></script>
+<script src="lib/mustache-2.3.0/mustache.min.js"></script>
 <script type="module" src="lib/template-generator/main.js"></script>
 </body>
 </html>
