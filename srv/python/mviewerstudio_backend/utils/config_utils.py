@@ -193,6 +193,7 @@ class Config:
             # normalize file name
             app_name = self.meta.find("{*}title").text[:20]
             normalized_file_name = re.sub('[^A-Za-z0-9 \n\.]+', "_", app_name).replace(" ", "_").lower()
+            self.directory = normalized_file_name
             # save file
             normalized_xml_file_name = "%s.xml" % normalized_file_name
             self.full_xml_path = path.join(self.workspace, normalized_xml_file_name)
@@ -230,7 +231,8 @@ class Config:
             publisher = self.meta.find("{*}publisher").text,
             url = self.url,
             subject = subject,
-            relation = self.meta.find("{*}relation").text if self.meta.find("{*}relation").text else ""
+            relation = self.meta.find("{*}relation").text if self.meta.find("{*}relation").text else "",
+            directory = self.directory
         )
     
     def as_dict(self):

@@ -22,6 +22,7 @@ class ConfigModel:
     subject: str
     date: str
     relation: str
+    directory: str
 
     def as_dict(self):
         return {
@@ -35,5 +36,6 @@ class ConfigModel:
             "url": self.url,
             "subject": self.subject,
             "date": self.date,
-            "relation": self.relation
+            "relation": self.relation,
+            "directory": self.directory
         }

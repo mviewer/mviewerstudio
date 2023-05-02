@@ -442,7 +442,6 @@ def create_app_version(id) -> Response:
     config = current_app.register.read_json(id)
     if not config:
         raise BadRequest("This config doesn't exists !")
-
     config = config[0]
     workspace = path.join(current_app.config["EXPORT_CONF_FOLDER"], current_user.organisation, config["id"])
     git = Git_manager(workspace)
@@ -469,6 +468,28 @@ def store_style() -> Response:
             "success": True,
             "filepath": path.join(
                 current_app.config["CONF_PATH_FROM_MVIEWER"], "styles", filename
+            ),
+        }
+    )
+
+
+@basic_store.route("/api/app/<id>/template/<file_name>", methods=["POST"])
+def add_layer_template(id, file_name) -> Response:
+    template = request.data.decode("utf-8")
+    config = current_app.register.read_json(id)
+    if not config:
+        raise BadRequest("This config doesn't exists !")
+    config = config[0]
+    draftspace = path.join(current_app.config["EXPORT_CONF_FOLDER"], current_user.organisation, config["id"])
+    draft_templates = path.join(draftspace, config["directory"], "templates", "%s.mst" % file_name)
+    f = open(draft_templates, "w")
+    f.write(template)
+    f.close()
+    return jsonify(
+        {
+            "success": True,
+            "filepath": path.join(
+                current_app.config["CONF_PATH_FROM_MVIEWER"], current_user.organisation, config["id"], config["directory"], "templates", "%s.mst" % file_name
             ),
         }
     )
