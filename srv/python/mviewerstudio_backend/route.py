@@ -141,7 +141,7 @@ def publish_config(id, name) -> Response:
 
     xml_publish_name = name
 
-    if not request.data:
+    if not request.data and request.method == "POST":
         return BadRequest("Empty request POST data !")
 
     # control publish directory exists
@@ -157,7 +157,7 @@ def publish_config(id, name) -> Response:
     past_file = path.join(org_publish_dir, "%s.xml" % xml_publish_name)
     past_dir = path.join(org_publish_dir, xml_publish_name)
 
-    if path.exists(past_file) and request.method == "GET":     
+    if path.exists(past_file) and request.method == "POST":     
         # detect conflict
         if not control_relation(past_file, xml_publish_name, id):
             return Conflict("Already exists !")
@@ -172,12 +172,13 @@ def publish_config(id, name) -> Response:
         return BadRequest("Application does not exists !")
 
     # read config if exists
-    config = Config(request.data, current_app)
+    if request.method == "POST":
+        config = Config(request.data, current_app)
+    else:
+        config = current_app.register.read_json(id)
+        config = from_xml_path(current_app, path.join(current_app.config["EXPORT_CONF_FOLDER"], config[0]["url"]))
     if not config:
         raise BadRequest("This config doesn't exists !")
-
-    copy_file = path.join(current_app.config["EXPORT_CONF_FOLDER"], config.url)
-    copy_dir = copy_file.replace(".xml", "")
 
     # add publish info in XML
     if request.method == "POST":
@@ -205,6 +206,8 @@ def publish_config(id, name) -> Response:
 
     # copy to publish directory
     if request.method == "POST":
+        copy_file = path.join(current_app.config["EXPORT_CONF_FOLDER"], config.url)
+        copy_dir = copy_file.replace(".xml", "")
         copyfile(copy_file, past_file)
         if path.exists(past_dir):
             rmtree(past_dir)
