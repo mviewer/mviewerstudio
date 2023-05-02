@@ -326,7 +326,8 @@
         "msg.xml_save": "Document non sauvegardé. \nVeuillez consulter votre administrateur.",
         "version.comment": "Ajouter une description à cette version",
         "version.comment.ph": "Exemple : Version de test sans données",
-        "publish.message": "Version publiée"
+        "publish.message": "Version publiée",
+        "unpublish.message": "Version dépubliée"
     },
     "en": {
         "head.title": "Application title",
@@ -536,6 +537,7 @@
         "tabs.publication.publish_text" : "Put your application online.",
         "tabs.publication.publish_retry": "Retry with this new name",
         "tabs.publication.publish_replace": "Replace",
-        "publish.message": "Publish version"
+        "publish.message": "Publish version",
+        "unpublish.message": "Unpublish version"
     }
 }
