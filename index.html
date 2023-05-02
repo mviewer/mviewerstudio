@@ -1257,6 +1257,9 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="d-grid gap-2" data-bs-toggle="modal" data-bs-target="#templageGeneratorModal">
+                                    <button id="openTemplateGenerator" class="btn btn-primary col-md-12" type="button">Accéder au générateur</button>
+                                </div>
                                 <div id="query-parameters" class="layerOption-wms d-none">       
                                     <!--LayerTempl-->
                                     <div class="accordion mt-2" id="accordionLayerTempl">
@@ -1930,11 +1933,11 @@
     </div>
     <!-- Modal -->
     <div class="modal fade" id="templageGeneratorModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="templageGeneratorModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
+        <div class="modal-dialog modal-xl">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" >Générateur de template</h5>
-                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <button type="button" class="close" data-bs-toggle="modal" data-bs-target="#mod-layerOptions"><span aria-hidden="true">&times;</span></button>
                 </div>
                 <div class="modal-body" id="templateConfigurator">
                     <div class="row ">
@@ -1967,21 +1970,21 @@
                                     <h6><i class="ri-search-eye-line"></i></h6>
                                     <h6>Aperçu</h6>
                                 </div>
-                                <div id="generatorPreviewContent">
+                                <div id="generatorPreviewContent" class="p-3">
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">                    
-                    <button type="button" class="btn btn-primary" data-dismiss="modal" i18n="validate">Valider</button>
+                    <button type="button" class="btn btn-primary" onclick="mv.templateGenerator.saveFile()" data-dismiss="modal" i18n="validate">Valider</button>
                     <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal" i18n="close">Fermer</button>
                 </div>
             </div>
         </div>
     </div>
     <div class="modal fade" id="templageGeneratorSelector" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="templageGeneratorModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
+        <div class="modal-dialog modal-md">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" >Générateur de template</h5>

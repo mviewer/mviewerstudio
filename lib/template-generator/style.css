@@ -172,3 +172,7 @@
 		overflow: auto;
 		height: 100% !important;
 	} 
+
+	#generatorPreviewContent {
+		overflow: auto;
+	}
