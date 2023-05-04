@@ -23,9 +23,6 @@ $(document).ready(function(){
             _conf = data.app_conf;
             const VERSION =  _conf.mviewerstudio_version
             console.log("MviewerStudio version " + VERSION);
-            if (_conf.proxy === undefined) {
-                _conf.proxy = "../proxy/?url=";
-            }
 
             if (_conf.logout_url) {
                 $("#menu_user_logout a").attr("href", _conf.logout_url);
@@ -937,7 +934,17 @@ var addgeoFilter = function () {
 var extractFeatures = function (fld, option) {
     var layerid = $(".layers-list-item.active").attr("data-layerid");
     var layer = config.temp.layers[layerid];
-    ogc.getFeatures(layer.wfs_url,layerid,fld, option);
+    let requestParams = {
+        TYPENAME: layerid
+    }
+    if (fld) {
+        requestParams.PROPERTYNAME = fld;
+    }
+    let onSuccess = (data) => {
+        ogc.getDictinctValues(data, fld, option);
+    };
+
+    ogc.getFeatures(layer.wfs_url, requestParams, onSuccess);
     if (option === 'control') {
         $("#frm-attributelabel").val(fld);
     }
