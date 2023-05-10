@@ -225,6 +225,8 @@ var newConfiguration = function (infos) {
     ["opt-title", "opt-logo", "optProxyUrl", "opt-favicon", "opt-help", "opt-home", "theme-edit-icon", "theme-edit-title"].forEach(function (param, id) {
         $("#"+param).val("");
     });
+    
+    $("#optProxyUrl").val(_conf.proxy);
 
     // default checked state
     ["opt-exportpng", "opt-zoomtools", "opt-geoloc", "opt-mouseposition", "opt-studio", "opt-measuretools", "opt-initialextenttool", "theme-edit-collapsed", "opt-mini", "opt-showhelp", "opt-coordinates",
