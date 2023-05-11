@@ -115,7 +115,11 @@
                 <div class="col-xl-3 col-md-12" id="blockWizard">
                     <div class="bg-light">
                         <div class="mb-3">
-                            <h3 class="text-primary strong" id="nameAppBlock">Mon application</h3>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h3 class="text-primary strong" id="nameAppBlock">Mon application</h3>
+                                <span class="badge badge-publish badge-title d-none" i18n="publish">En ligne</span>
+                                <span class="badge badge-draft badge-title d-none" i18n="draft">Brouillon</span>
+                            </div>                            
                             <span class="text-primary" id="detailArea">MVIEWER</span>
                         </div> 
                         <!-- STEP STUDIO -->
@@ -230,9 +234,7 @@
                             <form>
                             <h1>
                                 <i class="ri-equalizer-line"></i> 
-                                <span i18n="tabs.app.title">Application</span> 
-                                <span class="badge badge-publish badge-title d-none" i18n="publish">En ligne</span>
-                                <span class="badge badge-draft badge-title d-none" i18n="draft">Brouillon</span>
+                                <span i18n="tabs.app.title">Application</span>                                 
                             </h1>         
                             <div class="row mt-4">
                                 <div class="col-md-12">
@@ -807,7 +809,7 @@
                                 <!--Publish-->
                                 <div style="max-width: 18rem;" id="onlineCard">
                                     <a role="button" onclick="mv.showNamePublishModal(config?.id)" href="#">
-                                        <div class="card border-info p-3 zoomCard h-100" style="max-width: 18rem; background-color: #f5ae54; color: white;">
+                                        <div class="card text-white bg-warning p-3 zoomCard h-100 noborder" style="max-width: 18rem;">
                                             <div class="card-body mb-5">
                                             <span class="iconCard-finish">
                                                 <i class="ri-play-line" style="font-size: 20px;vertical-align: middle;"></i>
