@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify, Response, request, current_app, redirect
 from .utils.login_utils import current_user
-from .utils.config_utils import Config, edit_xml_string, control_relation
+from .utils.config_utils import Config, edit_xml_string, control_relation, replace_templates_url
 from .utils.commons import clean_preview, init_preview
 import hashlib, uuid
 from os import path, mkdir, remove
@@ -9,7 +9,6 @@ from flask.blueprints import BlueprintSetupState
 from urllib.parse import urlparse
 import requests
 from .utils.git_utils import Git_manager
-from .utils.register_utils import from_xml_path
 from datetime import datetime
 
 from werkzeug.exceptions import BadRequest, MethodNotAllowed, Conflict
@@ -212,6 +211,7 @@ def publish_config(id, name) -> Response:
         if path.exists(past_dir):
             rmtree(past_dir)
         copytree(copy_dir, past_dir)
+        replace_templates_url(past_file, xml_publish_name, current_app.config["CONF_PUBLISH_PATH_FROM_MVIEWER"])
 
     draft_file = path.join(current_app.config["CONF_PATH_FROM_MVIEWER"], config.as_dict()["url"])
     # online file from public dir

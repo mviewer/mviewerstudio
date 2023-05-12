@@ -85,6 +85,19 @@ def control_relation(path, relation, id):
         return False
     return True
 
+def replace_templates_url(publish_xml, relation_name, publish_dir):
+    relative_publish_dir = path.join(publish_dir,current_user.organisation, relation_name, "templates")
+    file_to_replace = open(publish_xml, "r")
+    xml_str = file_to_replace.read()
+    xml_parser = ET.fromstring(xml_str)
+    layersNode = xml_parser.findall(".//layer")
+    for layer in layersNode:
+        templateNode = layer.find(".//template")
+        newUrl = path.join(relative_publish_dir, "%s.mst" % layer.get("id"))
+        templateNode.set("url", newUrl)
+    write_file(xml_parser, publish_xml)
+    return
+
 '''
 This class ease git repo manipulations.
 A register from store/register.json is use as global configs metadata store.
