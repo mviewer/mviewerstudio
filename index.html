@@ -1127,7 +1127,7 @@
                           </a>
                         </li>
                         <li class="nav-item" role="presentation">
-                          <a class="nav-link" data-bs-toggle="pill" data-bs-target="#layer_conf2" type="button" role="tab" aria-controls="pills-layer_conf2" aria-selected="false" i18n="modal.layer.edit.sheet">
+                          <a class="nav-link" onclick="mv.openTemplateGenerator()" data-bs-toggle="pill" data-bs-target="#layer_conf2" type="button" role="tab" aria-controls="pills-layer_conf2" aria-selected="false" i18n="modal.layer.edit.sheet">
                             Interrogation
                           </a>
                         </li>
@@ -1246,7 +1246,7 @@
 
                                 <div id="query-parameters" class="layerOption-wms d-none">
                                     <div class="d-grid gap-2" data-bs-toggle="modal" data-bs-target="#templageGeneratorModal">
-                                        <button id="openTemplateGenerator" onclick="mv.openTemplateGenerator()" class="btn btn-primary col-md-12" type="button">Accéder au générateur</button>
+                                        <button id="openTemplateGenerator" class="btn btn-primary col-md-12" type="button">Accéder au générateur</button>
                                     </div>   
                                     <!--LayerTempl-->
                                     <div class="accordion mt-2" id="accordionLayerTempl">
@@ -1275,7 +1275,7 @@
                                         <h2 class="accordion-header" >
                                             <a class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseMustache" aria-expanded="true" aria-controls="collapseMustache">
                                             <div>
-                                                <span class="title-accordion" i18n="modal.layer.query.usetemplate">Utiliser un template externe</span>
+                                                <span class="title-accordion" i18n="modal.layer.query.useexternaltemplate">Utiliser un template externe</span>
                                             </div>
                                             </a>
                                         </h2>
@@ -1284,7 +1284,7 @@
                                                 <div class="form-group">                                                    
                                                     <div class="custom-control custom-switch mb-2">
                                                         <input type="checkbox" class="custom-control-input" id="frm-template">
-                                                        <label class="custom-control-label" for="frm-template"><span i18n="modal.layer.query.usetemplate">Utiliser un template externe</span></label>
+                                                        <label class="custom-control-label" for="frm-template"><span i18n="modal.layer.query.useexternaltemplate">Utiliser un template externe</span></label>
                                                     </div>
                                                     <div>
                                                         <label for="frm-template-url" i18n="modal.layer.query.templateurl">Lien vers le template .mst</label>
@@ -1994,8 +1994,8 @@
                     </span>
                 </div>
                 <div class="modal-footer">                    
-                    <button type="button" class="btn btn-primary" onclick="mv.templateGenerator.saveFile()" data-dismiss="modal" i18n="validate">Valider</button>
-                    <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal" i18n="close">Fermer</button>
+                    <button type="button" class="btn btn-primary" onclick="mv.templateGenerator.saveFile()" data-bs-toggle="modal" data-bs-target="#mod-layerOptions" i18n="validate">Valider</button>
+                    <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#mod-layerOptions" data-bs-dismiss="modal" i18n="close">Fermer</button>
                 </div>
             </div>
         </div>

@@ -485,11 +485,12 @@ def add_layer_template(id, file_name) -> Response:
     f = open(draft_templates, "w")
     f.write(template)
     f.close()
+
     return jsonify(
         {
             "success": True,
             "filepath": path.join(
-                current_app.config["CONF_PATH_FROM_MVIEWER"], current_user.organisation, config["id"], config["directory"], "templates", "%s.mst" % file_name
+                current_user.organisation, config["id"], config["directory"], "templates", "%s.mst" % file_name
             ),
         }
     )

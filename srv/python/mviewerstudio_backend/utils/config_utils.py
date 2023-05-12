@@ -123,6 +123,8 @@ class Config:
             self.repo = self.git.repo
             # save xml and git commit
             file = app.register.read_json(self.uuid)
+            if file :
+                self.directory = file[0]["directory"]
             self.create_or_update_config(file)
   
     def _read_xml(self, xml):
