@@ -35,6 +35,12 @@ Deux choix sont offerts à l'utilisateur :
               :alt: Projet existant serveur
               :align: center
 
+Chaque application accessible peut être prévisualisée, modifiée ou supprimée en cliquant sur les boutons associés. On visualise quelles sont les applications publiées, c'est à dire en ligne et les applications en mode "brouillon".
+
+Il est également possible de filtrer les applications selon un mot clé, une date ou un auteur à l'aide de la barre de recherche en haut.
+
+Cliquez sur "Modifier" pour accéder à l'éditeur d'application.
+
 * Ouvrir un projet existant disponible sur un espace de stockage local (fichier XML sur votre ordinateur)
 
 .. image:: ../_images/user/mviewerstudio_0_accueil_projet_existant_local.png
@@ -65,7 +71,7 @@ L'utilisateur peut basculer entre les étapes en cliquant sur l'étape de son ch
 	      :width: 70 pt
 
 
-Il est aussi possible d'enregistrer  |enregistrer| ou de prévisualiser |previsualiser| son projet tout le long de son parcours de création.
+Il est aussi possible d'enregistrer  |enregistrer|, de prévisualiser |previsualiser| ou de supprimer son projet tout le long du parcours de création.
 
 .. |enregistrer| image:: ../_images/user/mviewerstudio_1_application_bouton_enregistrer.png
               :alt: Enregistrer 

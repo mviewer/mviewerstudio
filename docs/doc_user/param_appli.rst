@@ -6,7 +6,7 @@
 1) Paramétrer son application
 ==============================
 
-Le mode simple est servi par défaut. Vous pouvez basculer à tout moment sur le mode avancé :guilabel:`mode avancé` en cliquant en haut à droite comme ci-dessous.
+Le mode simple est servi par défaut. Vous pouvez basculer à tout moment sur le :guilabel:`mode avancé` en cliquant en haut à droite comme ci-dessous.
 
 .. image:: ../_images/user/mviewerstudio_1_application_defaut.png
               :alt: Page application
@@ -16,9 +16,11 @@ Champs principaux
 -------------------------------------------
 
 * ``Titre de l'application`` (\* champ obligatoire) : renseigner le titre de votre application cartographique (ex. "Le plan vélo de la Communauté de communes de Châteaugiron").
-* ``Lien vers le logo`` : renseigner l'URL du logo de l'entité productrice de l'application qui apparaitra dans dans le bandeau de l'application (Exemple sur GéoBretagne, les logos des partenaires sont stockés ici_).
+* :guilabel:`mode avancé` ``Mots clés`` : indiquer des mots clés permettant de décrire l'application.
+* :guilabel:`mode avancé` ``URL du proxy`` : lien vers le proxy permettant l’interrogation CROSS DOMAIN des couches (`Plus d'informations <https://mviewerdoc.readthedocs.io/fr/latest/doc_tech/config_proxy.html>`).
 * :guilabel:`mode avancé` ``Lien vers le favicon`` : renseigner l'URL du fichier image à utiliser comme favicon de l’application.
-* :guilabel:`mode avancé` ``Lien vers la page principale`` : renseigner le lien d'une page web vers laquelle l'utilisateur sera redirigée en cliquant sur le logo de l'application mviewer.
+* :guilabel:`mode avancé` ``Lien vers le site parent`` : renseigner le lien d'une page web vers laquelle l'utilisateur sera redirigée en cliquant sur le logo de l'application mviewer.
+* ``Lien vers le logo`` : renseigner l'URL du logo de l'entité productrice de l'application qui apparaitra dans dans le bandeau de l'application (Exemple sur GéoBretagne, les logos des partenaires sont stockés ici_).
 * ``Thème de l'application`` : choisir le thème permettant de personnaliser l'interface de votre application (couleur).
 
 Fonctionnalités
@@ -61,6 +63,34 @@ Sélectionner les fonds de plan à afficher en cochant la case ainsi que le fond
 
 * ``Fond de plan au démarrage`` : choix du fond de plan affiché par défaut .
 * ``Mode d'affichage`` : choix entre le mode normal ou gallerie pour le changement de fond de plan :guilabel:`mode avancé`.
+
+En :guilabel:`mode avancé`, il est possible de rajouter un fond de plan personnalisé à l'aide de ses paramètres en activant la checkboxe. Veuillez ensuite sélectionner le type de couche parmi la liste et renseigner les champs nécessaires :
+
+.. image:: ../_images/user/mviewerstudio_1_application_fonds_de_plan_custom.png
+              :alt: Fond de plan personalisé
+              :align: center
+
+
+* ``Identifiant`` : paramètre obligatoire de type texte pour attribuer un identifiant unique et interne à la couche
+* ``Libellé`` : paramètre obligatoire de type texte pour définir le nom du fond de plan
+* ``URL`` : paramètre obligatoire de type url définissant l’URL du service web OSM, WMTS, WMS ou vector-tms.
+* ``Identifiant technique de la couche`` : identifiant technique de la couche à utiliser
+* ``Attribution`` : paramètre obligatoire alimentant le contrôle attributions de la carte
+* ``Sous-titre`` : informations complémentaires sur le fond de plan comme le producteur
+* ``Lien vers la vignette d'aperçu`` : paramètre obligatoire de type url permettant de sélectionner l’imagette à associer au fond de plan.
+* ``Format d'image`` : paramètre optionnel de type texte définissant le format d’image retourné par le serveur. (Obligatoire pour les couches de type WMS et WMTS)
+* ``Nom du style`` : paramètre optionnel précisant le style à associer à la couche. (Obligatoire pour les couches de type WMTS et vector-tms. Pour le type vector-tms, le style correspond à la valeur indiquée en tant que première clé de la propriété « sources » du fichier de style au format JSON).
+* ``Matrixset`` : paramètre optionnel précisant le style à associer à la couche. Paramètre obligatoire pour les couches de type WMTS si le paramètre fromcapacity n’est pas activé
+* ``Lien vers le fichier de style (JSON)`` : paramètre optionnel de type url définissant le fichier de style au format JSON à utiliser. (Obligatoire pour les couches de type vector-tms)
+
+Après avoir renseigné l'ensemble des paramètres valides, cliquez sur "Ajouter". Le fond de plan apparaît dans la liste. Il est nécessaire de l'activer pour qu'il soit visible dans l'application.
+
+.. image:: ../_images/user/mviewerstudio_1_application_fonds_de_plan_customList.png
+              :alt: Fond de plan personalisé et ajouté
+              :align: center
+
+.. note:: Note
+        Il n'est pas possible de modifier les paramètres d'un fond de plan ajouté. Il faut réitérer la saisie.
 
 
 Recherche (:guilabel:`mode avancé`)

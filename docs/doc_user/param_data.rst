@@ -64,8 +64,7 @@ Il est toutefois possible de gérer certains paramètres. Dans la liste des thé
 Une nouvelle fenêtre s'ouvre avec les options suivantes : 
 - ``Affichage des données de la thématique`` : Option permettant de gérer l'affichage des données de la thématique lors du démarrage de l'application.
 
-
-Paramétrer ses données
+Ajouter une donnée
 -------------------------------------------
 
 Il est ensuite nécessaire d'ajouter des données à cette thématique via le bouton |ajout_donnees|.
@@ -74,7 +73,7 @@ Il est ensuite nécessaire d'ajouter des données à cette thématique via le bo
               :alt: Ajouter une donnée 
 	      :width: 100 pt
 
-Ajouter une donnée
+Ajouter une donnée depuis un catalogue
 ~~~~~~~~~~~~~~~~~~~
 
 Vous pouvez chercher un jeu de données dans un catalogue (ex. Région Bretagne). Vous pouvez valider votre recherche en tapant sur la touche Entrée de votre clavier ou sur l'icone loupe :
@@ -95,6 +94,24 @@ Vous pouvez chercher un jeu de données dans un catalogue (ex. Région Bretagne)
               :alt: Chercher une donnée
               :align: center
 
+Ajouter une donnée depuis ces paramètres
+~~~~~~~~~~~~~~~~~~~
+
+Si le jeu de donnée n'est pas disponible dans un catalogue, il est possible de rajouter une donnée à l'aide de ces paramètres. Cliquez sur le second onglet et sélectionnez le type de la donnée parmi la liste. Indiquez ensuite les paramètres en veillant à leur validité :
+
+.. image:: ../_images/user/mviewerstudio_2_ajout_donnee_param.png
+              :alt: Ajouter une donnée depuis ces paramètres
+              :align: center
+
+* ``ID`` : paramètre de type texte qui renseigne l’identifiant technique de la couche côté serveur WMS ou WFS
+* ``Nom`` : nom de la donnée dans l'application
+* ``URL`` : paramètre de type URL (URL du service web)
+* ``Lien vers le fichier de style`` : pour les couches de type vector-tms uniquement, il indique l’URL vers le fichier de style au format JSON.
+* ``Nom du style`` : pour les couches de type vector-tms uniquement, titres à utiliser pour la liste des styles associés
+
+Paramétrer ses données
+-------------------------------------------
+
 Une fois cliqué sur Séléctionner, la donnée est ajoutée à l'arborescence. Vous pouvez modifier les paramétrages en cliquant sur |parametrage|.
 
 .. image:: ../_images/user/mviewerstudio_2_ajout_donnee.png
@@ -104,7 +121,6 @@ Une fois cliqué sur Séléctionner, la donnée est ajoutée à l'arborescence. 
 .. |parametrage| image:: ../_images/user/mviewerstudio_2_parametrage.png
               :alt: Editer cette donnée 
 	      :width: 20 pt
-
 
 Onglet Général
 ~~~~~~~~~~~~~~~
