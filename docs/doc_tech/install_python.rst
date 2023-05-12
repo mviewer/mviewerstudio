@@ -94,8 +94,9 @@ Cette étape permet de prévisualiser les cartes réalisées dans ``mviewerstudi
 **4. Ouvrir la configuration backend ``/srv/python/mviewerstudio_backend/settings.py`` et adapter les paramètres**
 
 .. code-block:: sh
-
-    CONF_PATH_FROM_MVIEWER = os.getenv("CONF_PATH_FROM_MVIEWER", "apps/store/")
+    
+    CONF_PATH_FROM_MVIEWER = os.getenv("CONF_PATH_FROM_MVIEWER", "apps/store")
+    CONF_PUBLISH_PATH_FROM_MVIEWER = os.getenv("CONF_PUBLISH_PATH_FROM_MVIEWER", "apps/publish")
     EXPORT_CONF_FOLDER = os.getenv("EXPORT_CONF_FOLDER", "./store")
     LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO")
     PROXY_WHITE_LIST = ['geobretagne.fr', 'ows.region-bretagne.fr']
@@ -106,6 +107,7 @@ Pour les chemins relatifs, la racine sera en général pour Flask ``/srv/python/
 Avec gunicorn (e.g pour la mise en production), vous devez utiliser des chemin absolus.
 
 - ``CONF_PATH_FROM_MVIEWER``: répertoire d'accès à partir de l'instance mviewer.
+- ``CONF_PUBLISH_PATH_FROM_MVIEWER``: répertoire de publication à partir de l'instance mviewer.
 - ``EXPORT_CONF_FOLDER``: répertoire d'accès à partir de l'instance mviewer.
 - ``LOG_LEVEL``: Niveau logs (voir https://docs.python.org/3/library/logging.html)
 - ``PROXY_WHITE_LIST``: Liste des noms de domaine laissé passé par le proxy en mode développement.
@@ -259,6 +261,7 @@ La configuration backend peut également être définie via des variables d'envi
 .. code-block:: sh
 
     CONF_PATH_FROM_MVIEWER ( défault = apps/store/)
+    CONF_PUBLISH_PATH_FROM_MVIEWER ( défault = apps/publish)
     EXPORT_CONF_FOLDER ( défault = ./store/)
 
 Ces variables peuvent aussi être définies lors du lancement du serveur de développement flask :
@@ -266,6 +269,7 @@ Ces variables peuvent aussi être définies lors du lancement du serveur de dév
 .. code-block:: sh
 
     export CONF_PATH_FROM_MVIEWER ( défault = apps/store/)
+    export CONF_PUBLISH_PATH_FROM_MVIEWER ( défault = apps/publish)
     export EXPORT_CONF_FOLDER ( défault = ./store/)
     flask run
 
