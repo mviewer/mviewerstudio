@@ -22,7 +22,8 @@ La gestion de son application est possible depuis la barre de navigation située
 Gérer la publication d'une application
 -------------------------------------------
 
-.. note:: Cette fonctionnalité est disponible si et seulement si l'instance sur laquelle vous créez votre application est configurée pour publier une application en production.
+.. note:: Note
+        Cette fonctionnalité est disponible si et seulement si l'instance sur laquelle vous créez votre application est configurée pour publier une application en production.
 
 Par défaut, une nouvelle application est créee en mode "brouillon". Le mode "brouillon" signifie que l'application est disponible depuis le mviewer studio, les modifications sont enregistrables et prévisualisables. Toutefois, l'application n'est pas accessible en ligne tant qu'elle n'a pas été publiée. 
 
@@ -49,7 +50,8 @@ Vous pouvez donc effectuer les changements nécessaires et la publier de nouveau
 Gérer l'historique des modifications
 -------------------------------------------
 
-.. note:: Cette fonctionnalité est accessible en mode avancé.
+.. note:: Note
+        Cette fonctionnalité est accessible en :guilabel:`mode avancé`.
 
 Lorsque l'on enregistre une application, chaque enregistrement est consigné en associant les modifications réalisées. Cet historique des modifications est visible dans une nouvelle fenêtre depuis le bouton "Options", "Historique des modifications" :
 
