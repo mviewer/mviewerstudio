@@ -3,6 +3,7 @@ from .utils.login_utils import current_user
 from .utils.config_utils import Config, edit_xml_string, control_relation, replace_templates_url
 from .utils.commons import clean_preview, init_preview
 import hashlib, uuid
+from .utils.register_utils import from_xml_path
 from os import path, mkdir, remove
 from shutil import rmtree, copyfile, copytree
 from flask.blueprints import BlueprintSetupState
