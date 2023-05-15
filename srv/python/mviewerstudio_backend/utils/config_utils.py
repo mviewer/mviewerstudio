@@ -93,6 +93,8 @@ def replace_templates_url(publish_xml, relation_name, publish_dir):
     layersNode = xml_parser.findall(".//layer")
     for layer in layersNode:
         templateNode = layer.find(".//template")
+        if not templateNode:
+            continue
         newUrl = path.join(relative_publish_dir, "%s.mst" % layer.get("id"))
         templateNode.set("url", newUrl)
     write_file(xml_parser, publish_xml)
