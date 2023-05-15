@@ -89,8 +89,7 @@ Après avoir renseigné l'ensemble des paramètres valides, cliquez sur "Ajouter
               :alt: Fond de plan personalisé et ajouté
               :align: center
 
-.. note:: Note
-        Il n'est pas possible de modifier les paramètres d'un fond de plan ajouté. Il faut réitérer la saisie.
+.. note:: Il n'est pas possible de modifier les paramètres d'un fond de plan ajouté. Il faut réitérer la saisie.
 
 
 Recherche (:guilabel:`mode avancé`)

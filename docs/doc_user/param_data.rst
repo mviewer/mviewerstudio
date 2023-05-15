@@ -142,20 +142,29 @@ L'onglet général recense les principales options de la donnée.
 Onglet Interrogation
 ~~~~~~~~~~~~~~~~~~~~~
 
-L'onglet interrogation recense les options relatives à l'interrogation de la donnée.
+L’onglet interrogation recense les options relatives à l’interrogation de la donnée. Concrètement ces options permettent de gérer l’affichage des informations supplémentaires d’une donnée lorsque l’on clique sur une entité sur la carte.
 
 .. image:: ../_images/user/mviewerstudio_2_donnees_interrogation.png
-              :alt: Onglet Général
+              :alt: Onglet Interrogation - mode simple
               :align: center
 
 * ``Activer l'interrogation de la donnée au clic sur la carte`` : active l'interrogation de la donnée.
 * ``Position de la fiche d'information`` : affichage de la fiche d'information à droite ou en bas.
-* :guilabel:`mode avancé` ``Limitation du nombre de réponses`` : limitation du nombre d'entités interrogées.
-* ``Format de la fiche d'information`` : personnalisation possible de la fiche d'information.
+* ``Limitation du nombre de réponses`` :guilabel:`mode avancé`: limitation du nombre d'entités interrogées.
+* ``Format de la fiche d'information`` : option permettant de choisir le format d’affichage de la fiche d’information.
+        * ``Standard`` : affichage par défaut de la fiche d'information tel que défini par le serveur géographique
+        * ``Personnalisé`` : affichage personnalisé de la fiche à l’aide d’un template
 
-        * Choix du type : titre, texte, lien ou image.
-        * Choix du label 
-        * Choix de l'ordre d'affichage dans la fiche d'information
+.. image:: ../_images/user/mviewerstudio_2_donnees_interrogation_advanced.png
+              :alt: Onglet Interrogation - mode avancé
+              :align: center
+
+Pour personnaliser l’affichage de la fiche d’information, deux options sont possibles :
+
+* ``Configurer une fiche d’information`` : créer une fiche personnalisée à l’aide du générateur de template (voir la rubrique « Configurer une fiche d’information" ci-dessous).
+* ``Utiliser un template externe`` :guilabel:`mode avancé`: cette option permet d’activer l’utilisation d’un template externe en indiquant le lien vers un fichier .mst disponible en ligne.
+
+.. warning:: L’activation de la fonctionnalité « Utiliser un template externe » prend le dessus sur le template construit à l’aide du générateur.
 
 Onglet filtre dynamique
 ~~~~~~~~~~~~~~~~~~~~~~~~
@@ -215,3 +224,194 @@ L'onglet recherche permet d'activer la recherche dans l'application sur cette do
 .. image:: ../_images/user/mviewerstudio_2_donnees_recherche.png
               :alt: Filtre dynamique
               :align: center
+
+
+Paramétrer une fiche d’information
+-------------------------------------------
+
+Depuis le mviewer studio, il est possible de personnaliser l’affichage d’une fiche d’information pour une donnée identifiée en sélectionnant les champs visibles pour l’utilisateur et leurs formes.
+
+Créer une fiche d’information personnalisée
+~~~~~~~~~~~~~~~~~
+Depuis les paramètres de la donnée, sélectionnez l’onglet « Interrogation » et le type de format ``Personnalisé`` dans la liste :
+
+.. image:: ../_images/user/mviewerstudio_2_templateCustom_create.png
+              :alt: Créer un template personnalisé
+              :align: center
+
+Puis à la rubrique « Configurer la fiche d’information », cliquez sur le bouton « Créer ».
+
+.. note:: 
+  La position de la fiche d’information souhaitée doit préalablement être sélectionnée. Elle conditionne ensuite l’affichage des composants au sein du générateur.
+
+Interface du générateur de template
+~~~~~~~~~~~~~~~~~
+
+.. image:: ../_images/user/mviewerstudio_2_templateCustom_ihm.png
+              :alt: Fenêtre du générateur de template
+              :align: center
+
+Une nouvelle fenêtre s’ouvre. Cette fenêtre est divisée en deux, un bloc à gauche permettant de configurer la fiche d’information et ces composants, un bloc à droite permettant de prévisualiser la fiche configurée. On retrouvera cette configuration pour une fiche positionnée en bas mais avec un alignement vertical. 
+On visualise également le nom du jeu de donnée pour lequel on configure la fiche d’information et la position de la fiche en haut de la fenêtre. 
+
+.. note:: 
+  La prévisualisation est basée sur la première entité retournée du jeu de donnée. Si les champs du jeu de données ne sont pas renseignés correctement (valeur nulle), l’affichage peut être perturbé.
+
+Ajouter des composants à la fiche d’information
+~~~~~~~~~~~~~~~~~
+Il est maintenant nécessaire de peupler le bloc de gauche avec des composants en cliquant sur le bouton « Ajouter un composant ». Une nouvelle fenêtre s’ouvre avec une liste de composants disponibles et préformatés : 
+
+.. image:: ../_images/user/mviewerstudio_2_templateCustom_componentsList.png
+              :alt: Liste des composants du générateur
+              :align: center
+
+* ``Titre`` : composant permettant d’afficher un titre et nécessitant une valeur de type texte en entrée
+* ``Sous-titre`` : composant permettant d’afficher  un sous-titre et nécessitant une valeur de type texte en entrée
+* ``Iframe`` : composant permettant d’afficher une fenêtre externe / widget nécessitant une valeur de type « url » en entrée
+* ``Image`` : composant permettant d’afficher une image nécessitant une valeur de type « url » en entrée
+* ``Bouton`` : composant permettant d’afficher un bouton avec une redirection vers une ressource externe en ligne et nécessitant une valeur de type « url » en entrée
+* ``Chiffre clé`` : composant permettant d’afficher un chiffre clé à mettre en avant et nécessitant une valeur de type « nombre » en entrée
+* ``Liste`` : composant permettant d’afficher une liste et nécessitant un champ composé d’une liste comme indiqué dans la `documentation mviewer <https://mviewerdoc.readthedocs.io/fr/latest/doc_tech/config_tpl.html#iterer-sur-un-champ-de-type-json>`_
+* ``Texte`` : composant permettant d’afficher un texte et nécessitant une valeur de type texte en entrée
+
+Sélectionnez un composant et cliquez sur valider pour l’ajouter. Il n’est possible d’ajouter qu’un composant à la fois, veuillez réitérer l’opération pour ajouter des composants supplémentaires. 
+
+.. note:: 
+  Dans le cas d’une configuration pour la fiche d’information positionnée en bas, le nombre de composants est limité à 6, répartis sur 2 colonnes afin d’optimiser l’affichage. Pour aller plus loin, il est nécessaire de créer manuellement un template .mst et de l’importer en tant que template externe en s’aidant des modèles disponibles sur la page des démonstrations mviewer.
+
+Configurer les composants
+~~~~~~~~~~~~~~~~~
+Une fois les composants ajoutés, il est nécessaire de configurer chaque composant en définissant les informations à afficher et les options associées. 
+
+.. image:: ../_images/user/mviewerstudio_2_templateCustom_componentsAdd.png
+              :alt: Liste des composants du générateur
+              :align: center
+
+**Synthèse des options**
+
++-------------+-----------------------------+-------------------------------------+------------------------------------+---------+-------+--------+
+|  Composant  | Valeur à partir d’un champs | Valeur à partir de plusieurs champs | Valeur à partir d’une saisie libre | Couleur | Icône | Label  |
++=============+=============================+=====================================+====================================+=========+=======+========+
+|    Titre    |              x              |                  x                  |                 x                  |    x    |       |        |
+| Sous-titre  |              x              |                  x                  |                 x                  |    x    |       |        |
+|    Texte    |              x              |                  x                  |                 x                  |         |       |        |
+|    Image    |              x              |                                     |                 x                  |         |       |        |
+|   Bouton    |              x              |                                     |                 x                  |    x    |   x   |   x    |
+|    Liste    |              x              |                                     |                 x                  |         |       |        |
+|   Iframe    |              x              |                                     |                 x                  |         |       |        |
+| Chiffre clé |              x              |                                     |                 x                  |    x    |   x   |   x    |
++-------------+-----------------------------+-------------------------------------+------------------------------------+---------+-------+--------+
+
+**Valeur**
+
+Dans le bloc du composant, veuillez sélectionner la source de l’information à afficher parmi la liste « Choisir un type » : 
+
+- *A partir d’un champ :*
+La valeur est définie dans un champ du jeu de donnée. Il faut ensuite sélectionner le champ à afficher dans la seconde liste.
+
+.. image:: ../_images/user/mviewerstudio_2_templateCustom_componentValue1.png
+              :alt: Configurer un template - Valeur selon un champs
+              :align: center
+
+- *A partir de plusieurs champs :*
+La valeur est une concaténation de plusieurs champs au sein du jeu de données. Il faut saisir les champs dans le deuxième bloc en tapant le nom du champ puis en sélectionnant le champ dans la liste d’auto-complétion. Validez le champ à ajouter à l’aide de touche « Entrer ». Vous pouvez également ajouter du texte fixe en saisissant les caractères et validez avec la touche « Entrer ».
+
+.. image:: ../_images/user/mviewerstudio_2_templateCustom_componentValue2.png
+              :alt: Configurer un template - Valeur selon plusieurs champs
+              :align: center
+
+- *Saisie libre :*
+La valeur est une saisie de texte libre réalisée par l’utilisateur. Le texte saisie est statique, il sera affiché pour l’ensemble des entités du jeu de donnée. 
+
+.. image:: ../_images/user/mviewerstudio_2_templateCustom_componentValue3.png
+              :alt: Configurer un template - Valeur saisie libre
+              :align: center
+
+Pour une utilisation avancée, il est possible d’utiliser la synthaxe Mustache dans le bloc de saisie à l’aide des ``{{nom_du_champs}}`` ainsi que certaines balises .html comme le retour à la ligne ``</br>`` :
+
+.. image:: ../_images/user/mviewerstudio_2_templateCustom_componentValue4.png
+              :alt: Configurer un template - Valeur saisie libre mst
+              :align: center
+
+::
+
+        Réserve naturelle de Bretagne </br> {{nom}}
+
+Veuillez vous reporter à la documentation mviewer pour en savoir plus sur la `rédaction d’un template avec Mustache <https://mviewerdoc.readthedocs.io/fr/latest/doc_tech/config_tpl.html>`_.
+
+**Couleur**
+
+Pour certains composants, il est possible de personnaliser la couleur du texte et du fond. Cliquez sur le carré coloré et sélectionnez la couleur souhaitée dans la palette ou en saisissez une valeur RGB, HSL ou HEX. 
+
+.. image:: ../_images/user/mviewerstudio_2_templateCustom_componentColor.png
+              :alt: Configurer un template - Couleur
+              :align: center
+
+**Icône**
+
+Pour certains composants, il est possible d’associer un icône. L’icône est issu de la librairie font-awesome. Pour ajouter un icône, cliquez sur le bouton « Choisir » et sélectionnez votre icône dans la librairie. 
+
+**Label**
+
+Pour certains composants, il est possible d’associer une description. Dans le champ de saisie associé, indiquez le texte souhaité pour la description du chiffre clé ou le label du bouton par exemple.
+
+
+Prévisualiser votre fiche d’information
+~~~~~~~~~~~~~~~~~
+Lors de la configuration de la fiche d’information, il est possible de prévisualiser le résultat à tout moment en cliquant sur le bouton « Prévisualiser » en haut à droite :
+
+.. image:: ../_images/user/mviewerstudio_2_templateCustom_preview.png
+              :alt: Configurer un template - Prévisualisation
+              :align: center
+
+*Pour rappel, la prévisualisation est basée sur une la première entité du jeu de donnée. L’affichage peut être perturbé si les champs du jeu de données ne sont pas renseignés correctement (valeur nulle).*
+
+
+Gérer les composants
+~~~~~~~~~~~~~~~~~
+
+**Déplacer**
+
+Il est possible de modifier l’ordre d’affichage des composants via un glisser/déposer. Positionnez la souris sur le titre ou l’icône du composant et déplacez le bloc à l’emplacement souhaité.
+
+**Supprimer**
+
+Pour supprimer un composant, cliquez sur l’icône |deleteComponent_template| en haut à droite du bloc. 
+
+.. |deleteComponent_template| image:: ../_images/user/mviewerstudio_2_templateCustom_deleteComponent_btn.png
+              :alt: Supprimer un composant
+	            :width: 100 pt
+
+
+Enregistrer la fiche d'information
+~~~~~~~~~~~~~~~~~
+
+Lorsque la configuration est terminée, cliquez sur le bouton « Valider » en bas de la fenêtre pour enregistrer la fiche d’information. 
+
+
+Gérer une fiche d’information
+~~~~~~~~~~~~~~~~~
+
+.. image:: ../_images/user/mviewerstudio_2_templateCustom_manageOptions.png
+              :alt: Gérer son template
+              :align: center
+
+**Editer**
+
+Il est possible à tout moment de modifier la fiche d’information. Après avoir ouvert l’onglet « Interrogation » dans les paramètres de la donnée, cliquez sur l’icone |edit_template| pour éditer la fiche à l’aide du générateur.
+
+.. |edit_template| image:: ../_images/user/mviewerstudio_2_templateCustom_manageOptions_edit.png
+              :alt: Editer le template
+	            :width: 100 pt
+
+**Supprimer**
+
+Pour supprimer définitivement la fiche d’information personnalisée, cliquez sur l’icône |delete_template|.  
+
+.. |delete_template| image:: ../_images/user/mviewerstudio_2_templateCustom_manageOptions_delete.png
+              :alt: Supprimer le template
+	            :width: 100 pt
+
+**Modifier la position**
+
+Si vous modifiez la position de la fiche d’information après avoir configuré un template, il est préférable de vérifier l’affichage des composants et d’ajuster la disposition si nécessaire. 
