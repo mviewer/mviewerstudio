@@ -1327,3 +1327,8 @@
 		position: relative !important;
 	  }	
 	}
+
+	/*Template generator*/
+	#customTemplateManager {
+		display: flex;
+	}

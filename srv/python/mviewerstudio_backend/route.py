@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify, Response, request, current_app, redirect
 from .utils.login_utils import current_user
-from .utils.config_utils import Config, edit_xml_string, control_relation, replace_templates_url
+from .utils.config_utils import Config, write_file, edit_xml_string, control_relation, replace_templates_url, read_xml_file_content
 from .utils.commons import clean_preview, init_preview
 import hashlib, uuid
 from .utils.register_utils import from_xml_path
@@ -496,6 +496,29 @@ def add_layer_template(id, file_name) -> Response:
         }
     )
 
+@basic_store.route("/api/app/<id>/template/<id_layer>", methods=["DELETE"])
+def delete_layer_template(id, id_layer) -> Response:
+    config = current_app.register.read_json(id)
+    if not config:
+        raise BadRequest("This config doesn't exists !")
+    config = config[0]
+    xml_path = path.join(current_app.config["EXPORT_CONF_FOLDER"], config["url"])
+    # read XML and remove template
+    parser = read_xml_file_content(xml_path)
+    layer_node = parser.find(".//layer[@id='%s']" % id_layer)
+    layer_template = layer_node.find(".//template")
+    layer_template.set("url", "")
+    # save file
+    write_file(parser, xml_path)
+    # remove template file from server
+    draftspace = path.join(current_app.config["EXPORT_CONF_FOLDER"], current_user.organisation, config["id"])
+    draft_templates = path.join(draftspace, config["directory"], "templates", "%s.mst" % id_layer)
+    remove(draft_templates)
+    return jsonify(
+        {
+            "success": True
+        }
+    ) 
 
 @basic_store.route("/proxy/", methods=["GET", "POST"])
 def proxy() -> Response:

@@ -1245,11 +1245,38 @@
                                 </div>
 
                                 <div id="query-parameters" class="layerOption-wms d-none">
-                                    <div class="d-grid gap-2" data-bs-toggle="modal" data-bs-target="#templageGeneratorModal">
+                                    <!-- <div class="d-grid gap-2" data-bs-toggle="modal" data-bs-target="#templageGeneratorModal">
                                         <button id="openTemplateGenerator" class="btn btn-primary col-md-12" type="button">Accéder au générateur</button>
-                                    </div>   
+                                    </div> -->
                                     <!--LayerTempl-->
-                                    <div class="accordion mt-2" id="accordionLayerTempl">
+                                    <div id="templateGeneratorEdit">
+                                        <ul class="list-group">
+                                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                <div>
+                                                    <span class="title-accordion" i18n="modal.layer.customtemplate.title">Configurer la fiche d'information</span></br>
+                                                    <span class="subtitle-accordion" i18n="modal.layer.customtemplate.subtitle">Sélectionner les champs à afficher et leurs aspects</span>
+                                                </div>
+                                                <button id="openTemplateGenerator" class="btn btn-outline-info" data-bs-toggle="modal" data-bs-target="#templageGeneratorModal">
+                                                    <i class="bi bi-plus-lg"></i>
+                                                    <span i18n="tabs.data.themespanel.create">Créer</span>
+                                                </button>
+                                            </li>
+                                            <li id="customTemplateManager" class="list-group-item justify-content-between align-items-center d-none">
+                                                <div>
+                                                    <span i18n="modal.layer.customtemplate.nametemplate">Fiche d'information personnalisée</span>
+                                                </div>
+                                                <div>
+                                                    <button class="btn btn-sm btn-secondary" onclick="mv?.templateGenerator.removeTemplate()">
+                                                        <span class="layer-remove" title="Supprimer"><i class="bi bi-x-circle"></i></span>
+                                                    </button>
+                                                    <button class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#templageGeneratorModal">
+                                                        <span class="layer-edit" title="Editer cette fiche"><i class="bi bi-gear-fill"></i></span>
+                                                    </button>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <!-- <div class="accordion mt-2" id="accordionLayerTempl">
                                         <div class="accordion-item">
                                         <h2 class="accordion-header" >
                                             <a class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseLayerTempl" aria-expanded="true" aria-controls="collapseLayerTempl">
@@ -1267,7 +1294,7 @@
                                             </div>
                                         </div>
                                         </div>
-                                    </div>
+                                    </div> -->
                                     <!--./LayerTempl-->
                                     <!--Mustache-->
                                     <div class="accordion mt-2 advanced" id="accordionMustache" style="display: none;">
@@ -1994,7 +2021,7 @@
                     </span>
                 </div>
                 <div class="modal-footer">                    
-                    <button type="button" class="btn btn-primary" onclick="mv.templateGenerator.saveFile()" data-bs-toggle="modal" data-bs-target="#mod-layerOptions" i18n="validate">Valider</button>
+                    <button type="button" class="btn btn-primary" onclick="mv.templateGenerator.onValid()" data-bs-toggle="modal" data-bs-target="#mod-layerOptions" i18n="validate">Valider</button>
                     <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#mod-layerOptions" data-bs-dismiss="modal" i18n="close">Fermer</button>
                 </div>
             </div>

@@ -873,7 +873,36 @@ var saveAppWithPhp = (conf) => {
     })
 }
 
-var saveApplicationParameters = (message = "") => {
+var saveTemplateToGetUrl = () => new Promise((resolve, reject) => {
+    let waitTemplateUrls = []
+    let themes = Object.keys(config.themes);
+    themes.forEach(theme => {
+        let layers = config.themes[theme].layers.filter(layer => layer.templateFromGenerator);
+        waitTemplateUrls = [...waitTemplateUrls, ...layers.map(layer => {
+            return mv.saveTemplate(layer.id, layer.templateFromGenerator).then(r => r.json()).then(r => ({
+                layer: layer,
+                response: r
+            }))
+        })];
+
+    });
+    Promise.all(waitTemplateUrls).then(values => {
+        values.forEach(({ layer, response }) => {
+            let l = mv.getLayerById(layer?.id);
+            let templateFullPath = `${ _conf.mviewer_instance }${ _conf.conf_path_from_mviewer }${ response.filepath }`;
+            l.generatorTemplateUrl = templateFullPath;
+            l.useGeneratorTemplate = true;  
+        })
+        resolve(null);
+    })
+})
+var saveApplicationParameters = () => {
+    saveTemplateToGetUrl().then(() => {
+        saveApplicationsConfig();
+    })
+
+}
+var saveApplicationsConfig = (message = "") => {
     const conf = getConfig();
     if (!conf || !mv.validateXML(conf.join(""))) {
         return alertCustom(mviewer.tr('msg.xml_doc_invalid'), 'danger');
