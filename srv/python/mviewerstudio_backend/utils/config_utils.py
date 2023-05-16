@@ -49,18 +49,19 @@ def clean_xml_from_dir(path):
     for file in glob.glob("%s/*.xml" % path):
         remove(file)
 
-def read_xml_file_content(path, node = ""):
+def read_xml_file_content(path, node = "", all = False):
     '''
     Read XML from path and could return xml node or xml as parser
     :param path: string xml file path
     '''
-    fileToReplace = open(path, "r")
-    xml_str = fileToReplace.read()
+    file = open(path, "r")
+    xml_str = file.read()
     xml_parser = ET.fromstring(xml_str)
-    if node :
+    if node and not all:
         return xml_parser.find(node)
-    else:
-        return xml_parser
+    elif node and all:
+        return xml_parser.findall(node)
+    return xml_parser
 
 def control_relation(path, relation, id):
     '''
@@ -85,19 +86,17 @@ def control_relation(path, relation, id):
         return False
     return True
 
-def replace_templates_url(publish_xml, relation_name, publish_dir):
-    relative_publish_dir = path.join(publish_dir,current_user.organisation, relation_name, "templates")
-    file_to_replace = open(publish_xml, "r")
+def replace_templates_url(target_xml, new_target_dir):
+    file_to_replace = open(target_xml, "r")
     xml_str = file_to_replace.read()
     xml_parser = ET.fromstring(xml_str)
     layersNode = xml_parser.findall(".//layer")
     for layer in layersNode:
-        templateNode = layer.find(".//template")
-        if not templateNode:
-            continue
-        newUrl = path.join(relative_publish_dir, "%s.mst" % layer.get("id"))
-        templateNode.set("url", newUrl)
-    write_file(xml_parser, publish_xml)
+        templateNode = layer.findall(".//template")
+        for tpl in templateNode:
+            newUrl = path.join(new_target_dir, "%s.mst" % layer.get("id"))
+            tpl.set("url", newUrl)
+    write_file(xml_parser, target_xml)
     return
 
 '''

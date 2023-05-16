@@ -212,7 +212,8 @@ def publish_config(id, name) -> Response:
         if path.exists(past_dir):
             rmtree(past_dir)
         copytree(copy_dir, past_dir)
-        replace_templates_url(past_file, xml_publish_name, current_app.config["CONF_PUBLISH_PATH_FROM_MVIEWER"])
+        relative_publish_dir = path.join(current_app.config["CONF_PUBLISH_PATH_FROM_MVIEWER"], current_user.organisation, xml_publish_name, "templates")
+        replace_templates_url(past_file, relative_publish_dir)
 
     draft_file = path.join(current_app.config["CONF_PATH_FROM_MVIEWER"], config.as_dict()["url"])
     # online file from public dir
@@ -347,9 +348,19 @@ def preview_app_version(id, version) -> Response:
     # copy past file to preview folder
     app_config = current_app.config
     src_file = path.join(app_config["EXPORT_CONF_FOLDER"], config["url"])
+    src_dir = src_file.replace(".xml", "")
     preview_file = path.join(config["id"], "preview", "%s.xml" % version)
     path_preview_file = path.join(app_config["EXPORT_CONF_FOLDER"], config["publisher"], preview_file)
+    path_preview_dir = path_preview_file.replace(".xml", "")
+    if path.exists(path_preview_dir):
+        rmtree(path_preview_dir)
+    if path.exists(path_preview_dir):
+        remove(path_preview_file)
     copyfile(src_file, path_preview_file)
+    copytree(src_dir, path_preview_dir)
+    # replace template url
+    relative_publish_dir = path.join(current_app.config["CONF_PATH_FROM_MVIEWER"], config["publisher"], config["id"], "preview", version, "templates")
+    replace_templates_url(path_preview_file, relative_publish_dir)
     # restor branch
     git.repo.git.checkout("master")
     
@@ -482,7 +493,10 @@ def add_layer_template(id, file_name) -> Response:
         raise BadRequest("This config doesn't exists !")
     config = config[0]
     draftspace = path.join(current_app.config["EXPORT_CONF_FOLDER"], current_user.organisation, config["id"])
-    draft_templates = path.join(draftspace, config["directory"], "templates", "%s.mst" % file_name)
+    templates_dir = path.join(draftspace, config["directory"], "templates")
+    if not path.exists(templates_dir):
+        mkdir(templates_dir)
+    draft_templates = path.join(templates_dir, "%s.mst" % file_name)
     f = open(draft_templates, "w")
     f.write(template)
     f.close()
