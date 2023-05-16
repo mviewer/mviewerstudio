@@ -897,10 +897,13 @@ var saveTemplateToGetUrl = () => new Promise((resolve, reject) => {
     })
 })
 var saveApplicationParameters = () => {
-    saveTemplateToGetUrl().then(() => {
+    if (_conf?.is_php) {
         saveApplicationsConfig();
-    })
-
+    } else {
+        saveTemplateToGetUrl().then(() => {
+            saveApplicationsConfig();
+        })
+    }
 }
 var saveApplicationsConfig = (message = "") => {
     const conf = getConfig();

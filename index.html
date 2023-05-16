@@ -1245,13 +1245,15 @@
                                 </div>
 
                                 <div id="query-parameters" class="layerOption-wms d-none">
-                                    <!-- <div class="d-grid gap-2" data-bs-toggle="modal" data-bs-target="#templageGeneratorModal">
-                                        <button id="openTemplateGenerator" class="btn btn-primary col-md-12" type="button">Accéder au générateur</button>
-                                    </div> -->
                                     <!--LayerTempl-->
                                     <div id="templateGeneratorEdit">
                                         <ul class="list-group">
-                                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            <li  id="dismissTemplateGeneratorMsg" class="list-group-item justify-content-between align-items-center d-none" style="display:flex">
+                                                <div>
+                                                    <span class="title-accordion" i18n="modal.layer.customtemplate.phpmsg">Sélectionner les champs à afficher et leurs aspects</span>
+                                                </div>
+                                            </li>
+                                            <li id="liTemplateArea" class="list-group-item justify-content-between align-items-center">
                                                 <div>
                                                     <span class="title-accordion" i18n="modal.layer.customtemplate.title">Configurer la fiche d'information</span></br>
                                                     <span class="subtitle-accordion" i18n="modal.layer.customtemplate.subtitle">Sélectionner les champs à afficher et leurs aspects</span>

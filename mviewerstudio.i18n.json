@@ -218,6 +218,7 @@
         "modal.layer.infoformat.gml" : "Personnalisé",
         "modal.layer.customtemplate.title" : "Configurer la fiche d'information",
         "modal.layer.customtemplate.subtitle" : "Sélectionner les champs à afficher et leurs aspects",
+        "modal.layer.customtemplate.phpmsg" : "Le générateur de template n'est pas disponible. Veuillez contacter un administrateur.",
         "modal.layer.featurecount" : "Limitation du nombre de réponses",
         "modal.layer.featurecount.ph" : "Nombre max d'entités retournées",
         "modal.layer.query.useexternaltemplate" : "Utiliser un template externe",
