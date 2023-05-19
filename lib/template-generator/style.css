@@ -176,8 +176,4 @@
 	#generatorPreviewContent {
 		overflow: auto;
 	}
-
-	#openTemplateGenerator, #liTemplateArea {
-		display: flex;
-	}
 	

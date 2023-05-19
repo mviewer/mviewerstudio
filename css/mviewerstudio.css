@@ -1329,6 +1329,6 @@
 	}
 
 	/*Template generator*/
-	#customTemplateManager {
+	#newCustomTemplateManager, #openTemplateGeneratorBtn, #customTemplateManager, #dismissTemplateGeneratorMsg {
 		display: flex;
 	}
