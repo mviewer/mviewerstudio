@@ -289,18 +289,83 @@ Une fois les composants ajoutés, il est nécessaire de configurer chaque compos
 
 **Synthèse des options**
 
-+-------------+-----------------------------+-------------------------------------+------------------------------------+---------+-------+--------+
-|  Composant  | Valeur à partir d’un champs | Valeur à partir de plusieurs champs | Valeur à partir d’une saisie libre | Couleur | Icône | Label  |
-+=============+=============================+=====================================+====================================+=========+=======+========+
-|    Titre    |              x              |                  x                  |                 x                  |    x    |       |        |
-| Sous-titre  |              x              |                  x                  |                 x                  |    x    |       |        |
-|    Texte    |              x              |                  x                  |                 x                  |         |       |        |
-|    Image    |              x              |                                     |                 x                  |         |       |        |
-|   Bouton    |              x              |                                     |                 x                  |    x    |   x   |   x    |
-|    Liste    |              x              |                                     |                 x                  |         |       |        |
-|   Iframe    |              x              |                                     |                 x                  |         |       |        |
-| Chiffre clé |              x              |                                     |                 x                  |    x    |   x   |   x    |
-+-------------+-----------------------------+-------------------------------------+------------------------------------+---------+-------+--------+
+.. list-table:: Title
+   :widths: 25 25 25 25 25 25 25 25
+   :header-rows: 1
+
+   * - Composant
+     - Valeur à partir d'un champs
+     - Valeur à partir de plusieurs champs
+     - Valeur à partir d’une saisie libre
+     - Couleur
+     - Icône
+     - Label
+     - Style CSS
+   * - Titre
+     - x
+     - x
+     - x
+     - x
+     -
+     -
+     -
+   * - Sous-titre
+     - x
+     - x
+     - x
+     - x
+     -
+     -
+     -
+   * - Texte
+     - x
+     - x
+     - x
+     -
+     -
+     -
+     -
+     -
+   * - Image
+     - x
+     - 
+     - x
+     -
+     -
+     -
+     -
+   * - Bouton
+     - x
+     - 
+     - x
+     - x
+     - x
+     - x
+     - 
+   * - Liste
+     - x
+     - 
+     - x
+     -
+     -
+     -
+     - 
+   * - Iframe
+     - x
+     - x
+     - x
+     -
+     -
+     -
+     - x
+   * - Chiffre clé
+     - x
+     - x
+     - x
+     - x
+     - x
+     - x
+     -
 
 **Valeur**
 
