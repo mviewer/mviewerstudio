@@ -352,7 +352,7 @@ Une fois les composants ajoutés, il est nécessaire de configurer chaque compos
      - 
    * - Iframe
      - x
-     - x
+     -
      - x
      -
      -
