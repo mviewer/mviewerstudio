@@ -238,7 +238,6 @@ var newConfiguration = function (infos) {
    
     $("#opt-style").val("css/themes/default.css").trigger("change");
     $("#frm-searchlocalities").val("ban").trigger("change");    
-    $("#mod-themeOptions").modal('hide');
     $('#FadvElasticBlock form').trigger("reset");
 
     // Icon help 
@@ -696,7 +695,7 @@ var getConfig = () => {
     });
     application = application.join(padding(4)) + '>' + padding(0) + '</application>';
     savedProxy = `${ padding(0) }<proxy url=""/>`;
-    if ($("#optProxyUrl").val() && _conf?.proxy) {
+    if ($("#optProxyUrl").val()) {
         savedProxy = `${padding(0)}<proxy url="${$("#optProxyUrl").val() || _conf.proxy}"/>`
     }
     var search_params = {"bbox":false, "localities": false, "features":false, "static":false};
