@@ -695,8 +695,8 @@ var getConfig = () => {
         });
     });
     application = application.join(padding(4)) + '>' + padding(0) + '</application>';
-    savedProxy = `${padding(0)}<proxy url=""/>`
-    if ( _conf.proxy || $("#optProxyUrl").val()) {
+    savedProxy = `${ padding(0) }<proxy url=""/>`;
+    if ($("#optProxyUrl").val()) {
         savedProxy = `${padding(0)}<proxy url="${$("#optProxyUrl").val() || _conf.proxy}"/>`
     }
     var search_params = {"bbox":false, "localities": false, "features":false, "static":false};
