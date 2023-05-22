@@ -223,7 +223,7 @@ var newConfiguration = function (infos) {
         $("#"+param).val("");
     });
     
-    $("#optProxyUrl").val(_conf.proxy);
+    $("#optProxyUrl").val(_conf?.proxy);
 
     // default checked state
     ["opt-exportpng", "opt-zoomtools", "opt-geoloc", "opt-mouseposition", "opt-studio", "opt-measuretools", "opt-initialextenttool", "theme-edit-collapsed", "opt-mini", "opt-showhelp", "opt-coordinates",
@@ -696,7 +696,7 @@ var getConfig = () => {
     });
     application = application.join(padding(4)) + '>' + padding(0) + '</application>';
     savedProxy = `${ padding(0) }<proxy url=""/>`;
-    if ($("#optProxyUrl").val()) {
+    if ($("#optProxyUrl").val() && _conf?.proxy) {
         savedProxy = `${padding(0)}<proxy url="${$("#optProxyUrl").val() || _conf.proxy}"/>`
     }
     var search_params = {"bbox":false, "localities": false, "features":false, "static":false};

@@ -1215,7 +1215,7 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label class="control-label" for="frm-infopanel" i18n="modal.layer.info.position">Position de la fiche d'information</label>
-                                            <select id="frm-infopanel" name="infoformat" class="form-control">
+                                            <select id="frm-infopanel" class="form-control">
                                                 <option value="right-panel" i18n="modal.layer.info.right">Panneau de droite</option>
                                                 <option value="bottom-panel" i18n="modal.layer.info.down">Panneau du bas</option>
                                             </select>
@@ -1235,7 +1235,7 @@
                                         <div class="form-group">
                                             <label class="control-label" for="frm-infoformat" i18n="modal.layer.infoformat">Format de la fiche
                                                 d'information</label>
-                                            <select id="frm-infoformat" name="infoformat" class="form-control"
+                                            <select id="frm-infoformat" class="form-control"
                                                     onchange="mv.showHideQueryParameters(this.value);">                                                
                                                 <option value="application/vnd.ogc.gml" i18n="modal.layer.infoformat.gml">Personnalisé</option>
                                                 <option value="text/html" i18n="modal.layer.infoformat.html">Standard</option>
@@ -1259,7 +1259,7 @@
                                                     <span i18n="modal.layer.customtemplate.new">Créer une fiche d'information personnalisée</span>
                                                 </div>
                                                 <div>
-                                                    <button class="btn btn-sm btn-outline-info" data-bs-toggle="modal" data-bs-target="#templageGeneratorModal">
+                                                    <button type="button" class="btn btn-sm btn-outline-info" data-bs-toggle="modal" data-bs-target="#templageGeneratorModal">
                                                         <span class="layer-edit" title="Editer une nouvelle fiche"><i class="bi bi-plus-lg" style="margin-right:5px"></i><span i18n="modal.layer.customtemplate.create">Créer</span></span>
                                                     </button>
                                                 </div>
@@ -1269,10 +1269,10 @@
                                                     <span i18n="modal.layer.customtemplate.nametemplate">Fiche d'information personnalisée</span>
                                                 </div>
                                                 <div>
-                                                    <button class="btn btn-sm btn-secondary" onclick="mv?.templateGenerator.removeTemplate()">
+                                                    <button type="button" class="btn btn-sm btn-secondary" onclick="mv?.templateGenerator.removeTemplate()">
                                                         <span class="layer-remove" title="Supprimer"><i class="bi bi-x-circle"></i></span>
                                                     </button>
-                                                    <button class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#templageGeneratorModal">
+                                                    <button type="button" class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#templageGeneratorModal">
                                                         <span class="layer-edit" title="Editer cette fiche"><i class="bi bi-gear-fill"></i></span>
                                                     </button>
                                                 </div>
@@ -1284,25 +1284,6 @@
                                             </li>
                                         </ul>
                                     </div>
-                                    <!-- <div class="accordion mt-2" id="accordionLayerTempl">
-                                        <div class="accordion-item">
-                                        <h2 class="accordion-header" >
-                                            <a class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseLayerTempl" aria-expanded="true" aria-controls="collapseLayerTempl">
-                                            <div>
-                                                <span class="title-accordion" i18n="modal.layer.customtemplate.title">Configurer la fiche d'information</span></br>
-                                                <span class="subtitle-accordion" i18n="modal.layer.customtemplate.subtitle">Sélectionner les champs à afficher et leurs aspects</span>
-                                            </div>
-                                            </a>
-                                        </h2>
-                                        <div id="collapseLayerTempl" class="accordion-collapse collapse show" aria-labelledby="accordionLayerTempl">
-                                            <div class="accordion-body p-0">
-                                                <ul class="list-group list-group-flush">
-                                                    <div id="customTemplatesArea"></div>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                        </div>
-                                    </div> -->
                                     <!--./LayerTempl-->
                                     <!--Mustache-->
                                     <div class="accordion mt-2 advanced" id="accordionMustache" style="display: none;">
