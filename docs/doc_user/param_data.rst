@@ -325,7 +325,6 @@ Une fois les composants ajoutés, il est nécessaire de configurer chaque compos
      -
      -
      -
-     -
    * - Image
      - x
      - 
