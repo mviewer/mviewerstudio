@@ -1332,3 +1332,7 @@
 	#newCustomTemplateManager, #openTemplateGeneratorBtn, #customTemplateManager, #dismissTemplateGeneratorMsg {
 		display: flex;
 	}
+
+	#generatorComponentsDDArea .subcomponents .tags-menu{
+		top: 70% !important;
+	}
