@@ -62,6 +62,7 @@ Il est toutefois possible de gérer certains paramètres. Dans la liste des thé
               :align: center
 
 Une nouvelle fenêtre s'ouvre avec les options suivantes : 
+
 - ``Affichage des données de la thématique`` : Option permettant de gérer l'affichage des données de la thématique lors du démarrage de l'application.
 
 Ajouter une donnée
@@ -152,6 +153,7 @@ L’onglet interrogation recense les options relatives à l’interrogation de l
 * ``Position de la fiche d'information`` : affichage de la fiche d'information à droite ou en bas.
 * ``Limitation du nombre de réponses`` :guilabel:`mode avancé`: limitation du nombre d'entités interrogées.
 * ``Format de la fiche d'information`` : option permettant de choisir le format d’affichage de la fiche d’information.
+
         * ``Standard`` : affichage par défaut de la fiche d'information tel que défini par le serveur géographique
         * ``Personnalisé`` : affichage personnalisé de la fiche à l’aide d’un template
 
