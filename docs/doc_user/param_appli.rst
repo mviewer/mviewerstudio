@@ -31,6 +31,7 @@ Fonctionnalités
               :align: center
 
 Activer les outils que vous souhaitez afficher au sein de votre application :
+
 * ``Outils de zoom`` : cette option permet d'activer les outils de zoom +/- sur la carte.
 * ``Outils de mesures`` : cette option permet d'activer des outils de mesures de distance ou de surface.
 * ``Export de la carte en image`` : cette option permet d'exporter une capture d'écran de la carte consultée.
