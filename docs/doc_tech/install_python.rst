@@ -62,6 +62,11 @@ Exemple pour installer mviewerstudio dans le répertoire ``/git`` en utilisant l
 
 **2. Ajouter un lien symbolique entre mviewer et mviewerstudio**
 
+.. warning::
+    Cette étape n'est pas obligatoire car vous pouvez directement indiquer le répertoire de votre mviewer (e.g apps/store pour la production).
+    Vous devrez cependant veillez à affecter les bons droits pour que le studio puisse écrire et lire dans
+    les répertoires ciblés.
+
 Cette étape permet de prévisualiser les cartes réalisées dans ``mviewerstudio`` via un ``mviewer`` disponible.
 
 - Mviewerstudio sauvegarde les dans ``mviewerstudio/srv/python/mviewer_backend/store``
@@ -302,3 +307,21 @@ Il vous faudra également veiller à bien utiliser la bonne version de python di
     Avec VS Code, ouvrez dans une nouvelle fenêtre le répertoire ``srv/python`` et cliquer sur ``Exécuter et déboguer``.
     Sélectionner ensuite le type ``Python > Flask``.
     Le serveur se lance alors en mode débogue.
+
+Mise à jour
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Pour mettre à jour le code source (e.g branche ``develop``), vous pouvez utilisez le script ``mviewerstudio/srv/python/sync.sh`` après un ``git pull``.
+
+Il permet de copier / coller les sources vers le répertoire ``static`` du backend Python.
+
+Pour la mise à jour, voici donc les commandes à exécuter à partir du répertoire ``/mviewerstudio`` :
+
+.. code-block:: sh
+
+    cd /full/path/mviewerstudio
+    git pull
+    cd srv/python
+    sh ./sync.sh pull /full/path/mviewerstudio
+
+Si besoin, réaliser un restart de votre service (e.g gunicorn).
