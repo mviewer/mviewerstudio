@@ -658,7 +658,7 @@ var getConfig = () => {
 
     if ($('#opt-studio').prop('checked')) {
         let readURL = new URL(window.location.href);
-        studioUrl = readURL.origin + readURL.pathname;
+        studioUrl = `${readURL.origin}${readURL.pathname}?xml=`;
     }
 
     var application = ['<application',
