@@ -5,10 +5,6 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-
 @dataclass
 class ConfigModel:
     """
@@ -29,11 +25,6 @@ class ConfigModel:
             "keywords": self.keywords,
         }
 
-
->>>>>>> 62cfd1c (init new register system and add gitpython)
-=======
-
->>>>>>> 28c833c (format python files with black)
 @dataclass
 class RegisterModel:
     """
