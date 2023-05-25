@@ -11,6 +11,7 @@ class ConfigModel:
     Config schema dataclass
     To manipulate config data
     """
+
     id: int
     title: str
     creator: str
@@ -37,5 +38,5 @@ class ConfigModel:
             "subject": self.subject,
             "date": self.date,
             "relation": self.relation,
-            "directory": self.directory
+            "directory": self.directory,
         }

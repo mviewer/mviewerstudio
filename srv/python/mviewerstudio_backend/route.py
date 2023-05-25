@@ -1,6 +1,13 @@
 from flask import Blueprint, jsonify, Response, request, current_app, redirect
 from .utils.login_utils import current_user
-from .utils.config_utils import Config, write_file, edit_xml_string, control_relation, replace_templates_url, read_xml_file_content
+from .utils.config_utils import (
+    Config,
+    write_file,
+    edit_xml_string,
+    control_relation,
+    replace_templates_url,
+    read_xml_file_content,
+)
 from .utils.commons import clean_preview, init_preview
 import hashlib, uuid
 from .utils.register_utils import from_xml_path
@@ -35,28 +42,28 @@ def basic_store_init(state: BlueprintSetupState):
 
 @basic_store.route("/")
 def default_doc():
-    '''
+    """
     Return home page.
-    '''
+    """
     return redirect("index.html")
 
 
 @basic_store.route("/api/user", methods=["GET"])
 def user() -> Response:
-    '''
+    """
     Return current authentified user.
     Actually works with sec-proxy only.
-    '''
+    """
     return jsonify(current_user.as_dict())
 
 
 @basic_store.route("/api/app", methods=["POST"])
 def create_config() -> Response:
-    '''
+    """
     Create XML.
-    '''
+    """
     try:
-        config = Config(request.data, current_app)       
+        config = Config(request.data, current_app)
     except:
         raise BadRequest("XML seems not correct !")
 
@@ -75,12 +82,13 @@ def create_config() -> Response:
         {"success": True, "filepath": config_data.url, "config": config_data}
     )
 
+
 @basic_store.route("/api/app", methods=["PUT"])
 def update_config() -> Response:
-    '''
+    """
     Read XML UUID and update register and local file system if exists.
     :param id: app UUID
-    '''
+    """
     message = request.args.get("message")
     if not request.data:
         raise BadRequest("No XML found in the request body !")
@@ -89,7 +97,7 @@ def update_config() -> Response:
         raise BadRequest("This XML UUID doesn't exists !")
     # commit changes
     description = config.meta.find("{*}description").text
-    if message :
+    if message:
         description = message
     if not description:
         description = "Change XML"
@@ -118,17 +126,24 @@ def list_stored_configs() -> Response:
     Return all mviewer config created by the current user
     :param search: request args from query param.
     """
-    logger.debug("LIST CONFIGS FOR USER'S ORG OR ALL IF ANONYMOUS : %s " % current_user.username)
+    logger.debug(
+        "LIST CONFIGS FOR USER'S ORG OR ALL IF ANONYMOUS : %s " % current_user.username
+    )
     if "search" in request.args:
         pattern = request.args.get("search")
         configs = current_app.register.search_configs(pattern)
     else:
         configs = current_app.register.as_dict()["configs"]
-    
-    configs = [config for config in configs if config["publisher"] == current_user.organisation]
+
+    configs = [
+        config for config in configs if config["publisher"] == current_user.organisation
+    ]
     for config in configs:
-        config["link"] = path.join(current_app.config["CONF_PATH_FROM_MVIEWER"], config["url"])
+        config["link"] = path.join(
+            current_app.config["CONF_PATH_FROM_MVIEWER"], config["url"]
+        )
     return jsonify(configs)
+
 
 @basic_store.route("/api/app/<id>/publish/<name>", methods=["POST", "DELETE"])
 def publish_config(id, name) -> Response:
@@ -152,12 +167,12 @@ def publish_config(id, name) -> Response:
     org_publish_dir = path.join(current_app.publish_path, current_user.organisation)
     if not path.exists(org_publish_dir):
         mkdir(org_publish_dir)
-    
+
     # control file to create or replace
     past_file = path.join(org_publish_dir, "%s.xml" % xml_publish_name)
     past_dir = path.join(org_publish_dir, xml_publish_name)
 
-    if path.exists(past_file) and request.method == "POST":     
+    if path.exists(past_file) and request.method == "POST":
         # detect conflict
         if not control_relation(past_file, xml_publish_name, id):
             return Conflict("Already exists !")
@@ -167,7 +182,9 @@ def publish_config(id, name) -> Response:
             rmtree(past_dir)
 
     # control that workspace to copy exists
-    workspace = path.join(current_app.config["EXPORT_CONF_FOLDER"], current_user.organisation, id)
+    workspace = path.join(
+        current_app.config["EXPORT_CONF_FOLDER"], current_user.organisation, id
+    )
     if not path.exists(workspace):
         return BadRequest("Application does not exists !")
 
@@ -176,14 +193,19 @@ def publish_config(id, name) -> Response:
         config = Config(request.data, current_app)
     else:
         config = current_app.register.read_json(id)
-        config = from_xml_path(current_app, path.join(current_app.config["EXPORT_CONF_FOLDER"], config[0]["url"]))
+        config = from_xml_path(
+            current_app,
+            path.join(current_app.config["EXPORT_CONF_FOLDER"], config[0]["url"]),
+        )
     if not config:
         raise BadRequest("This config doesn't exists !")
 
     # add publish info in XML
     if request.method == "POST":
         edit_xml_string(config.meta, "relation", xml_publish_name)
-        edit_xml_string(config.meta, "date", datetime.now().strftime("%Y-%m-%d-%H-%M-%S"))
+        edit_xml_string(
+            config.meta, "date", datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
+        )
         message = "publication"
 
     # add unpublish info in XML
@@ -212,16 +234,24 @@ def publish_config(id, name) -> Response:
         if path.exists(past_dir):
             rmtree(past_dir)
         copytree(copy_dir, past_dir)
-        relative_publish_dir = path.join(current_app.config["CONF_PUBLISH_PATH_FROM_MVIEWER"], current_user.organisation, xml_publish_name, "templates")
+        relative_publish_dir = path.join(
+            current_app.config["CONF_PUBLISH_PATH_FROM_MVIEWER"],
+            current_user.organisation,
+            xml_publish_name,
+            "templates",
+        )
         replace_templates_url(past_file, relative_publish_dir)
 
-    draft_file = path.join(current_app.config["CONF_PATH_FROM_MVIEWER"], config.as_dict()["url"])
+    draft_file = path.join(
+        current_app.config["CONF_PATH_FROM_MVIEWER"], config.as_dict()["url"]
+    )
     # online file from public dir
     online_file = path.join(current_user.organisation, "%s.xml" % xml_publish_name)
     return jsonify({"online_file": online_file, "draft_file": draft_file})
 
+
 @basic_store.route("/api/app/<id>", methods=["DELETE"])
-def delete_config_workspace(id = None) -> Response:
+def delete_config_workspace(id=None) -> Response:
     """
     Delete one mviewer config
     :param id: app UUID
@@ -233,7 +263,9 @@ def delete_config_workspace(id = None) -> Response:
         raise BadRequest("Empty list : no value to delete !")
 
     logger.debug("START DELETE CONFIG : %s" % id)
-    workspace = path.join(current_app.config["EXPORT_CONF_FOLDER"], current_user.organisation, id)
+    workspace = path.join(
+        current_app.config["EXPORT_CONF_FOLDER"], current_user.organisation, id
+    )
     # update json
     config = current_app.register.read_json(id)
     if not config or not path.exists(workspace):
@@ -242,12 +274,20 @@ def delete_config_workspace(id = None) -> Response:
 
     config = config[0]
     # control if alowed
-    if current_user.username != "anonymous" and config["creator"] != current_user.username :
+    if (
+        current_user.username != "anonymous"
+        and config["creator"] != current_user.username
+    ):
         logger.debug("DELETE : NOT ALLOWED - ONLY THE OWNER CAN DELETE THIS APP")
         return MethodNotAllowed("Not allowed !")
     # control if org is default org
-    if current_user.username == "anonymous" and config["publisher"] != current_app.config["DEFAULT_ORG"]:
-        logger.debug("DELETE : NOT ALLOWED FOR THIS ANONYMOUS USER - ORG IS NOT DEFAULT")
+    if (
+        current_user.username == "anonymous"
+        and config["publisher"] != current_app.config["DEFAULT_ORG"]
+    ):
+        logger.debug(
+            "DELETE : NOT ALLOWED FOR THIS ANONYMOUS USER - ORG IS NOT DEFAULT"
+        )
         return MethodNotAllowed("Not allowed !")
     # control org and creator not only org - to delete the correct publish file
     map_relation = False
@@ -268,20 +308,24 @@ def delete_config_workspace(id = None) -> Response:
     rmtree(workspace)
     app_deleted += 1
     logger.debug("DELETE CONFIG : SUCCESS")
-    return jsonify({"deleted_files": app_deleted, "success": True, "deleted_publish": map_relation})
+    return jsonify(
+        {"deleted_files": app_deleted, "success": True, "deleted_publish": map_relation}
+    )
 
 
 @basic_store.route("/api/app/<id>/versions", methods=["GET"])
 def get_all_app_versions(id) -> Response:
-    '''
+    """
     Gets all tags and comit for a given UUID application.
     :param id: app UUID
-    '''
+    """
     config = current_app.register.read_json(id)
     if not config:
         raise BadRequest("This config doesn't exists !")
     config = config[0]
-    org = current_user.organisation if current_user else current_app.config["DEFAULT_ORG"]
+    org = (
+        current_user.organisation if current_user else current_app.config["DEFAULT_ORG"]
+    )
     workspace = path.join(current_app.config["EXPORT_CONF_FOLDER"], org, config["id"])
     git = Git_manager(workspace)
     versions = git.get_versions()
@@ -307,7 +351,11 @@ def switch_app_version(id, version="1") -> Response:
     if not config:
         raise BadRequest("This config doesn't exists !")
     config = config[0]
-    workspace = path.join(current_app.config["EXPORT_CONF_FOLDER"], current_user.organisation, config["id"])
+    workspace = path.join(
+        current_app.config["EXPORT_CONF_FOLDER"],
+        current_user.organisation,
+        config["id"],
+    )
     git = Git_manager(workspace)
     git.switch_version(version, as_new)
     # Update register
@@ -328,13 +376,13 @@ def switch_app_version(id, version="1") -> Response:
 
 @basic_store.route("/api/app/<id>/version/<version>/preview", methods=["GET"])
 def preview_app_version(id, version) -> Response:
-    '''
+    """
     Allow to copy XML specific version to preview directory.
     :param id: app UUID
     :param version: version to preview as git commit or git tag ref.
 
     Return file URL to preview.
-    '''
+    """
     config = current_app.register.read_json(id)
     if not config:
         raise BadRequest("This config doesn't exists !")
@@ -342,7 +390,11 @@ def preview_app_version(id, version) -> Response:
     # create preview space
     config = config[0]
     init_preview(current_app, config["id"])
-    workspace = path.join(current_app.config["EXPORT_CONF_FOLDER"], current_user.organisation, config["id"])
+    workspace = path.join(
+        current_app.config["EXPORT_CONF_FOLDER"],
+        current_user.organisation,
+        config["id"],
+    )
     git = Git_manager(workspace)
     git.switch_version(version, False)
     # copy past file to preview folder
@@ -350,7 +402,9 @@ def preview_app_version(id, version) -> Response:
     src_file = path.join(app_config["EXPORT_CONF_FOLDER"], config["url"])
     src_dir = src_file.replace(".xml", "")
     preview_file = path.join(config["id"], "preview", "%s.xml" % version)
-    path_preview_file = path.join(app_config["EXPORT_CONF_FOLDER"], config["publisher"], preview_file)
+    path_preview_file = path.join(
+        app_config["EXPORT_CONF_FOLDER"], config["publisher"], preview_file
+    )
     path_preview_dir = path_preview_file.replace(".xml", "")
     if path.exists(path_preview_dir):
         rmtree(path_preview_dir)
@@ -359,11 +413,18 @@ def preview_app_version(id, version) -> Response:
     copyfile(src_file, path_preview_file)
     copytree(src_dir, path_preview_dir)
     # replace template url
-    relative_publish_dir = path.join(current_app.config["CONF_PATH_FROM_MVIEWER"], config["publisher"], config["id"], "preview", version, "templates")
+    relative_publish_dir = path.join(
+        current_app.config["CONF_PATH_FROM_MVIEWER"],
+        config["publisher"],
+        config["id"],
+        "preview",
+        version,
+        "templates",
+    )
     replace_templates_url(path_preview_file, relative_publish_dir)
     # restor branch
     git.repo.git.checkout("master")
-    
+
     preview_url = path.join(config["publisher"], preview_file)
 
     return (
@@ -379,7 +440,7 @@ def preview_app_version(id, version) -> Response:
 
 @basic_store.route("/api/app/<id>/preview", methods=["POST"])
 def preview_uncommited_app(id) -> Response:
-    '''
+    """
     Allow to copy create a xml from request.data without save changes.
     This route will create XML in preview directory with random UUID.
 
@@ -387,7 +448,7 @@ def preview_uncommited_app(id) -> Response:
     :param version: version to preview as git commit or git tag ref.
 
     Return file URL to preview.
-    '''
+    """
     # init preview
     app_config = current_app.config
     # read XML
@@ -397,7 +458,9 @@ def preview_uncommited_app(id) -> Response:
     # get file name and path
     file_name = uuid.uuid1()
     preview_file = path.join(id, "preview", "%s.xml" % file_name)
-    system_path = path.join(app_config["EXPORT_CONF_FOLDER"], current_user.organisation, preview_file)
+    system_path = path.join(
+        app_config["EXPORT_CONF_FOLDER"], current_user.organisation, preview_file
+    )
     clean_preview(current_app, path.join(current_user.organisation, id))
     # store file to preview folder
     with open(system_path, "w") as file:
@@ -422,7 +485,7 @@ def delete_app_versions(id) -> Response:
     Delete each app versions except master branch.
 
     :param id: app UUID
-    
+
     """
     version_deleted = 0
 
@@ -447,15 +510,19 @@ def delete_app_versions(id) -> Response:
 
 @basic_store.route("/api/app/<id>/version", methods=["POST"])
 def create_app_version(id) -> Response:
-    '''
+    """
     Create a tag for a given UUID application.
     :param id: app UUID
-    '''
+    """
     config = current_app.register.read_json(id)
     if not config:
         raise BadRequest("This config doesn't exists !")
     config = config[0]
-    workspace = path.join(current_app.config["EXPORT_CONF_FOLDER"], current_user.organisation, config["id"])
+    workspace = path.join(
+        current_app.config["EXPORT_CONF_FOLDER"],
+        current_user.organisation,
+        config["id"],
+    )
     git = Git_manager(workspace)
     git.create_version(config["description"])
     return jsonify({"success": True, "message": "New version created !"}), 200
@@ -492,7 +559,11 @@ def add_layer_template(id, file_name) -> Response:
     if not config:
         raise BadRequest("This config doesn't exists !")
     config = config[0]
-    draftspace = path.join(current_app.config["EXPORT_CONF_FOLDER"], current_user.organisation, config["id"])
+    draftspace = path.join(
+        current_app.config["EXPORT_CONF_FOLDER"],
+        current_user.organisation,
+        config["id"],
+    )
     templates_dir = path.join(draftspace, config["directory"], "templates")
     if not path.exists(templates_dir):
         mkdir(templates_dir)
@@ -505,10 +576,15 @@ def add_layer_template(id, file_name) -> Response:
         {
             "success": True,
             "filepath": path.join(
-                current_user.organisation, config["id"], config["directory"], "templates", "%s.mst" % file_name
+                current_user.organisation,
+                config["id"],
+                config["directory"],
+                "templates",
+                "%s.mst" % file_name,
             ),
         }
     )
+
 
 @basic_store.route("/api/app/<id>/template/<id_layer>", methods=["DELETE"])
 def delete_layer_template(id, id_layer) -> Response:
@@ -525,21 +601,24 @@ def delete_layer_template(id, id_layer) -> Response:
     # save file
     write_file(parser, xml_path)
     # remove template file from server
-    draftspace = path.join(current_app.config["EXPORT_CONF_FOLDER"], current_user.organisation, config["id"])
-    draft_templates = path.join(draftspace, config["directory"], "templates", "%s.mst" % id_layer)
+    draftspace = path.join(
+        current_app.config["EXPORT_CONF_FOLDER"],
+        current_user.organisation,
+        config["id"],
+    )
+    draft_templates = path.join(
+        draftspace, config["directory"], "templates", "%s.mst" % id_layer
+    )
     remove(draft_templates)
-    return jsonify(
-        {
-            "success": True
-        }
-    ) 
+    return jsonify({"success": True})
+
 
 @basic_store.route("/proxy/", methods=["GET", "POST"])
 def proxy() -> Response:
-    '''
+    """
     Proxy service.
     :param url: string url to proxify.
-    '''
+    """
     url = request.args.get("url")
     if url:
         parsed_url = urlparse(url)

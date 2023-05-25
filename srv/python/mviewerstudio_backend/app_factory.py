@@ -22,6 +22,7 @@ def load_error_handlers(app: Flask) -> None:
 def load_blueprint(app: Flask) -> None:
     app.register_blueprint(basic_store)
 
+
 def init_publish_directory(app: Flask) -> None:
     if "MVIEWERSTUDIO_PUBLISH_PATH" not in app.config:
         return
@@ -29,6 +30,7 @@ def init_publish_directory(app: Flask) -> None:
     if not path.exists(publish_path) and publish_path:
         mkdir(publish_path)
     app.publish_path = publish_path
+
 
 def create_app() -> Flask:
     app = Flask("mviewerstudio")

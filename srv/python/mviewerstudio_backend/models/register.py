@@ -1,14 +1,11 @@
-<<<<<<< HEAD
 from dataclasses import dataclass, replace, field
 from .config import ConfigModel
-=======
-from dataclasses import dataclass
->>>>>>> 62cfd1c (init new register system and add gitpython)
 from typing import List
 import logging
 
 logger = logging.getLogger(__name__)
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 =======
 
@@ -34,6 +31,9 @@ class ConfigModel:
 
 
 >>>>>>> 62cfd1c (init new register system and add gitpython)
+=======
+
+>>>>>>> 28c833c (format python files with black)
 @dataclass
 class RegisterModel:
     """

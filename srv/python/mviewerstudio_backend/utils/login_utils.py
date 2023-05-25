@@ -6,6 +6,7 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+
 def _get_current_user() -> Optional["User"]:
     if has_app_context():
         roles = request.headers.get("sec-roles", "").split(";")
