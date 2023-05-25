@@ -15,6 +15,12 @@ jobs:
         with:
           python-version: '3.9'
 
+      - name: "python backend - install requirements"
+        working-directory: srv/python
+        run: |
+          pip install -r requirements.txt -r dev-requirements.txt
+          pip install -e .
+
       - name: "python backend - Checking format"
         working-directory: srv/python
         run: |
