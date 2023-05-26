@@ -11,7 +11,7 @@ Mviewerstudio est une application web développée en HTML / CSS / PHP / Python.
 mviewerstudio peut fonctionner avec 2 backends différents
 
 * PHP
-* Python
+* Python (nécessite Python >= v3.9)
 
 En fonction du backend retenu, l'installation diffère.
 
