@@ -27,6 +27,7 @@ Vous aurez besoin :
     sudo apt install libxslt1-dev libxml2-dev python3 python3-pip curl
     pip install virtualenv
 
+- d'une version Python >= 3.9
 - d'une instance mviewer fonctionnelle (/mviewer)
 
 Installation
