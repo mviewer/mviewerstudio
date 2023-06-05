@@ -95,13 +95,13 @@ Vous pouvez chercher un jeu de données dans un catalogue (ex. Région Bretagne)
               :alt: Chercher une donnée
               :align: center
 
-Ajouter une donnée depuis ces paramètres
+Ajouter une donnée depuis des paramètres
 ~~~~~~~~~~~~~~~~~~~
 
-Si le jeu de donnée n'est pas disponible dans un catalogue, il est possible de rajouter une donnée à l'aide de ces paramètres. Cliquez sur le second onglet et sélectionnez le type de la donnée parmi la liste. Indiquez ensuite les paramètres en veillant à leur validité :
+Si le jeu de donnée n'est pas disponible dans un catalogue, il est possible de rajouter une donnée à l'aide des paramètres. Cliquez sur le second onglet et sélectionnez le type de la donnée parmi la liste. Indiquez ensuite les paramètres en veillant à leur validité :
 
 .. image:: ../_images/user/mviewerstudio_2_ajout_donnee_param.png
-              :alt: Ajouter une donnée depuis ces paramètres
+              :alt: Ajouter une donnée depuis des paramètres
               :align: center
 
 * ``ID`` : paramètre de type texte qui renseigne l’identifiant technique de la couche côté serveur WMS ou WFS
@@ -113,7 +113,7 @@ Si le jeu de donnée n'est pas disponible dans un catalogue, il est possible de 
 Paramétrer ses données
 -------------------------------------------
 
-Une fois cliqué sur Séléctionner, la donnée est ajoutée à l'arborescence. Vous pouvez modifier les paramétrages en cliquant sur |parametrage|.
+Une fois cliqué sur Sélectionner, la donnée est ajoutée à l'arborescence. Vous pouvez modifier les paramétrages en cliquant sur |parametrage|.
 
 .. image:: ../_images/user/mviewerstudio_2_ajout_donnee.png
               :alt: Donnée ajoutée
@@ -133,10 +133,10 @@ L'onglet général recense les principales options de la donnée.
               :align: center
 
 * ``Nom`` : nom de la donnée dans notre application.
-* ``Attributions`` : source de la donnée.
+* ``Attribution`` : source de la donnée.
 * ``Opacité`` : opacité par défaut de la donnée.
 * ``Afficher la donnée au démarrage de l'application`` : la donnée s'affiche au lancement de l'application.
-* ``Afficher la donnée en première position de la carte`` : la données s'affiche toujours au-dessus des autres données qui n'ont pas activée cette option.
+* ``Afficher la donnée en première position de la carte`` : la donnée s'affiche toujours au-dessus des autres données qui n'ont pas activée cette option.
 * ``Styles disponibles`` : choix du·des style·s de la donnée dans notre application. Possibilité d'éditer le libellé du style.
 * ``Libellé de la liste des styles`` : Titre de la liste de sélection des styles.
 
@@ -253,7 +253,7 @@ Interface du générateur de template
               :alt: Fenêtre du générateur de template
               :align: center
 
-Une nouvelle fenêtre s’ouvre. Cette fenêtre est divisée en deux, un bloc à gauche permettant de configurer la fiche d’information et ces composants, un bloc à droite permettant de prévisualiser la fiche configurée. On retrouvera cette configuration pour une fiche positionnée en bas mais avec un alignement vertical. 
+Une nouvelle fenêtre s’ouvre. Cette fenêtre est divisée en deux, un bloc à gauche permettant de configurer la fiche d’information et ses composants, un bloc à droite permettant de prévisualiser la fiche configurée. On retrouvera cette configuration pour une fiche positionnée en bas mais avec un alignement vertical. 
 On visualise également le nom du jeu de donnée pour lequel on configure la fiche d’information et la position de la fiche en haut de la fenêtre. 
 
 .. note:: 
@@ -296,7 +296,7 @@ Une fois les composants ajoutés, il est nécessaire de configurer chaque compos
    :header-rows: 1
 
    * - Composant
-     - Valeur à partir d'un champs
+     - Valeur à partir d'un champ
      - Valeur à partir de plusieurs champs
      - Valeur à partir d’une saisie libre
      - Couleur
@@ -393,7 +393,7 @@ La valeur est une saisie de texte libre réalisée par l’utilisateur. Le texte
               :alt: Configurer un template - Valeur saisie libre
               :align: center
 
-Pour une utilisation avancée, il est possible d’utiliser la synthaxe Mustache dans le bloc de saisie à l’aide des ``{{nom_du_champs}}`` ainsi que certaines balises .html comme le retour à la ligne ``</br>`` :
+Pour une utilisation avancée, il est possible d’utiliser la syntaxe Mustache dans le bloc de saisie à l’aide des ``{{nom_du_champ}}`` ainsi que certaines balises .html comme le retour à la ligne ``</br>`` :
 
 .. image:: ../_images/user/mviewerstudio_2_templateCustom_componentValue4.png
               :alt: Configurer un template - Valeur saisie libre mst

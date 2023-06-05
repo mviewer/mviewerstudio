@@ -19,7 +19,7 @@ Champs principaux
 * :guilabel:`mode avancé` ``Mots clés`` : indiquer des mots clés permettant de décrire l'application.
 * :guilabel:`mode avancé` ``URL du proxy`` : lien vers le proxy permettant l’interrogation CROSS DOMAIN des couches (`Plus d'informations <https://mviewerdoc.readthedocs.io/fr/latest/doc_tech/config_proxy.html>`).
 * :guilabel:`mode avancé` ``Lien vers le favicon`` : renseigner l'URL du fichier image à utiliser comme favicon de l’application.
-* :guilabel:`mode avancé` ``Lien vers le site parent`` : renseigner le lien d'une page web vers laquelle l'utilisateur sera redirigée en cliquant sur le logo de l'application mviewer.
+* :guilabel:`mode avancé` ``Lien vers le site parent`` : renseigner le lien d'une page web vers laquelle l'utilisateur sera redirigé en cliquant sur le logo de l'application mviewer.
 * ``Lien vers le logo`` : renseigner l'URL du logo de l'entité productrice de l'application qui apparaitra dans dans le bandeau de l'application (Exemple sur GéoBretagne, les logos des partenaires sont stockés ici_).
 * ``Thème de l'application`` : choisir le thème permettant de personnaliser l'interface de votre application (couleur).
 
@@ -65,7 +65,7 @@ Sélectionner les fonds de plan à afficher en cochant la case ainsi que le fond
 * ``Fond de plan au démarrage`` : choix du fond de plan affiché par défaut .
 * ``Mode d'affichage`` : choix entre le mode normal ou gallerie pour le changement de fond de plan :guilabel:`mode avancé`.
 
-En :guilabel:`mode avancé`, il est possible de rajouter un fond de plan personnalisé à l'aide de ses paramètres en activant la checkboxe. Veuillez ensuite sélectionner le type de couche parmi la liste et renseigner les champs nécessaires :
+En :guilabel:`mode avancé`, il est possible de rajouter un fond de plan personnalisé à l'aide de ses paramètres en activant la checkbox. Veuillez ensuite sélectionner le type de couche parmi la liste et renseigner les champs nécessaires :
 
 .. image:: ../_images/user/mviewerstudio_1_application_fonds_de_plan_custom.png
               :alt: Fond de plan personalisé

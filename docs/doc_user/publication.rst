@@ -24,7 +24,7 @@ Pour publier votre application, cliquez sur "Publier votre application". Une nou
               :alt: Publier son application en production
               :align: center
 
-* ``Nouveau nom`` : nom de l'application publiée, par défaut c'est le nom saisie lors de la création. Ce nom sera visible dans le lien de l'application et sera également le nom du dossier sur le serveur.
+* ``Nouveau nom`` : nom de l'application publiée, par défaut c'est le nom saisi lors de la création. Ce nom sera visible dans le lien de l'application et sera également le nom du dossier sur le serveur.
 
 Pour valider le processus, cliquez sur "Publier votre application". 
 

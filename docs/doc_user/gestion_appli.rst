@@ -6,7 +6,7 @@
 Gérer son application
 =====================
 
-La gestion de son application est possible depuis la barre de navigation située en haut à droit des différents modules du studio :
+La gestion de son application est possible depuis la barre de navigation située en haut à droite des différents modules du studio :
 
 .. image:: ../_images/user/mviewerstudio_4_gestion_navabar.png
               :alt: Boutons pour gérer son application
