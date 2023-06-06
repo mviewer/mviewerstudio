@@ -24,7 +24,7 @@ Avant de vous lancer dans la belle aventure du mviewerstudio et de goûter les j
 
 .. note:: Sur GéoBretagne : pour plus de confort et d'autonomie, il est fortement conseillé d'être administrateur délégué_ de ses données.
 
-Construire son application
+Ouvrir une application existante
 -------------------------------------------
 
 Deux choix sont offerts à l'utilisateur :
@@ -48,7 +48,7 @@ Cliquez sur "Modifier" pour accéder à l'éditeur d'application.
               :align: center
 
 
-Etapes de création
+Création d'un nouveau projet
 -------------------------------------------
 
 Le générateur permet de créer son application en trois étapes :

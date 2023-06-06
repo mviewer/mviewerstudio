@@ -50,7 +50,7 @@ Paramétrer l'étendue et le zoom de la carte au démarrage de l'application. Ai
               :alt: Options de la carte
               :align: center
 
-* :guilabel:`mode avancé` ``Revenir à l'étendue initiale`` : cette option permet d'activer le bouton de retour à l’étendue initiale.
+* ``Revenir à l'étendue initiale`` : cette option permet d'activer le bouton de retour à l’étendue initiale.
 * :guilabel:`mode avancé` ``Interdire la navigation hors de l'étendue définie ci-dessus`` : bloque l'emprise de la carte sur l'emprise définie.
 
 Fonds de plan
@@ -75,7 +75,7 @@ En :guilabel:`mode avancé`, il est possible de rajouter un fond de plan personn
 * ``Identifiant`` : paramètre obligatoire de type texte pour attribuer un identifiant unique et interne à la couche
 * ``Libellé`` : paramètre obligatoire de type texte pour définir le nom du fond de plan
 * ``URL`` : paramètre obligatoire de type url définissant l’URL du service web OSM, WMTS, WMS ou vector-tms.
-* ``Identifiant technique de la couche`` : identifiant technique de la couche à utiliser
+* ``Identifiant technique de la couche`` : paramètre obligatoire de type texte définissant l'identifiant technique de la couche à utiliser
 * ``Attribution`` : paramètre obligatoire alimentant le contrôle attributions de la carte
 * ``Sous-titre`` : informations complémentaires sur le fond de plan comme le producteur
 * ``Lien vers la vignette d'aperçu`` : paramètre obligatoire de type url permettant de sélectionner l’imagette à associer au fond de plan.
@@ -94,7 +94,7 @@ Après avoir renseigné l'ensemble des paramètres valides, cliquez sur "Ajouter
         Il n'est pas possible de modifier les paramètres d'un fond de plan ajouté. Il faut réitérer la saisie.
 
 
-Recherche (:guilabel:`mode avancé`)
+Recherche
 -------------------------------------------
 
 Activer la recherche pour offrir à vos utilisateurs la possibilité de se localiser grâce à une barre de recherche :

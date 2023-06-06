@@ -51,11 +51,11 @@ En cliquant sur Importer, vous pouvez importer une·des thématique·s existante
 Il est possible de filtrer les thématiques à l'aide de la barre de recherche en saisissant un mot clé (thème, organisme) et de gérer l'affichage des thématiques grâce au sustème de pagination.
 
 Les thématiques importées ne sont pas configurables, elles sont visibles dans l'application comme elles sont définies dans l'application source (nom, icône, données et options des données).
-Il est toutefois possible de gérer certains paramètres. Dans la liste des thématiques, cliquez sur le le bouton |ajout_donnees|.
+Il est toutefois possible de gérer certains paramètres. Dans la liste des thématiques, cliquez sur le bouton |parametrage|.
 
-.. |ajout_donnees| image:: ../_images/user/mviewerstudio_2_thematiques_bouton_ajouter_donnees.png
-              :alt: Ajouter une donnée 
-	      :width: 100 pt
+.. |parametrage| image:: ../_images/user/mviewerstudio_2_parametrage.png
+              :alt: Editer cette donnée 
+	      :width: 20 pt
 
 .. image:: ../_images/user/mviewerstudio_2_thematiques_options.png
               :alt: Options thématique externe
@@ -68,7 +68,7 @@ Une nouvelle fenêtre s'ouvre avec les options suivantes :
 Ajouter une donnée
 -------------------------------------------
 
-Il est ensuite nécessaire d'ajouter des données à cette thématique via le bouton |ajout_donnees|.
+Il est ensuite nécessaire d'ajouter des données à cette thématique via le bouton |ajout_donnees|. L'ajout d'un nouveau jeu de données peut se faire avec une recherche dans un catalogue et en saisissant les paramètres de base.
 
 .. |ajout_donnees| image:: ../_images/user/mviewerstudio_2_thematiques_bouton_ajouter_donnees.png
               :alt: Ajouter une donnée 
@@ -194,9 +194,9 @@ L'onglet options avancées donne accès aux fonctionnalités avancées. :guilabe
 * :guilabel:`mode avancé` ``Echelle mini / maxi`` : Echelle minimale et maximale d'affichage de la donnée.
 * :guilabel:`mode avancé` ``Affichage tuilé`` : Affichage tuilé de la donnée. La donnée est chargée progressivement.
 * :guilabel:`mode avancé` ``Affichage exclusive de la données`` : l’affichage de cette couche masquera automatiquement toutes les autres couches ayant ce paramètre activé
-* :guilabel:`mode avancé` ``Affichage de la données seulement sur la carte`` : Permet de rendre la couche seulement visible sur la carte, et invisible dans les thématiques et la légende.
+* :guilabel:`mode avancé` ``Ne pas afficher la donnée dans la légende`` : Permet de rendre la couche seulement visible sur la carte, et invisible dans les thématiques et la légende.
 * :guilabel:`mode avancé` ``Utiliser un style externe`` : Lien vers un style SLD remplaçant le style du serveur cartographique.
-* :guilabel:`mode avancé` ``Type de légende`` : Lien vers la métadonnée. Ne pas modifier.
+* :guilabel:`mode avancé` ``Type de légende`` : possibilité de mettre une légende personnalisée vers un fichier image (via une URL)
 * :guilabel:`mode avancé` ``Adapter la légende selon le zoom de la carte`` : Précise si la légende est liée à l’échelle de la carte et si elle nécessite d’être actualisée à chaque changement d’échelle de la carte.
 * :guilabel:`mode avancé` ``Lien vers une légende personnalisée`` : URL vers un fichier afin d'afficher la légende à partir d'une image.
 * :guilabel:`mode avancé` ``Métadonnées`` : Lien vers la métadonnée. Ne pas modifier.
@@ -276,7 +276,7 @@ Il est maintenant nécessaire de peupler le bloc de gauche avec des composants e
 * ``Liste`` : composant permettant d’afficher une liste et nécessitant un champ composé d’une liste comme indiqué dans la `documentation mviewer <https://mviewerdoc.readthedocs.io/fr/latest/doc_tech/config_tpl.html#iterer-sur-un-champ-de-type-json>`_
 * ``Texte`` : composant permettant d’afficher un texte et nécessitant une valeur de type texte en entrée
 
-Sélectionnez un composant et cliquez sur valider pour l’ajouter. Il n’est possible d’ajouter qu’un composant à la fois, veuillez réitérer l’opération pour ajouter des composants supplémentaires. 
+Sélectionnez un composant et cliquez sur "Enregistrer" pour l’ajouter. Il n’est possible d’ajouter qu’un composant à la fois, veuillez réitérer l’opération pour ajouter des composants supplémentaires. 
 
 .. note:: 
   Dans le cas d’une configuration pour la fiche d’information positionnée en bas, le nombre de composants est limité à 6, répartis sur 2 colonnes afin d’optimiser l’affichage. Pour aller plus loin, il est nécessaire de créer manuellement un template .mst et de l’importer en tant que template externe en s’aidant des modèles disponibles sur la page des démonstrations mviewer.
@@ -452,7 +452,7 @@ Pour supprimer un composant, cliquez sur l’icône |deleteComponent_template| e
 Enregistrer la fiche d'information
 ~~~~~~~~~~~~~~~~~
 
-Lorsque la configuration est terminée, cliquez sur le bouton « Valider » en bas de la fenêtre pour enregistrer la fiche d’information. 
+Lorsque la configuration est terminée, cliquez sur le bouton « Enregistrer » en bas de la fenêtre pour enregistrer la fiche d’information. 
 
 
 Gérer une fiche d’information

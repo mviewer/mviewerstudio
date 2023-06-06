@@ -6,7 +6,7 @@
 3) Publier son application
 ==========================
 
-La configuration de votre application est terminée. Vous pouvez prévisualiser le résultat et télécharger le fichier .XML pour le déposer ensuite sur un serveur en production.
+La configuration de votre application est terminée. Vous pouvez prévisualiser le résultat, télécharger le fichier .XML ou publier l'application sur un serveur.
 
 .. image:: ../_images/user/mviewerstudio_3_publication.png
               :alt: Publier son application

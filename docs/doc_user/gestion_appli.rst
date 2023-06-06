@@ -16,7 +16,7 @@ La gestion de son application est possible depuis la barre de navigation située
 * ``Prévisualiser`` : permet de prévisualiser son application avec la configuration actuelle dans un nouvel onglet du navigateur
 * ``Supprimer`` : permet de supprimer définitevement son application
 * ``Dépublier`` : permet de dépublier son application quand celle-ci a été publiée auraparavant (voir rubrique ci-dessous)
-* ``Options`` : permet d'accéder à des options supplémentaires
+* ``Options`` :guilabel:`mode avancé` : permet d'accéder à des options supplémentaires. Visible seulement si l'application est enregistrée
 
 
 Gérer la publication d'une application
@@ -65,7 +65,7 @@ Créer une version
 
 Il est possible de créer une version spécifique avec des modifications associées.
 
-Après avoir importé une nouvelle thématique dans l'application, ouvrez la fenêtre "Historique des modifications" puis cliquez sur "Marquer cette version". Ajoutez ensuite une description à la version et valider: 
+Après avoir importé une nouvelle thématique dans l'application, ouvrez la fenêtre "Historique des modifications" puis cliquez sur "Marquer cette version". Ajoutez ensuite une description à la version et enregistrez: 
 
 .. image:: ../_images/user/mviewerstudio_4_gestion_version2.png
               :alt: Créer une version
