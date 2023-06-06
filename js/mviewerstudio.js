@@ -888,7 +888,7 @@ var saveTemplateToGetUrl = () => new Promise((resolve, reject) => {
     Promise.all(waitTemplateUrls).then(values => {
         values.forEach(({ layer, response }) => {
             let l = mv.getLayerById(layer?.id);
-            let templateFullPath = `${ _conf.mviewer_instance }${ _conf.conf_path_from_mviewer }${ response.filepath }`;
+            let templateFullPath = `${ response.filepath }`;
             l.generatorTemplateUrl = templateFullPath;
             l.useGeneratorTemplate = true;  
         })

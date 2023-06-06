@@ -156,6 +156,8 @@ def publish_config(id, name) -> Response:
 
     xml_publish_name = name
 
+    mviewer_instance = request.args.get("instance")
+
     if not request.data and request.method == "POST":
         return BadRequest("Empty request POST data !")
 
@@ -240,7 +242,9 @@ def publish_config(id, name) -> Response:
             xml_publish_name,
             "templates",
         )
-        replace_templates_url(past_file, relative_publish_dir)
+        if mviewer_instance:
+            absolute_path = path.join(mviewer_instance, relative_publish_dir)
+            replace_templates_url(past_file, absolute_path)
 
     draft_file = path.join(
         current_app.config["CONF_PATH_FROM_MVIEWER"], config.as_dict()["url"]
