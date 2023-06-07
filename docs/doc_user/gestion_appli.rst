@@ -34,12 +34,12 @@ Par défaut, une nouvelle application est créee en mode "brouillon". Le mode "b
 Dès que l'application a été publiée, comme expliqué dans la rubrique 3, le statut de celle-ci devient "en ligne". Votre application est alors accessible par tous via le lien disponible dans la fenêtre de publication. 
 
 Nouvelles modifications
-~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~
 
 Lorsque vous réalisez de nouvelles modifications sur votre application, il est nécessaire de la republier pour appliquer les changements à votre application en ligne.
 
 Dépublier une application
-~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Il est possible de dépublier une application, si par exemple les données sont obsolètes. Pour la rendre innaccessible, cliquez sur le bouton "Dépublier" dans la barre de navigation. Après cette action, votre application passera en mode "brouillon". Les ressources associées seront également supprimées du serveur de production. 
 
@@ -61,7 +61,7 @@ Lorsque l'on enregistre une application, chaque enregistrement est consigné en 
 
 
 Créer une version
-~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~
 
 Il est possible de créer une version spécifique avec des modifications associées.
 
@@ -79,7 +79,7 @@ Cette version marquée est maintenant disponible et identifiée dans l'historiqu
 
 
 Gérer les versions
-~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~
 
 Depuis la fenêtre "Historique des modifications", il est possible de gérer les versions avec les actions suivantes :
 

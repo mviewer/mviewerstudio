@@ -40,7 +40,7 @@ En cliquant sur le bouton créer, une fenêtre de paramétrage de la thématique
 - ``Icône`` : sélectionner l'icône illustrant la thématique. Pour rechercher un mot clé en anglais, utiliser la recherche du navigateur (taper CRTL+F).
 
 Option - Importer une thématique externe
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 En cliquant sur Importer, vous pouvez importer une·des thématique·s existante·s (voir option external_themes dans :ref:`config_front`).
 
@@ -120,7 +120,7 @@ Une fois cliqué sur Sélectionner, la donnée est ajoutée à l'arborescence. V
               :align: center
 
 .. |parametrage| image:: ../_images/user/mviewerstudio_2_parametrage.png
-              :alt: Editer cette donnée 
+        :alt: Editer cette donnée 
 	      :width: 20 pt
 
 Onglet Général

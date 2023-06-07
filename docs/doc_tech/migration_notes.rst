@@ -19,18 +19,18 @@ Si vous ne disposez pas de système d'authentification, cette version propose pa
 
 Pour avoir une vision détaillée des nouveautés, nous vous invitons à consulter la documentation utilisateur et la note de release GitHub.
 
-- Compatibilité des XML
+1. **Compatibilité des XML**
 
 La version 4 utilise des propriétés et des informations du XML rajoutées par le backend Python de mviewerstudio v4.
 Ces XML sont notamment versionnés et non dupliqués à chaque modification.
 Les XML réalisés avec la version de mviewerstudio < 4 ne sont pas compatibles avec le backend Python de la v4.
 
-- Choix du backend
+2. **Choix du backend**
 
 Le backend PHP reste toutefois utilisable et identique à la version 3.9.x sans nouveautés. Vos XML seront réutilisables en l'état.
-Si vous n'utiliser pas le backend Python, notez alors que vous ne pourrez pas disposer des dernières nouveautés telles que le verisonnement, la publication ou encore le générateur de template.
+Si vous n'utiliser pas le backend Python, notez alors que vous ne pourrez pas disposer des dernières nouveautés telles que le versionnement, la publication ou encore le générateur de template.
 
-- Migrer vos XML manuellement
+3. **Migrer vos XML manuellement**
 
 Si vous souhaiter utiliser le backend Python, mais que vous désirez conserver vos XML, il sera nécessaire de les réimporter unitairement en ouvrant le XML ``Depuis un ordinateur``.
 Vous devrez donc ouvrir le fichier afin de le re sauvegarder avec les informations nécessaires pour le bon fonctionnement de la v4.
