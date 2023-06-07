@@ -807,7 +807,7 @@ let previewWithPhp = (conf) => {
             var url = "";
             if (data.success && data.filepath) {
                 // Build a short and readable URL for the map
-                let url = mv.produceUrl(data.filePath);
+                let url = mv.produceUrl(data.filepath);
                 window.open(url, 'mvs_vizualize');
                 alertCustom("Téléchargement terminé !", 'success');
             }
