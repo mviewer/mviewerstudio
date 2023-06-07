@@ -42,7 +42,7 @@ En cliquant sur le bouton créer, une fenêtre de paramétrage de la thématique
 Option - Importer une thématique externe
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-En cliquant sur Importer, vous pouvez importer une·des thématique·s existante·s (voir option external_themes dans :ref:`config`).
+En cliquant sur Importer, vous pouvez importer une·des thématique·s existante·s (voir option external_themes dans :ref:`config_front`).
 
 .. image:: ../_images/user/mviewerstudio_2_thematiques_importer.png
               :alt: Import thématique
@@ -75,7 +75,7 @@ Il est ensuite nécessaire d'ajouter des données à cette thématique via le bo
 	      :width: 100 pt
 
 Ajouter une donnée depuis un catalogue
-~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Vous pouvez chercher un jeu de données dans un catalogue (ex. Région Bretagne). Vous pouvez valider votre recherche en tapant sur la touche Entrée de votre clavier ou sur l'icone loupe :
 
@@ -96,7 +96,7 @@ Vous pouvez chercher un jeu de données dans un catalogue (ex. Région Bretagne)
               :align: center
 
 Ajouter une donnée depuis des paramètres
-~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Si le jeu de donnée n'est pas disponible dans un catalogue, il est possible de rajouter une donnée à l'aide des paramètres. Cliquez sur le second onglet et sélectionnez le type de la donnée parmi la liste. Indiquez ensuite les paramètres en veillant à leur validité :
 
@@ -234,7 +234,7 @@ Paramétrer une fiche d’information
 Depuis le mviewer studio, il est possible de personnaliser l’affichage d’une fiche d’information pour une donnée identifiée en sélectionnant les champs visibles pour l’utilisateur et leurs formes.
 
 Créer une fiche d’information personnalisée
-~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Depuis les paramètres de la donnée, sélectionnez l’onglet « Interrogation » et le type de format ``Personnalisé`` dans la liste :
 
 .. image:: ../_images/user/mviewerstudio_2_templateCustom_create.png
@@ -247,7 +247,7 @@ Puis à la rubrique « Configurer la fiche d’information », cliquez sur le bo
   La position de la fiche d’information souhaitée doit préalablement être sélectionnée. Elle conditionne ensuite l’affichage des composants au sein du générateur.
 
 Interface du générateur de template
-~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. image:: ../_images/user/mviewerstudio_2_templateCustom_ihm.png
               :alt: Fenêtre du générateur de template
@@ -260,7 +260,7 @@ On visualise également le nom du jeu de donnée pour lequel on configure la fic
   La prévisualisation est basée sur la première entité retournée du jeu de donnée. Si les champs du jeu de données ne sont pas renseignés correctement (valeur nulle), l’affichage peut être perturbé.
 
 Ajouter des composants à la fiche d’information
-~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Il est maintenant nécessaire de peupler le bloc de gauche avec des composants en cliquant sur le bouton « Ajouter un composant ». Une nouvelle fenêtre s’ouvre avec une liste de composants disponibles et préformatés : 
 
 .. image:: ../_images/user/mviewerstudio_2_templateCustom_componentsList.png
@@ -282,7 +282,7 @@ Sélectionnez un composant et cliquez sur "Enregistrer" pour l’ajouter. Il n�
   Dans le cas d’une configuration pour la fiche d’information positionnée en bas, le nombre de composants est limité à 6, répartis sur 2 colonnes afin d’optimiser l’affichage. Pour aller plus loin, il est nécessaire de créer manuellement un template .mst et de l’importer en tant que template externe en s’aidant des modèles disponibles sur la page des démonstrations mviewer.
 
 Configurer les composants
-~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 Une fois les composants ajoutés, il est nécessaire de configurer chaque composant en définissant les informations à afficher et les options associées. 
 
 .. image:: ../_images/user/mviewerstudio_2_templateCustom_componentsAdd.png
@@ -373,6 +373,7 @@ Une fois les composants ajoutés, il est nécessaire de configurer chaque compos
 Dans le bloc du composant, veuillez sélectionner la source de l’information à afficher parmi la liste « Choisir un type » : 
 
 - *A partir d’un champ :*
+
 La valeur est définie dans un champ du jeu de donnée. Il faut ensuite sélectionner le champ à afficher dans la seconde liste.
 
 .. image:: ../_images/user/mviewerstudio_2_templateCustom_componentValue1.png
@@ -380,6 +381,7 @@ La valeur est définie dans un champ du jeu de donnée. Il faut ensuite sélecti
               :align: center
 
 - *A partir de plusieurs champs :*
+
 La valeur est une concaténation de plusieurs champs au sein du jeu de données. Il faut saisir les champs dans le deuxième bloc en tapant le nom du champ puis en sélectionnant le champ dans la liste d’auto-complétion. Validez le champ à ajouter à l’aide de touche « Entrer ». Vous pouvez également ajouter du texte fixe en saisissant les caractères et validez avec la touche « Entrer ».
 
 .. image:: ../_images/user/mviewerstudio_2_templateCustom_componentValue2.png
@@ -387,6 +389,7 @@ La valeur est une concaténation de plusieurs champs au sein du jeu de données.
               :align: center
 
 - *Saisie libre :*
+
 La valeur est une saisie de texte libre réalisée par l’utilisateur. Le texte saisie est statique, il sera affiché pour l’ensemble des entités du jeu de donnée. 
 
 .. image:: ../_images/user/mviewerstudio_2_templateCustom_componentValue3.png
@@ -423,7 +426,7 @@ Pour certains composants, il est possible d’associer une description. Dans le 
 
 
 Prévisualiser votre fiche d’information
-~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Lors de la configuration de la fiche d’information, il est possible de prévisualiser le résultat à tout moment en cliquant sur le bouton « Prévisualiser » en haut à droite :
 
 .. image:: ../_images/user/mviewerstudio_2_templateCustom_preview.png
@@ -434,7 +437,7 @@ Lors de la configuration de la fiche d’information, il est possible de prévis
 
 
 Gérer les composants
-~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~
 
 **Déplacer**
 
@@ -450,13 +453,13 @@ Pour supprimer un composant, cliquez sur l’icône |deleteComponent_template| e
 
 
 Enregistrer la fiche d'information
-~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Lorsque la configuration est terminée, cliquez sur le bouton « Enregistrer » en bas de la fenêtre pour enregistrer la fiche d’information. 
 
 
 Gérer une fiche d’information
-~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. image:: ../_images/user/mviewerstudio_2_templateCustom_manageOptions.png
               :alt: Gérer son template
