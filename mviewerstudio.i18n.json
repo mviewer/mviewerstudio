@@ -317,6 +317,7 @@
         "consult": "Consulter",
         "add": "Ajouter",
         "msg.preview_no_save": "Veuillez enregistrer votre projet en premier !",
+        "msg.preview_no_title": "Veuillez renseigner un nom à votre application !",
         "msg.user_info_retrieval_error": "Echec de la récupération de l'identité de l'utilisateur.\nVeuillez consulter votre administrateur.",
         "msg.save_theme_first": "Enregistrer d'abord votre thématique.",
         "msg.give_title_before_save": "Attention, vous devez obligatoirement indiquer un titre à votre application avant de sauvegarder.",

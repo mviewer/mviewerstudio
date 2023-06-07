@@ -125,7 +125,7 @@
                         <!-- STEP STUDIO -->
                         <ul class="nav nav-pills flex-column mb-5" id="stepStudio">
                             <li class="nav-item" id="navWizApp">
-                                <a class="nav-link active" data-bs-toggle="tab" href="#app">
+                                <a class="nav-link active" data-bs-toggle="tab" href="#app" id="appWizzardTab">
                                     <i class="ri-equalizer-line"></i>
                                     <div>
                                         <p class="title-wizard" i18n="studio.wizard.app_title">Application </p>
@@ -134,7 +134,7 @@
                                 </a>
                             </li>
                             <li class="nav-item" id="navWizData">
-                                <a class="nav-link" data-bs-toggle="tab" href="#themesdata">
+                                <a class="nav-link" data-bs-toggle="tab" href="#themesdata" onclick="mv.saveIfNecessary()">
                                     <i class="ri-stack-line"></i>
                                     <div>
                                         <p class="title-wizard" i18n="studio.wizard.theme_title">Thématiques & données</p>
@@ -143,7 +143,7 @@
                                 </a>
                             </li>
                             <li class="nav-item advanced" id="navWizFadv" style="display: none">
-                                <a class="nav-link" data-bs-toggle="tab" href="#fadanced">
+                                <a class="nav-link" data-bs-toggle="tab" href="#fadanced" onclick="mv.saveIfNecessary()">
                                     <i class="ri-list-settings-line"></i>
                                     <div>
                                         <p class="title-wizard" i18n="studio.wizard.advanced_title">Fonctionnalités avancées</p>
@@ -152,7 +152,7 @@
                                 </a>
                             </li>                         
                             <li class="nav-item" id="navWizPub">
-                                <a class="nav-link" data-bs-toggle="tab" href="#publication">                                
+                                <a class="nav-link" data-bs-toggle="tab" href="#publication" onclick="mv.saveIfNecessary()">                                
                                     <i class="ri-download-line"></i>
                                     <div>
                                         <p class="title-wizard" i18n="studio.wizard.publication_title">Publication</p>
@@ -909,7 +909,7 @@
                     </div>             
                 </div>
                 <div class="modal-footer">
-                    <button id="btn-saveTheme" class="btn btn btn-primary" onclick="saveTheme();">
+                    <button id="btn-saveTheme" class="btn btn btn-primary" onclick="mv.saveAllThemes();">
                         <span i18n="save">Enregistrer</span>
                     </button>
                     <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal" i18n="cancel">Annuler</button>
