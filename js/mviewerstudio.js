@@ -982,7 +982,16 @@ var loadApplicationParametersFromFile = function () {
         reader.readAsText(file, "UTF-8");
         reader.onload = function (evt) {
             var xml = $.parseXML(evt.target.result);
-            mv.parseApplication(xml);
+            let idApp = xml.getElementsByTagName("dc:identifier")[0]?.innerHTML;
+            if (!idApp) {
+                return mv.parseApplication(xml);
+            }
+            // control if ID already exists in studio register
+            fetch(`${ _conf.api }/${ idApp }/exists`)
+                .then(r => r.json()).then(r => {
+                    // read XML
+                    mv.parseApplication(xml, r.exists);
+                })
         }
         reader.onerror = function (evt) {
             //alert(mviewer.tr('msg.file_read_error'));

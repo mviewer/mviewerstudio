@@ -8,7 +8,7 @@ from .utils.config_utils import (
     replace_templates_url,
     read_xml_file_content,
 )
-from .utils.commons import clean_preview, init_preview
+from .utils.commons import clean_preview, init_preview, create_zip, make_archive
 import hashlib, uuid
 from .utils.register_utils import from_xml_path
 from os import path, mkdir, remove
@@ -615,6 +615,42 @@ def delete_layer_template(id, id_layer) -> Response:
     )
     remove(draft_templates)
     return jsonify({"success": True})
+
+@basic_store.route("/api/app/<id>/exists", methods=["GET"])
+def app_exists(id) -> Response:
+    config = current_app.register.read_json(id)
+    if not config:
+        return jsonify({"success": True, "exists": False})
+    else:
+        return jsonify({"success": True, "exists": True})
+    
+
+@basic_store.route("/api/download/<id>", methods=["GET"])
+def download(id) -> Response:
+    config = current_app.register.read_json(id)
+    if not config:
+        raise BadRequest("This config doesn't exists !")
+    config = config[0]
+    draftspace = path.join(
+        current_app.config["EXPORT_CONF_FOLDER"],
+        config["publisher"],
+        config["id"],
+    )
+    tmp_dir = path.join(current_app.config["EXPORT_CONF_FOLDER"], "tmp")
+    if not path.exists(tmp_dir):
+        mkdir(tmp_dir)
+    
+
+
+    zip_file = create_zip(draftspace, config["directory"])
+    # b = BytesIO(zip_file)
+    zip_file.close()
+    #return Response(zip_file.read(), mimetype='application/x-zip-compressed')
+    #return send_from_directory(path.join(draftspace, "tmp", config["directory"]), "%s.zip" % config["directory"], as_attachment=True)
+    #return send_file(zip_file.fp, download_name="test.zip", mimetype="application/zip", as_attachment=True)
+
+    return Response(zip_file.fp, mimetype="application/x-zip-compressed", headers={'Content-Disposition': 'attachment_filename=%s.zip' % config["directory"]})
+
 
 
 @basic_store.route("/proxy/", methods=["GET", "POST"])

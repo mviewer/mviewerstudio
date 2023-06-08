@@ -1,4 +1,6 @@
-from os import walk, remove, path, mkdir
+from os import walk, remove, path, mkdir, sep, makedirs
+from shutil import make_archive, copyfile, copytree, rmtree, move
+import zipfile
 
 
 def clean_preview(app, app_dir):
@@ -26,3 +28,38 @@ def init_preview(app, id):
     preview_path = path.join(config_path, "preview")
     if not path.exists(preview_path):
         mkdir(path.join(config_path, "preview"))
+
+def create_zip(dir, name):
+    tmp_dir = path.join(dir, "tmp")
+    zip_dir = path.join(tmp_dir, name)
+    zip_space = path.join(zip_dir, name)
+    zip_file = path.join(tmp_dir, "%s.zip" % name)
+    
+    if path.exists(tmp_dir):
+        rmtree(tmp_dir)
+    makedirs(zip_dir)
+
+    copyfile(path.join(dir, "%s.xml" % name), path.join(zip_dir, "%s.xml" % name))
+
+    copytree(path.join(dir, name), zip_space)
+    #make_archive(path.join(dir, "%s" % name), "zip", root_dir=zip_dir,base_dir=zip_dir)
+    custom_make_archive(zip_dir, zip_file)
+    archive = None
+    with zipfile.ZipFile(zip_file, "r") as zip:
+        archive = zip
+    return archive
+
+def zipdir(path, ziph):
+    # ziph is zipfile handle
+    for root, dirs, files in walk(path):
+        for file in files:
+            ziph.writestr(path.join(root, file), path.relpath(path.join(root, file), path.join(path, '..')))
+def custom_make_archive(source, destination):
+    base = path.basename(destination)
+    name = base.split('.')[0]
+    format = base.split('.')[1]
+    archive_from = path.dirname(source)
+    archive_to = path.basename(source.strip(sep))
+    print(source, destination, archive_from, archive_to)
+    make_archive(name, format, archive_from, archive_to)
+    move('%s.%s'%(name,format), destination)
