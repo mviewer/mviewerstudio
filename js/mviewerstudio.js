@@ -987,11 +987,7 @@ var loadApplicationParametersFromFile = function () {
                 return mv.parseApplication(xml);
             }
             // control if ID already exists in studio register
-            fetch(`${ _conf.api }/${ idApp }/exists`)
-                .then(r => r.json()).then(r => {
-                    // read XML
-                    mv.parseApplication(xml, r.exists);
-                })
+            mv.appExists(idApp, (r) => mv.parseApplication(xml, r.exists))
         }
         reader.onerror = function (evt) {
             //alert(mviewer.tr('msg.file_read_error'));
@@ -1028,7 +1024,7 @@ var loadApplicationParametersFromRemoteFile = function (url) {
     }
     Promise.all(waitRequests).then((values) => {
         const data = values[0];
-        mv.parseApplication(data);
+        mv.parseApplication(data, true);
         if (!_conf.is_php && values[1]) {
             const appMeta = values[1][0];
             if (appMeta?.versions) {
