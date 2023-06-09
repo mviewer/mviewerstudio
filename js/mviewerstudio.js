@@ -895,16 +895,16 @@ var saveTemplateToGetUrl = () => new Promise((resolve, reject) => {
         resolve(null);
     })
 })
-var saveApplicationParameters = () => {
+var saveApplicationParameters = (close) => {
     if (_conf?.is_php) {
-        saveApplicationsConfig();
+        saveApplicationsConfig(close);
     } else {
         saveTemplateToGetUrl().then(() => {
-            saveApplicationsConfig();
+            saveApplicationsConfig(close);
         })
     }
 }
-var saveApplicationsConfig = (message = "") => {
+var saveApplicationsConfig = (close, message = "") => {
     const conf = getConfig();
     if (!conf || !mv.validateXML(conf.join(""))) {
         return alertCustom(mviewer.tr('msg.xml_doc_invalid'), 'danger');
@@ -923,7 +923,7 @@ var saveApplicationsConfig = (message = "") => {
     })
     .then(r => r.ok ? r.json() : Promise.reject(r))
     .then(() => {
-        if (!_conf.is_php) {
+        if (!_conf.is_php && !close) {
             // don't execute this code with php backend
             config.isFile = true;
             document.querySelector("#toolsbarStudio-delete").classList.remove("d-none");

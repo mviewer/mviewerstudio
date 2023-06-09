@@ -26,7 +26,7 @@ $('#mod-closeStudio').modal('hide');
   document.querySelector(".badge-publish").classList.add("d-none");
 }
 
-function saveStudio() {
+function saveStudio(close) {
   const saveModal = document.querySelector("#mod-closeStudio").classList.contains("show");
   const titleApp = $("#opt-title").val();
   if (!titleApp) {
@@ -38,14 +38,14 @@ function saveStudio() {
 
   // confirm modal is open
   if (saveModal) {
-    saveApplicationParameters(); 
+    saveApplicationParameters(close); 
     showHome();
     return;
   }
   
   // confirm modal is hidden and user click onto save button
   if (config.id) {
-    saveApplicationParameters();
+    saveApplicationParameters(close);
     return;
   }
 
