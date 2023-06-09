@@ -255,7 +255,7 @@ var newConfiguration = function (infos) {
         date: infos?.date || newDate.toISOString(),
         temp: { layers: {} },
         id: infos?.id || mv.uuid(),
-        description: newDate.format("DD-MM-YYYY-HH-mm-ss"),
+        description: infos?.description || newDate.format("DD-MM-YYYY-HH-mm-ss"),
         isFile: !!infos?.id,
         relation: infos?.relation
     };
