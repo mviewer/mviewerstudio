@@ -614,7 +614,8 @@ def delete_layer_template(id, id_layer) -> Response:
     draft_templates = path.join(
         draftspace, config["directory"], "templates", "%s.mst" % id_layer
     )
-    remove(draft_templates)
+    if path.exists(draft_templates):
+        remove(draft_templates)
     return jsonify({"success": True})
 
 @basic_store.route("/api/app/<id>/exists", methods=["GET"])

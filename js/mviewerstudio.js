@@ -846,30 +846,22 @@ let previewAppsWithoutSave = (id, showPublish) => {
         .catch(err => alertCustom(mviewer.tr('msg.xml_doc_invalid'), 'error'))
 };
 
-/**
- * Download app
- */
 const downloadXML = () => {
     if (_conf.is_php) {
         return downloadXML4PHP()   
-    } else {
-        // get download file URI
-        fetch(`api/download/${ config.id }`).then(r => r.json()).then(r => {
-            let link = document.createElement("a");
-            link.download = r.name;
-            link.href = _conf.mviewer_instance + r.url;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            delete link;
-        })
     }
+    fetch(`api/download/${ config.id }`).then(r => r.json()).then(r => {
+        let link = document.createElement("a");
+        link.download = r.name;
+        link.href = _conf.mviewer_instance + r.url;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        delete link;
+    })
 }
-
-/**
- * Download XML - for PHP backend only
- */
 const downloadXML4PHP = () => {
+
     const conf = getConfig();
     if (mv.validateXML(conf.join(""))) {
         var element = document.createElement('a');
