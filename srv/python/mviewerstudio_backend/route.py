@@ -101,6 +101,7 @@ def update_config() -> Response:
         description = message
     if not description:
         description = "Change XML"
+    diff = config.git.repo.git.diff()
     config.git.commit_changes(description)
     # get config as class model data
     config_data = config.as_data()
@@ -116,7 +117,7 @@ def update_config() -> Response:
 
     current_app.register.update(config_data.as_dict())
     return jsonify(
-        {"success": True, "filepath": config_data.url, "config": config_data}
+        {"success": True, "filepath": config_data.url, "config": config_data, "diff": diff}
     )
 
 

@@ -322,6 +322,7 @@
         "msg.save_theme_first": "Enregistrer d'abord votre thématique.",
         "msg.give_title_before_save": "Attention, vous devez obligatoirement indiquer un titre à votre application avant de sauvegarder.",
         "msg.file_saved_on_server": "Fichier sauvegardé sur le serveur",
+        "msg.file_same_not_saved": "il n'y a aucune modification à sauvegarder !",
         "msg.save_failure": "Echec de la sauvegarde du fichier.\nVeuillez consulter votre administrateur.",
         "msg.file_read_error": "erreur de lecture de fichier",
         "msg.deleted_apps": " application(s) supprimée(s)",

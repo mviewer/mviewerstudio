@@ -904,6 +904,35 @@ var saveApplicationParameters = (close) => {
         })
     }
 }
+
+var saveAppWithPython = (exists, conf, url, close) => {
+    return fetch(url, {
+        method: exists ? "PUT" : "POST",
+        headers: {
+            'Content-Type': 'text/xml'
+        },
+        body: conf.join("")
+    })
+    .then(r => r.ok ? r.json() : Promise.reject(r))
+    .then(r => {
+        if (!_conf.is_php && !close) {
+            // don't execute this code with php backend
+            config.isFile = true;
+            document.querySelector("#toolsbarStudio-delete").classList.remove("d-none");
+            document.querySelector("#layerOptionBtn").classList.remove("d-none");
+            mv.manageDraftBadge(config.relation);
+        } else {
+            config.isFile = true;
+        }
+        if (r.diff || !exists) {
+            alertCustom(mviewer.tr('msg.file_saved_on_server'), 'info');
+        }
+        if (!r.diff && exists) {
+            alertCustom(mviewer.tr('msg.file_same_not_saved'), 'success');
+        } 
+        
+    }).catch(err => alertCustom(mviewer.tr('msg.save_failure'), 'danger'));
+}
 var saveApplicationsConfig = (close, message = "") => {
     const conf = getConfig();
     if (!conf || !mv.validateXML(conf.join(""))) {
@@ -913,27 +942,8 @@ var saveApplicationsConfig = (close, message = "") => {
         return saveAppWithPhp(conf)
     }
     // Save the map serverside
-    const url = message ? `${ _conf.api }?message=${message}` : _conf.api;
-    return fetch(url, {
-        method: config.isFile ? "PUT" : "POST",
-        headers: {
-            'Content-Type': 'text/xml'
-        },
-        body: conf.join("")
-    })
-    .then(r => r.ok ? r.json() : Promise.reject(r))
-    .then(() => {
-        if (!_conf.is_php && !close) {
-            // don't execute this code with php backend
-            config.isFile = true;
-            document.querySelector("#toolsbarStudio-delete").classList.remove("d-none");
-            document.querySelector("#layerOptionBtn").classList.remove("d-none");
-            mv.manageDraftBadge(config.relation);
-        } else {
-            config.isFile = false;
-        }
-        alertCustom(mviewer.tr('msg.file_saved_on_server'), 'info');
-    }).catch(err => alertCustom(mviewer.tr('msg.save_failure'), 'danger'));
+    const url = message ? `${ _conf.api }?message=${ message }` : _conf.api;
+    mv.appExists(config.id, (r) => saveAppWithPython(r.exists, conf, url, close))
 };
 
 var addgeoFilter = function () {
