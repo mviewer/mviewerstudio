@@ -636,23 +636,16 @@ def download(id) -> Response:
         current_app.config["EXPORT_CONF_FOLDER"],
         config["publisher"],
         config["id"],
-    )
-    tmp_dir = path.join(current_app.config["EXPORT_CONF_FOLDER"], "tmp")
-    if not path.exists(tmp_dir):
-        mkdir(tmp_dir)
-    
+    )    
+    create_zip(draftspace, config["directory"])
+    file_name = "%s.zip" % config["directory"]
+    url = path.join(current_app.config["CONF_PATH_FROM_MVIEWER"], config["publisher"], config["id"], "tmp", file_name)
 
-
-    zip_file = create_zip(draftspace, config["directory"])
-    # b = BytesIO(zip_file)
-    zip_file.close()
-    #return Response(zip_file.read(), mimetype='application/x-zip-compressed')
-    #return send_from_directory(path.join(draftspace, "tmp", config["directory"]), "%s.zip" % config["directory"], as_attachment=True)
-    #return send_file(zip_file.fp, download_name="test.zip", mimetype="application/zip", as_attachment=True)
-
-    return Response(zip_file.fp, mimetype="application/x-zip-compressed", headers={'Content-Disposition': 'attachment_filename=%s.zip' % config["directory"]})
-
-
+    return jsonify({
+        "success": True,
+        "url": url,
+        "name": file_name
+    })
 
 @basic_store.route("/proxy/", methods=["GET", "POST"])
 def proxy() -> Response:
