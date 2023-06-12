@@ -93,7 +93,7 @@ def control_relation(path, relation, id):
     return True
 
 
-def replace_templates_url(target_xml, new_target_dir):
+def replace_templates_url(target_xml, new_path):
     file_to_replace = open(target_xml, "r")
     xml_str = file_to_replace.read()
     xml_parser = ET.fromstring(xml_str)
@@ -101,7 +101,7 @@ def replace_templates_url(target_xml, new_target_dir):
     for layer in layersNode:
         templateNode = layer.findall(".//template")
         for tpl in templateNode:
-            newUrl = path.join(new_target_dir, "%s.mst" % layer.get("id"))
+            newUrl = path.join(new_path, "%s.mst" % layer.get("id"))
             tpl.set("url", newUrl)
     write_file(xml_parser, target_xml)
     return
@@ -193,6 +193,7 @@ class Config:
             # create directory
             makedirs(self.workspace)
             makedirs(path.join(self.workspace, "preview"))
+            makedirs(path.join(self.workspace, "tmp"))
 
     def _get_xml_describe(self, xml):
         """
