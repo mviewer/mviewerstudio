@@ -449,9 +449,6 @@ var addTheme = function (title, collapsed, themeid, icon, url, layersvisibility)
         url: url,
         layers: []
     };
-    if (title === "Nouvelle thématique") {
-        $(".themes-list-item[data-themeid='"+themeid+"'] .theme-edit").parent().trigger("click");
-    }
 };
 
 var editTheme = function (item) {
