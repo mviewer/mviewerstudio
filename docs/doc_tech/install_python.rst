@@ -76,7 +76,9 @@ Cette étape permet de prévisualiser les cartes réalisées dans ``mviewerstudi
 
     ln -s /<full_path>/mviewerstudio/srv/python/mviewerstudio_backend/store /<full_path>/mviewer/apps/store
 
-**3. Ouvrir la configuration frontend ``/srv/python/mviewerstudio_backend/static/apps/config.json`` et adapter les paramètres**
+**3. Modifier la configuration frontend**
+
+Ouvrir le fichier : ``/srv/python/mviewerstudio_backend/static/apps/config.json`` et adapter les paramètres (aidez-vous de la page d'explication des paramètres si besoin).
 
 .. warning::
     Le paramètre ``mviewer_instance`` doit finir par ``/``
@@ -84,16 +86,27 @@ Cette étape permet de prévisualiser les cartes réalisées dans ``mviewerstudi
 .. note::
    Le paramètre ``user_info_visible`` est à utiliser si vous instance est sécurisée (avec geOrchestra par exemple).
 
+.. note::
+   Le paramètre ``proxy`` est à laisser vide si vous n'utilisez pas de proxy.
+
 .. code-block:: sh
 
+    "studio_title": "Mviewer Studio Megalis"
     "mviewer_instance": "http://localhost/mviewer/",
     "conf_path_from_mviewer": "apps/store/",
+    "publish_url": "?config=apps/public/{{config}}.xml",
     "api": "api/app",
     "user_info": "api/user",
     "user_info_visible": false,
+    "proxy": "proxy/?url=",
     "mviewer_short_url": {
         "used": true,
         "apps_folder": "store"
+        "public_folder": "public"
+    },
+    "external_themes": {
+        "used": true,
+        "url": "https://geobretagne.fr/minicatalog/csv"
     },
 
 **4. Ouvrir la configuration backend ``/srv/python/mviewerstudio_backend/settings.py`` et adapter les paramètres**
@@ -326,4 +339,21 @@ Pour la mise à jour, voici donc les commandes à exécuter à partir du répert
     cd srv/python
     sh ./sync.sh pull /full/path/mviewerstudio
 
-Si besoin, réaliser un restart de votre service (e.g gunicorn).
+Si besoin, réaliser un restart de votre service (e.g gunicorn) : 
+
+.. code-block:: sh
+
+    systemctl restart mviewerstudio
+
+Pour tout redémarrage de gunicorn, vérifier que le service à bien démarrer : 
+
+.. code-block:: sh
+
+    systemctl status mviewerstudio
+
+.. warning::
+
+    Il est possible que Git n'ait pas terminé d'écrire un fichier lors de l'arrêt du service.
+    Le service peut alors démarrer et s'arréter.
+
+    Si vous constater dans le fichier de log d'erreur gunicorn que c'est bien le cas, redémarrer le service avec la commande ``systemctl restart mviewerstudio``
