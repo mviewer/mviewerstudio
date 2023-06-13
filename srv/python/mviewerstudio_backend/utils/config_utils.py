@@ -4,6 +4,7 @@ import xml.etree.ElementTree as ET
 import re
 import glob
 
+from .commons import replace_special_chars
 from ..models.config import ConfigModel
 from .login_utils import current_user
 from .git_utils import Git_manager
@@ -231,9 +232,7 @@ class Config:
 
             # normalize file name
             app_name = self.meta.find("{*}title").text[:20]
-            normalized_file_name = (
-                re.sub("[^A-Za-z0-9 \n\.]+", "_", app_name).replace(" ", "_").lower()
-            )
+            normalized_file_name = replace_special_chars(app_name)
             self.directory = normalized_file_name
             # save file
             normalized_xml_file_name = "%s.xml" % normalized_file_name
