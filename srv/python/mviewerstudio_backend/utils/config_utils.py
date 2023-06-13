@@ -39,7 +39,7 @@ def write_file(xml, xml_path):
     :param xml: xml to write in xml path file
     :param xml_path: string xml file path
     """
-    xml_to_string = ET.tostring(xml).decode("utf-8")
+    xml_to_string = ET.tostring(xml, "utf-8").decode("utf-8")
     file = open(xml_path, "w")
     file.write(xml_to_string)
     file.close()
