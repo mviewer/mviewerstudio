@@ -1,8 +1,11 @@
 from os import walk, remove, path, mkdir, sep, makedirs
 from shutil import make_archive, copyfile, copytree, rmtree, move
-'''
+
+"""
 Clean preview workspace to avoid spaces with many old files
-'''
+"""
+
+
 def clean_preview(app, app_dir):
     """
     Will remove each XML files in config preview directory
@@ -17,9 +20,12 @@ def clean_preview(app, app_dir):
         for f in files:
             remove(path.join(preview_dir, f))
 
-'''
+
+"""
 Prepare preview space
-'''
+"""
+
+
 def init_preview(app, id):
     """
     Will create preview directory inside given config workspace if necessary.
@@ -31,15 +37,18 @@ def init_preview(app, id):
     if not path.exists(preview_path):
         mkdir(path.join(config_path, "preview"))
 
-'''
+
+"""
 Create zip
-'''
+"""
+
+
 def create_zip(dir, name):
     tmp_dir = path.join(dir, "tmp")
     zip_dir = path.join(tmp_dir, name)
     zip_space = path.join(zip_dir, name)
     zip_file = path.join(tmp_dir, "%s.zip" % name)
-    
+
     if path.exists(tmp_dir):
         rmtree(tmp_dir)
     makedirs(zip_dir)
@@ -51,14 +60,16 @@ def create_zip(dir, name):
     return zip_file
 
 
-'''
+"""
 Ease make_archive use
-'''
+"""
+
+
 def custom_make_archive(source, destination):
     base = path.basename(destination)
-    name = base.split('.')[0]
-    format = base.split('.')[1]
+    name = base.split(".")[0]
+    format = base.split(".")[1]
     archive_from = path.dirname(source)
     archive_to = path.basename(source.strip(sep))
     make_archive(name, format, archive_from, archive_to)
-    move('%s.%s'%(name,format), destination)
+    move("%s.%s" % (name, format), destination)

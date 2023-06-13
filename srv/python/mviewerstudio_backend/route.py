@@ -117,7 +117,12 @@ def update_config() -> Response:
 
     current_app.register.update(config_data.as_dict())
     return jsonify(
-        {"success": True, "filepath": config_data.url, "config": config_data, "diff": diff}
+        {
+            "success": True,
+            "filepath": config_data.url,
+            "config": config_data,
+            "diff": diff,
+        }
     )
 
 
@@ -618,6 +623,7 @@ def delete_layer_template(id, id_layer) -> Response:
         remove(draft_templates)
     return jsonify({"success": True})
 
+
 @basic_store.route("/api/app/<id>/exists", methods=["GET"])
 def app_exists(id) -> Response:
     config = current_app.register.read_json(id)
@@ -625,7 +631,7 @@ def app_exists(id) -> Response:
         return jsonify({"success": True, "exists": False})
     else:
         return jsonify({"success": True, "exists": True})
-    
+
 
 @basic_store.route("/api/download/<id>", methods=["GET"])
 def download(id) -> Response:
@@ -637,16 +643,19 @@ def download(id) -> Response:
         current_app.config["EXPORT_CONF_FOLDER"],
         config["publisher"],
         config["id"],
-    )    
+    )
     create_zip(draftspace, config["directory"])
     file_name = "%s.zip" % config["directory"]
-    url = path.join(current_app.config["CONF_PATH_FROM_MVIEWER"], config["publisher"], config["id"], "tmp", file_name)
+    url = path.join(
+        current_app.config["CONF_PATH_FROM_MVIEWER"],
+        config["publisher"],
+        config["id"],
+        "tmp",
+        file_name,
+    )
 
-    return jsonify({
-        "success": True,
-        "url": url,
-        "name": file_name
-    })
+    return jsonify({"success": True, "url": url, "name": file_name})
+
 
 @basic_store.route("/proxy/", methods=["GET", "POST"])
 def proxy() -> Response:
