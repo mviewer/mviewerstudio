@@ -68,11 +68,13 @@ Une nouvelle fenêtre s'ouvre avec les options suivantes :
 Ajouter une donnée
 -------------------------------------------
 
-Il est ensuite nécessaire d'ajouter des données à cette thématique via le bouton |ajout_donnees|. L'ajout d'un nouveau jeu de données peut se faire avec une recherche dans un catalogue et en saisissant les paramètres de base.
+Depuis la fenêtre ``Paramètres de la thématique sélectionnée`` il est possible d'ajouter des données à cette thématique via le bouton |ajout_donnees|.
+
+L'ajout d'un nouveau jeu de données peut se faire avec une recherche dans un catalogue et en saisissant les paramètres de base.
 
 .. |ajout_donnees| image:: ../_images/user/mviewerstudio_2_thematiques_bouton_ajouter_donnees.png
-              :alt: Ajouter une donnée 
-	      :width: 100 pt
+  :alt: Ajouter une donnée 
+  :width: 100 pt
 
 Ajouter une donnée depuis un catalogue
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
