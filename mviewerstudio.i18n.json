@@ -20,6 +20,7 @@
         "modal.credits.lib": "Librairies",
         "modal.credits.icon": "Icônes",
         "modal.credits.draw": "Illustrations",
+        "modal.credits.funder": "Financeurs du projet",
         "modal.file.import" : "Ouvrir un projet existant",        
         "modal.file.serverside" : "Sur le serveur",
         "modal.file.local" : "Depuis votre ordinateur",

@@ -1336,3 +1336,12 @@
 	#generatorComponentsDDArea .subcomponents .tags-menu{
 		top: 80% !important;
 	}
+
+	/*Financeurs credit*/
+
+	.credits img{
+		height:50px;
+	}
+	.credits .col{
+		text-align:center;
+	}
