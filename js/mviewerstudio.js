@@ -22,7 +22,10 @@ $(document).ready(function(){
             // console.groupCollapsed("init app from config");
             _conf = data.app_conf;
             const VERSION =  _conf.mviewerstudio_version
-            console.log("MviewerStudio version " + VERSION);
+            document.querySelector("#creditInfo").innerHTML = `MviewerStudio | Licence GPL-3.0 | Version ${ VERSION }`;
+            let mvCompliantInfo = document.querySelector("#mviewerCompliantInfo");
+            mvCompliantInfo.innerHTML = `${mvCompliantInfo.innerHTML} ${ _conf.mviewer_version }`;
+            
 
             if (_conf.logout_url) {
                 $("#menu_user_logout a").attr("href", _conf.logout_url);
