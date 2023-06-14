@@ -92,6 +92,10 @@ Adaptez ensuite les paramètres selon votre environnement (aidez-vous de la page
 
 **4. Ouvrir la configuration backend ``/srv/python/mviewerstudio_backend/settings.py`` et adapter les paramètres**
 
+.. note::
+   Ces variables sont à renseigner dans le fichier settings.py.
+   Pour le déploiement en production (e.g via gunicorn), ces variables sont localisées dans le fichier du service (fichier ``systemd/system/mviewerstudio.service``)
+
 .. code-block:: sh
     
     CONF_PATH_FROM_MVIEWER = os.getenv("CONF_PATH_FROM_MVIEWER", "apps/store")
@@ -103,7 +107,9 @@ Adaptez ensuite les paramètres selon votre environnement (aidez-vous de la page
     DEFAULT_ORG = os.getenv("DEFAULT_ORG", "public")
 
 Pour les chemins relatifs, la racine sera en général pour Flask ``/srv/python/mviewerstudiobackend``. 
-Avec gunicorn (e.g pour la mise en production), vous devez utiliser des chemin absolus.
+Avec gunicorn (e.g pour la mise en production), vous devez utiliser des chemins absolus.
+
+Voici une description de ces variables :
 
 - ``CONF_PATH_FROM_MVIEWER``: répertoire d'accès à partir de l'instance mviewer.
 - ``CONF_PUBLISH_PATH_FROM_MVIEWER``: répertoire de publication à partir de l'instance mviewer.
