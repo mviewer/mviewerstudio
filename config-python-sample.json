@@ -1,8 +1,8 @@
 {
     "app_conf": {
-        "studio_title": "Mviewer Studio Megalis",
+        "studio_title": "Mviewer Studio",
         "mviewer_version":  "3.9",
-        "mviewerstudio_version":  "3.2",
+        "mviewerstudio_version":  "4",
         "api": "api/app",
         "store_style_service": "api/style",
         "mviewer_instance": "http://127.0.0.1:5051/",

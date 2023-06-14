@@ -78,7 +78,8 @@ Cette étape permet de prévisualiser les cartes réalisées dans ``mviewerstudi
 
 **3. Modifier la configuration frontend**
 
-Ouvrir le fichier : ``/srv/python/mviewerstudio_backend/static/apps/config.json`` et adapter les paramètres (aidez-vous de la page d'explication des paramètres si besoin).
+Récupérez le fichier ``config-python-sample.json`` (à la racine du projet) et copier son contenu dans le fichier ``/srv/python/mviewerstudio_backend/static/apps/config.json``.
+Adaptez ensuite les paramètres selon votre environnement (aidez-vous de la page d'explication des paramètres si besoin).
 
 .. warning::
     Le paramètre ``mviewer_instance`` doit finir par ``/``
@@ -88,26 +89,6 @@ Ouvrir le fichier : ``/srv/python/mviewerstudio_backend/static/apps/config.json`
 
 .. note::
    Le paramètre ``proxy`` est à laisser vide si vous n'utilisez pas de proxy.
-
-.. code-block:: sh
-
-    "studio_title": "Mviewer Studio Megalis"
-    "mviewer_instance": "http://localhost/mviewer/",
-    "conf_path_from_mviewer": "apps/store/",
-    "publish_url": "?config=apps/public/{{config}}.xml",
-    "api": "api/app",
-    "user_info": "api/user",
-    "user_info_visible": false,
-    "proxy": "proxy/?url=",
-    "mviewer_short_url": {
-        "used": true,
-        "apps_folder": "store"
-        "public_folder": "public"
-    },
-    "external_themes": {
-        "used": true,
-        "url": "https://geobretagne.fr/minicatalog/csv"
-    },
 
 **4. Ouvrir la configuration backend ``/srv/python/mviewerstudio_backend/settings.py`` et adapter les paramètres**
 
