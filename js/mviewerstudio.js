@@ -893,11 +893,17 @@ var saveTemplateToGetUrl = () => new Promise((resolve, reject) => {
     themes.forEach(theme => {
         let layers = config.themes[theme].layers.filter(layer => layer.templateFromGenerator);
         waitTemplateUrls = [...waitTemplateUrls, ...layers.map(layer => {
-            return mv.saveTemplate(layer.id, layer.templateFromGenerator).then(r => r.json()).then(r => ({
-                layer: layer,
-                response: r
-            }))
-        })];
+            return mv.saveTemplate(layer.id, layer.templateFromGenerator)
+                .then(r => r.json())
+                .then(r => {
+                    layer.templateFromGenerator = null;
+                    return {
+                        layer: layer,
+                        response: r
+                    }
+                })
+            })
+        ];
 
     });
     Promise.all(waitTemplateUrls).then(values => {
@@ -905,7 +911,8 @@ var saveTemplateToGetUrl = () => new Promise((resolve, reject) => {
             let l = mv.getLayerById(layer?.id);
             let templateFullPath = `${ response.filepath }`;
             l.generatorTemplateUrl = templateFullPath;
-            l.useGeneratorTemplate = true;  
+            l.useGeneratorTemplate = true;
+            l.templateFromGenerator = "";
         })
         resolve(null);
     })
