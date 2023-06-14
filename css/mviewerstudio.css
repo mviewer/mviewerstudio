@@ -1334,7 +1334,7 @@
 	}
 
 	#generatorComponentsDDArea .subcomponents .tags-menu{
-		top: 80% !important;
+		top: auto !important;
 	}
 
 	/*Financeurs credit*/
