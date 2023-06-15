@@ -135,7 +135,8 @@ class ConfigRegister:
         :param id: string uuid use as unique directory name
         """
         xml_path = glob.glob(
-            "%s/*.xml" % path.join(self.store_directory, current_user.organisation, id)
+            "%s/*.xml"
+            % path.join(self.store_directory, current_user.normalize_name, id)
         )
         if xml_path:
             config = from_xml_path(self.app, xml_path[0])

@@ -206,7 +206,7 @@ const getUser = () => {
                     mv.updateUserInfo({
                         userName: data.user_name,
                         name: `${ data.first_name } ${ data.last_name }`,
-                        groupSlugName: userGroupSlugName || slugify(userGroupFullName),
+                        groupSlugName: userGroupSlugName || data.normalize_name,
                         groupFullName: userGroupFullName
                     });
                 }

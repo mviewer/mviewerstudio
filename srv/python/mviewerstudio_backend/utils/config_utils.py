@@ -83,7 +83,7 @@ def control_relation(path, relation, id):
     identifier = content.find(".//metadata/{*}RDF/{*}Description//{*}identifier").text
     lastRelation = content.find(".//metadata/{*}RDF/{*}Description//{*}relation").text
 
-    if current_user.organisation != org:
+    if current_user.normalize_name != org:
         return False
     if current_user.username != creator:
         return False
@@ -140,7 +140,7 @@ class Config:
                 org = self.meta.find("{*}publisher").text
             else:
                 org = (
-                    current_user.organisation
+                    current_user.normalize_name
                     if current_user
                     else app.config["DEFAULT_ORG"]
                 )
@@ -205,8 +205,8 @@ class Config:
         # replace anonymous infos by user and org infos
         if current_user and current_user.username:
             edit_xml_string(meta_root, "creator", current_user.username)
-        if current_user and current_user.organisation:
-            edit_xml_string(meta_root, "publisher", current_user.organisation)
+        if current_user and current_user.normalize_name:
+            edit_xml_string(meta_root, "publisher", current_user.normalize_name)
         return meta_root
 
     def write(self):
@@ -245,7 +245,7 @@ class Config:
                 )
             else:
                 self.url = path.join(
-                    current_user.organisation, self.uuid, normalized_xml_file_name
+                    current_user.normalize_name, self.uuid, normalized_xml_file_name
                 )
             # create resources dir to save mst, customs, etc.
             app_dir = path.join(self.workspace, normalized_file_name)

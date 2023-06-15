@@ -142,7 +142,9 @@ def list_stored_configs() -> Response:
         configs = current_app.register.as_dict()["configs"]
 
     configs = [
-        config for config in configs if config["publisher"] == current_user.organisation
+        config
+        for config in configs
+        if config["publisher"] == current_user.normalize_name
     ]
     for config in configs:
         config["link"] = path.join(
@@ -172,7 +174,7 @@ def publish_config(id, name) -> Response:
     if not publish_dir or not path.exists(publish_dir):
         return BadRequest("Publish directory does not exists !")
     # create or get org parent directory from publication path
-    org_publish_dir = path.join(current_app.publish_path, current_user.organisation)
+    org_publish_dir = path.join(current_app.publish_path, current_user.normalize_name)
     if not path.exists(org_publish_dir):
         mkdir(org_publish_dir)
 
@@ -191,7 +193,7 @@ def publish_config(id, name) -> Response:
 
     # control that workspace to copy exists
     workspace = path.join(
-        current_app.config["EXPORT_CONF_FOLDER"], current_user.organisation, id
+        current_app.config["EXPORT_CONF_FOLDER"], current_user.normalize_name, id
     )
     if not path.exists(workspace):
         return BadRequest("Application does not exists !")
@@ -244,7 +246,7 @@ def publish_config(id, name) -> Response:
         copytree(copy_dir, past_dir)
         relative_publish_dir = path.join(
             current_app.config["CONF_PUBLISH_PATH_FROM_MVIEWER"],
-            current_user.organisation,
+            current_user.normalize_name,
             xml_publish_name,
             "templates",
         )
@@ -256,7 +258,7 @@ def publish_config(id, name) -> Response:
         current_app.config["CONF_PATH_FROM_MVIEWER"], config.as_dict()["url"]
     )
     # online file from public dir
-    online_file = path.join(current_user.organisation, "%s.xml" % xml_publish_name)
+    online_file = path.join(current_user.normalize_name, "%s.xml" % xml_publish_name)
     return jsonify({"online_file": online_file, "draft_file": draft_file})
 
 
@@ -274,7 +276,7 @@ def delete_config_workspace(id=None) -> Response:
 
     logger.debug("START DELETE CONFIG : %s" % id)
     workspace = path.join(
-        current_app.config["EXPORT_CONF_FOLDER"], current_user.organisation, id
+        current_app.config["EXPORT_CONF_FOLDER"], current_user.normalize_name, id
     )
     # update json
     config = current_app.register.read_json(id)
@@ -303,7 +305,9 @@ def delete_config_workspace(id=None) -> Response:
     map_relation = False
     if "relation" in config and config["relation"]:
         publish_name = config["relation"]
-        org_publish_dir = path.join(current_app.publish_path, current_user.organisation)
+        org_publish_dir = path.join(
+            current_app.publish_path, current_user.normalize_name
+        )
         publish_file = path.join(org_publish_dir, "%s.xml" % publish_name)
         map_relation = control_relation(publish_file, publish_name, id)
         if path.exists(publish_file) and map_relation:
@@ -334,7 +338,9 @@ def get_all_app_versions(id) -> Response:
         raise BadRequest("This config doesn't exists !")
     config = config[0]
     org = (
-        current_user.organisation if current_user else current_app.config["DEFAULT_ORG"]
+        current_user.normalize_name
+        if current_user
+        else current_app.config["DEFAULT_ORG"]
     )
     workspace = path.join(current_app.config["EXPORT_CONF_FOLDER"], org, config["id"])
     git = Git_manager(workspace)
@@ -363,7 +369,7 @@ def switch_app_version(id, version="1") -> Response:
     config = config[0]
     workspace = path.join(
         current_app.config["EXPORT_CONF_FOLDER"],
-        current_user.organisation,
+        current_user.normalize_name,
         config["id"],
     )
     git = Git_manager(workspace)
@@ -402,7 +408,7 @@ def preview_app_version(id, version) -> Response:
     init_preview(current_app, config["id"])
     workspace = path.join(
         current_app.config["EXPORT_CONF_FOLDER"],
-        current_user.organisation,
+        current_user.normalize_name,
         config["id"],
     )
     git = Git_manager(workspace)
@@ -469,15 +475,15 @@ def preview_uncommited_app(id) -> Response:
     file_name = uuid.uuid1()
     preview_file = path.join(id, "preview", "%s.xml" % file_name)
     system_path = path.join(
-        app_config["EXPORT_CONF_FOLDER"], current_user.organisation, preview_file
+        app_config["EXPORT_CONF_FOLDER"], current_user.normalize_name, preview_file
     )
-    clean_preview(current_app, path.join(current_user.organisation, id))
+    clean_preview(current_app, path.join(current_user.normalize_name, id))
     # store file to preview folder
     with open(system_path, "w") as file:
         file.write(xml)
         file.close()
     # return url
-    file_path = path.join(current_user.organisation, preview_file)
+    file_path = path.join(current_user.normalize_name, preview_file)
     return (
         jsonify(
             {
@@ -530,7 +536,7 @@ def create_app_version(id) -> Response:
     config = config[0]
     workspace = path.join(
         current_app.config["EXPORT_CONF_FOLDER"],
-        current_user.organisation,
+        current_user.normalize_name,
         config["id"],
     )
     git = Git_manager(workspace)
@@ -571,7 +577,7 @@ def add_layer_template(id, file_name) -> Response:
     config = config[0]
     draftspace = path.join(
         current_app.config["EXPORT_CONF_FOLDER"],
-        current_user.organisation,
+        current_user.normalize_name,
         config["id"],
     )
     templates_dir = path.join(draftspace, config["directory"], "templates")
@@ -586,7 +592,7 @@ def add_layer_template(id, file_name) -> Response:
         {
             "success": True,
             "filepath": path.join(
-                current_user.organisation,
+                current_user.normalize_name,
                 config["id"],
                 config["directory"],
                 "templates",
@@ -613,7 +619,7 @@ def delete_layer_template(id, id_layer) -> Response:
     # remove template file from server
     draftspace = path.join(
         current_app.config["EXPORT_CONF_FOLDER"],
-        current_user.organisation,
+        current_user.normalize_name,
         config["id"],
     )
     draft_templates = path.join(

@@ -310,6 +310,43 @@ Il vous faudra également veiller à bien utiliser la bonne version de python di
     Sélectionner ensuite le type ``Python > Flask``.
     Le serveur se lance alors en mode débogue.
 
+Gestion des logs
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+En mode développement, les logs sont affichées dans le terminal visible lors de l'éxécution du mode debug(e.g VS Code).
+
+En mode production, il est nécessaire d'adapter votre système de service pour conserver les logs dans un fichier spécifique.
+
+Pour gunicorn, nous conseillons d'ajouter les options nécessaires dans le script de démarrage du service (``/etc/systemd/system/mviewerstudio.service``).
+
+Voici par exemple la commande d'exécution du service gunicorn avec la sauvegardes des logs dans 2 fichiers : 
+
+.. code-block:: sh
+
+    --access-logfile /srv/log/gunicorn-access.log --capture-output --log-level debug --error-logfile /srv/log/gunicorn-error.log
+
+- Le fichier ``gunicorn-access.log`` permet d'obtenir les logs d'accès.
+
+- Le fichier ``gunicorn-error.log`` permet d'accéder aux logs générales des scripts Python (détail des erreurs, logging type INFO, DEBUG, WARN, etc...).
+
+.. warning::
+
+    Dans les scripts Python, nous utilisons le module logging de Python qui permet de définir un niveau de log (WARN, DEBUG, INFO) correspondant au niveau de log défini dans les options du service (e.g gunicorn).
+    
+    https://docs.python.org/fr/3/library/logging.html#module-logging
+
+.. note::
+
+    Pour aller plus loin avec le logging Python:
+    
+    https://docs.python.org/fr/3/howto/logging.html
+
+.. note::
+
+    Pour plus d'information sur les options de logging avec gunicorn, consultez la documentation gunicorn :
+
+    https://docs.gunicorn.org/en/stable/settings.html#logging
+
 Mise à jour
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 

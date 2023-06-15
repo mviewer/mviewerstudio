@@ -1,6 +1,6 @@
 from os import walk, remove, path, mkdir, sep, makedirs
 from shutil import make_archive, copyfile, copytree, rmtree, move
-import re
+import re, unicodedata
 
 """
 Clean preview workspace to avoid spaces with many old files
@@ -23,6 +23,16 @@ def clean_preview(app, app_dir):
 
 
 def replace_special_chars(string):
+    # Suppression des accents
+    phrase = "".join(
+        c
+        for c in unicodedata.normalize("NFD", string)
+        if unicodedata.category(c) != "Mn"
+    )
+    # Remplacement des espaces et caractères spéciaux par des underscores
+    phrase = re.sub(r"[^a-zA-Z0-9_]", "_", phrase)
+    return phrase.lower()
+
     # Remplacer les accents
     string = re.sub(r"[àáâãäå]", "a", string)
     string = re.sub(r"[ç]", "c", string)
@@ -36,7 +46,7 @@ def replace_special_chars(string):
     # Remplacer les caractères spéciaux et les espaces par un tiret bas (_)
     string = re.sub(r"[^a-zA-Z0-9_]", "_", string)
 
-    return string
+    return string.lower()
 
 
 """
