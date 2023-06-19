@@ -817,7 +817,7 @@ let previewWithPhp = (conf) => {
 
 let previewAppsWithoutSave = (id, showPublish) => {
     if (config.relation && _conf.publish_url && showPublish) {
-        const filePath = `${ mv.getAuthentUserInfos().groupFullName }/${ config.relation }`;
+        const filePath = `${ mv.getAuthentUserInfos("groupSlugName")}/${ config.relation }`;
         const previewUrl = mv.produceUrl(filePath, true);
         return window.open(previewUrl, 'mvs_vizualize');
     }
