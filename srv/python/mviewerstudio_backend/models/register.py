@@ -5,6 +5,7 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+
 @dataclass
 class ConfigModel:
     """
@@ -24,6 +25,7 @@ class ConfigModel:
             "versions": self.versions,
             "keywords": self.keywords,
         }
+
 
 @dataclass
 class RegisterModel:
