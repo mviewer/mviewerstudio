@@ -34,7 +34,7 @@ jobs:
           black . --check    
         
       - name: "Calculating image tag"
-        if: github.repository == 'geobretagne/mviewerstudio'
+        if: github.repository == 'mviewer/mviewerstudio'
         id: version
         run: |
           if [[ $GITHUB_REF == 'refs/heads/master' ]]; then
@@ -54,13 +54,13 @@ jobs:
 
       - name: "Log in to docker hub"
         uses: azure/docker-login@v1
-        if: github.repository == 'geobretagne/mviewerstudio'
+        if: github.repository == 'mviewer/mviewerstudio'
         with:
           username: '${{ secrets.DOCKER_HUB_USERNAME }}'
           password: '${{ secrets.DOCKER_HUB_PASSWORD }}'
 
       - name: "Retag / push the docker images (not stable)"
-        if: github.repository == 'geobretagne/mviewerstudio'
+        if: github.repository == 'mviewer/mviewerstudio'
         run: |
             docker tag mviewer/mviewerstudio:python-latest mviewer/mviewerstudio:python-${{ steps.version.outputs.VERSION }}
             docker tag mviewer/mviewerstudio:php-latest    mviewer/mviewerstudio:php-${{ steps.version.outputs.VERSION }}
