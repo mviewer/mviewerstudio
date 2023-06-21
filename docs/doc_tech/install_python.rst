@@ -157,13 +157,14 @@ Mode opératoire
 
 2) Création du service et activation du service
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Vous devez créer un fichier dans `/etc/systemd/system/mviewerstudio.service`:
 
  .. code-block:: sh
    :caption: création du fichier mviewerstudio.service
 
        sudo nano /etc/systemd/system/mviewerstudio.service
 
-avec le contenu suivant
+Ajoutez ensuite ce contenu en adaptant les valeurs (chemin, user...) selon votre environnement :
 
  .. code-block:: sh
    :caption: fichier mviewerstudio.service
@@ -175,13 +176,17 @@ avec le contenu suivant
         [Service]
         User=monuser
         Environment="EXPORT_CONF_FOLDER=/var/www/mviewer/apps/store/"
+        Environment="CONF_PUBLISH_PATH_FROM_MVIEWER=apps/prod"
+        Environment="CONF_PATH_FROM_MVIEWER="apps/store"
+        Environment="MVIEWERSTUDIO_PUBLISH_PATH=/var/www/mviewer/apps/prod"
+        Environment="DEFAULT_ORG=public"
         WorkingDirectory=/home/monuser/mviewerstudio/srv/python
         ExecStart=/home/monuser/mviewerstudio/srv/python/.venv/bin/gunicorn -b 127.0.0.1:5007 mviewerstudio_backend.app:app
 
         [Install]
         WantedBy=multi-user.target
 
-Notre service tourne sur le port 5007.
+Notre service tournera donc sur le port `5007` une fois démarré.
 
 
 .. code-block:: sh
