@@ -9,7 +9,7 @@ setup(
     description="little api for mviewerstudio",
     author="Camptocamp",
     author_email="info@camptocamp.com",
-    url="https://github.com/geobretagne/mviewerstudio",
+    url="https://github.com/mviewer/mviewerstudio",
     packages=find_packages(),
     install_requires=REQUIREMENTS,
     classifiers=[
