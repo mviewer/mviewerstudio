@@ -1,24 +1,25 @@
 {
     "app_conf": {
-        "studio_title": "Mviewer STudio Megalis",
-        "upload_service": "srv/store",
-        "delete_service": "srv/delete",
-        "list_service": "srv/list",
-        "store_style_service": "srv/store/style",
-        "mviewer_instance": "/mviewer/",
+        "studio_title": "Mviewer Studio",
+        "mviewer_version":  "3.9",
+        "mviewerstudio_version":  "4",
+        "api": "api/app",
+        "store_style_service": "api/style",
+        "mviewer_instance": "http://127.0.0.1:5051/",
+        "publish_url": "http://127.0.0.1:5051/?config=apps/public/{{config}}.xml",
         "conf_path_from_mviewer": "apps/store/",
         "mviewer_short_url": {
             "used": true,
-            "apps_folder": "store"
+            "apps_folder": "store",
+            "public_folder": "public"
         },
         "external_themes": {
             "used": true,
             "url": "https://geobretagne.fr/minicatalog/csv"
         },
-        "user_info": "srv/user_info",
-        "export_conf_folder": "/home/debian/mviewer/apps/store/",
+        "user_info": "api/user",
         "proxy": "proxy/?url=",
-        "user_info_visible": false,
+        "user_info_visible": true,
         "app_form_placeholders": {
             "app_title": "Kartenn",
             "logo_url": "https://geobretagne.fr/pub/logo/region-bretagne.jpg",

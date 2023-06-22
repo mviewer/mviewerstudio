@@ -1,0 +1,179 @@
+	/* Modal - templateGenerator */
+
+	/* Badge */
+
+	.badgeOptions > div {
+		background-color: var(--primary);
+		color: white;
+		padding: 8px 10px;
+		margin-right: 10px;
+		border-radius: 0.65rem;
+	}
+
+	.badgeOptions > div > i{
+		vertical-align: bottom;
+	}
+
+	.cardComponent {
+		padding: 1rem;
+		margin-bottom: 10px;
+	}
+
+	.cardComponent .form-group {
+		margin-bottom: 5px;
+	}
+
+
+	.titleComp {
+		color: var(--info);
+		font-size: 1.2em;
+		font-weight: 500;
+	}
+
+	.titleComp:hover {
+		cursor: move;
+	}
+
+	.titleComp i {
+		background-color: #934de238;
+		padding: 5px 9px;
+		border-radius: 10px;
+		margin-right: 8px;
+	}
+
+	.titleCompBlock {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+	}
+
+	.deleteComp {
+		color: var(--info);
+	}
+
+	.deleteComp:hover {
+		cursor: pointer;
+		opacity: 0.6;
+	}
+	/* colorPicker */
+	.colorPicker {
+		display: flex;
+		align-items: center;
+	}
+
+	.colorPicker span{
+		font-size: 0.7875rem;
+		margin-left: 5px;
+	}
+
+	.colorPicker input{
+		-webkit-appearance: none;
+		-moz-appearance: none;
+		appearance: none;
+		width: 35px;
+		height: 35px;
+		background-color: transparent;
+		border: none;
+		cursor: pointer;
+	}
+
+	.colorPicker input::-webkit-color-swatch {
+		border-radius: 8px;
+		border: none;
+	}
+
+	.colorPicker input::-moz-color-swatch {
+		border-radius: 8px;
+		border: none;
+	}
+
+	.addComponent {
+		text-align: center;
+		padding: 1rem;
+	}
+
+	.addComponent:hover {
+		background-color: #934ae41a;
+		cursor: pointer;
+	}
+
+	.previewMess {
+		text-align: center;
+		position: absolute;
+		top: 44%;
+		left: 43%;
+		color: #9E9E9E;
+	}
+
+
+	/* Lib components */
+
+	.lib-blockComp {
+		display: flex;
+		flex-direction: row;
+		flex-wrap: wrap;
+	}
+
+	.blockComp {
+		width: 8.5rem;
+		height: 8.5rem;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		margin: 0.3rem;
+		justify-content: center;
+	}
+
+	.blockComp:hover {
+		background-color: #e5e5e540;
+	}
+
+	.blockComp > i {
+		color: var(--info);
+		background-color: #934de238;
+		font-size: 1.2rem;
+		padding: 0.5rem 0.8rem;
+		border-radius: 0.65rem;
+		width: fit-content;
+		margin-bottom: 0.7rem;
+	}
+
+	.blockComp.selected {
+		outline: 2px solid var(--info);
+	}
+
+	.component-form {
+		margin-bottom: 10px;
+	}
+
+	.subcomponents span.badge {
+		color: white;
+		background-color: var(--info) !important;
+		font-size: 12px;
+	}
+	.subcomponents .dropdown-item {
+		color: black;
+		background-color: white !important;
+	}
+	.subcomponents .dropdown-item:hover {
+		color:white;
+		background-color: var(--info) !important;
+	}
+	.subcomponents .dropdown {
+		height: auto;
+	}
+	.activeMultiSelectTag {
+		color:white;
+		background-color: var(--info) !important;
+	}
+
+	/* generatorComponentsDDArea*/
+	#generatorComponentsDDArea {
+		overflow: auto;
+		height: 100% !important;
+	}
+
+	#generatorPreviewContent {
+		overflow: auto;
+	}
+	

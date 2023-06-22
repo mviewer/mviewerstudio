@@ -1,0 +1,207 @@
+openapi: 3.0.0
+info:
+  title: Mviewerstudio API
+  description: Description de l'API de  [mviewerstudio](https://github.com/mviewer/mviewerstudio).
+  version: 1.0.0
+servers:
+  - url: https://kartenn.region-bretagne.fr/mviewerstudio/
+    description: GéoBretagne instance
+  - url: https://gis.jdev.fr/mviewerstudio/#
+    description: JDev Instance (tests, développements)
+paths:
+  /proxy:
+    get:
+      summary: Dev proxy path
+      description: Use as proxy for OGC URL and avoid local CORS error
+      parameters:
+        - name: url
+          in: query
+          description: 'Target URL'
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':    # status code
+          description: URL Content
+        '405':    # status code
+          description: not allowed
+        '400':
+          description: Bad request - url param missing
+  /api/user:
+    get:
+      summary: User informations.
+      description: Return informations from header (e.g georchestra header CAS informations)
+      responses:
+        '200':    # status code
+          description: SUCCESS
+          content:
+            application/json:
+              schema: 
+                type: array
+                items: 
+                  type: string
+  /api/app:
+    post:
+      summary: Create new app
+      requestBody:
+        description: Will save new app in dedicated directory
+        content:
+          text/xml:
+            schema:
+              $ref: '#/components/schemas/Config'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              examples:
+                config:
+                  value:
+                    config:
+                      creator: anonymous
+                      date: '2023-02-23T14:18:25.727427'
+                      id: e507378c1fe7
+                      keywords: a,b,c,d
+                      subject: ''
+                      title: My new project title
+                      url: /e507378c1fe7/My_new_project_title.xml
+                      versions:
+                        - '1'
+                        - '2'
+                        - '3'
+                    filepath: /e507378c1fe7/My_new_project_title.xml
+                    success: true
+
+        '400':
+          description: Bad request - XML missing
+          content:
+            application/json:
+              examples:
+                badRequest:
+                  value:
+                    name: "Bad Request"
+                    description: "No XML found in the request body !"
+    get:
+      summary: Return all available apps
+      responses:
+        '200':
+          description: successful operation
+    delete:
+      summary: To delete apps
+      description: 'Pass a list of apps ids to delete'
+      parameters:
+        - name: ids
+          in: query
+          description: List of apps to delete
+          required: true
+          schema:
+            $ref: '#/components/schemas/ArrayOfInt'
+      responses:
+        '400':
+          description: ids param missing
+
+  /api/app/{id}/version:
+    post:
+      summary: Create a new app version
+      parameters:
+        - name: id
+          in: path
+          description: Target app ID
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+        '400':
+          description: Bad request - Incorrect version name
+          content:
+            application/json:
+              examples:
+                badRequest:
+                  value:
+                    name: "Bad Request"
+                    description: "This version ID does not exists !'"
+    delete:
+      summary: Delete versions from list
+      description: 'Will delete all release excepted latest'
+      parameters:
+        - name: id
+          in: path
+          description: Target app ID
+          required: true
+          schema:
+            type: string
+        - name: versions
+          in: query
+          description: List of versions to delete
+          required: true
+          schema:
+            $ref: '#/components/schemas/ArrayOfInt'
+      responses:
+        '200':
+          description: successful operation
+        '400':
+          description: Bad request - Incorrect version name
+          content:
+            application/json:
+              examples:
+                badRequest:
+                  value:
+                    name: "Bad Request"
+                    description: "Version does not exists!"
+  /api/app/{id}/version/{version}:
+    put:
+      summary: Change current app version
+      parameters:
+        - name: id
+          in: path
+          description: IDs of config to use
+          required: true
+          schema:
+            type: string
+        - name: version
+          in: path
+          description: version number to delete
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: successful operation
+        '400':
+          description: Bad request - Incorrect version name
+          content:
+            application/json:
+              examples:
+                badRequest:
+                  value:
+                    name: "Bad Request"
+                    description: "Version does not exists!"
+  /api/app/all:
+    delete:
+      summary: Delete all apps metadata
+      description: Will clean store
+      responses:
+        '200':
+          description: successful operation
+
+components:
+  schemas:
+    ArrayOfInt:
+      type: array
+      items:
+        type: integer
+        format: int64
+        example: 1
+    Config:
+      type: object
+      xml: 
+        name: config
+      properties:
+        mviewerstudioversion:
+          type: string
+          example: 3.2
+          xml:
+            attribute: true

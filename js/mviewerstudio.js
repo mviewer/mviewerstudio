@@ -1,31 +1,31 @@
 var _conf;
 var API = {};
-var VERSION = "3.2";
 
 var mviewer = {};
 
 $(document).ready(function(){
-
-    //Mviewer Studio version
-    console.log("MviewerStudio version " + VERSION);
-
 
     //Get URL Parameters
     if (window.location.search) {
         $.extend(API, $.parseJSON('{"' + decodeURIComponent(window.location.search.substring(1)
             .replace(/&/g, "\",\"").replace(/=/g,"\":\"")) + '"}'));
     }
-    $.ajax({
-        type: "GET",
-        url: "apps/config.json",
-        dataType: "json",
-        contentType: "application/json",
-        success: function (data) {
-            console.groupCollapsed("init app from config");
+    fetch("apps/config.json", {
+        method: "GET",
+        header: {
+            contentType: "application/json"
+        }
+    })
+        .then(r => r.json())
+        .then(data => {
+            //Mviewer Studio version
+            // console.groupCollapsed("init app from config");
             _conf = data.app_conf;
-            if (_conf.proxy === undefined) {
-                _conf.proxy = "../proxy/?url=";
-            }
+            const VERSION =  _conf.mviewerstudio_version
+            document.querySelector("#creditInfo").innerHTML = `MviewerStudio | Licence GPL-3.0 | Version ${ VERSION }`;
+            let mvCompliantInfo = document.querySelector("#mviewerCompliantInfo");
+            mvCompliantInfo.innerHTML = `${mvCompliantInfo.innerHTML} ${ _conf.mviewer_version }`;
+            
 
             if (_conf.logout_url) {
                 $("#menu_user_logout a").attr("href", _conf.logout_url);
@@ -53,35 +53,19 @@ $(document).ready(function(){
             // translate
             _initTranslate();
 
-            // Thematic layers providers
             var csw_providers = [];
             var wms_providers = [];
             if (_conf.external_themes && _conf.external_themes.used && _conf.external_themes.url) {
-                 $.ajax({
+                    $.ajax({
                     type: "GET",
                     url: _conf.external_themes.url,
-					success: function (csv) {
-						_conf.external_themes.data = Papa.parse(csv, {
-							header: true
-						}).data;
-						var html = [];
-					   _conf.external_themes.data.forEach(function(mv, id) {
-							if (mv.xml && mv.id) {
-								var url = mv.xml;
-								var themeid = mv.id;
-								if (url && themeid) {
-									html.push(['<div class="checkbox list-group-item">',
-										'<div class="custom-control custom-checkbox">',
-											'<input type="checkbox" class="custom-control-input" data-url="'+url+'" data-theme-label="'+mv.title+'" data-theme-id="'+themeid+'" name="checkboxes" id="import-theme-'+themeid+id+'">',
-											'<label class="custom-control-label" for="import-theme-'+themeid+id+'">'+mv.title+'</label>',
-										'</div>',
-                                    '</div>'].join(""));
-								}
-							}
-						});
-					   $("#mod-themesview .list-group").append(html);
+                    success: function (csv) {
+                        _conf.external_themes.data = Papa.parse(csv, {
+                            header: true
+                        }).data;
+                        mv.getThemeTable(_conf.external_themes.data);
                     }
-                 });
+                    });
             } else {
                 $("#btn-importTheme").remove();
             }
@@ -145,56 +129,13 @@ $(document).ready(function(){
             }
 
             // Get user info
-            if (_conf.user_info_visible) {
-                $.ajax({
-                    type: "GET",
-                    url: _conf.user_info,
-                    dataType: "json",
-                    contentType: "application/json",
-                    success: function (data) {
-                        var userGroupFullName;
-                        var userGroupSlugName;
-                        var selectGroupPopup = false;
-                        if (data) {
-                            if (data.organisation && data.organisation.legal_name) {
-                                userGroupFullName = data.organisation.legal_name;
-                            } else if (data && data.user_groups ) {
-                                if (data.user_groups.length > 1) {
-                                    selectGroupPopup = true;
-                                } else {
-                                    userGroupFullName = data.user_groups[0].full_name;
-                                    userGroupSlugName = data.user_groups[0].slug_name;
-                                }
-                            }
-
-                            if (selectGroupPopup) {
-                                mv.updateUserGroupList(data);
-                                $("#mod-groupselection").modal( {
-                                    backdrop: 'static',
-                                    keyboard: false});
-                            } else {
-                                if (!userGroupSlugName) {
-                                    userGroupSlugName = slugify(userGroupFullName);
-                                }
-                                mv.updateUserInfo(data.first_name + ' ' + data.last_name, userGroupSlugName, userGroupFullName);
-                            }
-                        }
-                    },
-                    error: function (xhr, ajaxOptions, thrownError) {
-                        console.error("user info retrieval failed", {
-                            xhr: xhr,
-                            ajaxOptions: ajaxOptions,
-                            thrownError: thrownError
-                        });
-                        alert(mviewer.tr('msg.user_info_retrieval_error'));
-                    }
-                });
-            } else {
-                mv.hideUserInfo();
-            }
-            console.groupEnd("init app from config");
-        }
-    });
+            getUser();
+            
+        })
+        .catch(err => {
+            console.log(err);
+            alertCustom("Impossible de récupérer la configuration. Veuillez contacter un administrateur.", "danger")
+        });
 });
 
 //EPSG:2154
@@ -231,26 +172,95 @@ var map2 = new ol.Map({
 });
 var config;
 
-var newConfiguration = function () {
-    ["opt-title", "opt-logo", "opt-help", "theme-edit-icon", "theme-edit-title"].forEach(function (param, id) {
+const getUser = () => {
+    if (!_conf.user_info) return;
+    fetch(_conf.user_info, {
+        method: "GET",
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+        .then(r => r.ok ? r.json() : Promise.reject(r))
+        .then(data => {
+            var userGroupFullName = "";
+            var userGroupSlugName = "";
+            var selectGroupPopup = false;
+            if (data) {
+                if (data.organisation && data.organisation.legal_name) {
+                    userGroupFullName = data.organisation.legal_name;
+                } else if (data && data.user_groups ) {
+                    if (data.user_groups.length > 1) {
+                        selectGroupPopup = true;
+                    } else {
+                        userGroupFullName = data.user_groups[0].full_name;
+                        userGroupSlugName = data.user_groups[0].slug_name;
+                    }
+                }
+                if (selectGroupPopup) {
+                    mv.updateUserGroupList(data);
+                    $("#mod-groupselection").modal({
+                        backdrop: 'static',
+                        keyboard: false
+                    });
+                } else {
+                    mv.updateUserInfo({
+                        userName: data.user_name,
+                        name: `${ data.first_name } ${ data.last_name }`,
+                        groupSlugName: userGroupSlugName || data.normalize_name,
+                        groupFullName: userGroupFullName
+                    });
+                }
+                if (_conf.user_info_visible && data.user_name != "anonymous") {
+                    let connectText = `Connecté en tant que ${ data.first_name } ${ data.last_name } (${userGroupFullName})`
+                    $("#user_connected").text(connectText);
+                    document.querySelector("#user_connected").classList.remove("d-none");
+                    document.querySelector("#menu_user_logout").classList.remove("d-none");
+                }
+            }
+        })
+        .catch(err => alertCustom(mviewer.tr('msg.user_info_retrieval_error'), 'danger'))
+}
+
+var newConfiguration = function (infos) {
+    ["opt-title", "opt-logo", "optProxyUrl", "opt-favicon", "opt-help", "opt-home", "theme-edit-icon", "theme-edit-title"].forEach(function (param, id) {
         $("#"+param).val("");
     });
-    ["opt-exportpng", "opt-measuretools", "theme-edit-collapsed", "opt-mini", "opt-showhelp", "opt-coordinates",
-        "opt-togglealllayersfromtheme", "SwitchAdressSearch","SwitchAdvanced"].forEach(function (param, id) {
-        $("#"+param).prop('checked', false);
+    
+    $("#optProxyUrl").val(_conf?.proxy);
+
+    // default checked state
+    ["opt-exportpng", "opt-zoomtools", "opt-geoloc", "opt-mouseposition", "opt-studio", "opt-measuretools", "opt-initialextenttool", "theme-edit-collapsed", "opt-mini", "opt-showhelp", "opt-coordinates",
+        "opt-togglealllayersfromtheme", "SwitchAdressSearch", "SwitchCustomBackground", "SwitchAdvanced"
+    ].forEach(id => {
+        document.querySelector(`#${ id }`).checked = false;
     });
+    ["opt-zoomtools", "opt-measuretools", "opt-initialextenttool"].forEach(id => {
+        document.querySelector(`#${ id }`).checked = true;
+    });
+    
    
     $("#opt-style").val("css/themes/default.css").trigger("change");
     $("#frm-searchlocalities").val("ban").trigger("change");    
-    $("#mod-themeOptions").modal('hide');
     $('#FadvElasticBlock form').trigger("reset");
 
+    // Icon help 
+    var icon = 'fas fa-home';
+    $("#opt-iconhelp").val(icon);
+    $("#opt-iconhelp").siblings('.selected-icon').attr('class', 'selected-icon');
+    $("#opt-iconhelp").siblings('.selected-icon').addClass(icon);
+    
     map.getView().setCenter(_conf.map.center);
     map.getView().setZoom(_conf.map.zoom);
+    const newDate = moment()
     config = {
         application: { title: "", logo: "" },
         themes: {},
-        temp : { layers : {}}
+        date: infos?.date || newDate.toISOString(),
+        temp: { layers: {} },
+        id: infos?.id || mv.uuid(),
+        description: infos?.description || newDate.format("DD-MM-YYYY-HH-mm-ss"),
+        isFile: !!infos?.id,
+        relation: infos?.relation
     };
     //Store des parametres non gérés
     savedParameters = {"application":[], "baselayers": {}};
@@ -283,7 +293,7 @@ var loadLayers = function (themeid) {
     var theme = config.themes[themeid];
     if (theme) {
         $.each(theme.layers, function (index, layer) {
-            addLayer(layer.title, layer.id);
+            addLayer(layer.title, layer.id, layer.index);
         });
     }
 };
@@ -328,6 +338,12 @@ sortThemes = function () {
     config.themes = orderedThemes;
 };
 
+setConf = (key, value) => {
+    _conf[key] = value
+};
+
+getConf = (key) => _conf[key]
+
 sortLayers = function (fromIndex, toIndex) {
     var themeid = $("#themes-list .active").attr("data-themeid");
     var arr = config.themes[themeid].layers;
@@ -336,31 +352,25 @@ sortLayers = function (fromIndex, toIndex) {
     arr.splice(toIndex, 0, element);
 };
 
-var sortableAttributeList = Sortable.create(document.getElementById('frm-lis-fields'), {
-    handle: '.bi-arrows-move',
-    animation: 150,
-    ghostClass: 'ghost',
-});
-
 $('input[type=file]').change(function () {
     loadApplicationParametersFromFile();
 });
 
 
-var addLayer = function (title, layerid) {
+var addLayer = function (title, layerid, index) {
     // test if theme is saved
     if (!config.themes[$("#theme-edit").attr("data-themeid")]) {
         saveTheme();
     }
-    var item = $("#themeLayers").append([
-        '<div class="list-group-item layers-list-item" data-layerid="'+layerid+'">',
-            '<span class="layer-name moveList">'+title+'</span>',
-            '<div class="layer-options-btn">',
-                '<button class="btn btn-sm btn-secondary"><span class="layer-move moveList" title="Déplacer"><i class="bi bi-arrows-move"></i></span></button>',
-                '<button class="btn btn-sm btn-secondary" onclick="deleteLayerItem(this);"><span class="layer-remove" title="Supprimer"><i class="bi bi-x-circle"></i></span></button>',
-                '<button class="btn btn-sm btn-info" onclick="editLayer(this);"><span class="layer-edit" title="Editer cette couche"><i class="bi bi-gear-fill"></i></span></button>',
-            '</div>',
-        '</div>'].join(""));
+    var item = $("#themeLayers").append(`
+        <div class="list-group-item layers-list-item" data-layerid="${layerid}">
+            <span class="layer-name moveList">${title}</span>
+            <div class="layer-options-btn" style="display:inline-flex; justify-content: end;">
+                <button class="btn btn-sm btn-secondary"><span class="layer-move moveList" title="Déplacer"><i class="bi bi-arrows-move"></i></span></button>
+                <button class="btn btn-sm btn-secondary" onclick="deleteLayerItem(this);"><span class="layer-remove" title="Supprimer"><i class="bi bi-x-circle"></i></span></button>
+                <button class="btn btn-sm btn-info" onclick="editLayer(this);"><span class="layer-edit" title="Editer cette couche"><i class="bi bi-gear-fill"></i></span></button>
+            </div>
+        </div>`);
 
      if (title === 'Nouvelle couche') {
         item.find(".layer-edit").last().click();
@@ -387,34 +397,36 @@ var editLayer = function (item) {
 
 var importThemes = function () {
     console.groupCollapsed("importThemes");
-    console.log("external theme to import", _conf.external_themes.data);
-    $("#importedThemes input:checked").each(function (id, item) {
+    //console.log("external theme to import", _conf.external_themes.data);
+    $("#tableThemaExt .selected").each(function (id, item) {
         var url = $(item).attr("data-url");
         var id  = $(item).attr("data-theme-id");
         var label  = $(item).attr("data-theme-label");
-        addTheme(label, true, id, false, url);
+        addTheme(label, true, id, false, url, "default");
     });
     console.groupEnd("importThemes");
     $("#mod-themesview").modal('hide');
 };
 
-var addTheme = function (title, collapsed, themeid, icon, url) {
+var addTheme = function (title, collapsed, themeid, icon, url, layersvisibility) {
     if ($("#mod-themeOptions").is(":visible")) {
-        alert(mviewer.tr('msg.save_theme_first'));
+        alert(mviewer.tr('msg.save_theme_first'));        
         return;
     }
     if (url) {
         //external theme
-         $("#themes-list").append([
-        '<div class="list-group-item list-group-item themes-list-item" data-theme-url="'+url+'" data-theme="'+title+'" data-themeid="'+themeid+'" data-theme-collapsed="'+collapsed+'" data-theme-icon="'+icon+'">',
-            '<div class="theme-infos">',
-                '<span class="theme-name moveList">'+title+'</span><span class="theme-infos-layer">Ext.</span>',
-            '</div>',
-            '<div class="theme-options-btn">',
-                '<button class="btn btn-sm btn-secondary" ><span class="theme-move moveList" title="Déplacer"><i class="bi bi-arrows-move"></i></span></button>',
-                '<button class="btn btn-sm btn-secondary" onclick="deleteThemeItem(this);" ><span class="theme-remove" title="Supprimer"><i class="bi bi-x-circle"></i></span></button>',
-            '</div>',
-        '</div>'].join(""));
+        $("#themes-list").append(`
+            <div class="list-group-item list-group-item themes-list-item" data-theme-url="${url}" data-theme="${title}" data-themeid="${themeid}" data-theme-collapsed="${collapsed}" data-theme-icon="${icon}" data-theme-layersvisibility="${layersvisibility}">
+                <div class="theme-infos">
+                    <span class="theme-name moveList">${title}</span><span class="theme-infos-layer">Ext.</span>
+                </div>
+                <div class="theme-options-btn">
+                    <button class="btn btn-sm btn-secondary" ><span class="theme-move moveList" title="Déplacer"><i class="bi bi-arrows-move"></i></span></button>
+                    <button class="btn btn-sm btn-secondary" onclick="deleteThemeItem(this);" ><span class="theme-remove" title="Supprimer"><i class="bi bi-x-circle"></i></span></button>
+                    <button class="btn btn-sm btn-info" onclick="editThemeExt(this);"><span class="theme-edit" title="Editer ce thème"><i class="bi bi-gear-fill"></i></span></button>
+                </div>
+            </div>`
+        );
     } else {
          $("#themes-list").append([
         '<div class="list-group-item themes-list-item" data-theme="'+title+'" data-themeid="'+themeid+'" data-theme-collapsed="'+collapsed+'" data-theme-icon="'+icon+'">',   
@@ -428,19 +440,15 @@ var addTheme = function (title, collapsed, themeid, icon, url) {
             '</div>',
         '</div>'].join(""));
     }
-
-
     config.themes[themeid] = {
         title:title,
         id: themeid,
         icon: icon,
         collapsed: collapsed,
+        layersvisibility: layersvisibility,
         url: url,
         layers: []
     };
-    if (title === "Nouvelle thématique") {
-        $(".themes-list-item[data-themeid='"+themeid+"'] .theme-edit").parent().trigger("click");
-    }
 };
 
 var editTheme = function (item) {
@@ -492,6 +500,34 @@ var saveTheme = function () {
     config.themes[themeid].icon = icon;
 };
 
+var editThemeExt = function (item) {    
+    $("#themes-list .list-group-item").removeClass("active");
+    $(item).parent().parent().addClass("active");
+    var themeid = $(item).parent().parent().attr("data-themeid");
+    $("#themeExt-edit").attr("data-themeid", themeid);
+    document.getElementById("nameThemeExt").innerHTML = "";
+    var title = $(item).parent().parent().attr("data-theme");
+    var titleBlock = document.getElementById("nameThemeExt");
+    titleBlock.append(title);
+    var layersvisibility = $(item).parent().parent().attr("data-theme-layersvisibility");
+    $("#themeext-layersvisibility").val(layersvisibility);
+    $("#mod-themeExtOptions").modal('show');
+};
+
+var saveThemeExt = function () {
+    //get active item in left panel
+    var theme = $("#themes-list .active");
+    //get edited values
+    var themeid = $("#themeExt-edit").attr("data-themeid");
+    var layersvisibility = $("#themeext-layersvisibility").val();
+    theme.attr("data-theme-layersvisibility", layersvisibility);    
+    //save theme locally
+    config.themes[themeid].layersvisibility = layersvisibility;
+    //deactivate theme edition
+    $("#themes-list .list-group-item").removeClass("active");
+    $("#mod-themeExtOptions").modal('hide');
+};
+
 var deleteTheme = function (themeid) {
     $("#mod-themeOptions").modal('hide');
     delete config.themes[themeid];
@@ -521,46 +557,146 @@ var createBaseLayerDef = function (bsl) {
     return parameters;
 };
 
-var saveApplicationParameters = function (option) {
-    // option == 0 : save serverside
-    // option == 1 : save serverside + download
-    // option == 2 : save serverside + launch map
+var deleteMyApplications = function () {
+    if (!_conf?.php?.delete_service) {
+        return alert("Erreur de la configuration : contactez un administrateur !");
+    }
+    $.ajax({
+        type: "GET",
+        url: _conf.php.delete_service,
+        success: function( data ) {
+            alert(data.deleted_files + mviewer.tr('msg.deleted_apps'));
+            mv.getListeApplications();
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+            console.error("map files deletion failed", {
+                xhr: xhr,
+                ajaxOptions: ajaxOptions,
+                thrownError: thrownError
+            });
+            alert(mviewer.tr('msg.delete_req_error'));
+        }
+    });
+};
 
+var deleteApplication = (id) => {
+    return fetch(`${_conf.api}/${id}`, {
+        method: "DELETE"
+    })
+    .then(r => r.ok ? r.json() : Promise.reject(r))
+    .then(r => r.success && showHome())    
+    .then(alertCustom('Application supprimée avec succès !', 'info'))
+    .catch(err => alertCustom("Suppression impossible.", "danger"))
+};
+
+var showAlertDelApp = (id) => {
+    genericModalContent.innerHTML = "";
+    genericModalContent.innerHTML = `
+                <div class="modal-header">
+                    <h5 class="modal-title" i18n="modal.exit.title">Attention</h5>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body">
+                    <p>
+                    Êtes-vous sûr de vouloir supprimer votre application définitivement ?
+                    </p>
+                    <a class="cardsClose save-close zoomCard" data-bs-dismiss="modal" onclick="deleteApplication('${ id }');">
+                        <i class="ri-delete-bin-2-line"></i>
+                        <span>Supprimer mon application et retourner à l'accueil</span>
+                    </a>
+                    <a class="cardsClose notsave-close zoomCard" class="close" data-bs-dismiss="modal" aria-label="Close">
+                        <i class="ri-arrow-go-back-line"></i>
+                        <span>Annuler</span>
+                    </a>
+                    <a class="returnConf-close" class="close" data-bs-dismiss="modal" aria-label="Close"><i class="ri-arrow-left-line"></i> <span i18n="modal.exit.previous">Retour</span></a>                    
+                </div>
+            `;
+    $("#genericModal").modal('show');
+}
+
+var showAlertDelAppFromList = (id) => {
+    genericModalContent.innerHTML = "";
+    genericModalContent.innerHTML = `
+        <div class="modal-header">
+            <h5 class="modal-title" i18n="modal.exit.title">Attention</h5>
+            <button type="button" class="close" data-bs-toggle="modal" data-bs-target="#mod-importfile" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        </div>
+        <div class="modal-body">
+            <p>
+            Êtes-vous sûr de vouloir supprimer cette application définitivement ?
+            </p>
+            <a class="cardsClose save-close zoomCard" data-bs-toggle="modal" data-bs-target="#mod-importfile" onclick="deleteAppFromList('${ id }');">
+                <i class="ri-delete-bin-2-line"></i>
+                <span>Supprimer cette application</span>
+            </a>
+            <a class="cardsClose notsave-close zoomCard" class="close" data-bs-toggle="modal" data-bs-target="#mod-importfile" aria-label="Close">
+                <i class="ri-arrow-go-back-line"></i>
+                <span>Annuler</span>
+            </a>
+            <a class="returnConf-close" class="close" data-bs-toggle="modal" data-bs-target="#mod-importfile" aria-label="Close"><i class="ri-arrow-left-line"></i> <span i18n="modal.exit.previous">Retour</span></a>                    
+        </div>
+    `;
+    $("#genericModal").modal('show');
+}
+
+var deleteAppFromList = (id) => {
+    deleteApplication(id).then(r => {
+        document.getElementById('liste_applications').innerHTML = "";
+        mv.getListeApplications();
+    });
+}
+
+var getConfig = () => {
     var padding = function (n) {
         return '\r\n' + " ".repeat(n);
     };
     var savedProxy = "";
     var olscompletion = "";
     var elasticsearch = "";
-    var savedSearchparameters = "";
+    // Url du studio
+    var studioUrl = "";
+
+    if ($('#opt-studio').prop('checked')) {
+        let readURL = new URL(window.location.href);
+        studioUrl = `${readURL.origin}${readURL.pathname}?xml=`;
+    }
+
     var application = ['<application',
         'title="'+$("#opt-title").val()+'"',
         'logo="'+$("#opt-logo").val()+'"',
+        'favicon="'+$("#opt-favicon").val()+'"',
         'help="'+$("#opt-help").val()+'"',
+        'titlehelp="'+$("#opt-titlehelp").val()+'"',
+        'iconhelp="'+$("#opt-iconhelp").val()+'"',
+        'home="'+$("#opt-home").val()+'"',
         'style="'+$("#opt-style").val()+'"',
-        'exportpng="'+($('#opt-exportpng').prop('checked')=== true)+'"',
+        'zoomtools="'+($('#opt-zoomtools').prop('checked')=== true)+'"',
+        'initialextenttool="'+($('#opt-initialextenttool').prop('checked')=== true)+'"',
+        'exportpng="'+($('#opt-exportpng').prop('checked')=== true)+'"',        
         'showhelp="'+($('#opt-showhelp').prop('checked')=== true)+'"',
         'coordinates="'+($('#opt-coordinates').prop('checked')=== true)+'"',
         'measuretools="'+($('#opt-measuretools').prop('checked')=== true)+'"',
+        'mouseposition="'+($('#opt-mouseposition').prop('checked')=== true)+'"',
+        'geoloc="'+($('#opt-geoloc').prop('checked')=== true)+'"',
+        'studio="'+studioUrl+'"',
         'togglealllayersfromtheme="'+($('#opt-togglealllayersfromtheme').prop('checked')=== true)+'"'];
 
     config.title = $("#opt-title").val();
 
     if(config.title == ''){
-        alert(mviewer.tr('msg.give_title_before_save'));
         $('#opt-title').addClass('is-invalid');
-        return;
+        alertCustom('Veuillez renseigner un nom à votre application !', 'danger')
     }
 
     savedParameters.application.forEach(function(parameter, id){
         $.each(parameter,function(prop,val) {
-            console.log(prop, val)
             application.push(prop+'="'+val+'"');
         });
     });
-    application = application.join(padding(4)) + '>'+padding(0)+'</application>';
-    if ( _conf.proxy ) {
-        savedProxy = padding(0) + "<proxy url='" + _conf.proxy + "'/>";
+    application = application.join(padding(4)) + '>' + padding(0) + '</application>';
+    savedProxy = `${ padding(0) }<proxy url=""/>`;
+    if ($("#optProxyUrl").val() && _conf.proxy) {
+        savedProxy = `${padding(0)}<proxy url="${$("#optProxyUrl").val() || _conf.proxy}"/>`
     }
     var search_params = {"bbox":false, "localities": false, "features":false, "static":false};
     if ( $("#frm-searchlocalities").val() !="false"  ) {
@@ -603,7 +739,9 @@ var saveApplicationParameters = function (option) {
     var baseLayers =   [padding(0) + '<baselayers style="'+baseLayersMode+'">'];
     $(".bl input:checked").each(function (i, b) {
         // set first bl visible
-        var baseLayer = _conf.baselayers[$(b).parent().parent().attr("data-layerid")] || savedParameters.baselayers[$(b).parent().parent().attr("data-layerid")];
+        const baseLayerId = $(b).parent().parent().attr("data-layerid");
+        
+        var baseLayer = _conf.baselayers[baseLayerId] || savedParameters.baselayers[baseLayerId] || getConf("customBaseLayers")[baseLayerId];
         var definition = [
             '<baselayer visible="false" ',
             createBaseLayerDef(baseLayer),
@@ -622,7 +760,7 @@ var saveApplicationParameters = function (option) {
             var t = config.themes[themeid];
             var theme = [];
             if (t.url) {
-                theme = [padding(4)+'<theme id="'+t.id+'" url="'+t.url+'" name="'+t.title+'" collapsed="'+t.collapsed+'" icon="'+t.icon+'">'];
+                theme = [padding(4)+'<theme id="'+t.id+'" url="'+t.url+'" name="'+t.title+'" collapsed="'+t.collapsed+'" icon="'+t.icon+'" layersvisibility="'+t.layersvisibility+'">'];
             } else {
                 theme = [padding(4)+'<theme id="'+t.id+'" name="'+t.title+'" collapsed="'+t.collapsed+'" icon="'+t.icon+'">'];
             }
@@ -631,12 +769,14 @@ var saveApplicationParameters = function (option) {
                 theme.push(layer);
             });
             themes.push(theme.join(" "));
-            themes.push(padding(4)+'</theme>');
-            }
+            themes.push(padding(4) + '</theme>');
+        }
     });
-    themes.push(padding(0)+'</themes>');
+    themes.push(padding(0) + '</themes>');
+    
+    const mviewerVersion = _conf?.mviewer_version || "";
 
-    var conf = ['<?xml version="1.0" encoding="UTF-8"?>\r\n<config mviewerstudioversion="'+VERSION+'">\r\n',
+    var conf = ['<?xml version="1.0" encoding="UTF-8"?>\r\n<config mviewerversion="'+ mviewerVersion +'" mviewerstudioversion="'+ _conf?.mviewerstudio_version +'">\r\n',
         '<metadata>\r\n'+mv.createDublinCore(config)+'\r\n</metadata>\r\n',
         application,
         mapoptions,
@@ -648,71 +788,184 @@ var saveApplicationParameters = function (option) {
         themes.join(" "),
         padding(0)+ '</config>'];
 
-    if (mv.validateXML(conf.join(""))) {
+    return conf
+}
 
-        // Save the map serverside
-        $.ajax({
-            type: "POST",
-            url: _conf.upload_service,
-            data: conf.join(""),
-            dataType: 'json',
-            contentType: 'text/xml',
-            success: function( data ) {
-
-                console.log("saved map file: %s", data.filepath);
-
-                if (option == 0) {
-                    // Ok it's been saved and that's it
-                    alert(mviewer.tr('msg.file_saved_on_server') + " (" + data.filepath + ").");
-
-                } else if (option == 1) {
-                    // Download map config file
-                    var element = document.createElement('a');
-                    var blob = new Blob([conf.join("")], {type : 'text/xml'});
-                    element.setAttribute('href', window.URL.createObjectURL(blob));
-                    element.setAttribute('download', "config.xml");
-                    document.body.appendChild(element);
-                    element.click();
-                    document.body.removeChild(element);
-
-                } else {
-                    // Preview the map
-                    var url = "";
-                    if (data.success && data.filepath) {
-                        // Build a short and readable URL for the map
-                        if (_conf.mviewer_short_url && _conf.mviewer_short_url.used) {
-                            var filePathWithNoXmlExtension = "";
-                            //Get path from mviewer/apps eg store for mviewer/apps/store
-                            if (_conf.mviewer_short_url.apps_folder) {
-                                filePathWithNoXmlExtension = [_conf.mviewer_short_url.apps_folder, data.filepath].join("/");
-                            } else {
-                                filePathWithNoXmlExtension = data.filepath;
-                            }
-                            if (filePathWithNoXmlExtension.endsWith(".xml")) {
-                                filePathWithNoXmlExtension = filePathWithNoXmlExtension.substring(0, filePathWithNoXmlExtension.length-4);
-                            }
-                            url = _conf.mviewer_instance + '#' + filePathWithNoXmlExtension;
-                        } else {
-                            // Build a classic URL for the map
-                            url = _conf.mviewer_instance + '?config=' + _conf.conf_path_from_mviewer + data.filepath;
-                        }
-                        window.open(url,'mvs_vizualize');
-                    }
-                }
-
-            },
-            error: function(xhr, status, error) {
-                console.error("map file save failed", {
-                    xhr: xhr,
-                    status: status,
-                    error: error
-                });
-                alert(mviewer.tr('msg.save_failure'));
-            }
-        });
-    } else {
-        alert(mviewer.tr('msg.xml_doc_invalid'));
+let previewWithPhp = (conf) => {
+    if (!_conf?.php?.upload_service) {
+        alertCustom("Erreur de configuration : contactez un administrateur !", 'error');
     }
+    // Save the map serverside
+    $.ajax({
+        type: "POST",
+        url: _conf.php.upload_service,
+        data: conf.join(""),
+        dataType: 'json',
+        contentType: 'text/xml',
+        success: function (data) {
+            // Preview the map
+            var url = "";
+            if (data.success && data.filepath) {
+                // Build a short and readable URL for the map
+                let url = mv.produceUrl(data.filepath);
+                window.open(url, 'mvs_vizualize');
+                alertCustom("Téléchargement terminé !", 'success');
+            }
+        }
+    })
+}
+
+let previewAppsWithoutSave = (id, showPublish) => {
+    if (config.relation && _conf.publish_url && showPublish) {
+        const filePath = `${ mv.getAuthentUserInfos("groupSlugName")}/${ config.relation }`;
+        const previewUrl = mv.produceUrl(filePath, true);
+        return window.open(previewUrl, 'mvs_vizualize');
+    }
+    const confXml = getConfig();
+    if (!confXml || (confXml && !mv.validateXML(confXml.join("")))) {
+        return alertCustom("XML invalide !", 'danger');
+    }
+    if (_conf.is_php) {
+        return previewWithPhp(confXml)
+    }
+    if (!id || !config.isFile) {
+        return alertCustom(mviewer.tr('msg.preview_no_save'), 'danger');
+    }
+    return fetch(`${ _conf.api }/${ id }/preview`, {
+        method: "POST",
+        headers: {
+            'Content-Type': 'text/xml'
+        },
+        body: confXml.join("")
+    })
+        .then(r => r.ok ? r.json() : Promise.reject(r))
+        .then(data => {
+            const url = mv.produceUrl(data.file, config.relation && config.showPublish);
+            window.open(url, 'mvs_vizualize');
+        })
+        .catch(err => alertCustom(mviewer.tr('msg.xml_doc_invalid'), 'error'))
+};
+
+const downloadXML = () => {
+    if (_conf.is_php) {
+        return downloadXML4PHP()   
+    }
+    fetch(`api/download/${ config.id }`).then(r => r.json()).then(r => {
+        let link = document.createElement("a");
+        link.download = r.name;
+        link.href = _conf.mviewer_instance + r.url;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        delete link;
+    })
+}
+const downloadXML4PHP = () => {
+
+    const conf = getConfig();
+    if (mv.validateXML(conf.join(""))) {
+        var element = document.createElement('a');
+        element.setAttribute('href', 'data:text/xml;charset=utf-8,' + encodeURIComponent(conf.join("")));
+        element.setAttribute('download', document.querySelector("#opt-title").value || moment().format("MMDDYYYYhhmmss"));
+        element.style.display = 'none';
+        document.body.appendChild(element);
+        element.click();
+        document.body.removeChild(element);
+    }
+};
+
+var saveAppWithPhp = (conf) => {
+    $.ajax({
+        type: "POST",
+        url: _conf.php.upload_service,
+        data: conf.join(""),
+        dataType: 'json',
+        contentType: 'text/xml',
+        success: function (data) {
+            alert(mviewer.tr('msg.file_saved_on_server') + " (" + data.filepath + ").");
+        }
+    })
+}
+
+var saveTemplateToGetUrl = () => new Promise((resolve, reject) => {
+    let waitTemplateUrls = []
+    let themes = Object.keys(config.themes);
+    themes.forEach(theme => {
+        let layers = config.themes[theme].layers.filter(layer => layer.templateFromGenerator);
+        waitTemplateUrls = [...waitTemplateUrls, ...layers.map(layer => {
+            return mv.saveTemplate(layer.id, layer.templateFromGenerator)
+                .then(r => r.json())
+                .then(r => {
+                    layer.templateFromGenerator = null;
+                    return {
+                        layer: layer,
+                        response: r
+                    }
+                })
+            })
+        ];
+
+    });
+    Promise.all(waitTemplateUrls).then(values => {
+        values.forEach(({ layer, response }) => {
+            let l = mv.getLayerById(layer?.id);
+            let templateFullPath = `${ response.filepath }`;
+            l.generatorTemplateUrl = templateFullPath;
+            l.useGeneratorTemplate = true;
+            l.templateFromGenerator = "";
+        })
+        resolve(null);
+    })
+})
+var saveApplicationParameters = (close) => {
+    if (_conf?.is_php) {
+        saveApplicationsConfig(close);
+    } else {
+        saveTemplateToGetUrl().then(() => {
+            saveApplicationsConfig(close);
+        })
+    }
+}
+
+var saveAppWithPython = (exists, conf, url, close) => {
+    return fetch(url, {
+        method: exists ? "PUT" : "POST",
+        headers: {
+            'Content-Type': 'text/xml'
+        },
+        body: conf.join("")
+    })
+    .then(r => r.ok ? r.json() : Promise.reject(r))
+    .then(r => {
+        if (!_conf.is_php && !close) {
+            // don't execute this code with php backend
+            config.isFile = true;
+            document.querySelector("#toolsbarStudio-delete").classList.remove("d-none");
+            document.querySelector("#layerOptionBtn").classList.remove("d-none");
+            mv.manageDraftBadge(config.relation);
+        } else {
+            config.isFile = true;
+        }
+        if (r.diff || !exists) {
+            alertCustom(mviewer.tr('msg.file_saved_on_server'), 'info');
+        }
+        if (!r.diff && exists) {
+            alertCustom(mviewer.tr('msg.file_same_not_saved'), 'success');
+        } 
+        
+    }).catch(err => alertCustom(mviewer.tr('msg.save_failure'), 'danger'));
+}
+var saveApplicationsConfig = (close, message = "") => {
+    const conf = getConfig();
+    if (!conf || !mv.validateXML(conf.join(""))) {
+        return alertCustom(mviewer.tr('msg.xml_doc_invalid'), 'danger');
+    }
+    if (_conf.is_php) {
+        return saveAppWithPhp(conf)
+    }
+    // Save the map serverside
+    const url = message ? `${ _conf.api }?message=${ message }` : _conf.api;
+    mv.appExists(config.id, (r) => saveAppWithPython(r.exists, conf, url, close))
 };
 
 var addgeoFilter = function () {
@@ -738,7 +991,17 @@ var addgeoFilter = function () {
 var extractFeatures = function (fld, option) {
     var layerid = $(".layers-list-item.active").attr("data-layerid");
     var layer = config.temp.layers[layerid];
-    ogc.getFeatures(layer.wfs_url,layerid,fld, option);
+    let requestParams = {
+        TYPENAME: layerid
+    }
+    if (fld) {
+        requestParams.PROPERTYNAME = fld;
+    }
+    let onSuccess = (data) => {
+        ogc.getDictinctValues(data, fld, option);
+    };
+
+    ogc.getFeatures(layer.wfs_url, requestParams, onSuccess);
     if (option === 'control') {
         $("#frm-attributelabel").val(fld);
     }
@@ -751,55 +1014,62 @@ var loadApplicationParametersFromFile = function () {
         reader.readAsText(file, "UTF-8");
         reader.onload = function (evt) {
             var xml = $.parseXML(evt.target.result);
-            mv.parseApplication(xml);
+            let idApp = xml.getElementsByTagName("dc:identifier")[0]?.innerHTML;
+            if (!idApp) {
+                return mv.parseApplication(xml);
+            }
+            // control if ID already exists in studio register
+            mv.appExists(idApp, (r) => mv.parseApplication(xml, r.exists))
         }
         reader.onerror = function (evt) {
-            alert(mviewer.tr('msg.file_read_error'));
+            //alert(mviewer.tr('msg.file_read_error'));
+            alertCustom(mviewer.tr('msg.file_read_error'), 'danger');
         }
         showStudio();
     }
 };
 
-var deleteMyApplications = function () {
-    $.ajax({
-        type: "GET",
-        url: _conf.delete_service,
-        success: function( data ) {
-            alert(data.deleted_files + mviewer.tr('msg.deleted_apps'));
-            mv.getListeApplications();
-        },
-        error: function (xhr, ajaxOptions, thrownError) {
-            console.error("map files deletion failed", {
-                xhr: xhr,
-                ajaxOptions: ajaxOptions,
-                thrownError: thrownError
-            });
-            alert(mviewer.tr('msg.delete_req_error'));
+var loadApplicationParametersFromRemoteFile = function (url) {
+    const waitRequests = [
+        fetch(url, {
+            method: "GET",
+            cache: "no-cache"
+        }).then(r => {
+            return r.ok ? r.text() : Promise.reject(r)
+        })
+            .then(xmlAsString => new window.DOMParser().parseFromString(xmlAsString, "text/xml"))
+            .catch(r => {
+                alertCustom(mviewer.tr('msg.retrieval_req_error'), "danger");
+            })
+    ];
+    if (!_conf.is_php) {
+        waitRequests.push(
+            fetch(_conf.api)
+                .then(r => {
+                    return r.ok ? r.json() : Promise.reject(r)
+                })
+            .then(r => {
+                return r.filter(app => app.id == config.id);
+            })
+            .catch(() => alert(mviewer.tr('msg.retrieval_req_error'), "danger"))
+        );
+    }
+    Promise.all(waitRequests).then((values) => {
+        const data = values[0];
+        mv.parseApplication(data, true);
+        if (!_conf.is_php && values[1]) {
+            const appMeta = values[1][0];
+            if (appMeta?.versions) {
+                config.versions = appMeta.versions;
+            }
+        }
+        showStudio();
+        if (!_conf.is_php) {
+            // don't execute this code with php backend
+            document.querySelector("#toolsbarStudio-delete").classList.remove("d-none");
+            document.querySelector("#layerOptionBtn").classList.remove("d-none");
         }
     });
-};
-
-var  loadApplicationParametersFromRemoteFile = function (url) {
-    $.ajax({
-        type: "GET",
-        url: url,
-        headers: {
-            "Cache-Control": "private, no-store, max-age=0"
-        },
-        success: function( data ) {
-            mv.parseApplication(data);
-            showStudio();
-        },
-        error: function (xhr, ajaxOptions, thrownError) {
-            console.error("map file retrieval failed", {
-                xhr: xhr,
-                ajaxOptions: ajaxOptions,
-                thrownError: thrownError
-            });
-            alert(mviewer.tr('msg.retrieval_req_error'));
-        }
-    });
-
 };
 
 var loadApplicationParametersFromWMC = function (url) {
@@ -816,7 +1086,8 @@ var loadApplicationParametersFromWMC = function (url) {
                 ajaxOptions: ajaxOptions,
                 thrownError: thrownError
             });
-            alert(mviewer.tr('msg.retrieval_req_error'));
+            //alert(mviewer.tr('msg.retrieval_req_error'));
+            alertCustom(mviewer.tr('msg.retrieval_req_error'), 'danger');
         }
     });
 
@@ -953,14 +1224,16 @@ $('a[data-bs-target="#geo_filter"]').on('shown.bs.tab', function (e) {
 $(".checkedurl").change(mv.checkURL);
 
 $("#mod-importfile").on('shown.bs.modal', function () {
+    document.getElementById('liste_applications').innerHTML = "";
     mv.getListeApplications();
 });
 
 
 var uploadSldFileToBackend = function(e) {
     var reader = new FileReader()
-    e.files[0].text().then(function(sldFile){
-        $.ajax(_conf.store_style_service, {
+    e.files[0].text().then(function (sldFile) {
+        const url = _conf.is_php ? _conf.php.store_style_service : _conf.store_style_service;
+        $.ajax(url, {
             data: sldFile,
             method: 'POST',
             processData: false,
@@ -976,7 +1249,8 @@ var uploadSldFileToBackend = function(e) {
                 $("#frm-sld").val(finalUrl)
             },
             error: function() {
-                 alert(mviewer.tr('msg.retrieval_req_error'));
+                 //alert(mviewer.tr('msg.retrieval_req_error'));
+                 alertCustom(mviewer.tr('msg.retrieval_req_error'), 'danger');
             }
         })
     });
@@ -987,7 +1261,7 @@ $('#input-ogc-filter').keypress(function(event){
     var keycode = (event.keyCode ? event.keyCode : event.which);
     if(keycode == '13'){
         mv.search();
-    }        
+    }
     event.stopPropagation();
 });
 

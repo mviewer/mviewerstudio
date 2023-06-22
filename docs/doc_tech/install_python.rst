@@ -5,8 +5,7 @@
 
 
 Installer mviewerstudio avec Python
-###################################
-
+===================================
 
 Mviewerstudio est une application web développée en HTML / CSS / PHP / Python. Elle nécessite simplement d'être déployée sur un serveur WEB qui peut être APACHE, NGINX, TOMCAT…
 
@@ -27,6 +26,7 @@ Vous aurez besoin :
     sudo apt install libxslt1-dev libxml2-dev python3 python3-pip curl
     pip install virtualenv
 
+- d'une version Python >= 3.9
 - d'une instance mviewer fonctionnelle (/mviewer)
 
 Installation
@@ -62,6 +62,11 @@ Exemple pour installer mviewerstudio dans le répertoire ``/git`` en utilisant l
 
 **2. Ajouter un lien symbolique entre mviewer et mviewerstudio**
 
+.. warning::
+    Cette étape n'est pas obligatoire car vous pouvez directement indiquer le répertoire de votre mviewer (e.g apps/store pour la production).
+    Vous devrez cependant veillez à affecter les bons droits pour que le studio puisse écrire et lire dans
+    les répertoires ciblés.
+
 Cette étape permet de prévisualiser les cartes réalisées dans ``mviewerstudio`` via un ``mviewer`` disponible.
 
 - Mviewerstudio sauvegarde les dans ``mviewerstudio/srv/python/mviewer_backend/store``
@@ -71,28 +76,53 @@ Cette étape permet de prévisualiser les cartes réalisées dans ``mviewerstudi
 
     ln -s /<full_path>/mviewerstudio/srv/python/mviewerstudio_backend/store /<full_path>/mviewer/apps/store
 
-**3. Ouvrir la configuration frontend ``/srv/python/mviewerstudio_backend/static/apps/config.json`` et adapter les paramètres**
+**3. Modifier la configuration frontend**
 
-(Attention : le paramètre ``mviewer_instance`` doit finir par ``/``)
+Récupérez le fichier ``config-python-sample.json`` (à la racine du projet) et copier son contenu dans le fichier ``/srv/python/mviewerstudio_backend/static/apps/config.json``.
+Adaptez ensuite les paramètres selon votre environnement (aidez-vous de la page d'explication des paramètres si besoin).
 
-.. code-block:: sh
+.. warning::
+    Le paramètre ``mviewer_instance`` doit finir par ``/``
 
-    "mviewer_instance": "http://localhost/mviewer/",
-    "conf_path_from_mviewer": "apps/store/",
-    "mviewer_short_url": {
-        "used": true,
-        "apps_folder": "store"
-    },
+.. note::
+   Le paramètre ``user_info_visible`` est à utiliser si vous instance est sécurisée (avec geOrchestra par exemple).
+
+.. note::
+   Le paramètre ``proxy`` est à laisser vide si vous n'utilisez pas de proxy.
 
 **4. Ouvrir la configuration backend ``/srv/python/mviewerstudio_backend/settings.py`` et adapter les paramètres**
 
-.. code-block:: sh
+.. note::
+   Ces variables sont à renseigner dans le fichier settings.py.
+   Pour le déploiement en production (e.g via gunicorn), ces variables sont localisées dans le fichier du service (fichier ``systemd/system/mviewerstudio.service``)
 
-    CONF_PATH_FROM_MVIEWER = os.getenv("CONF_PATH_FROM_MVIEWER", "apps/store/")
+.. code-block:: sh
+    
+    CONF_PATH_FROM_MVIEWER = os.getenv("CONF_PATH_FROM_MVIEWER", "apps/store")
+    CONF_PUBLISH_PATH_FROM_MVIEWER = os.getenv("CONF_PUBLISH_PATH_FROM_MVIEWER", "apps/publish")
     EXPORT_CONF_FOLDER = os.getenv("EXPORT_CONF_FOLDER", "./store")
     LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO")
     PROXY_WHITE_LIST = ['geobretagne.fr', 'ows.region-bretagne.fr']
+    MVIEWERSTUDIO_PUBLISH_PATH =  os.getenv("MVIEWERSTUDIO_PUBLISH_PATH", "public")
+    DEFAULT_ORG = os.getenv("DEFAULT_ORG", "public")
 
+Pour les chemins relatifs, la racine sera en général pour Flask ``/srv/python/mviewerstudiobackend``. 
+Avec gunicorn (e.g pour la mise en production), vous devez utiliser des chemins absolus.
+
+Voici une description de ces variables :
+
+- ``CONF_PATH_FROM_MVIEWER``: répertoire d'accès à partir de l'instance mviewer.
+- ``CONF_PUBLISH_PATH_FROM_MVIEWER``: répertoire de publication à partir de l'instance mviewer.
+- ``EXPORT_CONF_FOLDER``: répertoire d'accès à partir de l'instance mviewer.
+- ``LOG_LEVEL``: Niveau logs (voir https://docs.python.org/3/library/logging.html)
+- ``PROXY_WHITE_LIST``: Liste des noms de domaine laissé passé par le proxy en mode développement.
+- ``MVIEWERSTUDIO_PUBLISH_PATH``: Répertoire de publication lors du passage du mode brouillon au mode publié.
+- ``DEFAULT_ORG``: Nom de l'organisation par défaut à utiliser pour un usage non sécurisé (e.g en dehors d'un georchestra, ANONYMOUS).
+
+
+
+Mettre en production mviewerstudio
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Environnement de production sans Docker
 ***************************************
@@ -127,13 +157,14 @@ Mode opératoire
 
 2) Création du service et activation du service
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Vous devez créer un fichier dans `/etc/systemd/system/mviewerstudio.service`:
 
  .. code-block:: sh
    :caption: création du fichier mviewerstudio.service
 
        sudo nano /etc/systemd/system/mviewerstudio.service
 
-avec le contenu suivant
+Ajoutez ensuite ce contenu en adaptant les valeurs (chemin, user...) selon votre environnement :
 
  .. code-block:: sh
    :caption: fichier mviewerstudio.service
@@ -145,13 +176,17 @@ avec le contenu suivant
         [Service]
         User=monuser
         Environment="EXPORT_CONF_FOLDER=/var/www/mviewer/apps/store/"
+        Environment="CONF_PUBLISH_PATH_FROM_MVIEWER=apps/prod"
+        Environment="CONF_PATH_FROM_MVIEWER="apps/store"
+        Environment="MVIEWERSTUDIO_PUBLISH_PATH=/var/www/mviewer/apps/prod"
+        Environment="DEFAULT_ORG=public"
         WorkingDirectory=/home/monuser/mviewerstudio/srv/python
         ExecStart=/home/monuser/mviewerstudio/srv/python/.venv/bin/gunicorn -b 127.0.0.1:5007 mviewerstudio_backend.app:app
 
         [Install]
         WantedBy=multi-user.target
 
-Notre service tourne sur le port 5007.
+Notre service tournera donc sur le port `5007` une fois démarré.
 
 
 .. code-block:: sh
@@ -238,6 +273,7 @@ La configuration backend peut également être définie via des variables d'envi
 .. code-block:: sh
 
     CONF_PATH_FROM_MVIEWER ( défault = apps/store/)
+    CONF_PUBLISH_PATH_FROM_MVIEWER ( défault = apps/publish)
     EXPORT_CONF_FOLDER ( défault = ./store/)
 
 Ces variables peuvent aussi être définies lors du lancement du serveur de développement flask :
@@ -245,6 +281,7 @@ Ces variables peuvent aussi être définies lors du lancement du serveur de dév
 .. code-block:: sh
 
     export CONF_PATH_FROM_MVIEWER ( défault = apps/store/)
+    export CONF_PUBLISH_PATH_FROM_MVIEWER ( défault = apps/publish)
     export EXPORT_CONF_FOLDER ( défault = ./store/)
     flask run
 
@@ -277,3 +314,75 @@ Il vous faudra également veiller à bien utiliser la bonne version de python di
     Avec VS Code, ouvrez dans une nouvelle fenêtre le répertoire ``srv/python`` et cliquer sur ``Exécuter et déboguer``.
     Sélectionner ensuite le type ``Python > Flask``.
     Le serveur se lance alors en mode débogue.
+
+Gestion des logs
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+En mode développement, les logs sont affichées dans le terminal visible lors de l'éxécution du mode debug(e.g VS Code).
+
+En mode production, il est nécessaire d'adapter votre système de service pour conserver les logs dans un fichier spécifique.
+
+Pour gunicorn, nous conseillons d'ajouter les options nécessaires dans le script de démarrage du service (``/etc/systemd/system/mviewerstudio.service``).
+
+Voici par exemple la commande d'exécution du service gunicorn avec la sauvegardes des logs dans 2 fichiers : 
+
+.. code-block:: sh
+
+    --access-logfile /srv/log/gunicorn-access.log --capture-output --log-level debug --error-logfile /srv/log/gunicorn-error.log
+
+- Le fichier ``gunicorn-access.log`` permet d'obtenir les logs d'accès.
+
+- Le fichier ``gunicorn-error.log`` permet d'accéder aux logs générales des scripts Python (détail des erreurs, logging type INFO, DEBUG, WARN, etc...).
+
+.. warning::
+
+    Dans les scripts Python, nous utilisons le module logging de Python qui permet de définir un niveau de log (WARN, DEBUG, INFO) correspondant au niveau de log défini dans les options du service (e.g gunicorn).
+    
+    https://docs.python.org/fr/3/library/logging.html#module-logging
+
+.. note::
+
+    Pour aller plus loin avec le logging Python:
+    
+    https://docs.python.org/fr/3/howto/logging.html
+
+.. note::
+
+    Pour plus d'information sur les options de logging avec gunicorn, consultez la documentation gunicorn :
+
+    https://docs.gunicorn.org/en/stable/settings.html#logging
+
+Mise à jour
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Pour mettre à jour le code source (e.g branche ``develop``), vous pouvez utilisez le script ``mviewerstudio/srv/python/sync.sh`` après un ``git pull``.
+
+Il permet de copier / coller les sources vers le répertoire ``static`` du backend Python.
+
+Pour la mise à jour, voici donc les commandes à exécuter à partir du répertoire ``/mviewerstudio`` :
+
+.. code-block:: sh
+
+    cd /full/path/mviewerstudio
+    git pull
+    cd srv/python
+    sh ./sync.sh pull /full/path/mviewerstudio
+
+Si besoin, réaliser un restart de votre service (e.g gunicorn) : 
+
+.. code-block:: sh
+
+    systemctl restart mviewerstudio
+
+Pour tout redémarrage de gunicorn, vérifier que le service à bien démarrer : 
+
+.. code-block:: sh
+
+    systemctl status mviewerstudio
+
+.. warning::
+
+    Il est possible que Git n'ait pas terminé d'écrire un fichier lors de l'arrêt du service.
+    Le service peut alors démarrer et s'arréter.
+
+    Si vous constater dans le fichier de log d'erreur gunicorn que c'est bien le cas, redémarrer le service avec la commande ``systemctl restart mviewerstudio``

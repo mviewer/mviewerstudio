@@ -1,0 +1,64 @@
+on:
+  push:
+    branches:
+    - develop-meg-vsr
+    - develop-meg
+jobs:
+  build_images:
+    timeout-minutes: 10
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: "Set up Python"
+        uses: actions/setup-python@v1
+        with:
+          python-version: '3.9'
+
+      - name: "python backend - install requirements"
+        working-directory: srv/python
+        run: |
+          pip install -r requirements.txt -r dev-requirements.txt
+          pip install -e .
+
+      - name: "python backend - Checking format"
+        working-directory: srv/python
+        run: |
+          black . --check    
+        
+      - name: "Calculating image tag"
+        if: github.repository == 'geobretagne/mviewerstudio'
+        id: version
+        run: |
+          if [[ $GITHUB_REF == 'refs/heads/master' ]]; then
+            echo ::set-output name=VERSION::stable
+          elif [[ $GITHUB_REF == 'refs/heads/develop' ]]; then
+            echo ::set-output name=VERSION::latest
+          else
+            echo "This action only works with master or develop branch"
+            exit 1
+          fi
+
+      - name: "build the docker containers"
+        env:
+          DOCKER_BUILDKIT: 1
+        run: |
+          docker-compose build
+
+      - name: "Log in to docker hub"
+        uses: azure/docker-login@v1
+        if: github.repository == 'geobretagne/mviewerstudio'
+        with:
+          username: '${{ secrets.DOCKER_HUB_USERNAME }}'
+          password: '${{ secrets.DOCKER_HUB_PASSWORD }}'
+
+      - name: "Retag / push the docker images (not stable)"
+        if: github.repository == 'geobretagne/mviewerstudio'
+        run: |
+            docker tag mviewer/mviewerstudio:python-latest mviewer/mviewerstudio:python-${{ steps.version.outputs.VERSION }}
+            docker tag mviewer/mviewerstudio:php-latest    mviewer/mviewerstudio:php-${{ steps.version.outputs.VERSION }}
+            docker push mviewer/mviewerstudio:python-${{ steps.version.outputs.VERSION }}
+            docker push mviewer/mviewerstudio:php-${{ steps.version.outputs.VERSION }}
+
+     
+

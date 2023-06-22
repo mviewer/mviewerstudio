@@ -1,39 +1,29 @@
 from werkzeug.local import LocalProxy
-from flask import has_app_context, request
-from dataclasses import dataclass
-from typing import List, Optional
+from flask import has_app_context, request, current_app
+from ..models.user import User
+from .commons import replace_special_chars
+from typing import Optional
 import logging
-
 
 logger = logging.getLogger(__name__)
 
 
-@dataclass
-class User:
-    username: str
-    firstname: str
-    lastname: str
-    organisation: Optional[str]
-    roles: List[str]
-
-    def as_dict(self):
-        return {
-            "user_name": self.username,
-            "first_name": self.firstname,
-            "last_name": self.lastname,
-            "organisation": {"legal_name": self.organisation},
-            "roles": self.roles,
-        }
-
-
 def _get_current_user() -> Optional["User"]:
     if has_app_context():
+        logger.info("REQUEST HEADER")
+        logger.info(dict(request.headers))
         roles = request.headers.get("sec-roles", "").split(";")
+        # use sec-orgname by default
+        orgname = request.headers.get("sec-orgname")
+        if not orgname:
+            orgname = current_app.config["DEFAULT_ORG"]
+        normalize_orgname = replace_special_chars(orgname)
         user = User(
             request.headers.get("sec-username", "anonymous"),
             request.headers.get("sec-firstname", "anonymous"),
             request.headers.get("sec-lastname", "anonymous"),
-            request.headers.get("sec-org"),
+            orgname,
+            normalize_orgname,
             roles,
         )
         logging.info(f"logged user: {user}")
