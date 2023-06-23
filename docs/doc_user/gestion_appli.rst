@@ -12,11 +12,11 @@ La gestion de son application est possible depuis la barre de navigation située
               :alt: Boutons pour gérer son application
               :align: center
 
-* ``Enregistrer`` : permet d'enregistrer les modifications de son application
-* ``Prévisualiser`` : permet de prévisualiser son application avec la configuration actuelle dans un nouvel onglet du navigateur
-* ``Supprimer`` : permet de supprimer définitevement son application
-* ``Dépublier`` : permet de dépublier son application quand celle-ci a été publiée auraparavant (voir rubrique ci-dessous)
-* ``Options`` :guilabel:`mode avancé` : permet d'accéder à des options supplémentaires. Visible seulement si l'application est enregistrée
+* ``Enregistrer`` : permet d'enregistrer les modifications de son application.
+* ``Prévisualiser`` : permet de prévisualiser son application avec la configuration actuelle dans un nouvel onglet du navigateur.
+* ``Supprimer`` : permet de supprimer définitivement son application.
+* ``Dépublier`` : permet de dépublier son application quand celle-ci a été publiée auraparavant (voir rubrique ci-dessous).
+* ``Options`` :guilabel:`mode avancé` : permet d'accéder à des options supplémentaires. Visible seulement si l'application est enregistrée.
 
 
 Gérer la publication d'une application
@@ -25,7 +25,7 @@ Gérer la publication d'une application
 .. note:: Note
         Cette fonctionnalité est disponible si et seulement si l'instance sur laquelle vous créez votre application est configurée pour publier une application en production.
 
-Par défaut, une nouvelle application est créee en mode "brouillon". Le mode "brouillon" signifie que l'application est disponible depuis le mviewer studio, les modifications sont enregistrables et prévisualisables. Toutefois, l'application n'est pas accessible en ligne tant qu'elle n'a pas été publiée. 
+Par défaut, une nouvelle application est créee en mode "brouillon". Le mode "brouillon" signifie que l'application est disponible depuis le mviewer studio, les modifications sont enregistrables et prévisualisables. Toutefois, l'application n'est pas accessible en ligne via une url stable tant qu'elle n'a pas été publiée. 
 
 .. image:: ../_images/user/mviewerstudio_4_gestion_publication1.png
               :alt: Statut des applications

@@ -35,7 +35,7 @@ Deux choix sont offerts à l'utilisateur :
               :alt: Projet existant serveur
               :align: center
 
-Chaque application accessible peut être prévisualisée, modifiée ou supprimée en cliquant sur les boutons associés. On visualise quelles sont les applications publiées, c'est à dire en ligne et les applications en mode "brouillon".
+Chaque application accessible peut être prévisualisée, modifiée ou supprimée en cliquant sur les boutons associés. Si vous n'avez que le droit de prévisualisation c'est que l'application a été créée par un autre utilisateur de votre organisation. On visualise quelles sont les applications publiées, c'est à dire "en ligne" et les applications en mode "brouillon".
 
 Il est également possible de filtrer les applications selon un mot clé, une date ou un auteur à l'aide de la barre de recherche en haut.
 

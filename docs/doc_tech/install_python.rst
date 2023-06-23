@@ -9,13 +9,13 @@ Installer mviewerstudio avec Python
 
 Mviewerstudio est une application web développée en HTML / CSS / PHP / Python. Elle nécessite simplement d'être déployée sur un serveur WEB qui peut être APACHE, NGINX, TOMCAT…
 
-Cette page ne traite que de l'installation du backend avec Python.
+Pour une utilisation optimale, il est vivement recommandé d'utiliser python pour son installation.
 
 Environnement global
-********************
+-------------------------------------------
 
 Prérequis
-=========
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Vous aurez besoin :
 
@@ -30,7 +30,7 @@ Vous aurez besoin :
 - d'une instance mviewer fonctionnelle (/mviewer)
 
 Installation
-============
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. note::
     Avant de réaliser l'installation, vous devez avoir connaissance de la différence entre un environnement de
@@ -122,15 +122,15 @@ Voici une description de ces variables :
 
 
 Mettre en production mviewerstudio
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Environnement de production sans Docker
-***************************************
+-------------------------------------------
 
 **Cette partie décrit l'installation en production de mviewerstudio sur un serveur Linux (Ubuntu / Debian).**
 
 Prérequis
-=========
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
  - Disposer d'un serveur web (Apache ou Nginx)
  - Disposer d'une instance mviewer sur le même serveur (ex : /var/www/mviewer)
@@ -138,13 +138,13 @@ Prérequis
  - Avoir installé mviewerstudio avec la méthode décrite dans la partie précédante
 
 Objectifs
-=========
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
  - Servir le backend python et le front de studio avec un service Linux
  - Proxyfier ce service avec Nginx ou Apache
 
 Mode opératoire
-===============
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 1) Création du dossier store dans le dossier mviewer/apps
 
@@ -228,10 +228,10 @@ Notre service tourne sur le port 5007. Nous souhaitons que ce service soit acces
 
 
 Développer avec mviewerstudio
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-------------------------------------------
 
 Serveur de développement
-***********************************
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 En développement, vous devez activer le virtualenv pour démarrer le serveur flask en local :
 
@@ -257,7 +257,7 @@ Pour modifier le port ``5000`` par le port ``XXXX``, utilisez cette commande ave
 
 
 Configuration
-***********************************
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 La configuration frontend est localisée dans :
 
@@ -290,7 +290,7 @@ Ces variables peuvent aussi être définies lors du lancement du serveur de dév
 
 
 Proxy
-***********************************
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Pour utiliser les services types OGC (catalogue ou serveurs cartographiques), vous aurez besoin d'utiliser le proxy.
 
@@ -304,7 +304,7 @@ Ce paramètre est accessible dans :
 
 
 Déboguer le backend
-***********************************
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Pour debug le backend Python, il est conseillé de créer un nouveau fichier de debug type ``Python > flask`` qui utilisera le fichier ``mviewer_backend/app.py``.
 
@@ -316,7 +316,7 @@ Il vous faudra également veiller à bien utiliser la bonne version de python di
     Le serveur se lance alors en mode débogue.
 
 Gestion des logs
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 En mode développement, les logs sont affichées dans le terminal visible lors de l'éxécution du mode debug(e.g VS Code).
 
@@ -353,7 +353,7 @@ Voici par exemple la commande d'exécution du service gunicorn avec la sauvegard
     https://docs.gunicorn.org/en/stable/settings.html#logging
 
 Mise à jour
-~~~~~~~~~~~~~~~~~~~~~~~~~
+-------------------------------------------
 
 Pour mettre à jour le code source (e.g branche ``develop``), vous pouvez utilisez le script ``mviewerstudio/srv/python/sync.sh`` après un ``git pull``.
 

@@ -34,7 +34,7 @@ Une fenêtre indique que l'application a été publiée avec succès :
               :alt: Publier son application en production validée
               :align: center
 
-* ``Lien de partage`` : Lien de l'application en production permettant d'y accéder
+* ``Lien de partage`` : Lien de l'application en production permettant d'y accéder. Ce lien est fixe permettant une mise en production de l'application.
 * ``Intégration en iframe`` : Code HTML à copier/coller pour intégrer la carte dans une page web 
 
 Vous pouvez ensuite poursuivre vos modifications ou retourner à l'accueil.

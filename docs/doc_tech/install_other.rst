@@ -1,27 +1,24 @@
 .. Authors :
 .. mviewer team
 
-.. _install:
+.. _install_other:
 
-Installer mviewerstudio
+Autres types d'installations possibles
 =======================
 
-Mviewerstudio est une application web développée en HTML / CSS / PHP / Python. Elle nécessite simplement d'être déployée sur un serveur WEB qui peut être APACHE, NGINX, TOMCAT…
-
-mviewerstudio peut fonctionner avec 2 backends différents : PHP ou Python (nécessite Python >= v3.9).
-
-En fonction du backend retenu, l'installation diffère.
-
-L'installation avec Python est à lire dans la section dédiée de cette documentation.
+SI vous ne pouvez installer mviewerstudio via python, il est aussi possible d'utiliser PHP ou docker.
 
 Installer avec le Backend PHP
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. warning:: L'installation via le backend PHP ne donne pas accès à toutes les fonctionnalités disponibles dans mviewerstudio (Exemple : gestion des versions, publication, création de templates...).
+
 
 Prérequis
 *********
 Apache 2, PHP 7
 
-Ainsi qu'une instance mviewer fonctionnelle (/mviewer)
+Ainsi qu'une instance mviewer fonctionnelle (/mviewer).
 
 Install
 *********

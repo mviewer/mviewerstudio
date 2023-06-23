@@ -35,7 +35,7 @@ En cliquant sur le bouton créer, une fenêtre de paramétrage de la thématique
 
 - ``Nom`` : renseigner le nom de la thématique (ex. Ports).
 
-- ``Déroulée par défaut`` : option permettant d'afficher le contenu de la thématique par défaut
+- ``Déroulée par défaut`` : option permettant d'afficher le contenu de la thématique par défaut.
 
 - ``Icône`` : sélectionner l'icône illustrant la thématique. Pour rechercher un mot clé en anglais, utiliser la recherche du navigateur (taper CRTL+F).
 
@@ -48,7 +48,7 @@ En cliquant sur Importer, vous pouvez importer une·des thématique·s existante
               :alt: Import thématique
               :align: center
 
-Il est possible de filtrer les thématiques à l'aide de la barre de recherche en saisissant un mot clé (thème, organisme) et de gérer l'affichage des thématiques grâce au sustème de pagination.
+Il est possible de filtrer les thématiques à l'aide de la barre de recherche en saisissant un mot clé (thème, organisme) et de gérer l'affichage des thématiques grâce au système de pagination.
 
 Les thématiques importées ne sont pas configurables, elles sont visibles dans l'application comme elles sont définies dans l'application source (nom, icône, données et options des données).
 Il est toutefois possible de gérer certains paramètres. Dans la liste des thématiques, cliquez sur le bouton |parametrage|.
@@ -61,9 +61,9 @@ Il est toutefois possible de gérer certains paramètres. Dans la liste des thé
               :alt: Options thématique externe
               :align: center
 
-Une nouvelle fenêtre s'ouvre avec les options suivantes : 
+Une nouvelle fenêtre s'ouvre avec l'option suivante : 
 
-- ``Affichage des données de la thématique`` : Option permettant de gérer l'affichage des données de la thématique lors du démarrage de l'application.
+- ``Affichage des données de la thématique`` : Option permettant de gérer l'affichage des données de la thématique lors du démarrage de l'application : tout afficher, rien ou comme dans l'application source.
 
 Ajouter une donnée
 -------------------------------------------
@@ -91,7 +91,7 @@ Vous pouvez chercher un jeu de données dans un catalogue (ex. Région Bretagne)
               :alt: Chercher une donnée
               :align: center
 
-- :guilabel:`mode avancé` en renseignant l'adresse du catalogue fournisseur ou d'un service WMS
+- :guilabel:`mode avancé` en renseignant l'adresse du catalogue fournisseur ou d'un service WMS.
 
 .. image:: ../_images/user/mviewerstudio_2_thematiques_donnees_avance.png
               :alt: Chercher une donnée
@@ -100,7 +100,7 @@ Vous pouvez chercher un jeu de données dans un catalogue (ex. Région Bretagne)
 Ajouter une donnée depuis des paramètres
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Si le jeu de donnée n'est pas disponible dans un catalogue, il est possible de rajouter une donnée à l'aide des paramètres. Cliquez sur le second onglet et sélectionnez le type de la donnée parmi la liste. Indiquez ensuite les paramètres en veillant à leur validité :
+Si le jeu de donnée n'est pas disponible dans un catalogue, il est possible de rajouter une donnée à l'aide des paramètres. Cliquez sur le second onglet et sélectionnez le type de la donnée parmi la liste (WMS, vector-TMS). Indiquez ensuite les paramètres en veillant à leur validité :
 
 .. image:: ../_images/user/mviewerstudio_2_ajout_donnee_param.png
               :alt: Ajouter une donnée depuis des paramètres
@@ -110,7 +110,7 @@ Si le jeu de donnée n'est pas disponible dans un catalogue, il est possible de 
 * ``Nom`` : nom de la donnée dans l'application
 * ``URL`` : paramètre de type URL (URL du service web)
 * ``Lien vers le fichier de style`` : pour les couches de type vector-tms uniquement, il indique l’URL vers le fichier de style au format JSON.
-* ``Nom du style`` : pour les couches de type vector-tms uniquement, titres à utiliser pour la liste des styles associés
+* ``Nom du style`` : pour les couches de type vector-tms uniquement, titre à utiliser pour la liste des styles associés
 
 Paramétrer ses données
 -------------------------------------------
@@ -120,10 +120,6 @@ Une fois cliqué sur Sélectionner, la donnée est ajoutée à l'arborescence. V
 .. image:: ../_images/user/mviewerstudio_2_ajout_donnee.png
               :alt: Donnée ajoutée
               :align: center
-
-.. |parametrage| image:: ../_images/user/mviewerstudio_2_parametrage.png
-        :alt: Editer cette donnée 
-	      :width: 20 pt
 
 Onglet Général
 ~~~~~~~~~~~~~~~
@@ -186,21 +182,21 @@ L'onglet filtre dynamique permet de filtrer la donnée via une liste déroulante
 Onglet options avancées
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-L'onglet options avancées donne accès aux fonctionnalités avancées. :guilabel:`mode avancé`
+L'onglet options avancées donne accès aux fonctionnalités avancées. Disponible uniquement en  :guilabel:`mode avancé`
 
 .. image:: ../_images/user/mviewerstudio_2_donnees_avancees.png
               :alt: Options avancées
               :align: center
 
-* :guilabel:`mode avancé` ``Index de couche`` : Position dans l'ordre d'affichage des données sur la carte et la légende.
+* :guilabel:`mode avancé` ``Index de couche`` : Position dans l'ordre d'affichage des données sur la carte et la légende au démarrage de l'application.
 * :guilabel:`mode avancé` ``Echelle mini / maxi`` : Echelle minimale et maximale d'affichage de la donnée.
 * :guilabel:`mode avancé` ``Affichage tuilé`` : Affichage tuilé de la donnée. La donnée est chargée progressivement.
-* :guilabel:`mode avancé` ``Affichage exclusive de la données`` : l’affichage de cette couche masquera automatiquement toutes les autres couches ayant ce paramètre activé
-* :guilabel:`mode avancé` ``Ne pas afficher la donnée dans la légende`` : Permet de rendre la couche seulement visible sur la carte, et invisible dans les thématiques et la légende.
+* :guilabel:`mode avancé` ``Affichage exclusive de la données`` : L’affichage de cette couche masquera automatiquement toutes les autres couches ayant ce paramètre activé.
+* :guilabel:`mode avancé` ``Ne pas afficher la donnée dans la légende`` : Permet de rendre la couche seulement visible sur la carte et invisible dans les thématiques et la légende.
 * :guilabel:`mode avancé` ``Utiliser un style externe`` : Lien vers un style SLD remplaçant le style du serveur cartographique.
-* :guilabel:`mode avancé` ``Type de légende`` : possibilité de mettre une légende personnalisée vers un fichier image (via une URL)
-* :guilabel:`mode avancé` ``Adapter la légende selon le zoom de la carte`` : Précise si la légende est liée à l’échelle de la carte et si elle nécessite d’être actualisée à chaque changement d’échelle de la carte.
+* :guilabel:`mode avancé` ``Type de légende`` : Possibilité de mettre une légende personnalisée vers un fichier image (via une URL).
 * :guilabel:`mode avancé` ``Lien vers une légende personnalisée`` : URL vers un fichier afin d'afficher la légende à partir d'une image.
+* :guilabel:`mode avancé` ``Adapter la légende selon le zoom de la carte`` : Précise si la légende est liée à l’échelle de la carte et si elle nécessite d’être actualisée à chaque changement d’échelle de la carte.
 * :guilabel:`mode avancé` ``Métadonnées`` : Lien vers la métadonnée. Ne pas modifier.
 * :guilabel:`mode avancé` ``Type de donnée`` : Lien vers la donnée. Ne pas modifier.
 * :guilabel:`mode avancé` ``Métadonnées`` : Lien vers la métadonnée. Ne pas modifier.
@@ -208,7 +204,7 @@ L'onglet options avancées donne accès aux fonctionnalités avancées. :guilabe
 Onglet filtre statique
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-L'onglet filtre statique permet de filtrer les données à afficher sur la carte. :guilabel:`mode avancé`
+L'onglet filtre statique permet de filtrer les données à afficher sur la carte. Disponible uniquement en :guilabel:`mode avancé`
 
 .. image:: ../_images/user/mviewerstudio_2_filtre_statique.png
               :alt: Filtre statique
@@ -223,7 +219,7 @@ L'onglet filtre statique permet de filtrer les données à afficher sur la carte
 Onglet recherche
 ~~~~~~~~~~~~~~~~~
 
-L'onglet recherche permet d'activer la recherche dans l'application sur cette donnée. Cela nécessite un moteur de recherche elasticsearch pour une donnée WMS ou une donnée vectorielle type geojson pour le mode fuse. :guilabel:`mode avancé`
+L'onglet recherche permet d'activer la recherche dans l'application sur cette donnée. Cela nécessite un moteur de recherche elasticsearch pour une donnée WMS ou une donnée vectorielle type geojson pour le mode fuse. Disponible uniquement en :guilabel:`mode avancé`
 
 .. image:: ../_images/user/mviewerstudio_2_donnees_recherche.png
               :alt: Filtre dynamique
@@ -243,7 +239,7 @@ Depuis les paramètres de la donnée, sélectionnez l’onglet « Interrogation 
               :alt: Créer un template personnalisé
               :align: center
 
-Puis à la rubrique « Configurer la fiche d’information », cliquez sur le bouton « Créer ».
+Puis à la rubrique « Configurer la fiche d’information », cliquez sur le bouton « + Créer ».
 
 .. note:: 
   La position de la fiche d’information souhaitée doit préalablement être sélectionnée. Elle conditionne ensuite l’affichage des composants au sein du générateur.
@@ -269,14 +265,14 @@ Il est maintenant nécessaire de peupler le bloc de gauche avec des composants e
               :alt: Liste des composants du générateur
               :align: center
 
-* ``Titre`` : composant permettant d’afficher un titre et nécessitant une valeur de type texte en entrée
-* ``Sous-titre`` : composant permettant d’afficher  un sous-titre et nécessitant une valeur de type texte en entrée
-* ``Iframe`` : composant permettant d’afficher une fenêtre externe / widget nécessitant une valeur de type « url » en entrée
-* ``Image`` : composant permettant d’afficher une image nécessitant une valeur de type « url » en entrée
-* ``Bouton`` : composant permettant d’afficher un bouton avec une redirection vers une ressource externe en ligne et nécessitant une valeur de type « url » en entrée
-* ``Chiffre clé`` : composant permettant d’afficher un chiffre clé à mettre en avant et nécessitant une valeur de type « nombre » en entrée
-* ``Liste`` : composant permettant d’afficher une liste et nécessitant un champ composé d’une liste comme indiqué dans la `documentation mviewer <https://mviewerdoc.readthedocs.io/fr/latest/doc_tech/config_tpl.html#iterer-sur-un-champ-de-type-json>`_
-* ``Texte`` : composant permettant d’afficher un texte et nécessitant une valeur de type texte en entrée
+* ``Titre`` : composant permettant d’afficher un titre et nécessitant une valeur de type texte en entrée.
+* ``Sous-titre`` : composant permettant d’afficher  un sous-titre et nécessitant une valeur de type texte en entrée.
+* ``Iframe`` : composant permettant d’afficher une fenêtre externe / widget nécessitant une valeur de type « url » en entrée.
+* ``Image`` : composant permettant d’afficher une image nécessitant une valeur de type « url » en entrée.
+* ``Bouton`` : composant permettant d’afficher un bouton avec une redirection vers une ressource externe en ligne et nécessitant une valeur de type « url » en entrée.
+* ``Chiffre clé`` : composant permettant d’afficher un chiffre clé à mettre en avant et nécessitant une valeur de type « nombre » en entrée.
+* ``Liste`` : composant permettant d’afficher une liste et nécessitant un champ composé d’une liste comme indiqué dans la `documentation mviewer <https://mviewerdoc.readthedocs.io/fr/latest/doc_tech/config_tpl.html#iterer-sur-un-champ-de-type-json>`_.
+* ``Texte`` : composant permettant d’afficher un texte et nécessitant une valeur de type texte en entrée.
 
 Sélectionnez un composant et cliquez sur "Enregistrer" pour l’ajouter. Il n’est possible d’ajouter qu’un composant à la fois, veuillez réitérer l’opération pour ajouter des composants supplémentaires. 
 
@@ -370,6 +366,7 @@ Une fois les composants ajoutés, il est nécessaire de configurer chaque compos
      - x
      -
 
+
 **Valeur**
 
 Dans le bloc du composant, veuillez sélectionner la source de l’information à afficher parmi la liste « Choisir un type » : 
@@ -384,7 +381,8 @@ La valeur est définie dans un champ du jeu de donnée. Il faut ensuite sélecti
 
 - *A partir de plusieurs champs :*
 
-La valeur est une concaténation de plusieurs champs au sein du jeu de données. Il faut saisir les champs dans le deuxième bloc en tapant le nom du champ puis en sélectionnant le champ dans la liste d’auto-complétion. Validez le champ à ajouter à l’aide de touche « Entrer ». Vous pouvez également ajouter du texte fixe en saisissant les caractères et validez avec la touche « Entrer ».
+La valeur est une concaténation de plusieurs champs au sein du jeu de données ainsi que de valeurs saisies librement. 
+Il faut saisir les champs dans le deuxième bloc en tapant le nom du champ puis en sélectionnant le champ dans la liste d’auto-complétion. Validez le champ à ajouter à l’aide de touche « Entrer ». Vous pouvez également ajouter du texte fixe en saisissant les caractères et validez avec la touche « Entrer ».
 
 .. image:: ../_images/user/mviewerstudio_2_templateCustom_componentValue2.png
               :alt: Configurer un template - Valeur selon plusieurs champs
