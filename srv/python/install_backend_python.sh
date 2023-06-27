@@ -2,7 +2,7 @@
 
 # Install required packages
 
-apt install libxslt1-dev libxml2-dev
+apt install libxslt1-dev libxml2-dev python3 python3-pip python3-venv
 pip install virtualenv
 
 # FULL PATH - WILL CLONE REPO TO THIS LOCATION
