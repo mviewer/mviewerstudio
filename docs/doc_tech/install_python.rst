@@ -44,6 +44,9 @@ Installation
 
 **1. Téléchargez le script d'installation**
 
+.. warning::
+    Remplacez l'URL du fichier ``install_backend_python.sh`` selon la branche souhaitée.
+
 .. code-block:: sh
 
     sudo apt install curl
