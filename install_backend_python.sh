@@ -19,7 +19,7 @@ apt install libxslt1-dev libxml2-dev
 pip install virtualenv
 
 if [ ! -d "${MVIEWERSTUDIO_DIR}" ]; then
-    git clone https://github.com/jdev-org/mviewerstudio.git
+    git clone https://github.com/mviewer/mviewerstudio.git
 fi
 
 mkdir -p "${MVIEWERSTUDIO_DIR}/srv/python/mviewerstudio_backend/static/apps"
