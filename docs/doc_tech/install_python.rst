@@ -51,8 +51,8 @@ Installation
 
 Le script utilise 2 paramètres optionnels :
 
-- ``<branch>`` : Le chemin dans lequel installer mviewerstudio (par défaut le répertoire d'exécution du script)
-- ``<path>`` : La branche à installer (par défaut master)
+- ``<path>`` : Le chemin dans lequel installer mviewerstudio (par défaut le répertoire d'exécution du script)
+- ``<branch>`` : La branche à installer (par défaut master)
 
 Exemple pour installer mviewerstudio dans le répertoire ``/git`` en utilisant la branche ``develop`` :
 
