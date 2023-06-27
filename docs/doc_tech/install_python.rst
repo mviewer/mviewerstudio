@@ -21,7 +21,7 @@ Vous aurez besoin :
 
 .. code-block:: sh
 
-    sudo apt install libxslt1-dev libxml2-dev python3 python3-pip curl
+    sudo apt install libxslt1-dev libxml2-dev python3 python3-pip
     pip install virtualenv
 
 - d'une version Python >= 3.9
@@ -94,7 +94,7 @@ Configuration du front
 ----------------------
 
 Récupérez le fichier ``config-python-sample.json`` (à la racine du projet) et copier son contenu dans le fichier ``/srv/python/mviewerstudio_backend/static/apps/config.json``.
-Adaptez ensuite les paramètres selon votre environnement (aidez-vous de la page d'explication des paramètres si besoin).
+Adaptez ensuite les paramètres selon votre environnement (aidez-vous de la page :ref:`config_front`).
 
 .. warning::
     Le paramètre ``mviewer_instance`` doit finir par ``/``
@@ -120,6 +120,7 @@ Variables d'environnement du backend
 Lancement de l'application avec Flask
 =====================================
 
+Pour création d'un environnement de développements.
 
 .. code-block:: sh
 
@@ -156,14 +157,19 @@ Mode opératoire
 - Servir le backend python et le front de studio avec un service Linux
 - Proxyfier ce service avec Nginx ou Apache
 
-1) Création du dossier store dans le dossier mviewer/apps
+1) Création des dossiers de stockage dans le dossier mviewer/apps
 ---------------------------------------------------------
 
- .. code-block:: sh
-   :caption: dossier store
+Création du répertoire de stockage des brouillons (store) et des applications publiées (prod).
 
+
+ .. code-block:: sh
+   
        mkdir /var/www/mviewer/apps/store
        sudo chown monuser /var/www/mviewer/apps/store
+       mkdir /var/www/mviewer/apps/prod
+       sudo chown monuser /var/www/mviewer/apps/prod
+
 
 
 2) Création du service et activation du service
@@ -171,14 +177,14 @@ Mode opératoire
 Vous devez créer un fichier dans `/etc/systemd/system/mviewerstudio.service`:
 
  .. code-block:: sh
-   :caption: création du fichier mviewerstudio.service
 
        sudo nano /etc/systemd/system/mviewerstudio.service
 
 Ajoutez ensuite ce contenu en adaptant les valeurs (chemin, user...) selon votre environnement :
 
+fichier mviewerstudio.service
+
  .. code-block:: sh
-   :caption: fichier mviewerstudio.service
 
        [Unit]
         Description=mviewerstudio
@@ -200,9 +206,9 @@ Ajoutez ensuite ce contenu en adaptant les valeurs (chemin, user...) selon votre
 
 Notre service tournera donc sur le port `5007` une fois démarré.
 
+Activation et démarrage du service :
 
 .. code-block:: sh
-   :caption: Activation et démarrage du service
 
        sudo systemctl daemon-reload
        sudo systemctl enable mviewerstudio.service
@@ -211,19 +217,19 @@ Notre service tournera donc sur le port `5007` une fois démarré.
 A partir de maintenant, il est possible de stopper, redémarrer ou afficher le service avec les commandes :
 
 .. code-block:: sh
-   :caption: service mviewerstudio
 
        sudo systemctl stop mviewerstudio
        sudo systemctl restart mviewerstudio
        sudo systemctl status mviewerstudio.service
 
-3) Proxyfication nginx du service
+3) Proxyfication du service
 ---------------------------------
 
 Notre service tourne sur le port 5007. Nous souhaitons que ce service soit accessible sur les ports 80 et 443 à l'adresse **/mviewerstudio/**. Nous allons donc opérer une proxyfication de ce service.
 
-.. code-block::
-   :caption: Configuration nginx
+Configuration nginx
+
+.. code-block:: sh
 
        location /mviewerstudio {
             proxy_pass http://127.0.0.1:5007/;
@@ -232,9 +238,24 @@ Notre service tourne sur le port 5007. Nous souhaitons que ce service soit acces
             proxy_set_header X-Forwarded-Host $host;
         }
 
+Rechargement de la conf nginx
 
-.. code-block::
-   :caption: Rechargement de la conf nginx
+.. code-block:: sh
 
        sudo systemctl reload nginx
+
+Configuration apache
+
+.. code-block:: sh
+
+        <Location "/mviewerstudio">
+            ProxyPass "http://127.0.0.1:5007"
+            ProxyPassReverse "http://127.0.0.1:5007"
+        </Location>
+
+Rechargement de la conf apache
+
+.. code-block:: sh
+
+       sudo systemctl reload apache2
 
