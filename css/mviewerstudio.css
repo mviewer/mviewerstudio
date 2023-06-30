@@ -590,14 +590,21 @@
 	
 	.blue,
 	.blue:focus {
-	  background-color: #F6F7F8;
+	  background-color: #032e46;
 	}
 	
 	.default,
 	.default:focus {
 	  background-color: #34495D;
 	}
-	
+
+	.theme-designfr,
+	.theme-designfr:focus {
+	  background-color: #ffffff;
+	  color: #333333 !important;
+	}
+
+
 	.nephritis,
 	.nephritis:focus {
 	  background-color: #26AE60;
