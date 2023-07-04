@@ -160,13 +160,8 @@
                 },
                 {
                     "title": "Catalogue de la Région Grand Est",
-                    "url": "https://www.geograndest.fr/geonetwork/srv/fre/csw",
-                    "baseref": "https://www.geograndest.fr/geonetwork/srv/eng/catalog.search?node=srv#/metadata/"
-                },
-                {
-                    "title": "Catalogue de la Région Pays de la Loire",
-                    "url": "https://www.geopal.org/geonetwork/srv/fre/csw",
-                    "baseref": "https://www.geopal.org/geonetwork/srv/eng/catalog.search?node=srv#/metadata/"
+                    "url": "https://datagrandest.fr/geonetwork/srv/fre/csw",
+                    "baseref": "https://datagrandest.fr/geonetwork/srv/eng/catalog.search?node=srv#/metadata/"
                 }
             ],
             "wms": [{
