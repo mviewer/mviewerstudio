@@ -1352,3 +1352,6 @@
 	.credits .col{
 		text-align:center;
 	}
+	.credits {
+		padding-bottom: 15px;
+	}
