@@ -38,8 +38,8 @@ services:
 
   mviewer:
     # this image is automatically built in
-    # the geobretagne/mviewer github repository
-    # See https://github.com/geobretagne/mviewer/pull/236
+    # the mviewer/mviewer github repository
+    # See https://github.com/mviewer/mviewer/pull/236
     image: mviewer/mviewer
     volumes:
         - "apps:/usr/share/nginx/html/apps"

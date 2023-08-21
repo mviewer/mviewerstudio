@@ -107,7 +107,7 @@ Les liens en bas de page renvoient vers :
 
 
 
-.. _mviewer: https://github.com/geobretagne/mviewer
+.. _mviewer: https://github.com/mviewer/mviewer
 
 .. _délégué: https://cms.geobretagne.fr/content/administration-deleguee-sur-geoserver
 
