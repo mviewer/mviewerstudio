@@ -24,7 +24,7 @@ Avant de vous lancer dans la belle aventure du mviewerstudio et de goûter les j
 
 .. note:: Sur GéoBretagne : pour plus de confort et d'autonomie, il est fortement conseillé d'être administrateur délégué_ de ses données.
 
-Construire son application
+Ouvrir une application existante
 -------------------------------------------
 
 Deux choix sont offerts à l'utilisateur :
@@ -35,6 +35,12 @@ Deux choix sont offerts à l'utilisateur :
               :alt: Projet existant serveur
               :align: center
 
+Chaque application accessible peut être prévisualisée, modifiée ou supprimée en cliquant sur les boutons associés. Si vous n'avez que le droit de prévisualisation c'est que l'application a été créée par un autre utilisateur de votre organisation. On visualise quelles sont les applications publiées, c'est à dire "en ligne" et les applications en mode "brouillon".
+
+Il est également possible de filtrer les applications selon un mot clé, une date ou un auteur à l'aide de la barre de recherche en haut.
+
+Cliquez sur "Modifier" pour accéder à l'éditeur d'application.
+
 * Ouvrir un projet existant disponible sur un espace de stockage local (fichier XML sur votre ordinateur)
 
 .. image:: ../_images/user/mviewerstudio_0_accueil_projet_existant_local.png
@@ -42,7 +48,7 @@ Deux choix sont offerts à l'utilisateur :
               :align: center
 
 
-Etapes de création
+Création d'un nouveau projet
 -------------------------------------------
 
 Le générateur permet de créer son application en trois étapes :
@@ -57,23 +63,23 @@ Le générateur permet de créer son application en trois étapes :
 L'utilisateur peut basculer entre les étapes en cliquant sur l'étape de son choix via l'arbre de gauche ou via les boutons de bas de page Précédent |precedent| / Suivant |suivant|.
 
 .. |suivant| image:: ../_images/user/mviewerstudio_1_application_bouton_suivant.png
-              :alt: Suivant 
-	      :width: 70 pt
+            :alt: Suivant 
+            :width: 70 pt
 
 .. |precedent| image:: ../_images/user/mviewerstudio_1_application_bouton_precedent.png
-              :alt: Précédent 
-	      :width: 70 pt
+            :alt: Précédent 
+	        :width: 70 pt
 
 
-Il est aussi possible d'enregistrer  |enregistrer| ou de prévisualiser |previsualiser| son projet tout le long de son parcours de création.
+Il est aussi possible d'enregistrer  |enregistrer|, de prévisualiser |previsualiser| ou de supprimer son projet tout le long du parcours de création.
 
 .. |enregistrer| image:: ../_images/user/mviewerstudio_1_application_bouton_enregistrer.png
-              :alt: Enregistrer 
-	      :width: 70 pt
+        :alt: Enregistrer 
+        :width: 70 pt
 
 .. |previsualiser| image:: ../_images/user/mviewerstudio_1_application_bouton_previsualiser.png
-              :alt: Prévisualiser 
-	      :width: 70 pt
+        :alt: Prévisualiser 
+        :width: 70 pt
 
 Modes
 -------------------------------------------

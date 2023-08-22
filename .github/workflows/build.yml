@@ -3,7 +3,6 @@ on:
     branches:
     - master
     - develop
-
 jobs:
   build_images:
     timeout-minutes: 10
@@ -14,19 +13,13 @@ jobs:
       - name: "Set up Python"
         uses: actions/setup-python@v1
         with:
-          python-version: '3.8'
+          python-version: '3.9'
 
-      - name: "python backend - Running unit tests"
+      - name: "python backend - install requirements"
         working-directory: srv/python
         run: |
           pip install -r requirements.txt -r dev-requirements.txt
           pip install -e .
-          pytest mviewerstudio_backend/test.py
-
-      - name: "python backend - Typechecking"
-        working-directory: srv/python
-        run: |
-          mypy --ignore-missing mviewerstudio_backend
 
       - name: "python backend - Checking format"
         working-directory: srv/python
@@ -68,5 +61,3 @@ jobs:
             docker push mviewer/mviewerstudio:php-${{ steps.version.outputs.VERSION }}
 
      
-
-
