@@ -22,6 +22,6 @@
   },
   "homepage": "https://github.com/mviewer/mviewerstudio#readme",
   "devDependencies": {
-    "prettier": "^2.7.1"
+    "prettier": "^3.0.3"
   }
 }
