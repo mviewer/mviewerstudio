@@ -20,5 +20,8 @@
   "bugs": {
     "url": "https://github.com/mviewer/mviewerstudio/issues"
   },
-  "homepage": "https://github.com/mviewer/mviewerstudio#readme"
+  "homepage": "https://github.com/mviewer/mviewerstudio#readme",
+  "devDependencies": {
+    "prettier": "^2.7.1"
+  }
 }
