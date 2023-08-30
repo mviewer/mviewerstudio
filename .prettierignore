@@ -3,3 +3,5 @@
 !lib/*.js
 !lib/template-generator/**/*.js
 !*/
+lib/Sortable.min.js
+lib/moment.js
