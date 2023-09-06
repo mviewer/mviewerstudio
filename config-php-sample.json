@@ -1,10 +1,17 @@
 {
     "app_conf": {
         "studio_title": "GéoBretagne mviewer studio",
-        "upload_service": "srv/store.php",
-        "delete_service": "srv/delete.php",
-        "list_service": "srv/list.php",
-        "store_style_service": "srv/store/style.php",
+        "mviewer_version":  "3.9",
+        "mviewerstudio_version":  "4",
+        "is_php": "true",
+        "php": {
+            "upload_service": "srv/php/store.php",
+            "delete_service": "srv/php/delete.php",
+            "list_service": "srv/php/list.php",
+            "store_style_service": "srv/php/store/style.php"
+        },
+        "api": "api/app",
+        "store_style_service": "api/style",
         "mviewer_instance": "http://172.16.10.30/mviewer/",
         "conf_path_from_mviewer": "apps/store/",
         "mviewer_short_url": {
@@ -15,7 +22,7 @@
             "used": false,
             "url": "https://geobretagne.fr/minicatalog/csv"
         },
-        "user_info": "srv/user_info.php",
+        "user_info": "api/user",
         "export_conf_folder": "/var/www/htdocs/mviewer/apps/store/",
         "proxy": "../proxy/?url=",
         "user_info_visible": false,
@@ -159,13 +166,8 @@
                 },
                 {
                     "title": "Catalogue de la Région Grand Est",
-                    "url": "https://www.geograndest.fr/geonetwork/srv/fre/csw",
-                    "baseref": "https://www.geograndest.fr/geonetwork/srv/eng/catalog.search?node=srv#/metadata/"
-                },
-                {
-                    "title": "Catalogue de la Région Pays de la Loire",
-                    "url": "https://www.geopal.org/geonetwork/srv/fre/csw",
-                    "baseref": "https://www.geopal.org/geonetwork/srv/eng/catalog.search?node=srv#/metadata/"
+                    "url": "https://datagrandest.fr/geonetwork/srv/fre/csw",
+                    "baseref": "https://datagrandest.fr/geonetwork/srv/eng/catalog.search?node=srv#/metadata/"
                 }
             ],
             "wms": [{

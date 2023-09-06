@@ -5,11 +5,11 @@ with open("requirements.txt") as f:
 
 setup(
     name="mviewerstudio_backend",
-    version="0.1",
-    description="little api for mviewerstudio",
-    author="Camptocamp",
-    author_email="info@camptocamp.com",
-    url="https://github.com/geobretagne/mviewerstudio",
+    version="0.2",
+    description="A simple API for mviewerstudio",
+    author="mviewer community",
+    author_email="",
+    url="https://github.com/mviewer/mviewerstudio",
     packages=find_packages(),
     install_requires=REQUIREMENTS,
     classifiers=[

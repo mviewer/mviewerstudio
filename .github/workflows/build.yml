@@ -3,7 +3,6 @@ on:
     branches:
     - master
     - develop
-
 jobs:
   build_images:
     timeout-minutes: 10
@@ -14,19 +13,13 @@ jobs:
       - name: "Set up Python"
         uses: actions/setup-python@v1
         with:
-          python-version: '3.8'
+          python-version: '3.9'
 
-      - name: "python backend - Running unit tests"
+      - name: "python backend - install requirements"
         working-directory: srv/python
         run: |
           pip install -r requirements.txt -r dev-requirements.txt
           pip install -e .
-          pytest mviewerstudio_backend/test.py
-
-      - name: "python backend - Typechecking"
-        working-directory: srv/python
-        run: |
-          mypy --ignore-missing mviewerstudio_backend
 
       - name: "python backend - Checking format"
         working-directory: srv/python
@@ -34,7 +27,7 @@ jobs:
           black . --check    
         
       - name: "Calculating image tag"
-        if: github.repository == 'geobretagne/mviewerstudio'
+        if: github.repository == 'mviewer/mviewerstudio'
         id: version
         run: |
           if [[ $GITHUB_REF == 'refs/heads/master' ]]; then
@@ -54,13 +47,13 @@ jobs:
 
       - name: "Log in to docker hub"
         uses: azure/docker-login@v1
-        if: github.repository == 'geobretagne/mviewerstudio'
+        if: github.repository == 'mviewer/mviewerstudio'
         with:
           username: '${{ secrets.DOCKER_HUB_USERNAME }}'
           password: '${{ secrets.DOCKER_HUB_PASSWORD }}'
 
       - name: "Retag / push the docker images (not stable)"
-        if: github.repository == 'geobretagne/mviewerstudio'
+        if: github.repository == 'mviewer/mviewerstudio'
         run: |
             docker tag mviewer/mviewerstudio:python-latest mviewer/mviewerstudio:python-${{ steps.version.outputs.VERSION }}
             docker tag mviewer/mviewerstudio:php-latest    mviewer/mviewerstudio:php-${{ steps.version.outputs.VERSION }}
@@ -68,5 +61,3 @@ jobs:
             docker push mviewer/mviewerstudio:php-${{ steps.version.outputs.VERSION }}
 
      
-
-

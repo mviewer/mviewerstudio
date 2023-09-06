@@ -1,17 +1,8 @@
 from flask import Flask
+from os import path, mkdir
 import logging
-from sentry_sdk.integrations.flask import FlaskIntegration
-import sentry_sdk
 from .error_handlers import ERROR_HANDLERS
 from .route import basic_store
-
-
-def init_sentry():
-    # sentry is a services that collect exception. it sends data _ONLY_ if you
-    # specify the SENTRY_DSN envrionment variable. Sentry is an opensource
-    # software (https://github.com/getsentry/sentry) that can be self hosted or
-    # available as SaaS. *No impact* if you don't want to use it.
-    sentry_sdk.init(integrations=[FlaskIntegration()])
 
 
 def setup_logging(app: Flask) -> None:
@@ -32,11 +23,20 @@ def load_blueprint(app: Flask) -> None:
     app.register_blueprint(basic_store)
 
 
+def init_publish_directory(app: Flask) -> None:
+    if "MVIEWERSTUDIO_PUBLISH_PATH" not in app.config:
+        return
+    publish_path = app.config["MVIEWERSTUDIO_PUBLISH_PATH"]
+    if not path.exists(publish_path) and publish_path:
+        mkdir(publish_path)
+    app.publish_path = publish_path
+
+
 def create_app() -> Flask:
-    init_sentry()
     app = Flask("mviewerstudio")
     load_config(app)
     load_error_handlers(app)
     load_blueprint(app)
     setup_logging(app)
+    init_publish_directory(app)
     return app

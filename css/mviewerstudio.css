@@ -61,16 +61,51 @@
 	
 	/* Alert */
 	
-	.alert-info {
+	.alert {
 	  display: flex;
 	  align-items: center;
 	  line-height: 1.2;
 	}
 	
-	.alert-info i {
-	  margin-right: 1em;
+	.alert i {
+		margin-right: 0.2em;
+		vertical-align: bottom;
 	}
 	
+	#liveAlertPlaceholder {
+		position: fixed;
+		z-index: 2000;
+		bottom: 1rem;
+		right: 2rem;
+	}
+
+	#liveAlertPlaceholder .alert i {
+		font-size: 1.2rem;
+		vertical-align: middle;
+	}
+
+	#liveAlertPlaceholder .btn-close i {
+		font-size: 1.4rem;
+		margin-left: 2.5rem;
+		margin-right: 0!important;
+	}
+	/*lib : Bootstrap5 Tags input*/
+	.subcomponents .badge .btn-close {
+		box-sizing: content-box;
+		width: 1em;
+		height: 1em;
+		padding: 0.25em 0.25em;
+		color: white;
+		background: transparent url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23000'%3e%3cpath d='M.293.293a1 1 0 0 1 1.414 0L8 6.586 14.293.293a1 1 0 1 1 1.414 1.414L9.414 8l6.293 6.293a1 1 0 0 1-1.414 1.414L8 9.414l-6.293 6.293a1 1 0 0 1-1.414-1.414L6.586 8 .293 1.707a1 1 0 0 1 0-1.414z'/%3e%3c/svg%3e") center/1em auto no-repeat;
+		border: 0;
+		border-radius: 0.375rem;
+		opacity: .5;
+	}
+
+	.subcomponents .badge .btn-close-white {
+		filter: invert(1) grayscale(100%) brightness(200%);
+	}
+
 	/* Tagsinput */
 	
 	#mod-layerOptions .bootstrap-tagsinput {
@@ -438,9 +473,66 @@
 	  color: white;
 	  background-color: var(--info);
 	}
+
+	#toolsbarStudio-delete {
+		color: white;
+		background-color: var(--danger);
+	}
+
+	#toolsbarStudio-unpublish {
+		color: white;
+		background-color: var(--warning);
+	}
 	
 	#btnSwitchAdvanced {
 	  color: var(--info);
+	}
+
+	#mod-layerOptions .custom-switch {
+		margin-bottom: 5px;
+	}
+	.versionActionsCol a {
+		font-size: 18px;
+	}
+
+	#versionPreviewLink {
+		color: var(--info)
+	}
+	#versionDeleteLink {
+		color: var(--danger);
+	}
+
+	#versionAsNewLink {
+		color: var(--warning);
+	}
+
+	#versionVersionIcon {
+		color: var(--success);
+	}
+
+	.publishedVersion {
+		color: var(--warning);
+		font-weight: 500;
+	}
+	.published {
+		color: black;
+		font-weight: 500;
+	}
+
+	.custom-tooltip-table>span {
+		display: none;
+		color: white;
+		background-color: #585858;
+		font-size: small;
+		padding: 5px;
+		border-radius: 5px;
+		font-weight: normal;
+		position: absolute;
+		margin-left: 10px;
+	}
+
+	.custom-tooltip-table:hover>span {
+		display: block!important;
 	}
 	
 	/* APPLICATION  */
@@ -498,14 +590,21 @@
 	
 	.blue,
 	.blue:focus {
-	  background-color: #F6F7F8;
+	  background-color: #032e46;
 	}
 	
 	.default,
 	.default:focus {
 	  background-color: #34495D;
 	}
-	
+
+	.theme-designfr,
+	.theme-designfr:focus {
+	  background-color: #ffffff;
+	  color: #333333 !important;
+	}
+
+
 	.nephritis,
 	.nephritis:focus {
 	  background-color: #26AE60;
@@ -695,6 +794,19 @@
 	#cardsPublication div {
 	  margin-right: 7px;
 	}
+
+	.badge-publish {
+		color: white;
+		background-color: var(--warning);
+	}
+	.badge-draft {
+		color: white;
+		background-color: #934ae4;
+	}
+
+	.badge-title {
+		font-size: 15px;
+	}
 	
 	/*
 	-- MODALS 
@@ -734,19 +846,10 @@
 	#liste_applications {
 	  height: 420px;
 	  overflow-y: auto;
-	}
-	
-	#liste_applications a {
-	  color: inherit;
-	}
+	}	
 	
 	#liste_applications h5 {
 	  color: var(--info) !important;
-	}
-	
-	#liste_applications a:hover {
-	  text-decoration: none;
-	  background-color: var(--light);
 	}
 	
 	/* Modal - Features value */
@@ -802,13 +905,114 @@
 	
 	/* Modal - Import des thématiques */
 	
-	#importedThemes .list-group-item:hover {
-	  background-color: var(--light);
+	.titleThema {
+		color: var(--info);
+		font-weight: 600;
+		font-size: 1.1em;
+		margin-top: 12px;
 	}
 	
-	#importedThemes {
-	  height: 550px;
-	  overflow-y: auto;
+	.publisherThema {
+		margin-bottom: 12px;
+		font-style: italic;
+	}
+	
+	.descriptionThema:first-letter {
+		text-transform: capitalize;
+	}
+	
+	.urlThema,
+	.idThema {
+		display: none !important;
+	}
+	
+	#tableThemaExt thead {
+		display: none !important;
+	}
+	
+	#tableThemaExt td {
+		display: block;
+		border: none !important;
+		padding: 2px !important;
+		margin-left: 10px;
+	}
+	
+	#tableThemaExt tr {
+		border: 1px solid #D1D1D1;
+	}
+	
+	#tableThemaExt tr:hover {
+		background-color: var(--light);
+		cursor: pointer;
+	}
+	
+	#tableThemaExt tr.selected td {
+		background: none;
+	}
+	
+	.checkCustom {
+		margin: 0 !important;
+		vertical-align: middle;
+		display: table-cell !important;
+		padding-left: 35px;
+		cursor: pointer;
+		-webkit-user-select: none;
+		-moz-user-select: none;
+		-ms-user-select: none;
+		user-select: none;
+	}
+	
+	.checkCustom input {
+		position: absolute;
+		opacity: 0;
+		cursor: pointer;
+		height: 0;
+		width: 0;
+	}
+	
+	.checkCustom span {
+		position: absolute;
+		border-radius: 0.9rem;
+		top: 40%;
+		left: 1rem;
+		width: 1.2rem;
+		height: 1.2rem;
+		background-color: #fff;
+		border: #BDBDBD solid 1px;
+	}
+	
+	.checkCustom input:checked~span {
+		background-color: var(--info);
+		border-color: var(--info);
+	}
+	
+	.checkCustom span:after {
+		content: "";
+		position: absolute;
+		display: none;
+	}
+	
+	.checkCustom input:checked~span:after {
+		display: block;
+	}
+	
+	.checkCustom span:after {
+		left: 6px;
+		top: 3px;
+		width: 5px;
+		height: 10px;
+		border: solid white;
+		border-width: 0 3px 3px 0;
+		-webkit-transform: rotate(45deg);
+		-ms-transform: rotate(45deg);
+		transform: rotate(45deg);
+	}
+
+	/* Modal Theme externe - Param */
+
+	#nameThemeExt {
+		font-size: 16px;
+		font-weight: 500;
 	}
 	
 	/* Modal - Ajout d'une couche */
@@ -856,6 +1060,16 @@
 	}
 	
 	/*  Modal LayerOptions */
+
+	#layerTypeLabel {
+		background-color: var(--info);
+		color: white;
+		padding: 0.5em 0.7em;
+		border-radius: 1em;
+		text-transform: uppercase;
+		font-size: 0.9em;
+		margin-left: 1em;
+	}	
 	
 	#opacity-value {
 		margin: 0.7rem;
@@ -1076,6 +1290,7 @@
 	  background-color: #060024;
 	  color: white;
 	  padding: 1rem 0.5rem;
+	  width: 100%;
 	}
 	
 	/* Scrollbar */
@@ -1118,4 +1333,25 @@
 	  #homeNavbarDoc {
 		position: relative !important;
 	  }	
+	}
+
+	/*Template generator*/
+	#newCustomTemplateManager, #openTemplateGeneratorBtn, #customTemplateManager, #dismissTemplateGeneratorMsg {
+		display: flex;
+	}
+
+	#generatorComponentsDDArea .subcomponents .tags-menu{
+		top: auto !important;
+	}
+
+	/*Financeurs credit*/
+
+	.credits img{
+		height:50px;
+	}
+	.credits .col{
+		text-align:center;
+	}
+	.credits {
+		padding-bottom: 15px;
 	}

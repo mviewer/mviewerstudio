@@ -1,0 +1,13 @@
+*.min*
+*.css
+*.mst
+**/.git
+bootstrap/
+bootstrap-table/
+bootstrap5-tags/
+Font-awesome/
+i18njs/
+mustache-2.3.0/
+openlayers/
+moment.js
+Sortable.min.js

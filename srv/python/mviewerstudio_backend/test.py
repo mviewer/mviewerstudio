@@ -1,5 +1,5 @@
 # create a fixture with 3 files, 2 belong to user1 and the other belong to user2.
-from .login_utils import _get_current_user, User
+from .utils.login_utils import _get_current_user, User
 import pytest
 from .app_factory import create_app
 import hashlib
