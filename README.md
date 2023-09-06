@@ -8,5 +8,5 @@ Application écrite en Javascript pour le front.
 Référez-vous à la documentation pour plus d'information :
 
  * [Documentation utilisateur](https://mviewerstudio.readthedocs.io/fr/stable/doc_user/accueil.html)
- * [Documentation d'installation](https://mviewerstudio.readthedocs.io/fr/stable/doc_tech/install.html)
- * [Documentation administrateur](https://mviewerstudio.readthedocs.io/fr/stable/doc_tech/config.html)
+ * [Documentation d'installation](https://mviewerstudio.readthedocs.io/fr/stable/doc_tech/install_python.html)
+ * [Documentation administrateur](https://mviewerstudio.readthedocs.io/fr/stable/doc_tech/config_front.html)
