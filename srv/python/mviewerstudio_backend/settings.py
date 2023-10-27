@@ -19,3 +19,5 @@ class Config:
         "MVIEWERSTUDIO_PUBLISH_PATH", "/home/user/git/mviewer/apps/public"
     )
     DEFAULT_ORG = os.getenv("DEFAULT_ORG", "public")
+    URL_PATH_PREFIX = os.getenv("MVIEWERSTUDIO_URL_PATH_PREFIX", "")
+
