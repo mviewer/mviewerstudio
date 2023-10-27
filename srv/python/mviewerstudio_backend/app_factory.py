@@ -20,7 +20,11 @@ def load_error_handlers(app: Flask) -> None:
 
 
 def load_blueprint(app: Flask) -> None:
-    app.register_blueprint(basic_store)
+    app_prefix = app.config.get("MVIEWERSTUDIO_URL_PATH_PREFIX", "")
+    if app_prefix:
+        # Handle possible missing or excess / chars: needs to start with one but not end with one
+        app_prefix = "/" + app_prefix.strip("/")
+    app.register_blueprint(basic_store, url_prefix=app_prefix)
 
 
 def init_publish_directory(app: Flask) -> None:
