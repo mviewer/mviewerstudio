@@ -10,11 +10,10 @@ class Config:
         "EXPORT_CONF_FOLDER", "/home/user/git/mviewer/apps/store"
     )
     LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO")
-    PROXY_WHITE_LIST = [
-        "geobretagne.fr",
-        "ows.region-bretagne.fr",
-        "kartenn.region-bretagne.fr",
-    ]
+
+    PROXY_WHITE_LIST = os.getenv("MVIEWERSTUDIO_PROXY_WHITE_LIST", "geobretagne.fr, "
+                                                     "ows.region-bretagne.fr, "
+                                                     "kartenn.region-bretagne.fr").split()
     MVIEWERSTUDIO_PUBLISH_PATH = os.getenv(
         "MVIEWERSTUDIO_PUBLISH_PATH", "/home/user/git/mviewer/apps/public"
     )
