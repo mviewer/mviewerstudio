@@ -9,7 +9,7 @@ __pycache__/
 
 *.egg-info/
 *.egg
-
+srv/python/build
 
 
 # IDE stuff
