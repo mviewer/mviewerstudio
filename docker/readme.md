@@ -1,7 +1,7 @@
 # mviewerstudio Dockerfile
 
 ## Which one ?
-The maintained dockerfile if the python one. The php one is there for historical reasons and will probably soon be dropped.
+The maintained dockerfile is the python one. The php one is there for historical reasons and will probably soon be dropped.
 
 ## Environment variables
 
@@ -16,7 +16,7 @@ The maintained dockerfile if the python one. The php one is there for historical
 The default configuration (env vars defined in the dockerfile and json config file copied) assume that:
 - the mviewer _apps_ folder is mounted at EXPORT_CONF_FOLDER=/home/apprunner/apps
 - /home/apprunner/apps/store and /home/apprunner/apps/prod are existing folders (you might need to create them manually beforehand)
-- it is using config-python-sample.json, which has some development settings (see path to mviewer). The current docker-compose.yml makes do with this config, but you will definitely want to override this config file when running on production.
+- it is using config-python-sample.json, which at some point you will probably want to override with your own config.
 
 
 It is also configured to serve the frontend (static files) with gunicorn, which is usually not recommended. Later versions might use an nginx container to serve the frontend.
