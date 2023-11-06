@@ -5,25 +5,8 @@ volumes:
 
 services:
 
-  # Select between the next 2 services the backend you want to use by
-  # commenting / uncommenting the 'volume' section &  modify the links alias
-  # on the mviewer-studio service.
-  #
-  # You cannot use both backends at the same time, and you have to be wary if
-  # you switch from one to another, as each comes with a custom config.json
-  # file.
-  #
-  # If you want to switch, make sure either you modify the config.json, or
-  # reinitialize the docker volume.
-
-  #  PHP version
-  mviewerstudio-php:
-    build:
-      context: .
-      dockerfile: docker/Dockerfile-php-backend
-    image: mviewer/mviewerstudio:php-latest
-#    volumes:
-#      - "apps:/var/www/html/apps"
+  # Minimalist composition. It is exposing mviewer on port 5001 to match the config-python-sample.json and
+  # reduce exposure to breakage.
 
   # Python version
   mviewerstudio-python:
@@ -31,31 +14,28 @@ services:
       context: .
       dockerfile: docker/Dockerfile-python-backend
     image: mviewer/mviewerstudio:python-latest
+    ports:
+      - "8080:8000"
+    environment:
+      - CONF_PATH_FROM_MVIEWER=apps/store
+      - CONF_PUBLISH_PATH_FROM_MVIEWER=apps/public
+      - DEFAULT_ORG=my_org
+      - EXPORT_CONF_FOLDER=/home/apprunner/apps/store
+      - MVIEWERSTUDIO_PUBLISH_PATH=/home/apprunner/apps/public
+      - MVIEWERSTUDIO_URL_PATH_PREFIX=mviewerstudio/
     volumes:
       - "apps:/home/apprunner/apps"
-      - "mviewerstudio_config:/home/apprunner/mviewerstudio_backend/static/apps"
-      - "./docker/config-docker-python.json:/home/apprunner/mviewerstudio_backend/static/apps/config.json"
+      - "./config-python-sample.json:/home/apprunner/mviewerstudio_backend/static/apps/config.json"
 
   mviewer:
+    depends_on:
+      - mviewerstudio-python
     # this image is automatically built in
     # the mviewer/mviewer github repository
     # See https://github.com/mviewer/mviewer/pull/236
     image: mviewer/mviewer
+    ports:
+      - "5051:80"
     volumes:
         - "apps:/usr/share/nginx/html/apps"
-    links:
-        - mviewerstudio-php
-        - mviewerstudio-python
-
-  mviewer-studio:
-      image: nginx:1.17.9
-      volumes:
-        - "./docker/nginx-default.conf:/etc/nginx/conf.d/default.conf"
-      ports:
-        - "8080:8080"
-      links:
-          - mviewer
-          # use the correct link entry below, depending on the selected
-          # backend
-          #- mviewerstudio-php:mviewerstudio
-          - mviewerstudio-python:mviewerstudio
+#
