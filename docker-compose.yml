@@ -1,41 +1,53 @@
 version: '3'
 volumes:
   apps:
-  mviewerstudio_config:
 
 services:
-
-  # Minimalist composition. It is exposing mviewer on port 5001 to match the config-python-sample.json and
-  # reduce exposure to breakage.
+  # Reverse-proxy using nginx. Groups mviewer and mviewerstudio under respective paths
+  # Config can be found under ./docker/nginx/default.conf.template
+  www:
+    image: nginx
+    ports:
+      - 80:80
+    environment:
+      - NGINX_HOST=localhost
+      - MVIEWERSTUDIO_URL_PATH_PREFIX=mviewerstudio
+    volumes:
+      - ./docker/nginx:/etc/nginx/templates
+    depends_on:
+      - mviewerstudio
+      - mviewer
 
   # Python version
-  mviewerstudio-python:
+  # Served under /${MVIEWERSTUDIO_URL_PATH_PREFIX}/ see docker/nginx/default.conf.template
+  mviewerstudio:
     build:
       context: .
       dockerfile: docker/Dockerfile-python-backend
-    image: mviewer/mviewerstudio:python-latest
-    ports:
-      - "8080:8000"
+    image: mviewer/mviewerstudio:latest
+#    ports:
+#      - "8000:8000"
     environment:
       - CONF_PATH_FROM_MVIEWER=apps/store
       - CONF_PUBLISH_PATH_FROM_MVIEWER=apps/public
       - DEFAULT_ORG=my_org
       - EXPORT_CONF_FOLDER=/home/apprunner/apps/store
       - MVIEWERSTUDIO_PUBLISH_PATH=/home/apprunner/apps/public
-      - MVIEWERSTUDIO_URL_PATH_PREFIX=mviewerstudio/
+      - MVIEWERSTUDIO_URL_PATH_PREFIX=mviewerstudio
     volumes:
       - "apps:/home/apprunner/apps"
       - "./config-python-sample.json:/home/apprunner/mviewerstudio_backend/static/apps/config.json"
 
+  # Served under /mviewer/ see docker/nginx/default.conf.template
   mviewer:
     depends_on:
-      - mviewerstudio-python
+      - mviewerstudio
     # this image is automatically built in
     # the mviewer/mviewer github repository
     # See https://github.com/mviewer/mviewer/pull/236
     image: mviewer/mviewer
-    ports:
-      - "5051:80"
+#    ports:
+#      - "5051:80"
     volumes:
         - "apps:/usr/share/nginx/html/apps"
 #

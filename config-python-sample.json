@@ -5,8 +5,8 @@
         "mviewerstudio_version":  "4",
         "api": "api/app",
         "store_style_service": "api/style",
-        "mviewer_instance": "http://127.0.0.1:5051/",
-        "publish_url": "http://127.0.0.1:5051/?config=apps/public/{{config}}.xml",
+        "mviewer_instance": "/mviewer/",
+        "publish_url": "/mviewer/?config=apps/public/{{config}}.xml",
         "conf_path_from_mviewer": "apps/store/",
         "mviewer_short_url": {
             "used": true,
