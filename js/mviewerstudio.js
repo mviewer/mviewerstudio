@@ -155,7 +155,7 @@ $(document).ready(function () {
     .catch((err) => {
       console.log(err);
       alertCustom(
-        "Impossible de récupérer la configuration. Veuillez contacter un administrateur.",
+        mviewer.tr("msg.config_load_error"),
         "danger"
       );
     });
@@ -418,12 +418,13 @@ var addLayer = function (title, layerid, index) {
         <div class="list-group-item layers-list-item" data-layerid="${layerid}">
             <span class="layer-name moveList">${title}</span>
             <div class="layer-options-btn" style="display:inline-flex; justify-content: end;">
-                <button class="btn btn-sm btn-secondary"><span class="layer-move moveList" title="Déplacer"><i class="bi bi-arrows-move"></i></span></button>
-                <button class="btn btn-sm btn-secondary" onclick="deleteLayerItem(this);"><span class="layer-remove" title="Supprimer"><i class="bi bi-x-circle"></i></span></button>
-                <button class="btn btn-sm btn-info" onclick="editLayer(this);"><span class="layer-edit" title="Editer cette couche"><i class="bi bi-gear-fill"></i></span></button>
+                <button class="btn btn-sm btn-secondary"><span class="layer-move moveList" i18n="move" title="Déplacer"><i class="bi bi-arrows-move"></i></span></button>
+                <button class="btn btn-sm btn-secondary" onclick="deleteLayerItem(this);"><span class="layer-remove" i18n="delete" title="Supprimer"><i class="bi bi-x-circle"></i></span></button>
+                <button class="btn btn-sm btn-info" onclick="editLayer(this);"><span class="layer-edit" i18n="edit_layer" title="Editer cette couche"><i class="bi bi-gear-fill"></i></span></button>
             </div>
         </div>`);
 
+  // TODO : Need to be delete soon if useless
   if (title === "Nouvelle couche") {
     item.find(".layer-edit").last().click();
   }
@@ -456,7 +457,6 @@ var importThemes = function () {
     var label = $(item).attr("data-theme-label");
     addTheme(label, true, id, false, url, "default");
   });
-  console.groupEnd("importThemes");
   $("#mod-themesview").modal("hide");
 };
 
@@ -473,9 +473,9 @@ var addTheme = function (title, collapsed, themeid, icon, url, layersvisibility)
                     <span class="theme-name moveList">${title}</span><span class="theme-infos-layer">Ext.</span>
                 </div>
                 <div class="theme-options-btn">
-                    <button class="btn btn-sm btn-secondary" ><span class="theme-move moveList" title="Déplacer"><i class="bi bi-arrows-move"></i></span></button>
-                    <button class="btn btn-sm btn-secondary" onclick="deleteThemeItem(this);" ><span class="theme-remove" title="Supprimer"><i class="bi bi-x-circle"></i></span></button>
-                    <button class="btn btn-sm btn-info" onclick="editThemeExt(this);"><span class="theme-edit" title="Editer ce thème"><i class="bi bi-gear-fill"></i></span></button>
+                    <button class="btn btn-sm btn-secondary" ><span class="theme-move moveList" id18="move" title="Déplacer"><i class="bi bi-arrows-move"></i></span></button>
+                    <button class="btn btn-sm btn-secondary" onclick="deleteThemeItem(this);" ><span class="theme-remove" id18="delete" title="Supprimer"><i class="bi bi-x-circle"></i></span></button>
+                    <button class="btn btn-sm btn-info" onclick="editThemeExt(this);"><span class="theme-edit" id18="edit_layer" title="Editer ce thème"><i class="bi bi-gear-fill"></i></span></button>
                 </div>
             </div>`);
   } else {
@@ -496,9 +496,9 @@ var addTheme = function (title, collapsed, themeid, icon, url, layersvisibility)
           '</span><span class="theme-infos-layer">0</span>',
         "</div>",
         '<div class="theme-options-btn">',
-        '<button class="btn btn-sm btn-secondary" ><span class="theme-move moveList" title="Déplacer"><i class="bi bi-arrows-move"></i></span></button>',
-        '<button class="btn btn-sm btn-secondary" onclick="deleteThemeItem(this);" ><span class="theme-remove" title="Supprimer"><i class="bi bi-x-circle"></i></span></button>',
-        '<button class="btn btn-sm btn-info" onclick="editTheme(this);"><span class="theme-edit" title="Editer ce thème"><i class="bi bi-gear-fill"></i></span></button>',
+        '<button class="btn btn-sm btn-secondary" ><span class="theme-move moveList" i18n="move" title="Déplacer"><i class="bi bi-arrows-move"></i></span></button>',
+        '<button class="btn btn-sm btn-secondary" onclick="deleteThemeItem(this);" ><span class="theme-remove" i18n="delete" title="Supprimer"><i class="bi bi-x-circle"></i></span></button>',
+        '<button class="btn btn-sm btn-info" onclick="editTheme(this);"><span class="theme-edit" title="Editer i18n="edit_layer" ce thème"><i class="bi bi-gear-fill"></i></span></button>',
         "</div>",
         "</div>",
       ].join("")
@@ -631,7 +631,7 @@ var createBaseLayerDef = function (bsl) {
 
 var deleteMyApplications = function () {
   if (!_conf?.php?.delete_service) {
-    return alert("Erreur de la configuration : contactez un administrateur !");
+    return alert(mviewer.tr("msg.config_error"));
   }
   $.ajax({
     type: "GET",
@@ -669,16 +669,16 @@ var showAlertDelApp = (id) => {
                     <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 </div>
                 <div class="modal-body">
-                    <p>
-                    Êtes-vous sûr de vouloir supprimer votre application définitivement ?
+                    <p i18n="confirm.delete_app">
+                      Êtes-vous sûr de vouloir supprimer votre application définitivement ?
                     </p>
                     <a class="cardsClose save-close zoomCard" data-bs-dismiss="modal" onclick="deleteApplication('${id}');">
                         <i class="ri-delete-bin-2-line"></i>
-                        <span>Supprimer mon application et retourner à l'accueil</span>
+                        <span i18n="btn.delete_go_home">Supprimer mon application et retourner à l'accueil</span>
                     </a>
                     <a class="cardsClose notsave-close zoomCard" class="close" data-bs-dismiss="modal" aria-label="Close">
                         <i class="ri-arrow-go-back-line"></i>
-                        <span>Annuler</span>
+                        <span i18n="cancel">Annuler</span>
                     </a>
                     <a class="returnConf-close" class="close" data-bs-dismiss="modal" aria-label="Close"><i class="ri-arrow-left-line"></i> <span i18n="modal.exit.previous">Retour</span></a>                    
                 </div>
@@ -694,16 +694,16 @@ var showAlertDelAppFromList = (id) => {
             <button type="button" class="close" data-bs-toggle="modal" data-bs-target="#mod-importfile" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         </div>
         <div class="modal-body">
-            <p>
-            Êtes-vous sûr de vouloir supprimer cette application définitivement ?
+            <p i18n="confirm.delete_app">
+              Êtes-vous sûr de vouloir supprimer cette application définitivement ?
             </p>
             <a class="cardsClose save-close zoomCard" data-bs-toggle="modal" data-bs-target="#mod-importfile" onclick="deleteAppFromList('${id}');">
                 <i class="ri-delete-bin-2-line"></i>
-                <span>Supprimer cette application</span>
+                <span i18n="btn.delete">Supprimer cette application</span>
             </a>
             <a class="cardsClose notsave-close zoomCard" class="close" data-bs-toggle="modal" data-bs-target="#mod-importfile" aria-label="Close">
                 <i class="ri-arrow-go-back-line"></i>
-                <span>Annuler</span>
+                <span i18n="cancel">Annuler</span>
             </a>
             <a class="returnConf-close" class="close" data-bs-toggle="modal" data-bs-target="#mod-importfile" aria-label="Close"><i class="ri-arrow-left-line"></i> <span i18n="modal.exit.previous">Retour</span></a>                    
         </div>
@@ -761,7 +761,7 @@ var getConfig = () => {
 
   if (config.title == "") {
     $("#opt-title").addClass("is-invalid");
-    alertCustom("Veuillez renseigner un nom à votre application !", "danger");
+    alertCustom(mviewer.tr("msg.alert_app_name"), "danger");
   }
 
   savedParameters.application.forEach(function (parameter, id) {
@@ -932,7 +932,7 @@ var getConfig = () => {
 
 let previewWithPhp = (conf) => {
   if (!_conf?.php?.upload_service) {
-    alertCustom("Erreur de configuration : contactez un administrateur !", "error");
+    alertCustom(mviewer.tr("msg.alert_wrong_config"), "error");
   }
   // Save the map serverside
   $.ajax({
@@ -948,7 +948,7 @@ let previewWithPhp = (conf) => {
         // Build a short and readable URL for the map
         let url = mv.produceUrl(data.filepath);
         window.open(url, "mvs_vizualize");
-        alertCustom("Téléchargement terminé !", "success");
+        alertCustom(mviewer.tr("msg.download_success"), "success");
       }
     },
   });
@@ -1271,7 +1271,7 @@ var updateProviderSearchButtonState = function () {
     $("#provider_search_btn").prop("disabled", false);
   } else {
     $("#provider_search_btn").prop("disabled", true);
-    $("#search-message").text("Aucun fournisseur sélectionné. Veuillez en choisir un.");
+    $("#search-message").text(mviewer.tr("msg.select_provider"));
     $("#search-message").show();
   }
 };
