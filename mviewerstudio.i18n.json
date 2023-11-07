@@ -411,8 +411,10 @@
     "publish.save.first": "Enregistrez une premère fois avant de publier !",
     "publish.config.missing": "Configuration manquante pour la publication. Veuillez contacter un administrateur.",
     "publish.alert.success": "L'application a bien été publiée !",
-    "publish.alert.error": "Une erreur s'est produite. Veuillez contacter un administrateur."
-
+    "publish.alert.error": "Une erreur s'est produite. Veuillez contacter un administrateur.",
+    "template.generator": "Générateur de template",
+    "template.title.config": "Configurer le template",
+    "template.component.add": "Ajouter un composant"
 
   },
   "en": {
@@ -702,6 +704,9 @@
     "publish.save.first": "Record once before publishing!",
     "publish.config.missing": "Missing configuration for publication. Please contact an administrator.",
     "publish.alert.success": "The application has been published!",
-    "publish.alert.error": "An error has occurred. Please contact an administrator."
+    "publish.alert.error": "An error has occurred. Please contact an administrator.",
+    "template.generator": "Template generator",
+    "template.title.config": "Template configuration",
+    "template.component.add": "Add a component"
   }
 }
