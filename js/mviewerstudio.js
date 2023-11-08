@@ -154,10 +154,7 @@ $(document).ready(function () {
     })
     .catch((err) => {
       console.log(err);
-      alertCustom(
-        mviewer.tr("msg.config_load_error"),
-        "danger"
-      );
+      alertCustom(mviewer.tr("msg.config_load_error"), "danger");
     });
 });
 
@@ -425,7 +422,7 @@ var addLayer = function (title, layerid, index) {
         </div>`);
 
   // TODO : Need to be delete soon if useless
-  if (title === mviewer.tr('title.new.layer')) {
+  if (title === mviewer.tr("title.new.layer")) {
     item.find(".layer-edit").last().click();
   }
 };
@@ -680,7 +677,9 @@ var showAlertDelApp = (id) => {
                         <i class="ri-arrow-go-back-line"></i>
                         <span i18n="cancel">Annuler</span>
                     </a>
-                    <a class="returnConf-close" class="close" data-bs-dismiss="modal" aria-label="Close"><i class="ri-arrow-left-line"></i> <span i18n="modal.exit.previous">${mviewer.tr("delete.request.back")}</span></a>                    
+                    <a class="returnConf-close" class="close" data-bs-dismiss="modal" aria-label="Close"><i class="ri-arrow-left-line"></i> <span i18n="modal.exit.previous">${mviewer.tr(
+                      "delete.request.back"
+                    )}</span></a>                    
                 </div>
             `;
   $("#genericModal").modal("show");
@@ -690,7 +689,9 @@ var showAlertDelAppFromList = (id) => {
   genericModalContent.innerHTML = "";
   genericModalContent.innerHTML = `
         <div class="modal-header">
-            <h5 class="modal-title" i18n="modal.exit.title">${mviewer.tr("delete.request.warning")}</h5>
+            <h5 class="modal-title" i18n="modal.exit.title">${mviewer.tr(
+              "delete.request.warning"
+            )}</h5>
             <button type="button" class="close" data-bs-toggle="modal" data-bs-target="#mod-importfile" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         </div>
         <div class="modal-body">
@@ -1331,21 +1332,19 @@ var _configureTranslate = function (dic) {
   }
 };
 
-var _initTooltip = translate => {
+var _initTooltip = (translate) => {
   // Display tooltip bootstrap
   let tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
-  let tooltipList = [...tooltipTriggerList].map(
-    (tooltipTriggerEl) => {
-      if (translate && mviewer?.tr) {
-        let key = tooltipTriggerEl.getAttribute("data-bs-title");
-        tooltipTriggerEl.setAttribute("data-bs-title", mviewer.tr(key))
-      }
-      new bootstrap.Tooltip(tooltipTriggerEl)
+  let tooltipList = [...tooltipTriggerList].map((tooltipTriggerEl) => {
+    if (translate && mviewer?.tr) {
+      let key = tooltipTriggerEl.getAttribute("data-bs-title");
+      tooltipTriggerEl.setAttribute("data-bs-title", mviewer.tr(key));
     }
-  ); 
+    new bootstrap.Tooltip(tooltipTriggerEl);
+  });
   tooltipTriggerList = null;
   tooltipList = null;
-}
+};
 
 var _initTranslate = function () {
   mviewer.tr = function (s) {
