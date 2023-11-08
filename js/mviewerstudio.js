@@ -425,7 +425,7 @@ var addLayer = function (title, layerid, index) {
         </div>`);
 
   // TODO : Need to be delete soon if useless
-  if (title === "Nouvelle couche") {
+  if (title === mviewer.tr('title.new.layer')) {
     item.find(".layer-edit").last().click();
   }
 };
@@ -680,7 +680,7 @@ var showAlertDelApp = (id) => {
                         <i class="ri-arrow-go-back-line"></i>
                         <span i18n="cancel">Annuler</span>
                     </a>
-                    <a class="returnConf-close" class="close" data-bs-dismiss="modal" aria-label="Close"><i class="ri-arrow-left-line"></i> <span i18n="modal.exit.previous">Retour</span></a>                    
+                    <a class="returnConf-close" class="close" data-bs-dismiss="modal" aria-label="Close"><i class="ri-arrow-left-line"></i> <span i18n="modal.exit.previous">${mviewer.tr("delete.request.back")}</span></a>                    
                 </div>
             `;
   $("#genericModal").modal("show");
@@ -690,20 +690,20 @@ var showAlertDelAppFromList = (id) => {
   genericModalContent.innerHTML = "";
   genericModalContent.innerHTML = `
         <div class="modal-header">
-            <h5 class="modal-title" i18n="modal.exit.title">Attention</h5>
+            <h5 class="modal-title" i18n="modal.exit.title">${mviewer.tr("delete.request.warning")}</h5>
             <button type="button" class="close" data-bs-toggle="modal" data-bs-target="#mod-importfile" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         </div>
         <div class="modal-body">
             <p i18n="confirm.delete_app">
-              Êtes-vous sûr de vouloir supprimer cette application définitivement ?
+              ${mviewer.tr("delete.request.title")}
             </p>
             <a class="cardsClose save-close zoomCard" data-bs-toggle="modal" data-bs-target="#mod-importfile" onclick="deleteAppFromList('${id}');">
                 <i class="ri-delete-bin-2-line"></i>
-                <span i18n="btn.delete">Supprimer cette application</span>
+                <span i18n="btn.delete">${mviewer.tr("delete.request.delete")}</span>
             </a>
             <a class="cardsClose notsave-close zoomCard" class="close" data-bs-toggle="modal" data-bs-target="#mod-importfile" aria-label="Close">
                 <i class="ri-arrow-go-back-line"></i>
-                <span i18n="cancel">Annuler</span>
+                <span i18n="cancel">${mviewer.tr("delete.request.cancel")}</span>
             </a>
             <a class="returnConf-close" class="close" data-bs-toggle="modal" data-bs-target="#mod-importfile" aria-label="Close"><i class="ri-arrow-left-line"></i> <span i18n="modal.exit.previous">Retour</span></a>                    
         </div>
