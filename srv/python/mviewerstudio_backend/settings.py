@@ -11,12 +11,12 @@ class Config:
     )
     LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO")
 
-    PROXY_WHITE_LIST = os.getenv("MVIEWERSTUDIO_PROXY_WHITE_LIST", "geobretagne.fr, "
-                                                     "ows.region-bretagne.fr, "
-                                                     "kartenn.region-bretagne.fr").split()
+    PROXY_WHITE_LIST = os.getenv(
+        "MVIEWERSTUDIO_PROXY_WHITE_LIST",
+        "geobretagne.fr,ows.region-bretagne.fr,kartenn.region-bretagne.fr"
+    ).split(",")
     MVIEWERSTUDIO_PUBLISH_PATH = os.getenv(
         "MVIEWERSTUDIO_PUBLISH_PATH", "/home/user/git/mviewer/apps/public"
     )
     DEFAULT_ORG = os.getenv("DEFAULT_ORG", "public")
     MVIEWERSTUDIO_URL_PATH_PREFIX = os.getenv("MVIEWERSTUDIO_URL_PATH_PREFIX", "")
-
