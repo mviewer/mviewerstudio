@@ -1325,10 +1325,27 @@ var _configureTranslate = function (dic) {
     mviewer.tr = mviewer.lang[lang];
     _elementTranslate("body");
     mviewer.lang.lang = lang;
+    _initTooltip(true);
   } else {
     console.log("langue non disponible " + lang);
   }
 };
+
+var _initTooltip = translate => {
+  // Display tooltip bootstrap
+  let tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+  let tooltipList = [...tooltipTriggerList].map(
+    (tooltipTriggerEl) => {
+      if (translate && mviewer?.tr) {
+        let key = tooltipTriggerEl.getAttribute("data-bs-title");
+        tooltipTriggerEl.setAttribute("data-bs-title", mviewer.tr(key))
+      }
+      new bootstrap.Tooltip(tooltipTriggerEl)
+    }
+  ); 
+  tooltipTriggerList = null;
+  tooltipList = null;
+}
 
 var _initTranslate = function () {
   mviewer.tr = function (s) {
@@ -1342,6 +1359,7 @@ var _initTranslate = function () {
       success: _configureTranslate,
       error: function () {
         console.log("Error: can't load JSON lang file!");
+        _initTooltip();
       },
     });
   }
@@ -1435,9 +1453,3 @@ $("#input-ogc-filter").keypress(function (event) {
   }
   event.stopPropagation();
 });
-
-// Display tooltip bootstrap
-const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
-const tooltipList = [...tooltipTriggerList].map(
-  (tooltipTriggerEl) => new bootstrap.Tooltip(tooltipTriggerEl)
-);
