@@ -31,3 +31,7 @@ pydocs*
 # store
 store/
 public/
+
+# npm
+node*
+package-*
