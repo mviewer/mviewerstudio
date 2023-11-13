@@ -1,20 +1,13 @@
-upstream mviewerstudio {
-   server mviewerstudio:8000;
-}
-
-upstream mviewer {
-   server mviewer:80;
-}
-
 server {
-    listen       8080;
-    server_name  localhost;
+    listen       80;
+    server_name  ${NGINX_HOST};
 
     location /mviewer/ {
-        proxy_pass http://mviewer/;
+        proxy_pass http://mviewer:80/;
     }
-    location / {
-        proxy_pass http://mviewerstudio;
+
+    location /${MVIEWERSTUDIO_URL_PATH_PREFIX}/ {
+        proxy_pass http://mviewerstudio:8000/${MVIEWERSTUDIO_URL_PATH_PREFIX}/;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
@@ -23,6 +16,11 @@ server {
         #proxy_set_header sec-username "testadmin";
         #proxy_set_header sec-roles "ROLE_ADMINISTRATOR;ROLE_MVIEWER_ADMIN";
         #proxy_set_header sec-org "geobretagne";
+    }
+
+    location / {
+        server_name_in_redirect off;
+        return 302 /${MVIEWERSTUDIO_URL_PATH_PREFIX};
     }
 }
 

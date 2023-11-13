@@ -9,7 +9,7 @@ __pycache__/
 
 *.egg-info/
 *.egg
-
+srv/python/build
 
 
 # IDE stuff
@@ -31,3 +31,7 @@ pydocs*
 # store
 store/
 public/
+
+# npm
+node*
+package-*
