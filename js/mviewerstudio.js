@@ -29,9 +29,8 @@ $(document).ready(function () {
       // console.groupCollapsed("init app from config");
       _conf = data.app_conf;
       const VERSION = _conf.mviewerstudio_version;
-      document.querySelector(
-        "#creditInfo"
-      ).innerHTML = `MviewerStudio | Licence GPL-3.0 | Version ${VERSION}`;
+      document.querySelector("#creditInfo").innerHTML =
+        `MviewerStudio | Licence GPL-3.0 | Version ${VERSION}`;
       let mvCompliantInfo = document.querySelector("#mviewerCompliantInfo");
       mvCompliantInfo.innerHTML = `${mvCompliantInfo.innerHTML} ${_conf.mviewer_version}`;
 
