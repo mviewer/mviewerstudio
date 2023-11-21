@@ -55,7 +55,7 @@
                 "layers": "ORTHOIMAGERY.ORTHOPHOTOS",
                 "format": "image/jpeg",
                 "fromcapacity": "false",
-                "attribution": "<a href='https://geoservices.ign.fr' target='_blank'><img src='https://geoservices.ign.fr/images/logoIGN.png'></a>",
+                "attribution": "<a href='https://geoservices.ign.fr' target='_blank'><img src='https://geobretagne.fr/pub/logo/099_ign.jpg'></a>",
                 "style": "normal",
                 "matrixset": "PM",
                 "maxzoom": "22"
@@ -147,7 +147,7 @@
                 "layers": "GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2",
                 "format": "image/png",
                 "fromcapacity": "false",
-                "attribution": "<a href='https://geoservices.ign.fr' target='_blank'><img src='https://geoservices.ign.fr/images/logoIGN.png'></a>",
+                "attribution": "<a href='https://geoservices.ign.fr' target='_blank'><img src='https://geobretagne.fr/pub/logo/099_ign.jpg'></a>",
                 "style": "normal",
                 "matrixset": "PM",
                 "maxzoom": "22"
