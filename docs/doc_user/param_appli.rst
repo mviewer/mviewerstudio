@@ -158,8 +158,8 @@ En :guilabel:`mode avancé`, il est possible de rajouter un fond de plan personn
      - OpenStreetMap GéoBretagne
      - BDTOPO IGN
    * - URL
-     - https://wxs.ign.fr/agriculture/geoportail/wmts
-     - https://osm.geobretagne.fr/gwc01/service/wms
+     - https://data.geopf.fr/wmts
+     - https://tile.geobretagne.fr/osm/service
      - https://wxs.ign.fr/topographie/geoportail/tms/1.0.0/BDTOPO/{z}/{x}/{y}.pbf
    * - Identifiant technique
      - LANDUSE.AGRICULTURE2021
