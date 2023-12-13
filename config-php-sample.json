@@ -141,7 +141,7 @@
             "osm_grey": {
                 "id": "osm_grey",
                 "thumbgallery": "img/basemap/osm_grey.png",
-                "title": "GéoBretagne",
+                "title": "GéoBretagne - GéoGrandEst",
                 "label": "OpenStreetMap style noir et blanc",
                 "type": "WMTS",
                 "url": "https://tile.geobretagne.fr/osm/service",
