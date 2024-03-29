@@ -281,9 +281,11 @@ class Config:
             publisher=self.meta.find("{*}publisher").text,
             url=self.url,
             subject=subject,
-            relation=self.meta.find("{*}relation").text
-            if self.meta.find("{*}relation").text
-            else "",
+            relation=(
+                self.meta.find("{*}relation").text
+                if self.meta.find("{*}relation").text
+                else ""
+            ),
             directory=self.directory,
         )
 
