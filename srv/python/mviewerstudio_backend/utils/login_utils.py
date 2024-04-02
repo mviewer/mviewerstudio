@@ -13,8 +13,8 @@ def _get_current_user() -> Optional["User"]:
         logger.info("REQUEST HEADER")
         logger.info(dict(request.headers))
         roles = request.headers.get("sec-roles", "").split(";")
-        # use sec-orgname by default
-        orgname = request.headers.get("sec-orgname")
+        # sec-org by default. Use sec-orgname to have organism long name
+        orgname = request.headers.get("sec-org")
         if not orgname:
             orgname = current_app.config["DEFAULT_ORG"]
         normalize_orgname = replace_special_chars(orgname)

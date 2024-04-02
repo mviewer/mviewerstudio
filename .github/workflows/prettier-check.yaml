@@ -1,4 +1,4 @@
-name: Code style checking
+name: Front - Code style checking
 on:
   pull_request:
   push:
