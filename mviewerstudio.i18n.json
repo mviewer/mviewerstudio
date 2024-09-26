@@ -787,6 +787,7 @@
     "tabs.app.map_title": "Map options",
     "tabs.app.map_text": "Set the extent and zoom of the map when the application starts up",
     "tabs.app.opt_initialextent": "Return to initial extend",
+    "tabs.app.opt_maxzoom": "Return to initial extend",
     "tabs.app.opt_maxextent": "Prohibit navigation outside the area defined above",
     "tabs.app.bg_title": "Plan backgrounds",
     "tabs.app.bg_text": "Select the backgrounds to be displayed and the display mode",
