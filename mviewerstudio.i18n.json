@@ -437,6 +437,7 @@
     "tooltip.app.logo": "Logo affiché dans l'onglet du navigateur",
     "tooltip.redirect.logo": "Redirection vers la page indiquée lors du clique sur le logo",
     "tooltip.logo": "Logo affiché en haut à gauche du mviewer",
+    "tooltip.maxzoom": "Zoom maximal de l'application",
     "tooltip.color.ihm": "Couleur de l'interface du mviewer",
     "tooltip.initial.extent": "Option permettant d'activer le bouton pour revenir à l'étendue intiale de l'application (initialextenttool)",
     "tooltip.intern.id": "Identifiant unique et interne au fond de plan",

@@ -745,6 +745,7 @@ var getConfig = () => {
     'style="' + $("#opt-style").val() + '"',
     'zoomtools="' + ($("#opt-zoomtools").prop("checked") === true) + '"',
     'initialextenttool="' + ($("#opt-initialextenttool").prop("checked") === true) + '"',
+    'maxzoom="' + $("#opt-maxzoom").val() + '"',
     'exportpng="' + ($("#opt-exportpng").prop("checked") === true) + '"',
     'showhelp="' + ($("#opt-showhelp").prop("checked") === true) + '"',
     'coordinates="' + ($("#opt-coordinates").prop("checked") === true) + '"',
