@@ -829,7 +829,8 @@ var getConfig = () => {
     padding(0) +
     '<mapoptions projection="EPSG:3857" center="' +
     center +
-    '" maxzoom="' + $("#opt-maxzoom").val() +
+    '" maxzoom="' +
+	$("#opt-maxzoom").val() +
     '" zoom="' +
     zoom +
     '" ' +
