@@ -73,7 +73,7 @@
     "tabs.app.map_title": "Options de la carte",
     "tabs.app.map_text": "Paramétrer l'étendue et le zoom de la carte au démarrage de l'application",
     "tabs.app.opt_initialextent": "Revenir à l'étendue initiale",
-    "tabs.app.opt_maxzoom": "Zoom maximale de l'application",
+    "tabs.app.opt_maxzoom": "Zoom maximal de l'application",
     "tabs.app.opt_maxextent": "Interdire la navigation hors de l'étendue définie ci-dessus",
     "tabs.app.bg_title": "Fonds de plan",
     "tabs.app.bg_text": "Sélectionner les fonds de plan à afficher et le mode d'affichage",
