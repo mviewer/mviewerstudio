@@ -745,7 +745,6 @@ var getConfig = () => {
     'style="' + $("#opt-style").val() + '"',
     'zoomtools="' + ($("#opt-zoomtools").prop("checked") === true) + '"',
     'initialextenttool="' + ($("#opt-initialextenttool").prop("checked") === true) + '"',
-    'maxzoom="' + $("#opt-maxzoom").val() + '"',
     'exportpng="' + ($("#opt-exportpng").prop("checked") === true) + '"',
     'showhelp="' + ($("#opt-showhelp").prop("checked") === true) + '"',
     'coordinates="' + ($("#opt-coordinates").prop("checked") === true) + '"',
@@ -828,8 +827,9 @@ var getConfig = () => {
   var zoom = map.getView().getZoom();
   var mapoptions =
     padding(0) +
-    '<mapoptions maxzoom="20" projection="EPSG:3857" center="' +
+    '<mapoptions  projection="EPSG:3857" center="' +
     center +
+	'" maxzoom="' + $("#opt-maxzoom").val() +
     '" zoom="' +
     zoom +
     '" ' +
