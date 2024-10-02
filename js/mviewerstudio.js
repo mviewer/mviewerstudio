@@ -827,8 +827,10 @@ var getConfig = () => {
   var zoom = map.getView().getZoom();
   var mapoptions =
     padding(0) +
-    '<mapoptions maxzoom="20" projection="EPSG:3857" center="' +
+    '<mapoptions projection="EPSG:3857" center="' +
     center +
+    '" maxzoom="' +
+    $("#opt-maxzoom").val() +
     '" zoom="' +
     zoom +
     '" ' +
