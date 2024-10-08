@@ -297,7 +297,7 @@
     "modal.layer.new.provider.ph": "URL du fournisseur",
     "modal.layer.new.provider.csw": "CSW",
     "modal.layer.new.provider.wms": "WMS",
-    "modal.layer.new.provider.add": "Ajouter un catalogue de données",
+    "modal.layer.new.provider.add": "Ajouter une source de données",
     "modal.icon.list": "Icône de la thématique",
     "modal.iconhelp.list": "Icône du bouton vers la fenêtre d'aide",
     "modal.exit.title": "Attention",
