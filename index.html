@@ -898,11 +898,11 @@
                                 <label class="settinglabel" i18n="modal.theme.paramspanel.icon">Icône</label>
                                 <span class="selected-icon"></span>
                                 <input type="text" class="icon-class-input form-control advanced"  style="display: none;" id="theme-pick-icon" />
-                                <button type="button" class="btn btn-outline-info picker-button mt-2">
+                                <button type="button" class="btn btn-outline-info picker-button mt-2" data-bs-target="#iconPicker" data-bs-toggle="modal">
                                     <span i18n="modal.theme.paramspanel.icon_pick">Choisir une icône</span>
-                                </button>                               
+                                </button>
                             </div>
-                        </div>                        
+                        </div>
                     </div>
                     <hr>
                     <h6 class="my-2" i18n="modal.theme.paramspanel.data">Données de la thématique</h6>
@@ -1930,7 +1930,7 @@
         </div>
     </div>
     <!-- Modal icons -->
-    <div class="modal fade" id="iconsModal" role="dialog" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="iconsModal" aria-hidden="true">
+    <div class="modal fade" id="iconsTemplateModal" role="dialog" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="iconsTemplateModal" aria-hidden="true">
         <div class="modal-dialog modal-xl modal-dialog-scrollable">
             <div class="modal-content" id="iconsModalContent">
             </div>
@@ -2040,13 +2040,13 @@
     
 <script src="js/wizard.js"></script>
 <script src="js/manageDisplayContainer.js"></script>
+<script src="lib/icon-picker/iconPickerComponent.js"></script>
 <script src="js/mviewerstudio.js"></script>
-<script src="lib/icon-picker/icon-picker.js"></script>
+<script type="module" src="lib/icon-picker/icon-picker.js"></script>
 <script src="lib/bootstrap-table/bootstrap-table.min.js"></script>
 <script src="lib/bootstrap-table/bootstrap-table-fr-FR.min.js"></script>
 <script src="lib/moment.js"></script>
 <script src="lib/mustache-2.3.0/mustache.min.js"></script>
-<script src="lib/icon-picker/icon-picker-new.js"></script>
 <script type="module" src="lib/template-generator/main.js"></script>
 </body>
 </html>
