@@ -35,10 +35,10 @@ Activer les outils que vous souhaitez afficher au sein de votre application :
 * ``Outils de zoom`` : cette option permet d'activer les outils de zoom +/- sur la carte.
 * ``Outils de mesures`` : cette option permet d'activer les outils de mesures de distance et de surface.
 * ``Export de la carte en image`` : cette option permet d'exporter une capture d'écran de la carte consultée.
+* ``Se géolocaliser`` : cette option permet d'activer l'outil de géolocalisation (bouton permettant à l'utilisateur de se localiser sur la carte).
 * :guilabel:`mode avancé` ``Affichage des coordonnées au clic`` : cette option permet d'afficher dans le bandeau en haut les coordonnées du point cliqué.
 * :guilabel:`mode avancé` ``Afficher les coordonnées correspondant à la position de la souris`` : cette option permet d'afficher les coordonnées correspondant à la position de la souris en bas à droite de la carte .
 * :guilabel:`mode avancé` ``Afficher/masquer toutes les données d'une thématique`` : active la possibilité d'afficher toutes les données d'un thème en un clic.
-* ``Se géolocaliser`` : cette option permet d'activer l'outil de géolocalisation (bouton permettant à l'utilisateur de se localiser sur la carte).
 * :guilabel:`mode avancé` ``Ouvrir la carte dans le studio`` : active la possibilité d'ouvrir la carte en cours au sein d'un mviewerstudio pour édition.
 
 Options de la carte
@@ -51,6 +51,7 @@ Paramétrer l'étendue et le zoom de la carte au démarrage de l'application. Ai
               :align: center
 
 * ``Revenir à l'étendue initiale`` : cette option permet d'activer le bouton de retour à l’étendue initiale.
+* :guilabel:`mode avancé` ``Zoom maximal de l'application`` : Option permettant de définir en niveau de zoom le zoom maximal. Pa exemple 20 correspond au zoom 1/533, 18 à l'échelle 1/2133, 15 à l'échelle 1/17062.
 * :guilabel:`mode avancé` ``Interdire la navigation hors de l'étendue définie ci-dessus`` : bloque l'emprise de la carte sur l'emprise définie.
 
 Fonds de plan
