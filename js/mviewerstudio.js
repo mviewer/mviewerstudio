@@ -273,7 +273,6 @@ var newConfiguration = function (infos) {
     "opt-showhelp",
     "opt-coordinates",
     "opt-togglealllayersfromtheme",
-    "SwitchAdressSearch",
     "SwitchCustomBackground",
     "SwitchAdvanced",
   ].forEach((id) => {
@@ -316,7 +315,6 @@ var newConfiguration = function (infos) {
 
   // Gestion des accordéons
   [
-    "collapseSearch",
     "collapseHomePage",
     "collapseFondPlan",
     "collapseElasticSearch",
