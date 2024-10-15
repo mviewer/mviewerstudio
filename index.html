@@ -599,29 +599,29 @@
                                 </div>                                
                             </div>  
                             <!--./Page d'accueil-->
-
+                           
                             <div class="accordion mt-4" id="search-config">
                                 <div class="accordion-item">
-                                  <h2 class="accordion-header" >
-                                    <a class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSearch" aria-expanded="true" aria-controls="collapseFondPlan">
-                                      <div>
-                                        <span class="title-accordion" i18n="tabs.app.search.title">Recherche</span><br>
-                                        <span class="subtitle-accordion" i18n="tabs.app.search.subtitle">Paramétrer les fonctionnalités disponibles dans la barre de recherche</span>
-                                      </div>
-                                    </a>
-                                  </h2>
-                                  <div id="collapseSearch" class="accordion-collapse collapse" aria-labelledby="accordionSearch">
+                                    <h2 class="accordion-header" id="accordionSearch">
+                                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSearch" aria-expanded="true" aria-controls="collapseSearch">
+                                          <div>
+                                            <span class="title-accordion" i18n="tabs.app.search.title">Recherche</span><br>
+                                            <span class="subtitle-accordion" i18n="tabs.app.search.subtitle">Paramétrer les fonctionnalités disponibles dans la barre de recherche</span>
+                                          </div>
+                                        </button>
+                                    </h2>
+                                  <div id="collapseSearch" class="accordion-collapse collapse show" aria-labelledby="accordionSearch">
                                     <div class="accordion-body p-0"> 
                                         <ul class="list-group list-group-flush">     
                                             <li class="list-group-item">
                                                 <div class="list-flex">
                                                     <p class="strong" i18n="tabs.app.search.address_search.title">Activer la recherche d'adresse</p>
                                                     <div class="custom-control custom-switch">
-                                                        <input type="checkbox" class="custom-control-input" id="SwitchAdressSearch">
+                                                        <input type="checkbox" class="custom-control-input" id="SwitchAdressSearch" checked>
                                                         <label class="custom-control-label" for="SwitchAdressSearch"></label>
                                                     </div>
                                                 </div>
-                                                <div id="AppSearchBlock" style="display: none;">
+                                                <div id="AppSearchBlock">
                                                     <div class="row mb-2" >                                                    
                                                         <div class="col-md-12">
                                                             <label for="frm-searchlocalities" i18n="tabs.app.search.address_search.service" class="form-label">Service utilisé</label>
@@ -658,7 +658,7 @@
                                           </ul>                                        
                                     </div>
                                   </div>
-                                </div>                                
+                                </div>                    
                             </div>  
                             <!--./Recherche-->                          
                                 <div class="mt-4">
@@ -2040,7 +2040,7 @@
     
 <script src="js/wizard.js"></script>
 <script src="js/manageDisplayContainer.js"></script>
-<script src="lib/icon-picker/iconPickerComponent.js"></script>
+<script src="lib/icon-picker/iconPicketComponent.js"></script>
 <script src="js/mviewerstudio.js"></script>
 <script type="module" src="lib/icon-picker/icon-picker.js"></script>
 <script src="lib/bootstrap-table/bootstrap-table.min.js"></script>
