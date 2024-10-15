@@ -13,7 +13,7 @@ L'objectif est d'accompagner les utilisateurs à saisir des type d'élément HTM
 
 Cet outil permettra au finale de réaliser des templates WYSIWYG.
 
-# Créer votre composant de saisie
+# Comment créer votre composant de saisie ?
 
 Nous allons décortiquer un composant en guise d'exemple.
 
