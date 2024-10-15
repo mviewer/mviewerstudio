@@ -362,7 +362,7 @@
     "template.msg.invalid_field": "Veuillez choisir un champ valide !",
     "template.select_json_field": "Veuillez choisir un champ type JSON !",
     "template.input.text": "Saisir un texte...",
-    "template.button.title": "Boutton",
+    "template.button.title": "Bouton",
     "template.iframe.title": "Iframe",
     "template.img.title": "Image",
     "template.list.title": "Liste",
