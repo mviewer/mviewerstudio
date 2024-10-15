@@ -982,7 +982,11 @@ let previewAppsWithoutSave = (id, showPublish) => {
     .then((r) => (r.ok ? r.json() : Promise.reject(r)))
     .then((data) => {
       const url = mv.produceUrl(data.file, config.relation && config.showPublish);
-      window.open(url, "mvs_vizualize");
+      const prevWindow = window.open(url, "mvs_vizualize");
+      if (prevWindow) {
+        prevWindow.focus();
+        prevWindow.location.reload();
+      }
     })
     .catch((err) => alertCustom(mviewer.tr("msg.xml_doc_invalid"), "error"));
 };
