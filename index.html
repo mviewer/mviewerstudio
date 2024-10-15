@@ -898,7 +898,7 @@
                                 <label class="settinglabel" i18n="modal.theme.paramspanel.icon">Icône</label>
                                 <span class="selected-icon"></span>
                                 <input type="text" class="icon-class-input form-control advanced"  style="display: none;" id="theme-pick-icon" />
-                                <button type="button" class="btn btn-outline-info picker-button mt-2">
+                                <button type="button" class="btn btn-outline-info picker-button mt-2" data-bs-target="#iconPicker" data-bs-toggle="modal">
                                     <span i18n="modal.theme.paramspanel.icon_pick">Choisir une icône</span>
                                 </button>
                             </div>
@@ -1930,7 +1930,7 @@
         </div>
     </div>
     <!-- Modal icons -->
-    <div class="modal fade" id="iconsModal" role="dialog" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="iconsModal" aria-hidden="true">
+    <div class="modal fade" id="iconsTemplateModal" role="dialog" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="iconsTemplateModal" aria-hidden="true">
         <div class="modal-dialog modal-xl modal-dialog-scrollable">
             <div class="modal-content" id="iconsModalContent">
             </div>
