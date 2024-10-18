@@ -273,6 +273,8 @@ var newConfiguration = function (infos) {
     "opt-showhelp",
     "opt-coordinates",
     "opt-togglealllayersfromtheme",
+    "opt-mapprint",
+    "opt-addlayerstools",
     "SwitchCustomBackground",
     "SwitchAdvanced",
   ].forEach((id) => {
