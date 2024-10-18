@@ -275,7 +275,6 @@ var newConfiguration = function (infos) {
     "opt-togglealllayersfromtheme",
     "opt-mapprint",
     "opt-addlayerstools",
-    "SwitchAdressSearch",
     "SwitchCustomBackground",
     "SwitchAdvanced",
   ].forEach((id) => {
