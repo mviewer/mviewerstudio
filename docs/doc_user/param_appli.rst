@@ -39,7 +39,9 @@ Activer les outils que vous souhaitez afficher au sein de votre application :
 * :guilabel:`mode avancé` ``Affichage des coordonnées au clic`` : cette option permet d'afficher dans le bandeau en haut les coordonnées du point cliqué.
 * :guilabel:`mode avancé` ``Afficher les coordonnées correspondant à la position de la souris`` : cette option permet d'afficher les coordonnées correspondant à la position de la souris en bas à droite de la carte .
 * :guilabel:`mode avancé` ``Afficher/masquer toutes les données d'une thématique`` : active la possibilité d'afficher toutes les données d'un thème en un clic.
+* :guilabel:`mode avancé` ``Impression de la vue courante depuis le navigateur`` : active la possibilité d’imprimer la vue courante depuis le navigateur.
 * :guilabel:`mode avancé` ``Ouvrir la carte dans le studio`` : active la possibilité d'ouvrir la carte en cours au sein d'un mviewerstudio pour édition.
+* :guilabel:`mode avancé` ``Activer le panneau pour ajouter des couches WMS`` : active la possibilité d'ajouter des couche WMS à la carte.
 
 Options de la carte
 -------------------------------------------
