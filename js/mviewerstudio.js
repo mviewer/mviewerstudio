@@ -823,6 +823,11 @@ var getConfig = () => {
     maxextent = map.getView().calculateExtent();
     maxextentStr = `maxextent="${maxextent}"`;
   }
+
+  var extentStr = "";
+  extent = map.getView().calculateExtent();
+  extentStr = `extent="${extent}"`;
+
   var center = map.getView().getCenter().join(",");
   var zoom = map.getView().getZoom();
   var mapoptions =
@@ -834,6 +839,8 @@ var getConfig = () => {
     '" zoom="' +
     zoom +
     '" ' +
+    extentStr +
+    " " +
     maxextentStr +
     "/>";
 
