@@ -273,8 +273,6 @@ var newConfiguration = function (infos) {
     "opt-showhelp",
     "opt-coordinates",
     "opt-togglealllayersfromtheme",
-    "opt-mapprint",
-    "opt-addlayerstools",
     "SwitchCustomBackground",
     "SwitchAdvanced",
   ].forEach((id) => {
@@ -454,7 +452,19 @@ var importThemes = function () {
   $("#mod-themesview").modal("hide");
 };
 
-var addTheme = function (title, collapsed, themeid, icon, url, layersvisibility) {
+var sortableElement = function (targetId, callback){
+  Sortable.create(document.getElementById(targetId), {
+      handle: '.moveList',
+      animation: 150,
+      ghostClass: 'ghost',
+      onEnd: function (evt) {
+          callback(evt);
+      }
+  });
+};
+sortableElement('themes-list', sortThemes);
+
+var addTheme = function (title, collapsed, themeid, icon, url, layersvisibility) {  
   if ($("#mod-themeOptions").is(":visible")) {
     alert(mviewer.tr("msg.save_theme_first"));
     return;
@@ -464,7 +474,7 @@ var addTheme = function (title, collapsed, themeid, icon, url, layersvisibility)
     $("#themes-list").append(`
             <div class="list-group-item list-group-item themes-list-item" data-theme-url="${url}" data-theme="${title}" data-themeid="${themeid}" data-theme-collapsed="${collapsed}" data-theme-icon="${icon}" data-theme-layersvisibility="${layersvisibility}">
                 <div class="theme-infos">
-                    <span class="theme-name moveList">${title}</span><span class="theme-infos-layer">Ext.</span>
+                    <span class="theme-name moveList" contentEditable="true">${title}</span><span class="theme-infos-layer">Ext.</span>
                 </div>
                 <div class="theme-options-btn">
                     <button class="btn btn-sm btn-secondary" ><span class="theme-move moveList" id18="move" title="Déplacer"><i class="bi bi-arrows-move"></i></span></button>
@@ -474,29 +484,25 @@ var addTheme = function (title, collapsed, themeid, icon, url, layersvisibility)
             </div>`);
   } else {
     $("#themes-list").append(
-      [
-        '<div class="list-group-item themes-list-item" data-theme="' +
-          title +
-          '" data-themeid="' +
-          themeid +
-          '" data-theme-collapsed="' +
-          collapsed +
-          '" data-theme-icon="' +
-          icon +
-          '">',
-        '<div class="theme-infos">',
-        '<span class="theme-name moveList">' +
-          title +
-          '</span><span class="theme-infos-layer">0</span>',
-        "</div>",
-        '<div class="theme-options-btn">',
-        '<button class="btn btn-sm btn-secondary" ><span class="theme-move moveList" i18n="move" title="Déplacer"><i class="bi bi-arrows-move"></i></span></button>',
-        '<button class="btn btn-sm btn-secondary" onclick="deleteThemeItem(this);" ><span class="theme-remove" i18n="delete" title="Supprimer"><i class="bi bi-x-circle"></i></span></button>',
-        '<button class="btn btn-sm btn-info" onclick="editTheme(this);"><span class="theme-edit" title="Editer i18n="edit_layer" ce thème"><i class="bi bi-gear-fill"></i></span></button>',
-        "</div>",
-        "</div>",
-      ].join("")
+      `<div class="list-group-item themes-list-item" id="${themeid}" data-theme="${title}" data-themeid="${themeid}" data-theme-collapsed="${collapsed}" data-theme-icon="${icon}">
+          <div class="theme-infos ">
+              <span type="button" class="selected-icon ${icon} picker-button" data-bs-target="#iconPicker" data-bs-toggle="modal"></span>
+              <span class="theme-name moveList" contenteditable="true">${title}</span><span class="theme-infos-layer">0</span>
+              <div class="custom-control custom-switch m-2">
+                <input type="checkbox" class="custom-control-input" id="${themeid}-theme-edit-collapsed" ${collapsed === 'false' ? 'checked' : ''}>
+                <label class="custom-control-label" for="${themeid}-theme-edit-collapsed"><span i18n="modal.theme.paramspanel.opt_unfolded">Déroulée par défaut</span></label>
+              </div>
+          </div>
+          <div class="theme-options-btn text-right">
+              <button class="btn btn-sm btn-outline-info" id="btn-addLayer-${themeid}" onclick="addLayer('Nouvelle couche', '${themeid}');" data-bs-target="#mod-layerNew" data-bs-toggle="modal"><i class="bi bi-plus-lg"></i> Ajouter une donnée</button>
+              <button class="btn btn-sm btn-secondary"><span class="theme-move moveList" title="Déplacer"><i class="bi bi-arrows-move"></i></span></button>
+              <button class="btn btn-sm btn-secondary" onclick="deleteThemeItem(this);" ><span class="theme-remove" title="Supprimer"><i class="bi bi-x-circle"></i></span></button>
+              <button class="btn btn-sm btn-primary" onclick="editTheme('${themeid}');"><span class="theme-edit" title="Editer ce thème"><i class="bi bi-gear-fill"></i></span></button>                
+          </div>                        
+          <div id="themeLayers-${themeid}" class="theme-layer-list list-group mt-3 mb-2"></div>
+      </div>`
     );
+    sortableElement("themeLayers-"+themeid, sortLayers);  
   }
   config.themes[themeid] = {
     title: title,
@@ -509,36 +515,55 @@ var addTheme = function (title, collapsed, themeid, icon, url, layersvisibility)
   };
 };
 
-var editTheme = function (item) {
-  $("#themes-list .list-group-item").removeClass("active");
-  $(item).parent().parent().addClass("active");
-  var title = $(item).parent().parent().attr("data-theme");
-  var themeid = $(item).parent().parent().attr("data-themeid");
-  var collapsed =
-    $(item).parent().parent().attr("data-theme-collapsed") === "true" ? false : true;
-  var icon = $(item).parent().parent().attr("data-theme-icon");
-  if (icon === "undefined") icon = "fas fa-caret-right";
-
-  $("#mod-themeOptions").modal("show");
-  $("#theme-edit-title").val(title);
-  $("#theme-edit-collapsed").prop("checked", collapsed);
+var editTheme = function (themeid) {
+  $(".themes-list-item.active").removeClass("active");     
+  var th = $('#'+themeid);
+  th.addClass("active");
+  
+  var themeid = th.attr("data-themeid");
+  var collapsed = (th.attr("data-theme-collapsed")==="true")?false:true;
+  var icon = th.attr("data-theme-icon");
+  if (icon === "undefined") icon = 'fas fa-caret-right';   
+  $("#mod-themeOptions").modal('show');
+  $("#theme-edit-title").val($("#"+themeid).find('.theme-name').text());
+  $("#theme-edit-collapsed").prop('checked', collapsed);
   $("#theme-edit").attr("data-themeid", themeid);
   $("#theme-pick-icon").val(icon);
-  $("#theme-pick-icon").siblings(".selected-icon").attr("class", "selected-icon");
-  $("#theme-pick-icon").siblings(".selected-icon").addClass(icon);
+  $("#theme-pick-icon").siblings('.selected-icon').attr('class', 'selected-icon');
+  $("#theme-pick-icon").siblings('.selected-icon').addClass(icon);
 
   //Remove old layers entries
-  $(".layers-list-item").remove();
+  $('#'+themeid+' .layers-list-item').remove();
   //Show layerslm
   loadLayers(themeid);
 };
+
+// New save function to override old one to edit and save all the themes at the same time now.
+var saveThemes = function(){
+  const themes = $(".themes-list-item")
+  for(i=0; i<themes.length; i++){
+    const theme = themes[i];
+    const themeid = theme.id;
+    const th = $('#' + themeid)
+    const title = th.find('.theme-name').text();
+    const icon = th.attr("data-theme-icon");       
+    const collapsed = !$(`#${themeid}-theme-edit-collapsed`).prop("checked");
+    console.log(collapsed);
+    
+
+    config.themes[themeid].title = title;
+    config.themes[themeid].id = themeid;
+    config.themes[themeid].collapsed = collapsed;
+    config.themes[themeid].icon = icon;
+  }
+}
 
 var saveTheme = function () {
   //get active item in left panel
   var theme = $("#themes-list .active");
   //get edited values (right panel)
-  var title = $("#theme-edit-title").val();
   var themeid = $("#theme-edit").attr("data-themeid");
+  var title = $("#theme-edit-title").val();
   var collapsed = !$("#theme-edit-collapsed").prop("checked");
   var icon = $.trim($("#theme-pick-icon").val());
   //update values in left panel
@@ -717,6 +742,8 @@ var deleteAppFromList = (id) => {
 };
 
 var getConfig = () => {
+  console.log('GET CONFIG');
+  
   var padding = function (n) {
     return "\r\n" + " ".repeat(n);
   };
@@ -753,8 +780,6 @@ var getConfig = () => {
     'togglealllayersfromtheme="' +
       ($("#opt-togglealllayersfromtheme").prop("checked") === true) +
       '"',
-    'mapprint="' + ($("#opt-mapprint").prop("checked") === true) + '"',
-    'addlayerstools="' + ($("#opt-addlayerstools").prop("checked") === true) + '"',
   ];
 
   config.title = $("#opt-title").val();
@@ -775,7 +800,7 @@ var getConfig = () => {
     savedProxy = `${padding(0)}<proxy url="${$("#optProxyUrl").val() || _conf.proxy}"/>`;
   }
   var search_params = { bbox: false, localities: false, features: false, static: false };
-  if ($("#SwitchAdressSearch").is(":checked")) {
+  if ($("#SwitchAdressSearch").is(":checked")) { 
     olscompletion = [
       padding(0) + '<olscompletion type="' + $("#frm-searchlocalities").val() + '"',
       'url="' + $("#opt-searchlocalities-url").val() + '"',
@@ -823,6 +848,11 @@ var getConfig = () => {
     maxextent = map.getView().calculateExtent();
     maxextentStr = `maxextent="${maxextent}"`;
   }
+
+  var extentStr = "";
+  extent = map.getView().calculateExtent();
+  extentStr = `extent="${extent}"`;
+  
   var center = map.getView().getCenter().join(",");
   var zoom = map.getView().getZoom();
   var mapoptions =
@@ -834,6 +864,8 @@ var getConfig = () => {
     '" zoom="' +
     zoom +
     '" ' +
+    extentStr +
+    ' ' +
     maxextentStr +
     "/>";
 
@@ -1085,6 +1117,8 @@ var saveApplicationParameters = (close) => {
 };
 
 var saveAppWithPython = (exists, conf, url, close) => {
+  console.log({conf});
+  
   return fetch(url, {
     method: exists ? "PUT" : "POST",
     headers: {
@@ -1112,6 +1146,7 @@ var saveAppWithPython = (exists, conf, url, close) => {
     })
     .catch((err) => alertCustom(mviewer.tr("msg.save_failure"), "danger"));
 };
+
 var saveApplicationsConfig = (close, message = "") => {
   const conf = getConfig();
   if (!conf || !mv.validateXML(conf.join(""))) {
