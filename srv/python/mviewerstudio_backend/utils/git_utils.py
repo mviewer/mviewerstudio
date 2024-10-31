@@ -1,10 +1,19 @@
 import git
-from os import path
+from os import path, remove
 from datetime import datetime
 from .login_utils import current_user
 import logging
+from time import sleep
 
 logger = logging.getLogger(__name__)
+
+
+def unlock_repo(repo):
+    """
+    Force remove git lock file
+    """
+    lock_file = path.join(repo.working_dir, '.git', 'index.lock')
+    remove(lock_file)
 
 def init_repo(workspace):
     """
@@ -41,7 +50,6 @@ def init_or_get_repo(workspace):
         repo = git.Repo(workspace)
     return repo
 
-
 def checkout(repo, target, hard=False):
     """
     checkout repo to targeted branch, tag, commit ref.
@@ -50,6 +58,15 @@ def checkout(repo, target, hard=False):
     :param target: string ref
     :param hard: boolean
     """
+
+    logger.debug(repo.working_dir)
+
+    repo_dir = repo.working_dir
+    lock_file = path.join(repo.working_dir, '.git', 'index.lock')
+    
+    if path.exists(lock_file):
+        logger.error(f"GIT : REPO LOCKED {repo_dir}")
+        sleep(5)
 
     if hard:
         logger.debug(f"GIT : RESET HARD {target}")
