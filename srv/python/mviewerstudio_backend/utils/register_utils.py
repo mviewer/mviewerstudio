@@ -105,6 +105,7 @@ class ConfigRegister:
                     if config:
                         self.update(config.as_dict())
                         logger.debug(f"UPDATE TO REGISTER : SUCCESS")
+                    logger.info(f"REGISTER : APP PROCESS SUCCESS {app_path}")
             except Exception as e:
                 logger.error(f"REGISTER : FAIL TO PROCESS {app_path}")
                 logger.error(e)
