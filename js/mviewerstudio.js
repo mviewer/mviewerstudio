@@ -412,7 +412,7 @@ var editLayer = function (item, themeid, layerid) {
   mv.setCurrentLayerId(layerid);
   var element = $(item).parent().parent();
   var layerid = element.attr("data-layerid");
-  
+
   if (layerid != "undefined") {
     $("#mod-layerOptions").modal("show");
     mv.showLayerOptions(element, themeid, layerid);
@@ -435,17 +435,17 @@ var importThemes = function () {
   $("#mod-themesview").modal("hide");
 };
 
-var sortableElement = function (targetId, callback){
+var sortableElement = function (targetId, callback) {
   Sortable.create(document.getElementById(targetId), {
-      handle: '.moveList',
-      animation: 150,
-      ghostClass: 'ghost',
-      onEnd: function (evt) {
-          callback(evt);
-      }
+    handle: ".moveList",
+    animation: 150,
+    ghostClass: "ghost",
+    onEnd: function (evt) {
+      callback(evt);
+    },
   });
 };
-sortableElement('themes-list', sortThemes); 
+sortableElement("themes-list", sortThemes);
 
 var addTheme = function (title, collapsed, themeid, icon, url, layersvisibility) {
   if (url) {
@@ -469,7 +469,7 @@ var addTheme = function (title, collapsed, themeid, icon, url, layersvisibility)
               <span class="theme-name" contenteditable="true">${title}</span>
               <span class="theme-infos-layer">0</span>
               <div class="custom-control custom-switch m-2">
-                <input type="checkbox" class="custom-control-input" id="${themeid}-theme-edit-collapsed" ${collapsed === 'false' ? 'checked' : ''}>
+                <input type="checkbox" class="custom-control-input" id="${themeid}-theme-edit-collapsed" ${collapsed === "false" ? "checked" : ""}>
                 <label class="custom-control-label" for="${themeid}-theme-edit-collapsed"><span i18n="modal.theme.paramspanel.opt_unfolded">Déroulée par défaut</span></label>
               </div>
           </div>
@@ -481,7 +481,7 @@ var addTheme = function (title, collapsed, themeid, icon, url, layersvisibility)
           <div id="themeLayers-${themeid}" class="theme-layer-list list-group mt-3 mb-2"></div>
       </div>`
     );
-    sortableElement("themeLayers-"+themeid, sortLayers);  
+    sortableElement("themeLayers-" + themeid, sortLayers);
   }
   config.themes[themeid] = {
     title: title,
@@ -495,47 +495,49 @@ var addTheme = function (title, collapsed, themeid, icon, url, layersvisibility)
 };
 
 // Only one checkbox "collapsed" checked
-$('#themes-list').on('change', '.custom-control-input', function() {
-  if ($(this).is(':checked')) {
-      $('#themes-list .custom-control-input').not(this).prop('checked', false);
+$("#themes-list").on("change", ".custom-control-input", function () {
+  if ($(this).is(":checked")) {
+    $("#themes-list .custom-control-input").not(this).prop("checked", false);
   }
 });
 
-document.getElementById('mod-layerNew').addEventListener('show.bs.modal', function (event) {
-  // `event.relatedTarget` est l'élément déclencheur (le bouton)
-  const button = event.relatedTarget;
-  const themeId = button.getAttribute('data-themeid');
-  const selectLayersButton = document.getElementById('selectLayersButton');
-  selectLayersButton.setAttribute('data-themeid', themeId);
-});
+document
+  .getElementById("mod-layerNew")
+  .addEventListener("show.bs.modal", function (event) {
+    // `event.relatedTarget` est l'élément déclencheur (le bouton)
+    const button = event.relatedTarget;
+    const themeId = button.getAttribute("data-themeid");
+    const selectLayersButton = document.getElementById("selectLayersButton");
+    selectLayersButton.setAttribute("data-themeid", themeId);
+  });
 
 // Update layers counter
-$('#mod-layerNew').on('click', '#selectLayersButton', function() {
+$("#mod-layerNew").on("click", "#selectLayersButton", function () {
   const themeId = mv.getCurrentThemeId();
-  console.log({themeId});
-  
+  console.log({ themeId });
+
   const th = $(`div[data-themeid="${themeId}"]`);
   var nb_layers = $(`#${themeId} .theme-layer-list`).children(".list-group-item").length;
   th.find(".theme-infos-layer").text(nb_layers);
 });
 
 // New save function to override old one to edit and save all the themes at the same time now.
-var saveThemes = function(){
-  const themes = $(".themes-list-item")
-  for(i=0; i<themes.length; i++){
+var saveThemes = function () {
+  const themes = $(".themes-list-item");
+  for (i = 0; i < themes.length; i++) {
     const theme = themes[i];
-    const themeid = theme.getAttribute('data-themeid');
-    const th = $(`div[data-themeid="${themeid}"]`)
-    const title = th.find('.theme-name').text();
-    const icon = th.attr("data-theme-icon");       
+    const themeid = theme.getAttribute("data-themeid");
+    const th = $(`div[data-themeid="${themeid}"]`);
+    const title = th.find(".theme-name").text();
+    const icon = th.attr("data-theme-icon");
     const collapsed = !$(`#${themeid}-theme-edit-collapsed`).prop("checked");
-    
+
     config.themes[themeid].title = title;
     config.themes[themeid].id = themeid;
     config.themes[themeid].collapsed = collapsed;
     config.themes[themeid].icon = icon;
   }
-}
+};
 
 var editThemeExt = function (item) {
   $("#themes-list .list-group-item").removeClass("active");
@@ -749,7 +751,7 @@ var getConfig = () => {
     savedProxy = `${padding(0)}<proxy url="${$("#optProxyUrl").val() || _conf.proxy}"/>`;
   }
   var search_params = { bbox: false, localities: false, features: false, static: false };
-  if ($("#SwitchAdressSearch").is(":checked")) { 
+  if ($("#SwitchAdressSearch").is(":checked")) {
     olscompletion = [
       padding(0) + '<olscompletion type="' + $("#frm-searchlocalities").val() + '"',
       'url="' + $("#opt-searchlocalities-url").val() + '"',
@@ -801,7 +803,7 @@ var getConfig = () => {
   var extentStr = "";
   extent = map.getView().calculateExtent();
   extentStr = `extent="${extent}"`;
-  
+
   var center = map.getView().getCenter().join(",");
   var zoom = map.getView().getZoom();
   var mapoptions =
@@ -814,7 +816,7 @@ var getConfig = () => {
     zoom +
     '" ' +
     extentStr +
-    ' ' +
+    " " +
     maxextentStr +
     "/>";
 
