@@ -692,6 +692,10 @@
 		.themes-list-item .theme-layer-list {
 			flex: 1!important;
 		}
+	
+		.theme-options-btn {
+			text-align: right !important;
+		}
 		
 		.theme-options-btn .btn {
 			margin: 0 5px;
@@ -709,6 +713,7 @@
 		.theme-name {
 			font-weight: 500;
 			margin-right: 10px;
+			padding: 5px;
 		}
 		
 		.theme-infos-layer {
