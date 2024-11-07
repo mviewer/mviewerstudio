@@ -43,7 +43,7 @@ jobs:
         env:
           DOCKER_BUILDKIT: 1
         run: |
-          docker-compose build
+          docker compose build
 
       - name: "Log in to docker hub"
         uses: azure/docker-login@v1

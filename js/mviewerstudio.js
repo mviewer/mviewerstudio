@@ -273,7 +273,8 @@ var newConfiguration = function (infos) {
     "opt-showhelp",
     "opt-coordinates",
     "opt-togglealllayersfromtheme",
-    "SwitchAdressSearch",
+    "opt-mapprint",
+    "opt-addlayerstools",
     "SwitchCustomBackground",
     "SwitchAdvanced",
   ].forEach((id) => {
@@ -315,14 +316,11 @@ var newConfiguration = function (infos) {
   $("#nameAppBlock").empty();
 
   // Gestion des accordéons
-  [
-    "collapseSearch",
-    "collapseHomePage",
-    "collapseFondPlan",
-    "collapseElasticSearch",
-  ].forEach(function (param) {
-    $("#" + param).collapse("hide");
-  });
+  ["collapseHomePage", "collapseFondPlan", "collapseElasticSearch"].forEach(
+    function (param) {
+      $("#" + param).collapse("hide");
+    }
+  );
 
   // Gestion des fonds de plan
   $("#frm-bl .bl input").prop("checked", false).trigger("change");
@@ -755,6 +753,8 @@ var getConfig = () => {
     'togglealllayersfromtheme="' +
       ($("#opt-togglealllayersfromtheme").prop("checked") === true) +
       '"',
+    'mapprint="' + ($("#opt-mapprint").prop("checked") === true) + '"',
+    'addlayerstools="' + ($("#opt-addlayerstools").prop("checked") === true) + '"',
   ];
 
   config.title = $("#opt-title").val();
@@ -775,7 +775,7 @@ var getConfig = () => {
     savedProxy = `${padding(0)}<proxy url="${$("#optProxyUrl").val() || _conf.proxy}"/>`;
   }
   var search_params = { bbox: false, localities: false, features: false, static: false };
-  if ($("#frm-searchlocalities").val() != "false") {
+  if ($("#SwitchAdressSearch").is(":checked")) {
     olscompletion = [
       padding(0) + '<olscompletion type="' + $("#frm-searchlocalities").val() + '"',
       'url="' + $("#opt-searchlocalities-url").val() + '"',
@@ -823,15 +823,24 @@ var getConfig = () => {
     maxextent = map.getView().calculateExtent();
     maxextentStr = `maxextent="${maxextent}"`;
   }
+
+  var extentStr = "";
+  extent = map.getView().calculateExtent();
+  extentStr = `extent="${extent}"`;
+
   var center = map.getView().getCenter().join(",");
   var zoom = map.getView().getZoom();
   var mapoptions =
     padding(0) +
-    '<mapoptions maxzoom="20" projection="EPSG:3857" center="' +
+    '<mapoptions projection="EPSG:3857" center="' +
     center +
+    '" maxzoom="' +
+    $("#opt-maxzoom").val() +
     '" zoom="' +
     zoom +
     '" ' +
+    extentStr +
+    " " +
     maxextentStr +
     "/>";
 
@@ -980,7 +989,11 @@ let previewAppsWithoutSave = (id, showPublish) => {
     .then((r) => (r.ok ? r.json() : Promise.reject(r)))
     .then((data) => {
       const url = mv.produceUrl(data.file, config.relation && config.showPublish);
-      window.open(url, "mvs_vizualize");
+      const prevWindow = window.open(url, "mvs_vizualize");
+      if (prevWindow) {
+        prevWindow.focus();
+        prevWindow.location.reload();
+      }
     })
     .catch((err) => alertCustom(mviewer.tr("msg.xml_doc_invalid"), "error"));
 };

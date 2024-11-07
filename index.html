@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@2.2.0/fonts/remixicon.css">
     <link rel="stylesheet" href="lib/openlayers/7.1/ol.css" type="text/css">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.13.0/css/all.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
     <script src="lib/Sortable.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/4.6.3/papaparse.min.js"></script>
@@ -245,13 +245,13 @@
                                 </div>
                                 <div class="col-md-6 advanced">
                                     <div class="form-group">
-                                        <label for="optKeywords" i18n="head.keywords" class="form-label">Mots clés</label>
+                                        <label for="optKeywords" class="form-label"><span i18n="head.keywords">Mots clés </span><span class="tooltip-info" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="tooltip.app.keywords"><i class="ri-information-line"></i></span></label>
                                         <input class="form-control" onchange="mv.changeKeyWords(this)" id="optKeywords" type="text" name="textinput" placeholder="ex: carte,rennes,lycées">
                                     </div>
                                 </div>
                                 <div class="col-md-6 advanced">
                                     <div class="form-group">
-                                        <label for="optProxyUrl" i18n="head.proxyurl" class="form-label">URL du proxy</label>
+                                        <label for="optProxyUrl" class="form-label"><span i18n="head.proxyurl">URL du proxy </span><span class="tooltip-info" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="tooltip.app.proxy"><i class="ri-information-line"></i></span></label>
                                         <input class="form-control" id="optProxyUrl" type="text" name="textinput" placeholder="https://proxy.fr">
                                     </div>
                                 </div>
@@ -369,13 +369,30 @@
                                                 </div>
                                             </div>                                            
                                         </li>
-
+                                        <li class="list-group-item advanced" style="display: none;">
+                                            <div class="list-flex">
+                                                <span i18n="tabs.app.opt_mapprint">Impression vue courante</span>
+                                                <div class="custom-control custom-switch">
+                                                    <input type="checkbox" class="custom-control-input" name="checkboxes" id="opt-mapprint">
+                                                    <label class="custom-control-label" for="opt-mapprint"></label>
+                                                </div>
+                                            </div>                                            
+                                        </li>
                                         <li class="list-group-item advanced" style="display: none;">
                                             <div class="list-flex">
                                                 <span i18n="tabs.app.opt_studio">Ouvrir la carte dans le studio</span>                                          
                                                 <div class="custom-control custom-switch">
                                                     <input type="checkbox" class="custom-control-input" name="checkboxes" id="opt-studio">
                                                     <label class="custom-control-label" for="opt-studio"></label>
+                                                </div>
+                                            </div>                                            
+                                        </li>
+                                        <li class="list-group-item advanced" style="display: none;">
+                                            <div class="list-flex">
+                                                <span i18n="tabs.app.opt_addlayerstools">Panneau ajout de couches</span>
+                                                <div class="custom-control custom-switch">
+                                                    <input type="checkbox" class="custom-control-input" name="checkboxes" id="opt-addlayerstools">
+                                                    <label class="custom-control-label" for="opt-addlayerstools"></label>
                                                 </div>
                                             </div>                                            
                                         </li>
@@ -399,6 +416,12 @@
                                                     <label class="custom-control-label" for="opt-initialextenttool"></label>
                                                 </div>
                                             </div>                                            
+                                        </li>
+                                        <li class="list-group-item advanced" style="display: none;">
+                                            <div class="form-group">
+                                                <label for="opt-maxzoom" class="form-label"><span i18n="tabs.app.opt_maxzoom">Zoom maximum </span><span class="tooltip-info" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="tooltip.maxzoom"><i class="ri-information-line"></i></span></label>
+                                                <input class="form-control" id="opt-maxzoom" placeholder="20">
+                                            </div>
                                         </li>
                                         <li class="list-group-item advanced" style="display: none;">
                                             <div class="list-flex">
@@ -593,29 +616,29 @@
                                 </div>                                
                             </div>  
                             <!--./Page d'accueil-->
-
+                           
                             <div class="accordion mt-4" id="search-config">
                                 <div class="accordion-item">
-                                  <h2 class="accordion-header" >
-                                    <a class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSearch" aria-expanded="true" aria-controls="collapseFondPlan">
-                                      <div>
-                                        <span class="title-accordion" i18n="tabs.app.search.title">Recherche</span><br>
-                                        <span class="subtitle-accordion" i18n="tabs.app.search.subtitle">Paramétrer les fonctionnalités disponibles dans la barre de recherche</span>
-                                      </div>
-                                    </a>
-                                  </h2>
-                                  <div id="collapseSearch" class="accordion-collapse collapse" aria-labelledby="accordionSearch">
+                                    <h2 class="accordion-header" id="accordionSearch">
+                                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSearch" aria-expanded="true" aria-controls="collapseSearch">
+                                          <div>
+                                            <span class="title-accordion" i18n="tabs.app.search.title">Recherche</span><br>
+                                            <span class="subtitle-accordion" i18n="tabs.app.search.subtitle">Paramétrer les fonctionnalités disponibles dans la barre de recherche</span>
+                                          </div>
+                                        </button>
+                                    </h2>
+                                  <div id="collapseSearch" class="accordion-collapse collapse show" aria-labelledby="accordionSearch">
                                     <div class="accordion-body p-0"> 
                                         <ul class="list-group list-group-flush">     
                                             <li class="list-group-item">
                                                 <div class="list-flex">
                                                     <p class="strong" i18n="tabs.app.search.address_search.title">Activer la recherche d'adresse</p>
                                                     <div class="custom-control custom-switch">
-                                                        <input type="checkbox" class="custom-control-input" id="SwitchAdressSearch">
+                                                        <input type="checkbox" class="custom-control-input" id="SwitchAdressSearch" checked>
                                                         <label class="custom-control-label" for="SwitchAdressSearch"></label>
                                                     </div>
                                                 </div>
-                                                <div id="AppSearchBlock" style="display: none;">
+                                                <div id="AppSearchBlock">
                                                     <div class="row mb-2" >                                                    
                                                         <div class="col-md-12">
                                                             <label for="frm-searchlocalities" i18n="tabs.app.search.address_search.service" class="form-label">Service utilisé</label>
@@ -652,7 +675,7 @@
                                           </ul>                                        
                                     </div>
                                   </div>
-                                </div>                                
+                                </div>                    
                             </div>  
                             <!--./Recherche-->                          
                                 <div class="mt-4">
@@ -884,7 +907,7 @@
                             <input type="text" id="theme-edit-title" class="form-control" tabs.search.elastic_search.disabled="Titre">
                             <div class="custom-control custom-switch mt-2">
                                 <input type="checkbox" class="custom-control-input" id="theme-edit-collapsed">
-                                <label class="custom-control-label" for="theme-edit-collapsed"><span i18n="modal.theme.paramspanel.opt_unfolded">Déroulée par défaut</span></label>
+                                <label class="custom-control-label" for="theme-edit-collapsed"><span i18n="modal.theme.paramspanel.opt_unfolded">Déroulée par défaut</span><span class="tooltip-info" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="tooltip.collapsed"><i class="ri-information-line"></i></label>
                             </div>
                         </div>
                         <div class="col-md-6">                            
@@ -892,11 +915,11 @@
                                 <label class="settinglabel" i18n="modal.theme.paramspanel.icon">Icône</label>
                                 <span class="selected-icon"></span>
                                 <input type="text" class="icon-class-input form-control advanced"  style="display: none;" id="theme-pick-icon" />
-                                <button type="button" class="btn btn-outline-info picker-button mt-2">
+                                <button type="button" class="btn btn-outline-info picker-button mt-2" data-bs-target="#iconPicker" data-bs-toggle="modal">
                                     <span i18n="modal.theme.paramspanel.icon_pick">Choisir une icône</span>
-                                </button>                               
+                                </button>
                             </div>
-                        </div>                        
+                        </div>
                     </div>
                     <hr>
                     <h6 class="my-2" i18n="modal.theme.paramspanel.data">Données de la thématique</h6>
@@ -976,7 +999,7 @@
                     <div class="row credits">
                         <div class="col"><img src="https://upload.wikimedia.org/wikipedia/fr/thumb/8/83/R%C3%A9gion-bretagne-logo.svg/132px-R%C3%A9gion-bretagne-logo.svg.png" ></div>
                         <div class="col"><img src="https://www.hauteloire.fr/sites/cg43/local/cache-vignettes/L227xH85/logo-dept43_2018-85462.jpg"></div>
-                        <div class="col"><img src="https://www.amenagement-numerique.gouv.fr/files/2021-06/megalis_logo.png"></div>
+                        <div class="col"><img src="https://geobretagne.fr/pub/logo/024_megalis.png"></div>
                     </div>
                         <div class="row credits">
                         <div class="col"><img src="img/Logo_France_Relance_vert.svg" ></div>
@@ -1135,12 +1158,12 @@
                             Interrogation
                           </a>
                         </li>
-                        <li class="nav-item advanced layerOption-wms" role="presentation" style="display: none;">
+                        <li class="nav-item layerOption-wms" role="presentation">
                           <a class="nav-link" data-bs-toggle="pill" data-bs-target="#layer_conf4" type="button" role="tab" aria-controls="pills-layer_conf4" aria-selected="false" i18n="modal.layer.edit.filter">
                             Filtre statique
                           </a>
                         </li>
-                        <li class="nav-item layerOption-wms" role="presentation">
+                        <li class="nav-item advanced layerOption-wms" role="presentation" style="display: none;">
                           <a class="nav-link" data-bs-toggle="pill" data-bs-target="#layer_conf5" type="button" role="tab" aria-controls="pills-layer_conf5" aria-selected="false" i18n="modal.layer.edit.choices">
                             Filtre dynamique
                           </a>
@@ -1178,6 +1201,10 @@
                                         <div class="custom-control custom-switch">
                                             <input type="checkbox" class="custom-control-input" id="frm-layer-toplayer">
                                             <label class="custom-control-label" for="frm-layer-toplayer" i18n="modal.layer.toplayer">Afficher la donnée en première position de la carte</label><span class="tooltip-info" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="tooltip.toplayer"><i class="ri-information-line"></i>
+                                        </div>
+                                        <div class="custom-control custom-switch">
+                                            <input type="checkbox" class="custom-control-input" id="frm-layer-expanded">
+                                            <label class="custom-control-label" for="frm-layer-expanded" i18n="modal.layer.expanded">Panneau de couché déplié au démarrage</label><span class="tooltip-info" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="tooltip.expanded"><i class="ri-information-line"></i>
                                         </div>
                                     </div>
                                     <div class="mt-4 layerOption-wms d-none">                                        
@@ -1339,7 +1366,7 @@
                                                     <input type="number" min="0" class="form-control" id="frm-layer-index" i18n="modal.layer.index"/>
                                                 </div> 
                                                 <div class="col-md-4 layerOption-wms d-none">
-                                                    <label for="frm-scalemin"><span i18n="modal.layer.scale.min">Echelle mini</span><span class="tooltip-info" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="tooltip.scaleview"><i class="ri-information-line"></i></label>
+                                                    <label for="frm-scalemin"><span i18n="modal.layer.scale.min">Echelle mini</span><span class="tooltip-info" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="tooltip.scaleview.min"><i class="ri-information-line"></i></label>
                                                     <input type="number" class="form-control" id="frm-scalemin"
                                                         placeholder="Echelle mini" i18n="modal.layer.display.ph.minscale"/>
                                                 </div>
@@ -1352,7 +1379,7 @@
                                             <div class="form-group mt-2">
                                                 <div class="custom-control custom-switch">
                                                     <input type="checkbox" class="custom-control-input" id="frm-tiled">
-                                                    <label class="custom-control-label" for="frm-tiled" i18n="modal.layer.tiled">Affichage tuilé</label>
+                                                    <label class="custom-control-label" for="frm-tiled" i18n="modal.layer.tiled">Affichage tuilé</label><span class="tooltip-info" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="tooltip.tiled"><i class="ri-information-line"></i>
                                                 </div>
                                                 <div class="custom-control custom-switch">
                                                     <input type="checkbox" class="custom-control-input" id="frm-layer-exclusive">
@@ -1612,13 +1639,13 @@
                             <form>
                                 <div class="form-group mt-3">
                                     <div class="form-group">
-                                        <label for="frm-attributelabel" i18n="modal.layer.filter.clientside.label">Nom du filtre</label>
+                                        <label for="frm-attributelabel" i18n="modal.layer.filter.clientside.label">Titre du filtre</label>
                                         <input type="textarea" class="form-control" id="frm-attributelabel"
                                                placeholder="Texte à afficher" i18n="modal.layer.filter.clientside.label.ph">
                                     </div>
                                     <div class="form-group row">
                                         <div class="col-md-6">
-                                            <label class="control-label" i18n="modal.layer.filter.fields">Champs à filtrer</label>
+                                            <label class="control-label" i18n="modal.layer.filter.fields">Champ à filtrer</label>
                                             <select id="opt-attributefield" name="fields" class="form-control"
                                                     onchange="extractFeatures(this.value,'control')">
                                             </select>
@@ -1920,7 +1947,7 @@
         </div>
     </div>
     <!-- Modal icons -->
-    <div class="modal fade" id="iconsModal" role="dialog" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="iconsModal" aria-hidden="true">
+    <div class="modal fade" id="iconsTemplateModal" role="dialog" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="iconsTemplateModal" aria-hidden="true">
         <div class="modal-dialog modal-xl modal-dialog-scrollable">
             <div class="modal-content" id="iconsModalContent">
             </div>
@@ -2030,13 +2057,13 @@
     
 <script src="js/wizard.js"></script>
 <script src="js/manageDisplayContainer.js"></script>
+<script src="lib/icon-picker/iconPicketComponent.js"></script>
 <script src="js/mviewerstudio.js"></script>
-<script src="lib/icon-picker/icon-picker.js"></script>
+<script type="module" src="lib/icon-picker/icon-picker.js"></script>
 <script src="lib/bootstrap-table/bootstrap-table.min.js"></script>
 <script src="lib/bootstrap-table/bootstrap-table-fr-FR.min.js"></script>
 <script src="lib/moment.js"></script>
 <script src="lib/mustache-2.3.0/mustache.min.js"></script>
-<script src="lib/icon-picker/icon-picker-new.js"></script>
 <script type="module" src="lib/template-generator/main.js"></script>
 </body>
 </html>
