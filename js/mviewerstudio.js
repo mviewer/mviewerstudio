@@ -380,7 +380,7 @@ setConf = (key, value) => {
 getConf = (key) => _conf[key];
 
 sortLayers = function (fromIndex, toIndex) {
-  var themeid = $("#themes-list .active").attr("data-themeid");
+  var themeid = mv.getCurrentThemeId();
   var arr = config.themes[themeid].layers;
   var element = arr[fromIndex];
   arr.splice(fromIndex, 1);
@@ -400,7 +400,7 @@ var addLayer = function (title, layerid, themeid) {
         <div class="list-group-item layers-list-item" data-layerid="${layerid}">
             <span class="layer-name moveList">${title}</span>
             <div class="layer-options-btn" style="display:inline-flex; justify-content: end;">
-                <button class="btn btn-sm btn-secondary"><span class="layer-move moveList" i18n="move" title="Déplacer"><i class="bi bi-arrows-move"></i></span></button>
+                <button class="btn btn-sm btn-secondary" onclick={mv.setCurrentThemeId("${themeid}");}><span class="layer-move moveList" i18n="move" title="Déplacer"><i class="bi bi-arrows-move"></i></span></button>
                 <button class="btn btn-sm btn-secondary deleteLayerButton" onclick="deleteLayerItem(this, '${themeid}');"><span class="layer-remove" i18n="delete" title="Supprimer"><i class="bi bi-x-circle"></i></span></button>
                 <button class="btn btn-sm btn-info" onclick="editLayer(this, '${themeid}', '${layerid}');"><span class="layer-edit" i18n="edit_layer" title="Editer cette couche"><i class="bi bi-gear-fill"></i></span></button>
             </div>
@@ -466,7 +466,7 @@ var addTheme = function (title, collapsed, themeid, icon, url, layersvisibility)
       `<div class="list-group-item themes-list-item" id="${themeid}" data-theme="${title}" data-themeid="${themeid}" data-theme-collapsed="${collapsed}" data-theme-icon="${icon}">
           <div class="theme-infos ">
               <span type="button" class="selected-icon ${icon} picker-button" data-bs-target="#iconPicker" data-bs-toggle="modal"></span>
-              <span class="theme-name" contenteditable="true">${title}</span>
+              <input type="text" class="theme-name" value="${title}" aria-label="title">
               <span class="theme-infos-layer">0</span>
               <div class="custom-control custom-switch m-2">
                 <input type="checkbox" class="custom-control-input" id="${themeid}-theme-edit-collapsed" ${collapsed === "false" ? "checked" : ""}>
@@ -514,8 +514,6 @@ document
 // Update layers counter
 $("#mod-layerNew").on("click", "#selectLayersButton", function () {
   const themeId = mv.getCurrentThemeId();
-  console.log({ themeId });
-
   const th = $(`div[data-themeid="${themeId}"]`);
   var nb_layers = $(`#${themeId} .theme-layer-list`).children(".list-group-item").length;
   th.find(".theme-infos-layer").text(nb_layers);
@@ -528,7 +526,9 @@ var saveThemes = function () {
     const theme = themes[i];
     const themeid = theme.getAttribute("data-themeid");
     const th = $(`div[data-themeid="${themeid}"]`);
-    const title = th.find(".theme-name").text();
+    const title = th.attr("data-theme-url")
+      ? theme.getAttribute("data-theme")
+      : th.find(".theme-name").val();
     const icon = th.attr("data-theme-icon");
     const collapsed = !$(`#${themeid}-theme-edit-collapsed`).prop("checked");
 
@@ -847,6 +847,7 @@ var getConfig = () => {
   ];
   // Respect theme order
   $(".themes-list-item").each(function (id, theme) {
+    saveThemes();
     var themeid = $(theme).attr("data-themeid");
     if (config.themes[themeid]) {
       var t = config.themes[themeid];
