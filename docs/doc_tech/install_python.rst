@@ -202,7 +202,7 @@ Vous devez créer un fichier dans `/etc/systemd/system/mviewerstudio.service`:
 
 Ajoutez ensuite ce contenu en adaptant les valeurs (chemin, user...) selon votre environnement :
 
-fichier mviewerstudio.service
+fichier `mviewerstudio.service`
 
  .. code-block:: sh
 
@@ -226,8 +226,13 @@ fichier mviewerstudio.service
             --error-logfile /var/log/mviewerstudio/gunicorn-error.log \
             mviewerstudio_backend.app:app
 
+        StandardOutput=append:/var/log/mviewerstudio//mviewerstudio.log
+        StandardError=append:/var/log/mviewerstudio/mviewerstudio.log
+
         [Install]
         WantedBy=multi-user.target
+
+N'oubliez pas d'adapter le niveau des logs, le répertoire des logs (à créer si nécessaire) avec les bons droits (`monuser` dans cette confiugration devra pouvoir écrire dans `/var/log/mviewerstudio`).
 
 Notre service tournera donc sur le port `5007` une fois démarré.
 

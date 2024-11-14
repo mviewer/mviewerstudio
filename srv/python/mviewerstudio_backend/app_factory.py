@@ -4,10 +4,14 @@ import logging
 from .error_handlers import ERROR_HANDLERS
 from .route import basic_store
 
+logger = logging.getLogger(__name__)
 
 def setup_logging(app: Flask) -> None:
-    logging.basicConfig(level=app.config["LOG_LEVEL"])
-
+    logging.basicConfig(
+        level=app.config["LOG_LEVEL"],
+        format='[%(asctime)s] %(levelname)s (%(module)s): %(message)s', datefmt='%Y-%m-%d %H:%M:%S'
+    )
+    
 
 def load_config(app: Flask) -> None:
     app.config.from_object("mviewerstudio_backend.settings.Config")
@@ -33,7 +37,10 @@ def init_publish_directory(app: Flask) -> None:
     publish_path = app.config["MVIEWERSTUDIO_PUBLISH_PATH"]
     if not path.exists(publish_path) and publish_path:
         mkdir(publish_path)
+        logger.info(f"CREATE PUBLISH PATH {publish_path}")
     app.publish_path = publish_path
+    logger.info(f"PUBLISH PATH READY TO USE : {publish_path}")
+    
 
 
 def create_app() -> Flask:
@@ -43,4 +50,5 @@ def create_app() -> Flask:
     load_blueprint(app)
     setup_logging(app)
     init_publish_directory(app)
+    logger.info(f"CREATE FLASK APP : SUCESS")
     return app

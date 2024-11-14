@@ -56,9 +56,14 @@ class ConfigRegister:
         Will read each files on server startup to create json and init register config data class
         in memory.
         """
-        self._delete_register()
-        self._create_empty_register()
-        self._configs_files_to_register()
+        try:
+            logger.info("REGISTER : CREATE PROCESS START")
+            self._delete_register()
+            self._create_empty_register()
+            self._configs_files_to_register()
+            logger.info("REGISTER : CREATE PROCESS SUCCESS")
+        except:
+            logger.error("REGISTER : CREATE PROCESS FAIL - Please control each app files")
 
     def _delete_register(self):
         """
@@ -77,6 +82,7 @@ class ConfigRegister:
         ]
         # and glob.glob("%s/*.xml" % path.join(self.store_directory, dir))
         xml_dirs = []
+        logger.debug("TRY TO CREATE REGISTER FILE")
         for sub_dir in sub_store_dirs:
             app_dirs = [
                 path.join(sub_dir, dir)
@@ -84,28 +90,42 @@ class ConfigRegister:
                 if isdir(path.join(sub_dir, dir))
                 and glob.glob("%s/*.xml" % path.join(sub_dir, dir))
             ]
-            print(app_dirs)
             xml_dirs = [*xml_dirs, *app_dirs]
+            logger.debug("CREATE REGISTER FILE : SUCCESS")
 
         for app_path in xml_dirs:
-            for xml in glob.glob("%s/*.xml" % app_path):
-                repo = init_or_get_repo(app_path)
-                # to be sur each app is in master branch
-                checkout(repo, "master", True)
-                # will return config as class data
-                config = from_xml_path(self.app, xml)
-                if config:
-                    self.update(config.as_dict())
+            logger.info(f"REGISTER : PROCESS {app_path}")
+            try:
+                for xml in glob.glob("%s/*.xml" % app_path):
+                    repo = init_or_get_repo(app_path)
+                    # to be sur each app is in master branch
+                    checkout(repo, "master", True)
+                    # will return config as class data
+                    config = from_xml_path(self.app, xml)
+                    if config:
+                        self.update(config.as_dict())
+                        logger.debug(f"UPDATE TO REGISTER : SUCCESS")
+                    logger.info(f"REGISTER : APP PROCESS SUCCESS {app_path}")
+            except Exception as e:
+                logger.error(f"REGISTER : FAIL TO PROCESS {app_path}")
+                logger.error(e)
+            logger.debug(f"REGISTER : APP PROCESS END")
+
+                
 
     def update_register(self, json_dict=None):
         """
         Replace register json file by a given json content.
         :param json_dict: dict to insert as new json content.
         """
-        register_file = open(self.full_path, "w")
-        if json_dict:
-            register_file.write(json.dumps(json_dict))
-        register_file.close()
+        logger.debug(f"REGISTER : UPDATE - WRITE FILE SYSTEM")
+        try:
+            register_file = open(self.full_path, "w")
+            if json_dict:
+                register_file.write(json.dumps(json_dict))
+            register_file.close()
+        except:
+            logger.error(f"REGISTER : FAIL TO WRITE FILE SYSTEM")
 
     def read_json(self, id):
         """
@@ -121,6 +141,7 @@ class ConfigRegister:
         Insert a config to json register file.
         :param config_dict: config class data as dict
         """
+        logger.debug(f"REGISTER : ADD CONFIG {id}")
         register_file = open(self.full_path)
         register_json = json.load(register_file)
         register_json["configs"].append(config_dict)
@@ -134,6 +155,7 @@ class ConfigRegister:
         This allow to change XML manually and update register automatically on service startup.
         :param id: string uuid use as unique directory name
         """
+        logger.debug(f"REGISTER : UPDATE CONFIG FROM ID {id}")
         xml_path = glob.glob(
             "%s/*.xml"
             % path.join(self.store_directory, current_user.normalize_name, id)
@@ -148,7 +170,9 @@ class ConfigRegister:
         Update register json file from config dict.
         :param config_dict: config class data as dict
         """
-        self.delete(config_dict["id"])
+        config_id = config_dict["id"]
+        logger.debug(f"REGISTER : UPDATE CONFIG {config_id}")
+        self.delete(config_id)
         self.add(config_dict)
 
     def delete(self, id):
@@ -156,6 +180,8 @@ class ConfigRegister:
         Delete a config to json register file.
         :param id: string uuid use as unique directory name
         """
+        logger.debug(f"REGISTER : DELETE CONFIG {id}")
+
         register_file = open(self.full_path)
         register_json = json.load(register_file)
         json_clean = [
@@ -177,6 +203,7 @@ class ConfigRegister:
         Search pattern inside configs fields (limited list).
         :param pattern: string to search.
         """
+        logger.debug(f"REGISTER : SEARCH CONFIGS")
         configs_match = []
         register_file = open(self.full_path)
         register_json = json.load(register_file)
