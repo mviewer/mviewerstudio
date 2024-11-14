@@ -6,12 +6,14 @@ from .route import basic_store
 
 logger = logging.getLogger(__name__)
 
+
 def setup_logging(app: Flask) -> None:
     logging.basicConfig(
         level=app.config["LOG_LEVEL"],
-        format='[%(asctime)s] %(levelname)s (%(module)s): %(message)s', datefmt='%Y-%m-%d %H:%M:%S'
+        format="[%(asctime)s] %(levelname)s (%(module)s): %(message)s",
+        datefmt="%Y-%m-%d %H:%M:%S",
     )
-    
+
 
 def load_config(app: Flask) -> None:
     app.config.from_object("mviewerstudio_backend.settings.Config")
@@ -40,7 +42,6 @@ def init_publish_directory(app: Flask) -> None:
         logger.info(f"CREATE PUBLISH PATH {publish_path}")
     app.publish_path = publish_path
     logger.info(f"PUBLISH PATH READY TO USE : {publish_path}")
-    
 
 
 def create_app() -> Flask:

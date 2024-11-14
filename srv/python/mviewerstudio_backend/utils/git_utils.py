@@ -12,8 +12,9 @@ def unlock_repo(repo):
     """
     Force remove git lock file
     """
-    lock_file = path.join(repo.working_dir, '.git', 'index.lock')
+    lock_file = path.join(repo.working_dir, ".git", "index.lock")
     remove(lock_file)
+
 
 def init_repo(workspace):
     """
@@ -50,6 +51,7 @@ def init_or_get_repo(workspace):
         repo = git.Repo(workspace)
     return repo
 
+
 def checkout(repo, target, hard=False):
     """
     checkout repo to targeted branch, tag, commit ref.
@@ -62,8 +64,8 @@ def checkout(repo, target, hard=False):
     logger.debug(repo.working_dir)
 
     repo_dir = repo.working_dir
-    lock_file = path.join(repo.working_dir, '.git', 'index.lock')
-    
+    lock_file = path.join(repo.working_dir, ".git", "index.lock")
+
     if path.exists(lock_file):
         logger.error(f"GIT : REPO LOCKED {repo_dir}")
         sleep(5)
@@ -186,7 +188,6 @@ class Git_manager:
         """
         logger.debug("GIT : READ VERSIONS (COMMITS AND TAGS)")
         return {"tags": self.get_tags(), "commits": self.get_commits()}
-    
 
     def get_tags(self):
         """

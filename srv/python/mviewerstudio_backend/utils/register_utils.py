@@ -63,7 +63,9 @@ class ConfigRegister:
             self._configs_files_to_register()
             logger.info("REGISTER : CREATE PROCESS SUCCESS")
         except:
-            logger.error("REGISTER : CREATE PROCESS FAIL - Please control each app files")
+            logger.error(
+                "REGISTER : CREATE PROCESS FAIL - Please control each app files"
+            )
 
     def _delete_register(self):
         """
@@ -110,8 +112,6 @@ class ConfigRegister:
                 logger.error(f"REGISTER : FAIL TO PROCESS {app_path}")
                 logger.error(e)
             logger.debug(f"REGISTER : APP PROCESS END")
-
-                
 
     def update_register(self, json_dict=None):
         """
