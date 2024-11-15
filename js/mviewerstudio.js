@@ -355,24 +355,6 @@ var deleteLayerItem = function (btn, themeid) {
   el && el.parentNode.removeChild(el);
 };
 
-var sortableThemeList = Sortable.create(document.getElementById("themes-list"), {
-  handle: ".moveList",
-  animation: 150,
-  ghostClass: "ghost",
-  onEnd: function (evt) {
-    sortThemes();
-  },
-});
-
-sortThemes = function () {
-  var orderedThemes = {};
-  $(".themes-list-item").each(function (i, item) {
-    var id = $(this).attr("data-themeid");
-    orderedThemes[id] = config.themes[id];
-  });
-  config.themes = orderedThemes;
-};
-
 setConf = (key, value) => {
   _conf[key] = value;
 };
@@ -397,7 +379,7 @@ var addLayer = function (title, layerid, themeid) {
     saveThemes();
   }
   var item = $(`#themeLayers-${themeid}`).append(`
-        <div class="list-group-item layers-list-item" data-layerid="${layerid}">
+        <div class="list-group-item layers-list-item nested-3" data-layerid="${layerid}">
             <span class="layer-name moveList">${title}</span>
             <div class="layer-options-btn" style="display:inline-flex; justify-content: end;">
                 <button class="btn btn-sm btn-secondary" onclick={mv.setCurrentThemeId("${themeid}");}><span class="layer-move moveList" i18n="move" title="Déplacer"><i class="bi bi-arrows-move"></i></span></button>
@@ -405,6 +387,44 @@ var addLayer = function (title, layerid, themeid) {
                 <button class="btn btn-sm btn-info" onclick="editLayer(this, '${themeid}', '${layerid}');"><span class="layer-edit" i18n="edit_layer" title="Editer cette couche"><i class="bi bi-gear-fill"></i></span></button>
             </div>
         </div>`);
+};
+
+var addGroup = (themeid) => {
+  // test if theme is saved
+  if (!config.themes[themeid]) {
+    saveThemes();
+  }
+  const title = "Nouveau groupe";
+  const item = $(`#themeGroups-${themeid}`).append(`
+    <div id="group-${mv.uuid()}" class="list-group-item nested-2">
+      <div class="layers-list-item">
+        <input type="text" class="group-name form-control col-4 d-inline" value="${title}" aria-label="title">
+        <div class="layer-options-btn" style="display:inline-flex; justify-content: end;">
+            <button class="btn btn-sm btn-secondary" onclick={mv.setCurrentThemeId("${themeid}");}><span class="layer-move moveList" i18n="move" title="Déplacer"><i class="bi bi-arrows-move"></i></span></button>
+            <button class="btn btn-sm btn-secondary deleteLayerButton" onclick="deleteGroupItem(this, '${themeid}');"><span class="layer-remove" i18n="delete" title="Supprimer"><i class="bi bi-x-circle"></i></span></button>
+        </div>
+      </div>
+      <div class="list-group nested-sortable mt-3 mb-2">
+        <div class="list-group-item layers-list-item nested-3" data-layerid="rdgrtsgstrg">
+            <span class="layer-name moveList">TRUC 01</span>
+            <div class="layer-options-btn" style="display:inline-flex; justify-content: end;">
+                <button class="btn btn-sm btn-secondary" onclick={mv.setCurrentThemeId("${themeid}");}><span class="layer-move moveList" i18n="move" title="Déplacer"><i class="bi bi-arrows-move"></i></span></button>
+                <button class="btn btn-sm btn-secondary deleteLayerButton" onclick="deleteLayerItem(this, '${themeid}');"><span class="layer-remove" i18n="delete" title="Supprimer"><i class="bi bi-x-circle"></i></span></button>
+                <button class="btn btn-sm btn-info" onclick="editLayer(this, '${themeid}', 'rdgrtsgstrg');"><span class="layer-edit" i18n="edit_layer" title="Editer cette couche"><i class="bi bi-gear-fill"></i></span></button>
+            </div>
+        </div>
+        <div class="list-group-item layers-list-item nested-3" data-layerid="reqstgfbs">
+            <span class="layer-name moveList">TRUC 02</span>
+            <div class="layer-options-btn" style="display:inline-flex; justify-content: end;">
+                <button class="btn btn-sm btn-secondary" onclick={mv.setCurrentThemeId("${themeid}");}><span class="layer-move moveList" i18n="move" title="Déplacer"><i class="bi bi-arrows-move"></i></span></button>
+                <button class="btn btn-sm btn-secondary deleteLayerButton" onclick="deleteLayerItem(this, '${themeid}');"><span class="layer-remove" i18n="delete" title="Supprimer"><i class="bi bi-x-circle"></i></span></button>
+                <button class="btn btn-sm btn-info" onclick="editLayer(this, '${themeid}', 'reqstgfbs');"><span class="layer-edit" i18n="edit_layer" title="Editer cette couche"><i class="bi bi-gear-fill"></i></span></button>
+            </div>
+        </div>
+      </div>
+    </div>`);
+  initializeNestedSortables();
+  return item;
 };
 
 var editLayer = function (item, themeid, layerid) {
@@ -435,11 +455,31 @@ var importThemes = function () {
   $("#mod-themesview").modal("hide");
 };
 
+sortThemes = function () {
+  var orderedThemes = {};
+  $(".themes-list-item").each(function (i, item) {
+    var id = $(this).attr("data-themeid");
+    orderedThemes[id] = config.themes[id];
+  });
+  config.themes = orderedThemes;
+};
+
+var sortableThemeList = Sortable.create(document.getElementById("themes-list"), {
+  handle: ".moveList",
+  animation: 150,
+  ghostClass: "ghost",
+  onEnd: function (evt) {
+    sortThemes();
+  },
+});
+
 var sortableElement = function (targetId, callback) {
   Sortable.create(document.getElementById(targetId), {
     handle: ".moveList",
     animation: 150,
     ghostClass: "ghost",
+    fallbackOnBody: true,
+    swapThreshold: 0.65,
     onEnd: function (evt) {
       callback(evt);
     },
@@ -447,11 +487,40 @@ var sortableElement = function (targetId, callback) {
 };
 sortableElement("themes-list", sortThemes);
 
+function initializeNestedSortables() {
+  const nestedSortables = document.querySelectorAll(".nested-sortable");
+
+  nestedSortables.forEach((sortableElement) => {
+    if (!sortableElement.getAttribute("data-sortable-initialized")) {
+      new Sortable(sortableElement, {
+        handle: ".moveList",
+        animation: 150,
+        ghostClass: "ghost",
+        fallbackOnBody: true,
+        swapThreshold: 0.65,
+        group: {
+          name: "nested",
+          pull: true,
+          put: true,
+        },
+        onEnd: function (evt) {
+          console.log(`Élément déplacé de ${evt.from.id} vers ${evt.to.id}`);
+        },
+      });
+      // Marquer cet élément comme "initialisé" pour éviter les doublons
+      sortableElement.setAttribute("data-sortable-initialized", true);
+    }
+  });
+}
+
+// Initialisation au chargement du DOM
+initializeNestedSortables();
+
 var addTheme = function (title, collapsed, themeid, icon, url, layersvisibility) {
   if (url) {
     //external theme
     $("#themes-list").append(`
-            <div class="list-group-item list-group-item themes-list-item" data-theme-url="${url}" data-theme="${title}" data-themeid="${themeid}" data-theme-collapsed="${collapsed}" data-theme-icon="${icon}" data-theme-layersvisibility="${layersvisibility}">
+            <div class="list-group-item list-group-item bg-light themes-list-item my-2" data-theme-url="${url}" data-theme="${title}" data-themeid="${themeid}" data-theme-collapsed="${collapsed}" data-theme-icon="${icon}" data-theme-layersvisibility="${layersvisibility}">
                 <div class="theme-infos">
                     <span class="theme-name moveList" contentEditable="true">${title}</span><span class="theme-infos-layer">Ext.</span>
                 </div>
@@ -463,10 +532,10 @@ var addTheme = function (title, collapsed, themeid, icon, url, layersvisibility)
             </div>`);
   } else {
     $("#themes-list").append(
-      `<div class="list-group-item themes-list-item" id="${themeid}" data-theme="${title}" data-themeid="${themeid}" data-theme-collapsed="${collapsed}" data-theme-icon="${icon}">
+      `<div class="list-group-item bg-light themes-list-item nested-1 my-2" id="${themeid}" data-theme="${title}" data-themeid="${themeid}" data-theme-collapsed="${collapsed}" data-theme-icon="${icon}">
           <div class="theme-infos ">
               <span type="button" class="selected-icon ${icon} picker-button" data-bs-target="#iconPicker" data-bs-toggle="modal"></span>
-              <input type="text" class="theme-name" value="${title}" aria-label="title">
+              <input type="text" class="theme-name form-control col-6 d-inline" value="${title}" aria-label="title">
               <span class="theme-infos-layer">0</span>
               <div class="custom-control custom-switch m-2">
                 <input type="checkbox" class="custom-control-input" id="${themeid}-theme-edit-collapsed" ${collapsed === "false" ? "checked" : ""}>
@@ -474,14 +543,18 @@ var addTheme = function (title, collapsed, themeid, icon, url, layersvisibility)
               </div>
           </div>
           <div class="theme-options-btn text-right">
+              <button onclick="mv.setCurrentThemeId('${themeid}'), addGroup('${themeid}'), mv.getConfGroups();" class="btn btn-sm btn-outline-info" id="btn-addGroup-${themeid}" data-themeid="${themeid}" ><i class="bi bi-plus-lg"></i>Groupe</button>
               <button onclick={mv.setCurrentThemeId("${themeid}");} class="btn btn-sm btn-outline-info" id="btn-addLayer-${themeid}" data-bs-target="#mod-layerNew" data-themeid="${themeid}" data-bs-toggle="modal"><i class="bi bi-plus-lg"></i> Ajouter une donnée</button>
               <button class="btn btn-sm btn-secondary"><span class="theme-move moveList" title="Déplacer"><i class="bi bi-arrows-move"></i></span></button>
               <button class="btn btn-sm btn-secondary" onclick="deleteThemeItem(this);" ><span class="theme-remove" title="Supprimer"><i class="bi bi-x-circle"></i></span></button>               
-          </div>                        
-          <div id="themeLayers-${themeid}" class="theme-layer-list list-group mt-3 mb-2"></div>
+          </div>
+          <div>
+            <div id="themeGroups-${themeid}" class="theme-group-list list-group mt-3 mb-2 nested-sortable"></div>
+            <div id="themeLayers-${themeid}" class="theme-layer-list list-group mt-3 mb-2 nested-sortable"></div>
+          </div>
       </div>`
     );
-    sortableElement("themeLayers-" + themeid, sortLayers);
+    initializeNestedSortables();
   }
   config.themes[themeid] = {
     title: title,
