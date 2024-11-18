@@ -389,14 +389,13 @@ var addLayer = function (title, layerid, themeid) {
         </div>`);
 };
 
-var addGroup = (themeid) => {
+var addGroup = (themeid, title, groupId) => {
   // test if theme is saved
   if (!config.themes[themeid]) {
     saveThemes();
   }
-  const title = "Nouveau groupe";
   const item = $(`#themeGroups-${themeid}`).append(`
-    <div id="group-${mv.uuid()}" class="list-group-item nested-2">
+    <div id="${groupId}" class="group-item list-group-item nested-2">
       <div class="layers-list-item">
         <input type="text" class="group-name form-control col-4 d-inline" value="${title}" aria-label="title">
         <div class="layer-options-btn" style="display:inline-flex; justify-content: end;">
@@ -404,24 +403,7 @@ var addGroup = (themeid) => {
             <button class="btn btn-sm btn-secondary deleteLayerButton" onclick="deleteGroupItem(this, '${themeid}');"><span class="layer-remove" i18n="delete" title="Supprimer"><i class="bi bi-x-circle"></i></span></button>
         </div>
       </div>
-      <div class="list-group nested-sortable mt-3 mb-2">
-        <div class="list-group-item layers-list-item nested-3" data-layerid="rdgrtsgstrg">
-            <span class="layer-name moveList">TRUC 01</span>
-            <div class="layer-options-btn" style="display:inline-flex; justify-content: end;">
-                <button class="btn btn-sm btn-secondary" onclick={mv.setCurrentThemeId("${themeid}");}><span class="layer-move moveList" i18n="move" title="Déplacer"><i class="bi bi-arrows-move"></i></span></button>
-                <button class="btn btn-sm btn-secondary deleteLayerButton" onclick="deleteLayerItem(this, '${themeid}');"><span class="layer-remove" i18n="delete" title="Supprimer"><i class="bi bi-x-circle"></i></span></button>
-                <button class="btn btn-sm btn-info" onclick="editLayer(this, '${themeid}', 'rdgrtsgstrg');"><span class="layer-edit" i18n="edit_layer" title="Editer cette couche"><i class="bi bi-gear-fill"></i></span></button>
-            </div>
-        </div>
-        <div class="list-group-item layers-list-item nested-3" data-layerid="reqstgfbs">
-            <span class="layer-name moveList">TRUC 02</span>
-            <div class="layer-options-btn" style="display:inline-flex; justify-content: end;">
-                <button class="btn btn-sm btn-secondary" onclick={mv.setCurrentThemeId("${themeid}");}><span class="layer-move moveList" i18n="move" title="Déplacer"><i class="bi bi-arrows-move"></i></span></button>
-                <button class="btn btn-sm btn-secondary deleteLayerButton" onclick="deleteLayerItem(this, '${themeid}');"><span class="layer-remove" i18n="delete" title="Supprimer"><i class="bi bi-x-circle"></i></span></button>
-                <button class="btn btn-sm btn-info" onclick="editLayer(this, '${themeid}', 'reqstgfbs');"><span class="layer-edit" i18n="edit_layer" title="Editer cette couche"><i class="bi bi-gear-fill"></i></span></button>
-            </div>
-        </div>
-      </div>
+      <div class="list-group list-group-item nested-sortable mt-3 mb-2"></div>
     </div>`);
   initializeNestedSortables();
   return item;
@@ -469,6 +451,7 @@ var sortableThemeList = Sortable.create(document.getElementById("themes-list"), 
   animation: 150,
   ghostClass: "ghost",
   onEnd: function (evt) {
+    console.log("Move thème");
     sortThemes();
   },
 });
@@ -543,7 +526,7 @@ var addTheme = function (title, collapsed, themeid, icon, url, layersvisibility)
               </div>
           </div>
           <div class="theme-options-btn text-right">
-              <button onclick="mv.setCurrentThemeId('${themeid}'), addGroup('${themeid}'), mv.getConfGroups();" class="btn btn-sm btn-outline-info" id="btn-addGroup-${themeid}" data-themeid="${themeid}" ><i class="bi bi-plus-lg"></i>Groupe</button>
+              <button onclick="mv.setCurrentThemeId('${themeid}'), mv.getConfGroups();" class="btn btn-sm btn-outline-info" id="btn-addGroup-${themeid}" data-themeid="${themeid}" ><i class="bi bi-plus-lg"></i>Groupe</button>
               <button onclick={mv.setCurrentThemeId("${themeid}");} class="btn btn-sm btn-outline-info" id="btn-addLayer-${themeid}" data-bs-target="#mod-layerNew" data-themeid="${themeid}" data-bs-toggle="modal"><i class="bi bi-plus-lg"></i> Ajouter une donnée</button>
               <button class="btn btn-sm btn-secondary"><span class="theme-move moveList" title="Déplacer"><i class="bi bi-arrows-move"></i></span></button>
               <button class="btn btn-sm btn-secondary" onclick="deleteThemeItem(this);" ><span class="theme-remove" title="Supprimer"><i class="bi bi-x-circle"></i></span></button>               
@@ -956,6 +939,11 @@ var getConfig = () => {
             '">',
         ];
       }
+      $(t.groups).each((i, g) => {
+        var group = mv.writeGroupNode(g);
+        theme.push(group);
+      });
+
       $(t.layers).each(function (i, l) {
         var layer = mv.writeLayerNode(l);
         theme.push(layer);
@@ -985,6 +973,7 @@ var getConfig = () => {
     themes.join(" "),
     padding(0) + "</config>",
   ];
+  console.log({ conf });
 
   return conf;
 };
@@ -1020,6 +1009,8 @@ let previewAppsWithoutSave = (id, showPublish) => {
     return window.open(previewUrl, "mvs_vizualize");
   }
   const confXml = getConfig();
+  console.log({ confXml });
+
   if (!confXml || (confXml && !mv.validateXML(confXml.join("")))) {
     return alertCustom("XML invalide !", "danger");
   }
@@ -1142,6 +1133,8 @@ var saveApplicationParameters = (close) => {
 };
 
 var saveAppWithPython = (exists, conf, url, close) => {
+  console.log("conf python : ", conf);
+
   return fetch(url, {
     method: exists ? "PUT" : "POST",
     headers: {

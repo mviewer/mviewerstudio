@@ -689,7 +689,7 @@
 			flex: 1 50%;
 		}
 	
-		.themes-list-item .theme-layer-list {
+		.themes-list-item .theme-layer-list  .theme-group-list {
 			flex: 1!important;
 		}
 	
