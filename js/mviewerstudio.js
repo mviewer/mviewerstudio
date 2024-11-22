@@ -385,7 +385,7 @@ var addLayer = function (title, layerid, themeid, groupid) {
     saveThemes();
   }
   var item = $(groupid ? `#${groupid} .list-group` : `#themeLayers-${themeid}`).append(`
-        <div id="${layerid}" class="list-group-item layers-list-item nested-3" data-layerid="${layerid}" data-themeid="${themeid}" data-groupid="${groupid}">
+        <div id="${layerid}" class="layer_item list-group-item layers-list-item nested-3" data-layerid="${layerid}" data-themeid="${themeid}" data-groupid="${groupid}">
             <span class="layer-name moveList">${title}</span>
             <div class="layer-options-btn" style="display:inline-flex; justify-content: end;">
                 <button class="btn btn-sm btn-secondary" onclick={mv.setCurrentThemeId("${themeid}");}><span class="layer-move moveList" i18n="move" title="Déplacer"><i class="bi bi-arrows-move"></i></span></button>
@@ -410,7 +410,7 @@ var addGroup = (themeid, title, groupId) => {
             <button class="btn btn-sm btn-secondary deleteLayerButton" onclick="deleteGroupItem(this, '${themeid}');"><span class="group-remove" i18n="delete" title="Supprimer"><i class="bi bi-x-circle"></i></span></button>
         </div>
       </div>
-      <div class="list-group list-group-item nested-sortable mt-3 mb-2"></div>
+      <div class="layer_item list-group list-group-item nested-sortable mt-3 mb-2 min-h-1"></div>
     </div>`);
   initializeNestedSortables();
   return item;
@@ -501,6 +501,7 @@ function initializeNestedSortables() {
           const toGroupId = evt.to.closest(".group-item")?.id
             ? evt.to.closest(".group-item").id
             : null;
+          const newIndex = evt.newIndex;
 
           item.setAttribute("data-groupid", toGroupId);
           item.setAttribute("data-themeid", toThemeId);
@@ -527,14 +528,16 @@ function initializeNestedSortables() {
               // Si le thème n'a pas de layer, on set theme.layers à []
               if (!config.themes[fromThemeId].layers)
                 config.themes[fromThemeId].layers = [];
-              // Si le groupe n'a pas de layers, on set group.layers à []
-              if (
-                !config.themes[toThemeId].groups.find((group) => group.id === toGroupId)
-                  .layers
-              )
-                config.themes[toThemeId].groups.find(
-                  (group) => group.id === toGroupId
-                ).layers = [];
+              // Si le groupe d'arrivé n'a pas de layers, on set group.layers à []
+              if (toGroupId)
+                if (
+                  !config.themes[toThemeId].groups.find((group) => group.id === toGroupId)
+                    .layers
+                )
+                  config.themes[toThemeId].groups.find(
+                    (group) => group.id === toGroupId
+                  ).layers = [];
+
               const [itemToMove] = fromGroupId
                 ? config.themes[fromThemeId].groups
                     .find((group) => group.id === fromGroupId)
@@ -543,8 +546,8 @@ function initializeNestedSortables() {
               toGroupId
                 ? config.themes[toThemeId].groups
                     .find((group) => group.id === toGroupId)
-                    .layers.push(itemToMove)
-                : config.themes[toThemeId].layers.push(itemToMove);
+                    .layers.splice(newIndex, 0, itemToMove)
+                : config.themes[toThemeId].layers.splice(newIndex, 0, itemToMove);
             }
           } else {
             // sinon item est un groupe
@@ -605,8 +608,8 @@ var addTheme = function (title, collapsed, themeid, icon, url, layersvisibility)
               <button class="btn btn-sm btn-secondary" onclick="deleteThemeItem(this);" ><span class="theme-remove" title="Supprimer"><i class="bi bi-x-circle"></i></span></button>               
           </div>
           <div>
-            <div id="themeGroups-${themeid}" class="theme-group-list list-group mt-3 mb-2 nested-sortable"></div>
-            <div id="themeLayers-${themeid}" class="theme-layer-list list-group mt-3 mb-2 nested-sortable"></div>
+            <div id="themeGroups-${themeid}" class="group_list theme-group-list list-group mt-3 mb-2 p-2 nested-sortable"> Groupes </div>
+            <div id="themeLayers-${themeid}" class="layer_item theme-layer-list list-group mt-3 mb-2 p-2 nested-sortable"> Couches </div>
           </div>
       </div>`
     );
@@ -682,9 +685,11 @@ var saveGroups = () => {
       const gr = $(`div[id="${groupId}"]`);
       const groupTitle = gr.find(".group-name").val();
 
-      config.themes[themeId].groups.find((group) => group.id === groupId).id = groupId;
-      config.themes[themeId].groups.find((group) => group.id === groupId).title =
-        groupTitle;
+      if (config.themes[themeId].groups) {
+        config.themes[themeId].groups.find((group) => group.id === groupId).id = groupId;
+        config.themes[themeId].groups.find((group) => group.id === groupId).title =
+          groupTitle;
+      }
     }
   }
 };
