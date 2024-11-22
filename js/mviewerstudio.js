@@ -268,13 +268,10 @@ var newConfiguration = function (infos) {
     "opt-studio",
     "opt-measuretools",
     "opt-initialextenttool",
-    "theme-edit-collapsed",
     "opt-mini",
     "opt-showhelp",
     "opt-coordinates",
     "opt-togglealllayersfromtheme",
-    "opt-mapprint",
-    "opt-addlayerstools",
     "SwitchCustomBackground",
     "SwitchAdvanced",
   ].forEach((id) => {
@@ -309,7 +306,7 @@ var newConfiguration = function (infos) {
   };
   //Store des parametres non gérés
   savedParameters = { application: [], baselayers: {} };
-  $("#themes-list, #themeLayers, #liste_applications, #distinct_values")
+  $("#themes-list, #liste_applications, #distinct_values")
     .find(".list-group-item")
     .remove();
   $("#frm-bl .custom-bl").remove();
@@ -345,15 +342,6 @@ var loadLayers = function (themeid) {
   }
 };
 
-var sortableLayerList = Sortable.create(document.getElementById("themeLayers"), {
-  handle: ".moveList",
-  animation: 150,
-  ghostClass: "ghost",
-  onEnd: function (evt) {
-    sortLayers(evt.oldIndex, evt.newIndex);
-  },
-});
-
 var deleteThemeItem = function (btn) {
   var el = $(btn).closest(".list-group-item")[0];
   var themeid = $(el).attr("data-themeid");
@@ -361,9 +349,9 @@ var deleteThemeItem = function (btn) {
   el && el.parentNode.removeChild(el);
 };
 
-var deleteLayerItem = function (btn) {
+var deleteLayerItem = function (btn, themeid) {
   var el = $(btn).closest(".layers-list-item")[0];
-  deleteLayer(el.getAttribute("data-layerid"));
+  deleteLayer(el.getAttribute("data-layerid"), themeid);
   el && el.parentNode.removeChild(el);
 };
 
@@ -392,7 +380,7 @@ setConf = (key, value) => {
 getConf = (key) => _conf[key];
 
 sortLayers = function (fromIndex, toIndex) {
-  var themeid = $("#themes-list .active").attr("data-themeid");
+  var themeid = mv.getCurrentThemeId();
   var arr = config.themes[themeid].layers;
   var element = arr[fromIndex];
   arr.splice(fromIndex, 1);
@@ -403,42 +391,35 @@ $("input[type=file]").change(function () {
   loadApplicationParametersFromFile();
 });
 
-var addLayer = function (title, layerid, index) {
+var addLayer = function (title, layerid, themeid) {
   // test if theme is saved
-  if (!config.themes[$("#theme-edit").attr("data-themeid")]) {
-    saveTheme();
+  if (!config.themes[themeid]) {
+    saveThemes();
   }
-  var item = $("#themeLayers").append(`
+  var item = $(`#themeLayers-${themeid}`).append(`
         <div class="list-group-item layers-list-item" data-layerid="${layerid}">
             <span class="layer-name moveList">${title}</span>
             <div class="layer-options-btn" style="display:inline-flex; justify-content: end;">
-                <button class="btn btn-sm btn-secondary"><span class="layer-move moveList" i18n="move" title="Déplacer"><i class="bi bi-arrows-move"></i></span></button>
-                <button class="btn btn-sm btn-secondary" onclick="deleteLayerItem(this);"><span class="layer-remove" i18n="delete" title="Supprimer"><i class="bi bi-x-circle"></i></span></button>
-                <button class="btn btn-sm btn-info" onclick="editLayer(this);"><span class="layer-edit" i18n="edit_layer" title="Editer cette couche"><i class="bi bi-gear-fill"></i></span></button>
+                <button class="btn btn-sm btn-secondary" onclick={mv.setCurrentThemeId("${themeid}");}><span class="layer-move moveList" i18n="move" title="Déplacer"><i class="bi bi-arrows-move"></i></span></button>
+                <button class="btn btn-sm btn-secondary deleteLayerButton" onclick="deleteLayerItem(this, '${themeid}');"><span class="layer-remove" i18n="delete" title="Supprimer"><i class="bi bi-x-circle"></i></span></button>
+                <button class="btn btn-sm btn-info" onclick="editLayer(this, '${themeid}', '${layerid}');"><span class="layer-edit" i18n="edit_layer" title="Editer cette couche"><i class="bi bi-gear-fill"></i></span></button>
             </div>
         </div>`);
-
-  // TODO : Need to be delete soon if useless
-  if (title === mviewer.tr("title.new.layer")) {
-    item.find(".layer-edit").last().click();
-  }
 };
 
-var editLayer = function (item) {
-  $("#themeLayers .list-group-item").removeClass("active");
+var editLayer = function (item, themeid, layerid) {
+  mv.setCurrentThemeId(themeid);
+  mv.setCurrentLayerId(layerid);
   var element = $(item).parent().parent();
-  element.addClass("active");
-  var title = element.find(".layer-name").text();
   var layerid = element.attr("data-layerid");
+
   if (layerid != "undefined") {
     $("#mod-layerOptions").modal("show");
-    $("#mod-themeOptions").modal("hide");
-    mv.showLayerOptions(element);
+    mv.showLayerOptions(element, themeid, layerid);
   } else {
     $("#input-ogc-filter").val("");
     $("#csw-results .csw-result").remove();
     $("#mod-layerNew").modal("show");
-    $("#mod-themeOptions").modal("hide");
   }
 };
 
@@ -454,17 +435,25 @@ var importThemes = function () {
   $("#mod-themesview").modal("hide");
 };
 
+var sortableElement = function (targetId, callback) {
+  Sortable.create(document.getElementById(targetId), {
+    handle: ".moveList",
+    animation: 150,
+    ghostClass: "ghost",
+    onEnd: function (evt) {
+      callback(evt);
+    },
+  });
+};
+sortableElement("themes-list", sortThemes);
+
 var addTheme = function (title, collapsed, themeid, icon, url, layersvisibility) {
-  if ($("#mod-themeOptions").is(":visible")) {
-    alert(mviewer.tr("msg.save_theme_first"));
-    return;
-  }
   if (url) {
     //external theme
     $("#themes-list").append(`
             <div class="list-group-item list-group-item themes-list-item" data-theme-url="${url}" data-theme="${title}" data-themeid="${themeid}" data-theme-collapsed="${collapsed}" data-theme-icon="${icon}" data-theme-layersvisibility="${layersvisibility}">
                 <div class="theme-infos">
-                    <span class="theme-name moveList">${title}</span><span class="theme-infos-layer">Ext.</span>
+                    <span class="theme-name moveList" contentEditable="true">${title}</span><span class="theme-infos-layer">Ext.</span>
                 </div>
                 <div class="theme-options-btn">
                     <button class="btn btn-sm btn-secondary" ><span class="theme-move moveList" id18="move" title="Déplacer"><i class="bi bi-arrows-move"></i></span></button>
@@ -474,29 +463,25 @@ var addTheme = function (title, collapsed, themeid, icon, url, layersvisibility)
             </div>`);
   } else {
     $("#themes-list").append(
-      [
-        '<div class="list-group-item themes-list-item" data-theme="' +
-          title +
-          '" data-themeid="' +
-          themeid +
-          '" data-theme-collapsed="' +
-          collapsed +
-          '" data-theme-icon="' +
-          icon +
-          '">',
-        '<div class="theme-infos">',
-        '<span class="theme-name moveList">' +
-          title +
-          '</span><span class="theme-infos-layer">0</span>',
-        "</div>",
-        '<div class="theme-options-btn">',
-        '<button class="btn btn-sm btn-secondary" ><span class="theme-move moveList" i18n="move" title="Déplacer"><i class="bi bi-arrows-move"></i></span></button>',
-        '<button class="btn btn-sm btn-secondary" onclick="deleteThemeItem(this);" ><span class="theme-remove" i18n="delete" title="Supprimer"><i class="bi bi-x-circle"></i></span></button>',
-        '<button class="btn btn-sm btn-info" onclick="editTheme(this);"><span class="theme-edit" title="Editer i18n="edit_layer" ce thème"><i class="bi bi-gear-fill"></i></span></button>',
-        "</div>",
-        "</div>",
-      ].join("")
+      `<div class="list-group-item themes-list-item" id="${themeid}" data-theme="${title}" data-themeid="${themeid}" data-theme-collapsed="${collapsed}" data-theme-icon="${icon}">
+          <div class="theme-infos ">
+              <span type="button" class="selected-icon ${icon} picker-button" data-bs-target="#iconPicker" data-bs-toggle="modal"></span>
+              <input type="text" class="theme-name" value="${title}" aria-label="title">
+              <span class="theme-infos-layer">0</span>
+              <div class="custom-control custom-switch m-2">
+                <input type="checkbox" class="custom-control-input" id="${themeid}-theme-edit-collapsed" ${collapsed === "false" ? "checked" : ""}>
+                <label class="custom-control-label" for="${themeid}-theme-edit-collapsed"><span i18n="modal.theme.paramspanel.opt_unfolded">Déroulée par défaut</span></label>
+              </div>
+          </div>
+          <div class="theme-options-btn text-right">
+              <button onclick={mv.setCurrentThemeId("${themeid}");} class="btn btn-sm btn-outline-info" id="btn-addLayer-${themeid}" data-bs-target="#mod-layerNew" data-themeid="${themeid}" data-bs-toggle="modal"><i class="bi bi-plus-lg"></i> Ajouter une donnée</button>
+              <button class="btn btn-sm btn-secondary"><span class="theme-move moveList" title="Déplacer"><i class="bi bi-arrows-move"></i></span></button>
+              <button class="btn btn-sm btn-secondary" onclick="deleteThemeItem(this);" ><span class="theme-remove" title="Supprimer"><i class="bi bi-x-circle"></i></span></button>               
+          </div>                        
+          <div id="themeLayers-${themeid}" class="theme-layer-list list-group mt-3 mb-2"></div>
+      </div>`
     );
+    sortableElement("themeLayers-" + themeid, sortLayers);
   }
   config.themes[themeid] = {
     title: title,
@@ -509,54 +494,49 @@ var addTheme = function (title, collapsed, themeid, icon, url, layersvisibility)
   };
 };
 
-var editTheme = function (item) {
-  $("#themes-list .list-group-item").removeClass("active");
-  $(item).parent().parent().addClass("active");
-  var title = $(item).parent().parent().attr("data-theme");
-  var themeid = $(item).parent().parent().attr("data-themeid");
-  var collapsed =
-    $(item).parent().parent().attr("data-theme-collapsed") === "true" ? false : true;
-  var icon = $(item).parent().parent().attr("data-theme-icon");
-  if (icon === "undefined") icon = "fas fa-caret-right";
+// Only one checkbox "collapsed" checked
+$("#themes-list").on("change", ".custom-control-input", function () {
+  if ($(this).is(":checked")) {
+    $("#themes-list .custom-control-input").not(this).prop("checked", false);
+  }
+});
 
-  $("#mod-themeOptions").modal("show");
-  $("#theme-edit-title").val(title);
-  $("#theme-edit-collapsed").prop("checked", collapsed);
-  $("#theme-edit").attr("data-themeid", themeid);
-  $("#theme-pick-icon").val(icon);
-  $("#theme-pick-icon").siblings(".selected-icon").attr("class", "selected-icon");
-  $("#theme-pick-icon").siblings(".selected-icon").addClass(icon);
+document
+  .getElementById("mod-layerNew")
+  .addEventListener("show.bs.modal", function (event) {
+    // `event.relatedTarget` est l'élément déclencheur (le bouton)
+    const button = event.relatedTarget;
+    const themeId = button.getAttribute("data-themeid");
+    const selectLayersButton = document.getElementById("selectLayersButton");
+    selectLayersButton.setAttribute("data-themeid", themeId);
+  });
 
-  //Remove old layers entries
-  $(".layers-list-item").remove();
-  //Show layerslm
-  loadLayers(themeid);
-};
+// Update layers counter
+$("#mod-layerNew").on("click", "#selectLayersButton", function () {
+  const themeId = mv.getCurrentThemeId();
+  const th = $(`div[data-themeid="${themeId}"]`);
+  var nb_layers = $(`#${themeId} .theme-layer-list`).children(".list-group-item").length;
+  th.find(".theme-infos-layer").text(nb_layers);
+});
 
-var saveTheme = function () {
-  //get active item in left panel
-  var theme = $("#themes-list .active");
-  //get edited values (right panel)
-  var title = $("#theme-edit-title").val();
-  var themeid = $("#theme-edit").attr("data-themeid");
-  var collapsed = !$("#theme-edit-collapsed").prop("checked");
-  var icon = $.trim($("#theme-pick-icon").val());
-  //update values in left panel
-  theme.attr("data-theme", title);
-  theme.attr("data-theme-collapsed", collapsed);
-  theme.attr("data-theme-icon", icon);
-  theme.find(".theme-name").text(title);
-  var nb_layers = $("#themeLayers .list-group-item").length;
-  theme.find(".theme-infos-layer").text(nb_layers);
-  //deactivate theme edition
-  $("#themes-list .list-group-item").removeClass("active");
-  $("#mod-themeOptions").modal("hide");
+// New save function to override old one to edit and save all the themes at the same time now.
+var saveThemes = function () {
+  const themes = $(".themes-list-item");
+  for (i = 0; i < themes.length; i++) {
+    const theme = themes[i];
+    const themeid = theme.getAttribute("data-themeid");
+    const th = $(`div[data-themeid="${themeid}"]`);
+    const title = th.attr("data-theme-url")
+      ? theme.getAttribute("data-theme")
+      : th.find(".theme-name").val();
+    const icon = th.attr("data-theme-icon");
+    const collapsed = !$(`#${themeid}-theme-edit-collapsed`).prop("checked");
 
-  //save theme locally
-  config.themes[themeid].title = title;
-  config.themes[themeid].id = themeid;
-  config.themes[themeid].collapsed = collapsed;
-  config.themes[themeid].icon = icon;
+    config.themes[themeid].title = title;
+    config.themes[themeid].id = themeid;
+    config.themes[themeid].collapsed = collapsed;
+    config.themes[themeid].icon = icon;
+  }
 };
 
 var editThemeExt = function (item) {
@@ -588,12 +568,10 @@ var saveThemeExt = function () {
 };
 
 var deleteTheme = function (themeid) {
-  $("#mod-themeOptions").modal("hide");
   delete config.themes[themeid];
 };
 
-var deleteLayer = function (layerid) {
-  var themeid = $("#theme-edit").attr("data-themeid");
+var deleteLayer = function (layerid, themeid) {
   var index = config.themes[themeid].layers.findIndex(function (l) {
     return l.id === layerid;
   });
@@ -753,8 +731,6 @@ var getConfig = () => {
     'togglealllayersfromtheme="' +
       ($("#opt-togglealllayersfromtheme").prop("checked") === true) +
       '"',
-    'mapprint="' + ($("#opt-mapprint").prop("checked") === true) + '"',
-    'addlayerstools="' + ($("#opt-addlayerstools").prop("checked") === true) + '"',
   ];
 
   config.title = $("#opt-title").val();
@@ -871,6 +847,7 @@ var getConfig = () => {
   ];
   // Respect theme order
   $(".themes-list-item").each(function (id, theme) {
+    saveThemes();
     var themeid = $(theme).attr("data-themeid");
     if (config.themes[themeid]) {
       var t = config.themes[themeid];
@@ -1119,6 +1096,7 @@ var saveAppWithPython = (exists, conf, url, close) => {
     })
     .catch((err) => alertCustom(mviewer.tr("msg.save_failure"), "danger"));
 };
+
 var saveApplicationsConfig = (close, message = "") => {
   const conf = getConfig();
   if (!conf || !mv.validateXML(conf.join(""))) {
