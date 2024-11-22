@@ -51,6 +51,18 @@
 		.list-group-item {
 			background-color: #ffffff00;
 		}
+	
+		.group_list {
+			background-color: #e1e1e1;
+		}
+	
+		.layer_item {
+			background-color: #e1e1e1;
+		}
+	
+		.group_list .layer_item {
+			background-color: #c5c5c5;
+		}
 		
 		.modal {
 			overflow-y: auto !important;
