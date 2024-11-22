@@ -355,6 +355,12 @@ var deleteLayerItem = function (btn, themeid) {
   el && el.parentNode.removeChild(el);
 };
 
+var deleteGroupItem = function (btn, themeid) {
+  var el = $(btn).closest(".list-group-item")[0];
+  deleteGroup(el.id, themeid);
+  el && el.parentNode.removeChild(el);
+};
+
 setConf = (key, value) => {
   _conf[key] = value;
 };
@@ -373,13 +379,13 @@ $("input[type=file]").change(function () {
   loadApplicationParametersFromFile();
 });
 
-var addLayer = function (title, layerid, themeid) {
+var addLayer = function (title, layerid, themeid, groupid) {
   // test if theme is saved
   if (!config.themes[themeid]) {
     saveThemes();
   }
-  var item = $(`#themeLayers-${themeid}`).append(`
-        <div class="list-group-item layers-list-item nested-3" data-layerid="${layerid}">
+  var item = $(groupid ? `#${groupid} .list-group` : `#themeLayers-${themeid}`).append(`
+        <div id="${layerid}" class="list-group-item layers-list-item nested-3" data-layerid="${layerid}" data-themeid="${themeid}" data-groupid="${groupid}">
             <span class="layer-name moveList">${title}</span>
             <div class="layer-options-btn" style="display:inline-flex; justify-content: end;">
                 <button class="btn btn-sm btn-secondary" onclick={mv.setCurrentThemeId("${themeid}");}><span class="layer-move moveList" i18n="move" title="Déplacer"><i class="bi bi-arrows-move"></i></span></button>
@@ -387,6 +393,7 @@ var addLayer = function (title, layerid, themeid) {
                 <button class="btn btn-sm btn-info" onclick="editLayer(this, '${themeid}', '${layerid}');"><span class="layer-edit" i18n="edit_layer" title="Editer cette couche"><i class="bi bi-gear-fill"></i></span></button>
             </div>
         </div>`);
+  return item;
 };
 
 var addGroup = (themeid, title, groupId) => {
@@ -395,12 +402,12 @@ var addGroup = (themeid, title, groupId) => {
     saveThemes();
   }
   const item = $(`#themeGroups-${themeid}`).append(`
-    <div id="${groupId}" class="group-item list-group-item nested-2">
+    <div id="${groupId}" class="group-item list-group-item nested-2" data-themeid="${themeid}">
       <div class="layers-list-item">
         <input type="text" class="group-name form-control col-4 d-inline" value="${title}" aria-label="title">
         <div class="layer-options-btn" style="display:inline-flex; justify-content: end;">
             <button class="btn btn-sm btn-secondary" onclick={mv.setCurrentThemeId("${themeid}");}><span class="layer-move moveList" i18n="move" title="Déplacer"><i class="bi bi-arrows-move"></i></span></button>
-            <button class="btn btn-sm btn-secondary deleteLayerButton" onclick="deleteGroupItem(this, '${themeid}');"><span class="layer-remove" i18n="delete" title="Supprimer"><i class="bi bi-x-circle"></i></span></button>
+            <button class="btn btn-sm btn-secondary deleteLayerButton" onclick="deleteGroupItem(this, '${themeid}');"><span class="group-remove" i18n="delete" title="Supprimer"><i class="bi bi-x-circle"></i></span></button>
         </div>
       </div>
       <div class="list-group list-group-item nested-sortable mt-3 mb-2"></div>
@@ -427,7 +434,6 @@ var editLayer = function (item, themeid, layerid) {
 
 var importThemes = function () {
   console.groupCollapsed("importThemes");
-  //console.log("external theme to import", _conf.external_themes.data);
   $("#tableThemaExt .selected").each(function (id, item) {
     var url = $(item).attr("data-url");
     var id = $(item).attr("data-theme-id");
@@ -451,7 +457,6 @@ var sortableThemeList = Sortable.create(document.getElementById("themes-list"), 
   animation: 150,
   ghostClass: "ghost",
   onEnd: function (evt) {
-    console.log("Move thème");
     sortThemes();
   },
 });
@@ -487,7 +492,75 @@ function initializeNestedSortables() {
           put: true,
         },
         onEnd: function (evt) {
-          console.log(`Élément déplacé de ${evt.from.id} vers ${evt.to.id}`);
+          const item = evt.item;
+          const fromThemeId = evt.from.closest(".themes-list-item")?.id;
+          const fromGroupId = evt.from.closest(".group-item")?.id
+            ? evt.from.closest(".group-item").id
+            : null;
+          const toThemeId = evt.to.closest(".themes-list-item")?.id;
+          const toGroupId = evt.to.closest(".group-item")?.id
+            ? evt.to.closest(".group-item").id
+            : null;
+
+          item.setAttribute("data-groupid", toGroupId);
+          item.setAttribute("data-themeid", toThemeId);
+
+          // Si item est un layer
+          if (item.classList.contains("layers-list-item")) {
+            config.themes[toThemeId].layers.forEach((layer) => {
+              if (layer.id === item.getAttribute("data-layerid")) {
+                layer["data-groupid"] = toGroupId;
+                layer["data-themeid"] = toThemeId;
+              }
+            });
+            // Cherche l'index de départ en fonction de si le layer bougé vient d'un groupe ou un thème
+            const index = fromGroupId
+              ? config.themes[fromThemeId].groups
+                  .find((group) => group.id === fromGroupId)
+                  .layers.findIndex((layer) => layer.id === item.id)
+              : config.themes[fromThemeId].layers.findIndex(
+                  (layer) => layer.id === item.id
+                );
+
+            // Si l'index éxiste, suppr l'item de la position de départ et l'ajoute à l'arrivée
+            if (index !== -1) {
+              // Si le thème n'a pas de layer, on set theme.layers à []
+              if (!config.themes[fromThemeId].layers)
+                config.themes[fromThemeId].layers = [];
+              // Si le groupe n'a pas de layers, on set group.layers à []
+              if (
+                !config.themes[toThemeId].groups.find((group) => group.id === toGroupId)
+                  .layers
+              )
+                config.themes[toThemeId].groups.find(
+                  (group) => group.id === toGroupId
+                ).layers = [];
+              const [itemToMove] = fromGroupId
+                ? config.themes[fromThemeId].groups
+                    .find((group) => group.id === fromGroupId)
+                    .layers.splice(index, 1)
+                : config.themes[fromThemeId].layers.splice(index, 1);
+              toGroupId
+                ? config.themes[toThemeId].groups
+                    .find((group) => group.id === toGroupId)
+                    .layers.push(itemToMove)
+                : config.themes[toThemeId].layers.push(itemToMove);
+            }
+          } else {
+            // sinon item est un groupe
+            config.themes[toThemeId].groups.forEach((group) => {
+              if (group.id === item.getAttribute("data-groupid")) {
+                group["data-themeid"] = toThemeId;
+              }
+            });
+            const index = config.themes[fromThemeId].groups.findIndex(
+              (group) => group.id === item.id
+            );
+            if (index !== -1) {
+              const [itemToMove] = config.themes[fromThemeId].groups.splice(index, 1);
+              config.themes[toThemeId].groups.push(itemToMove);
+            }
+          }
         },
       });
       // Marquer cet élément comme "initialisé" pour éviter les doublons
@@ -503,7 +576,7 @@ var addTheme = function (title, collapsed, themeid, icon, url, layersvisibility)
   if (url) {
     //external theme
     $("#themes-list").append(`
-            <div class="list-group-item list-group-item bg-light themes-list-item my-2" data-theme-url="${url}" data-theme="${title}" data-themeid="${themeid}" data-theme-collapsed="${collapsed}" data-theme-icon="${icon}" data-theme-layersvisibility="${layersvisibility}">
+            <div class="list-group-item bg-light themes-list-item my-2" data-theme-url="${url}" data-theme="${title}" data-themeid="${themeid}" data-theme-collapsed="${collapsed}" data-theme-icon="${icon}" data-theme-layersvisibility="${layersvisibility}">
                 <div class="theme-infos">
                     <span class="theme-name moveList" contentEditable="true">${title}</span><span class="theme-infos-layer">Ext.</span>
                 </div>
@@ -595,6 +668,27 @@ var saveThemes = function () {
   }
 };
 
+var saveGroups = () => {
+  const themes = $(".themes-list-item");
+  for (i = 0; i < themes.length; i++) {
+    const theme = themes[i];
+    const themeId = theme.getAttribute("data-themeid");
+    const groups = $(`#${themeId}`).find(".group-item");
+
+    for (j = 0; j < groups.length; j++) {
+      const group = groups[j];
+      const groupId = group.id;
+
+      const gr = $(`div[id="${groupId}"]`);
+      const groupTitle = gr.find(".group-name").val();
+
+      config.themes[themeId].groups.find((group) => group.id === groupId).id = groupId;
+      config.themes[themeId].groups.find((group) => group.id === groupId).title =
+        groupTitle;
+    }
+  }
+};
+
 var editThemeExt = function (item) {
   $("#themes-list .list-group-item").removeClass("active");
   $(item).parent().parent().addClass("active");
@@ -632,6 +726,13 @@ var deleteLayer = function (layerid, themeid) {
     return l.id === layerid;
   });
   config.themes[themeid].layers.splice(index, 1);
+};
+
+var deleteGroup = function (groupid, themeid) {
+  var index = config.themes[themeid].groups.findIndex(function (g) {
+    return g.id === groupid;
+  });
+  config.themes[themeid].groups.splice(index, 1);
 };
 
 var createId = function (obj) {
@@ -904,6 +1005,7 @@ var getConfig = () => {
   // Respect theme order
   $(".themes-list-item").each(function (id, theme) {
     saveThemes();
+    saveGroups();
     var themeid = $(theme).attr("data-themeid");
     if (config.themes[themeid]) {
       var t = config.themes[themeid];
@@ -939,15 +1041,17 @@ var getConfig = () => {
             '">',
         ];
       }
+      // push groupes
       $(t.groups).each((i, g) => {
         var group = mv.writeGroupNode(g);
         theme.push(group);
       });
-
+      // push layers hors groupes
       $(t.layers).each(function (i, l) {
         var layer = mv.writeLayerNode(l);
         theme.push(layer);
       });
+
       themes.push(theme.join(" "));
       themes.push(padding(4) + "</theme>");
     }
@@ -973,8 +1077,6 @@ var getConfig = () => {
     themes.join(" "),
     padding(0) + "</config>",
   ];
-  console.log({ conf });
-
   return conf;
 };
 
