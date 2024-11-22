@@ -1111,8 +1111,6 @@ let previewAppsWithoutSave = (id, showPublish) => {
     return window.open(previewUrl, "mvs_vizualize");
   }
   const confXml = getConfig();
-  console.log({ confXml });
-
   if (!confXml || (confXml && !mv.validateXML(confXml.join("")))) {
     return alertCustom("XML invalide !", "danger");
   }
@@ -1235,8 +1233,6 @@ var saveApplicationParameters = (close) => {
 };
 
 var saveAppWithPython = (exists, conf, url, close) => {
-  console.log("conf python : ", conf);
-
   return fetch(url, {
     method: exists ? "PUT" : "POST",
     headers: {
