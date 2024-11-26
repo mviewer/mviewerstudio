@@ -683,12 +683,12 @@ var saveGroups = () => {
       const groupId = group.id;
 
       const gr = $(`div[id="${groupId}"]`);
-      const groupTitle = gr.find(".group-name").val();
+      const groupName = gr.find(".group-name").val();
 
       if (config.themes[themeId].groups) {
         config.themes[themeId].groups.find((group) => group.id === groupId).id = groupId;
-        config.themes[themeId].groups.find((group) => group.id === groupId).title =
-          groupTitle;
+        config.themes[themeId].groups.find((group) => group.id === groupId).name =
+          groupName;
       }
     }
   }
@@ -1268,6 +1268,7 @@ var saveAppWithPython = (exists, conf, url, close) => {
 
 var saveApplicationsConfig = (close, message = "") => {
   const conf = getConfig();
+
   if (!conf || !mv.validateXML(conf.join(""))) {
     return alertCustom(mviewer.tr("msg.xml_doc_invalid"), "danger");
   }
