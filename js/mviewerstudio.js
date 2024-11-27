@@ -412,7 +412,7 @@ var editLayer = function (item, themeid, layerid) {
   mv.setCurrentLayerId(layerid);
   var element = $(item).parent().parent();
   var layerid = element.attr("data-layerid");
-
+  element.addClass("active");
   if (layerid != "undefined") {
     $("#mod-layerOptions").modal("show");
     mv.showLayerOptions(element, themeid, layerid);
