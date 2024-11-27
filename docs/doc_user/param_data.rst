@@ -276,6 +276,7 @@ Il est maintenant nécessaire de peupler le bloc de gauche avec des composants e
 * ``Chiffre clé`` : composant permettant d’afficher un chiffre clé à mettre en avant et nécessitant une valeur de type « nombre » en entrée.
 * ``Liste`` : composant permettant d’afficher une liste et nécessitant un champ composé d’une liste comme indiqué dans la `documentation mviewer <https://mviewerdoc.readthedocs.io/fr/latest/doc_tech/config_tpl.html#iterer-sur-un-champ-de-type-json>`_.
 * ``Texte`` : composant permettant d’afficher un texte et nécessitant une valeur de type texte en entrée.
+* ``Libre`` : composant permettant de saisir librement le contenu du template comme dans un fichier Mustache (.mst).
 
 Sélectionnez un composant et cliquez sur "Enregistrer" pour l’ajouter. Il n’est possible d’ajouter qu’un composant à la fois, veuillez réitérer l’opération pour ajouter des composants supplémentaires. 
 
