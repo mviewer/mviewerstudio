@@ -602,7 +602,7 @@ var addTheme = function (title, collapsed, themeid, icon, url, layersvisibility)
               </div>
           </div>
           <div class="theme-options-btn text-right">
-              <button onclick="mv.setCurrentThemeId('${themeid}'), mv.getConfGroups(), displayGroupsPanel('${themeid}');" class="btn btn-sm btn-outline-info" id="btn-addGroup-${themeid}" data-themeid="${themeid}" ><i class="bi bi-plus-lg"></i>Groupe</button>
+              <button onclick="mv.setCurrentThemeId('${themeid}'), mv.getConfGroups(), displayGroupsPanel('${themeid}');" class="btn btn-sm btn-outline-info" id="btn-addGroup-${themeid}" data-themeid="${themeid}" ><i class="bi bi-plus-lg"></i>Ajouter un groupe</button>
               <button onclick={mv.setCurrentThemeId("${themeid}");} class="btn btn-sm btn-outline-info" id="btn-addLayer-${themeid}" data-bs-target="#mod-layerNew" data-themeid="${themeid}" data-bs-toggle="modal"><i class="bi bi-plus-lg"></i> Ajouter une donnée</button>
               <button class="btn btn-sm btn-secondary"><span class="theme-move moveList" title="Déplacer"><i class="bi bi-arrows-move"></i></span></button>
               <button class="btn btn-sm btn-secondary" onclick="deleteThemeItem(this);" ><span class="theme-remove" title="Supprimer"><i class="bi bi-x-circle"></i></span></button>               
