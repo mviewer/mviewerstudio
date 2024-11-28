@@ -351,7 +351,7 @@ var deleteThemeItem = function (btn) {
 
 var deleteLayerItem = function (btn, themeid) {
   var el = $(btn).closest(".layers-list-item")[0];
-  deleteLayer(el.getAttribute("data-layerid"), themeid);
+  deleteLayer(el.getAttribute("data-layerid"), themeid, el.getAttribute("data-groupid"));
   el && el.parentNode.removeChild(el);
 };
 
@@ -735,11 +735,22 @@ var deleteTheme = function (themeid) {
   delete config.themes[themeid];
 };
 
-var deleteLayer = function (layerid, themeid) {
-  var index = config.themes[themeid].layers.findIndex(function (l) {
-    return l.id === layerid;
-  });
-  config.themes[themeid].layers.splice(index, 1);
+var deleteLayer = function (layerid, themeid, groupid) {
+  if (groupid !== undefined) {
+    var index = config.themes[themeid].layers.findIndex(function (l) {
+      return l.id === layerid;
+    });
+    config.themes[themeid].layers.splice(index, 1);
+  } else {
+    var index = config.themes[themeid].groups
+      .find((group) => group.id === groupid)
+      .layers.findIndex(function (l) {
+        return l.id === layerid;
+      });
+    config.themes[themeid].groups
+      .find((group) => group.id === groupid)
+      .layers.splice(index, 1);
+  }
 };
 
 var deleteGroup = function (groupid, themeid) {
