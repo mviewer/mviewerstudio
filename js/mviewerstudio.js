@@ -390,7 +390,7 @@ var addLayer = function (title, layerid, themeid, groupid) {
             <div class="layer-options-btn" style="display:inline-flex; justify-content: end;">
                 <button class="btn btn-sm btn-secondary" onclick={mv.setCurrentThemeId("${themeid}");}><span class="layer-move moveList" i18n="move" title="Déplacer"><i class="bi bi-arrows-move"></i></span></button>
                 <button class="btn btn-sm btn-secondary deleteLayerButton" onclick="deleteLayerItem(this, '${themeid}');"><span class="layer-remove" i18n="delete" title="Supprimer"><i class="bi bi-x-circle"></i></span></button>
-                <button class="btn btn-sm btn-info" onclick="editLayer(this, '${themeid}', '${layerid}');"><span class="layer-edit" i18n="edit_layer" title="Editer cette couche"><i class="bi bi-gear-fill"></i></span></button>
+                <button class="btn btn-sm btn-info" onclick="editLayer(this, '${themeid}', '${layerid}', '${groupid}'), mv.setCurrentGroupId('${groupid}');"><span class="layer-edit" i18n="edit_layer" title="Editer cette couche"><i class="bi bi-gear-fill"></i></span></button>
             </div>
         </div>`);
   return item;
@@ -416,7 +416,7 @@ var addGroup = (themeid, title, groupId) => {
   return item;
 };
 
-var editLayer = function (item, themeid, layerid) {
+var editLayer = function (item, themeid, layerid, groupid) {
   mv.setCurrentThemeId(themeid);
   mv.setCurrentLayerId(layerid);
   var element = $(item).parent().parent();
@@ -424,7 +424,7 @@ var editLayer = function (item, themeid, layerid) {
   element.addClass("active");
   if (layerid != "undefined") {
     $("#mod-layerOptions").modal("show");
-    mv.showLayerOptions(element, themeid, layerid);
+    mv.showLayerOptions(element, themeid, layerid, groupid);
   } else {
     $("#input-ogc-filter").val("");
     $("#csw-results .csw-result").remove();
