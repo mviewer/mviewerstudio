@@ -47,6 +47,7 @@ Cette partie est dédiée aux personnes qui ont vocation à déployer et configu
    doc_tech/install_other
    doc_tech/config_front
    doc_tech/migration_notes
+   doc_tech/dev_corner
 
 
 Documentation contributeur

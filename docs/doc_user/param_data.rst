@@ -135,8 +135,9 @@ L'onglet général recense les principales options de la donnée.
 * ``Opacité`` : opacité par défaut de la donnée.
 * ``Afficher la donnée au démarrage de l'application`` : la donnée s'affiche au lancement de l'application.
 * ``Afficher la donnée en première position de la carte`` : la donnée s'affiche toujours au-dessus des autres données qui n'ont pas activée cette option.
+* ``Afficher le panneau de la couche déplié au démarrage`` : le pannneau d'affichage de la donnée sera déplié au démarrage. Il contient filtre, opacité, métadonnée...
 * ``Styles disponibles`` : choix du·des style·s de la donnée dans notre application. Possibilité d'éditer le libellé du style.
-* ``Libellé de la liste des styles`` : Titre de la liste de sélection des styles.
+* ``Libellé de la liste des styles`` : titre de la liste de sélection des styles.
 
 Onglet Interrogation
 ~~~~~~~~~~~~~~~~~~~~~
@@ -166,18 +167,34 @@ Pour personnaliser l’affichage de la fiche d’information, deux options sont 
 
 .. warning:: L’activation de la fonctionnalité « Utiliser un template externe » prend le dessus sur le template construit à l’aide du générateur.
 
-Onglet filtre dynamique
-~~~~~~~~~~~~~~~~~~~~~~~~
+Onglet filtre
+~~~~~~~~~~~~~~~~~~~~~~~
 
-L'onglet filtre dynamique permet de filtrer la donnée via une liste déroulante entre différentes valeurs.
+L'onglet filtre permet de filtrer les données à afficher sur la carte.
 
-.. image:: ../_images/user/mviewerstudio_2_donnees_filtre_dynamique.png
-              :alt: Filtre dynamique
+.. image:: ../_images/user/mviewerstudio_2_filtre_statique.png
+              :alt: Filtre
               :align: center
 
-* ``Nom du filtre`` : nom du filtre dans l'application.
-* ``Champs à filtrer`` : champ sur lequel le filtre va être effectué.
-* ``Valeur(s) sélectionnée(s)`` : valeurs disponibles dans le filtre.
+* ``Filtre attributaire`` : Filtre selon un attribut. Utilisation d'un filtre cql_.
+* ``Filtre géographique`` : Filtre selon la géométrie. Utilisation d'un filtre cql_.
+
+.. _cql: https://docs.geoserver.org/stable/en/user/tutorials/cql/cql_tutorial.html#cql-tutorial
+
+
+
+Onglet liste de choix
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+L'onglet liste de choix permet de filtrer la donnée via une liste déroulante entre différentes valeurs. Disponible uniquement en :guilabel:`mode avancé`
+
+.. image:: ../_images/user/mviewerstudio_2_donnees_filtre_dynamique.png
+              :alt: Liste de choix
+              :align: center
+
+* :guilabel:`mode avancé` ``Nom du filtre`` : nom du filtre dans l'application.
+* :guilabel:`mode avancé` ``Champs à filtrer`` : champ sur lequel le filtre va être effectué.
+* :guilabel:`mode avancé` ``Valeur(s) sélectionnée(s)`` : valeurs disponibles dans le filtre.
 
 Onglet options avancées
 ~~~~~~~~~~~~~~~~~~~~~~~~
@@ -200,20 +217,6 @@ L'onglet options avancées donne accès aux fonctionnalités avancées. Disponib
 * :guilabel:`mode avancé` ``Métadonnées`` : Lien vers la métadonnée. Ne pas modifier.
 * :guilabel:`mode avancé` ``Type de donnée`` : Lien vers la donnée. Ne pas modifier.
 * :guilabel:`mode avancé` ``Métadonnées`` : Lien vers la métadonnée. Ne pas modifier.
-
-Onglet filtre statique
-~~~~~~~~~~~~~~~~~~~~~~~
-
-L'onglet filtre statique permet de filtrer les données à afficher sur la carte. Disponible uniquement en :guilabel:`mode avancé`
-
-.. image:: ../_images/user/mviewerstudio_2_filtre_statique.png
-              :alt: Filtre statique
-              :align: center
-
-* :guilabel:`mode avancé` ``Filtre attributaire`` : Filtre selon un attribut. Utilisation d'un filtre cql_.
-* :guilabel:`mode avancé` ``Filtre géographique`` : Filtre selon la géométrie. Utilisation d'un filtre cql_.
-
-.. _cql: https://docs.geoserver.org/stable/en/user/tutorials/cql/cql_tutorial.html#cql-tutorial
 
 
 Onglet recherche
@@ -273,6 +276,7 @@ Il est maintenant nécessaire de peupler le bloc de gauche avec des composants e
 * ``Chiffre clé`` : composant permettant d’afficher un chiffre clé à mettre en avant et nécessitant une valeur de type « nombre » en entrée.
 * ``Liste`` : composant permettant d’afficher une liste et nécessitant un champ composé d’une liste comme indiqué dans la `documentation mviewer <https://mviewerdoc.readthedocs.io/fr/latest/doc_tech/config_tpl.html#iterer-sur-un-champ-de-type-json>`_.
 * ``Texte`` : composant permettant d’afficher un texte et nécessitant une valeur de type texte en entrée.
+* ``Libre`` : composant permettant de saisir librement le contenu du template comme dans un fichier Mustache (.mst).
 
 Sélectionnez un composant et cliquez sur "Enregistrer" pour l’ajouter. Il n’est possible d’ajouter qu’un composant à la fois, veuillez réitérer l’opération pour ajouter des composants supplémentaires. 
 

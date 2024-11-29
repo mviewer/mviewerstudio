@@ -10,8 +10,8 @@ logger = logging.getLogger(__name__)
 
 def _get_current_user() -> Optional["User"]:
     if has_app_context():
-        logger.info("REQUEST HEADER")
-        logger.info(dict(request.headers))
+        logger.debug("GET USER : READ HEADER")
+        logger.debug(dict(request.headers))
         roles = request.headers.get("sec-roles", "").split(";")
         # sec-org by default. Use sec-orgname to have organism long name
         orgname = request.headers.get("sec-org")
@@ -26,9 +26,8 @@ def _get_current_user() -> Optional["User"]:
             normalize_orgname,
             roles,
         )
-        logging.info(f"logged user: {user}")
         return user
-    logging.debug(f"No app context. Returning no user")
+    logger.debug("GET USER : EMPTY APP CONTEXT - NO USER")
     return None
 
 

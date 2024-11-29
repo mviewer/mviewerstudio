@@ -377,6 +377,8 @@
     "template.typefield.static": "Saisie libre",
     "template.typefield.liField": "A partir d'un champ JSON",
     "template.typefield.select": "Choisir un type...",
+    "template.free.title": "Saisie libre",
+    "template.free.label": "Contenu du template :",
     "version.comment": "Ajouter une description à cette version",
     "version.comment.ph": "Exemple : Version de test sans données",
     "publish.message": "Version publiée",

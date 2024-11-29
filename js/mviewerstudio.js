@@ -420,7 +420,10 @@ var editLayer = function (item, themeid, layerid, groupid) {
   mv.setCurrentThemeId(themeid);
   mv.setCurrentLayerId(layerid);
   var element = $(item).parent().parent();
-
+  element.addClass("active");
+  if (!layerid) {
+    layerid = element.attr("data-layerid");
+  }
   if (layerid != "undefined") {
     $("#mod-layerOptions").modal("show");
     mv.showLayerOptions(element, themeid, layerid, groupid);
@@ -432,7 +435,6 @@ var editLayer = function (item, themeid, layerid, groupid) {
 };
 
 var importThemes = function () {
-  console.groupCollapsed("importThemes");
   $("#tableThemaExt .selected").each(function (id, item) {
     var url = $(item).attr("data-url");
     var id = $(item).attr("data-theme-id");
@@ -599,7 +601,7 @@ function initializeNestedSortables() {
   });
 }
 
-// Initialisation au chargement du DOM
+// init on DOM loading
 initializeNestedSortables();
 
 var addTheme = function (title, collapsed, themeid, icon, url, layersvisibility) {

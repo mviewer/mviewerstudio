@@ -1,7 +1,19 @@
 import git
-from os import path
+from os import path, remove
 from datetime import datetime
 from .login_utils import current_user
+import logging
+from time import sleep
+
+logger = logging.getLogger(__name__)
+
+
+def unlock_repo(repo):
+    """
+    Force remove git lock file
+    """
+    lock_file = path.join(repo.working_dir, ".git", "index.lock")
+    remove(lock_file)
 
 
 def init_repo(workspace):
@@ -11,6 +23,7 @@ def init_repo(workspace):
     :param workspace: string workspace absolute path
     :param username: string authent username
     """
+    logger.debug("GIT : CREATE NEW REPOSITORY")
     # create repo
     repo = git.Repo.init(workspace)
     # gitignore
@@ -29,8 +42,10 @@ def init_or_get_repo(workspace):
     :param workspace: strin workspace absolute path
     """
     repo = None
+    logger.debug("GIT : GET REPOSITORY")
     try:
         repo = git.Repo(workspace)
+        logger.debug("GIT : REPOSITORY EXISTS")
     except git.exc.GitError:
         init_repo(workspace)
         repo = git.Repo(workspace)
@@ -45,9 +60,21 @@ def checkout(repo, target, hard=False):
     :param target: string ref
     :param hard: boolean
     """
+
+    logger.debug(repo.working_dir)
+
+    repo_dir = repo.working_dir
+    lock_file = path.join(repo.working_dir, ".git", "index.lock")
+
+    if path.exists(lock_file):
+        logger.error(f"GIT : REPO LOCKED {repo_dir}")
+        sleep(5)
+
     if hard:
+        logger.debug(f"GIT : RESET HARD {target}")
         repo.git.reset("--hard", target)
     else:
+        logger.debug(f"GIT : CHECKOUT {target}")
         repo.git.checkout(target)
 
 
@@ -70,6 +97,7 @@ class Git_manager:
         By default, tag name is formated as '2023-02-27-15-37-34'.
         :param msg: str tag message
         """
+        logger.debug("GIT : CREATE TAG")
         self.repo.create_tag(datetime.now().strftime("%Y-%m-%d-%H-%M-%S"), message=msg)
 
     def delete_version(self, version_name):
@@ -78,9 +106,11 @@ class Git_manager:
         :param version_name: str tag identifier
         """
         # delete tag
+        logger.debug("GIT : DELETE VERSION")
         tag = self.repo.tags[version_name]
         if tag:
             # delete version from tag object
+            logger.debug("GIT : DELETE TAG")
             self.repo.delete_tag(tag)
         if len(self.repo.tags) == 1:
             self.switch_version(self.repo.tags[0].name, True)
@@ -89,6 +119,7 @@ class Git_manager:
         """
         delete all branch except main
         """
+        logger.debug("GIT : DELETE BRANCH")
         for head in self.repo.heads:
             if head.name == "master":
                 continue
@@ -99,6 +130,7 @@ class Git_manager:
         Delete all tags
         """
         # delete tag
+        logger.debug("GIT : DELETE TAG (USER DELETE VERSION)")
         for tag in self.repo.tags:
             if int(tag.name) > 1:
                 self.repo.delete_tag(tag)
@@ -109,6 +141,7 @@ class Git_manager:
         :param target: string commit or tag identifier
         :param hard: boolean to reset hard instead simple checkout
         """
+        logger.debug("GIT : SWITCH TAG")
         if target in [tag.name for tag in self.repo.tags]:
             target = "tags/%s" % target
         elif not [
@@ -126,6 +159,7 @@ class Git_manager:
         Commit config changes on each save.
         :param message: string message to insert in commit or tag
         """
+        logger.debug("GIT : COMMIT CHANGES ON SAVE")
         if not self.repo.tags:
             self.repo.git.add("*")
             self.repo.git.commit("-m", message)
@@ -135,6 +169,7 @@ class Git_manager:
             self.repo.git.commit("-m", message)
 
     def create_publication_commit(self, message):
+        logger.debug("GIT : CREATE PULICATION COMMIT AS NEW VERSION")
         self.repo.git.add("*")
         self.repo.git.commit("-m", message)
         self.create_version(message)
@@ -144,18 +179,21 @@ class Git_manager:
         Return a tag name.
         :param name: return readable tag full name
         """
+        logger.debug("GIT : GET VERSION (SEARCH A TAG FROM TAG NAME)")
         return [tag for tag in self.repo.tags if tag.name == name]
 
     def get_versions(self):
         """
         Return dict wich contains tag and commits resume.
         """
+        logger.debug("GIT : READ VERSIONS (COMMITS AND TAGS)")
         return {"tags": self.get_tags(), "commits": self.get_commits()}
 
     def get_tags(self):
         """
         Return each tags as dict
         """
+        logger.debug("GIT : READ TAGS")
         tags = []
         for tag in self.repo.tags:
             json_tag = {"name": tag.name}
@@ -163,12 +201,15 @@ class Git_manager:
                 json_tag["message"] = tag.tag.message
                 json_tag["commit"] = tag.tag.object.hexsha
             tags.append(json_tag)
+        logger.debug("GIT : READ TAGS SUCCESS ")
+        logger.debug(tags)
         return tags
 
     def get_commits(self):
         """
         Return each commits as dict
         """
+        logger.debug("GIT : READ COMMITS")
         commits = []
         tags_json = self.get_tags()
         head = self.repo.head
@@ -185,4 +226,6 @@ class Git_manager:
             if tag:
                 commit_json["tag"] = tag[0]
             commits.append(commit_json)
+        logger.debug("GIT : READ COMMITS SUCCESS")
+        logger.debug(commits)
         return commits

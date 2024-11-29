@@ -1,8 +1,8 @@
 {
     "app_conf": {
         "studio_title": "GéoBretagne mviewer studio",
-        "mviewer_version":  "3.9",
-        "mviewerstudio_version":  "4.0.2",
+        "mviewer_version":  "3.12",
+        "mviewerstudio_version":  "4.1",
         "is_php": "true",
         "php": {
             "upload_service": "srv/php/store.php",
@@ -133,6 +133,7 @@
                 "url": "https://tile.geobretagne.fr/osm/service",
                 "layers": "osm:google",
                 "format": "image/png",
+                "fromcapacity": "false",
                 "attribution": "GéoBretagne. Données : les contributeurs d'<a href=\"https://www.openstreetmap.org/\" target=\"_blank\">OpenStreetMap </a>,  <a href=\"https://www.openstreetmap.org/copyright\" target=\"_blank\">ODbL </a>",
                 "style": "normal",
                 "matrixset": "PM",
@@ -147,6 +148,7 @@
                 "url": "https://tile.geobretagne.fr/osm/service",
                 "layers": "osm:grey",
                 "format": "image/png",
+                "fromcapacity": "false",
                 "attribution": "GéoBretagne - GéoGrandEst. Données : les contributeurs d'<a href=\"https://www.openstreetmap.org/\" target=\"_blank\">OpenStreetMap </a>,  <a href=\"https://www.openstreetmap.org/copyright\" target=\"_blank\">ODbL </a>",
                 "style": "normal",
                 "matrixset": "PM",
