@@ -750,7 +750,14 @@ var getConfig = () => {
   if ($("#optProxyUrl").val() && _conf.proxy) {
     savedProxy = `${padding(0)}<proxy url="${$("#optProxyUrl").val() || _conf.proxy}"/>`;
   }
-  var search_params = { bbox: false, localities: false, features: false, static: false, querymaponclick:false, closeafterclick:false };
+  var search_params = {
+    bbox: false,
+    localities: false,
+    features: false,
+    static: false,
+    querymaponclick: false,
+    closeafterclick: false,
+  };
   if ($("#SwitchAdressSearch").is(":checked")) {
     olscompletion = [
       padding(0) + '<olscompletion type="' + $("#frm-searchlocalities").val() + '"',
