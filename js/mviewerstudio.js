@@ -420,8 +420,10 @@ var editLayer = function (item, themeid, layerid, groupid) {
   mv.setCurrentThemeId(themeid);
   mv.setCurrentLayerId(layerid);
   var element = $(item).parent().parent();
-  var layerid = element.attr("data-layerid");
   element.addClass("active");
+  if (!layerid) {
+    layerid = element.attr("data-layerid");
+  }
   if (layerid != "undefined") {
     $("#mod-layerOptions").modal("show");
     mv.showLayerOptions(element, themeid, layerid, groupid);
@@ -433,7 +435,6 @@ var editLayer = function (item, themeid, layerid, groupid) {
 };
 
 var importThemes = function () {
-  console.groupCollapsed("importThemes");
   $("#tableThemaExt .selected").each(function (id, item) {
     var url = $(item).attr("data-url");
     var id = $(item).attr("data-theme-id");
