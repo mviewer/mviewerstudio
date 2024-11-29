@@ -750,13 +750,19 @@ var getConfig = () => {
   if ($("#optProxyUrl").val() && _conf.proxy) {
     savedProxy = `${padding(0)}<proxy url="${$("#optProxyUrl").val() || _conf.proxy}"/>`;
   }
-  var search_params = { bbox: false, localities: false, features: false, static: false };
+  var search_params = { bbox: false, localities: false, features: false, static: false, querymaponclick:false, closeafterclick:false };
   if ($("#SwitchAdressSearch").is(":checked")) {
     olscompletion = [
       padding(0) + '<olscompletion type="' + $("#frm-searchlocalities").val() + '"',
       'url="' + $("#opt-searchlocalities-url").val() + '"',
       'attribution="' + $("#opt-searchlocalities-attribution").val() + '" />',
     ].join(" ");
+    if ($("#search-querymaponclick").is(":checked")) {
+      search_params.querymaponclick = true;
+    }
+    if ($("#search-closeafterclick").is(":checked")) {
+      search_params.closeafterclick = true;
+    }
     search_params.localities = true;
   }
   if (
@@ -792,6 +798,10 @@ var getConfig = () => {
     search_params.features +
     '" static="' +
     search_params.static +
+    '" querymaponclick="' +
+    search_params.querymaponclick +
+    '" closeafterclick="' +
+    search_params.closeafterclick +
     '"/>';
 
   var maxextentStr = "";
