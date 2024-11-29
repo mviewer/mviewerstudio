@@ -410,7 +410,7 @@ var addGroup = (themeid, title, groupId) => {
             <button class="btn btn-sm btn-secondary deleteLayerButton" onclick="deleteGroupItem(this, '${themeid}'), displayGroupsPanel('${themeid}');"><span class="group-remove" i18n="delete" title="Supprimer"><i class="bi bi-x-circle"></i></span></button>
         </div>
       </div>
-      <div class="layer_item list-group list-group-item nested-sortable mt-3 mb-2 min-h-1"></div>
+      <div class="layer_item list-group list-group-item nested-sortable-layers mt-3 mb-2 min-h-1"></div>
     </div>`);
   initializeNestedSortables();
   return item;
@@ -451,6 +451,7 @@ sortThemes = function () {
   config.themes = orderedThemes;
 };
 
+//D'n'D themes
 var sortableThemeList = Sortable.create(document.getElementById("themes-list"), {
   handle: ".moveList",
   animation: 150,
@@ -474,10 +475,13 @@ var sortableElement = function (targetId, callback) {
 };
 sortableElement("themes-list", sortThemes);
 
+//D'n'D groups && layers
 function initializeNestedSortables() {
-  const nestedSortables = document.querySelectorAll(".nested-sortable");
+  const nestedSortablesGroups = document.querySelectorAll(".nested-sortable-groups");
+  const nestedSortablesLayers = document.querySelectorAll(".nested-sortable-layers");
 
-  nestedSortables.forEach((sortableElement) => {
+  // For groups
+  nestedSortablesGroups.forEach((sortableElement) => {
     if (!sortableElement.getAttribute("data-sortable-initialized")) {
       new Sortable(sortableElement, {
         handle: ".moveList",
@@ -486,9 +490,52 @@ function initializeNestedSortables() {
         fallbackOnBody: true,
         swapThreshold: 0.65,
         group: {
-          name: "nested",
+          name: "groups",
           pull: true,
-          put: true,
+          put: ["groups"],
+        },
+        onEnd: function (evt) {
+          const item = evt.item;
+          const fromThemeId = evt.from.closest(".themes-list-item")?.id;
+          const toThemeId = evt.to.closest(".themes-list-item")?.id;
+          const toGroupId = evt.to.closest(".group-item")?.id
+            ? evt.to.closest(".group-item").id
+            : null;
+
+          item.setAttribute("data-groupid", toGroupId);
+          item.setAttribute("data-themeid", toThemeId);
+
+          config.themes[toThemeId].groups.forEach((group) => {
+            if (group.id === item.getAttribute("data-groupid")) {
+              group["data-themeid"] = toThemeId;
+            }
+          });
+          const index = config.themes[fromThemeId].groups.findIndex(
+            (group) => group.id === item.id
+          );
+          if (index !== -1) {
+            const [itemToMove] = config.themes[fromThemeId].groups.splice(index, 1);
+            config.themes[toThemeId].groups.push(itemToMove);
+          }
+        },
+      });
+      sortableElement.setAttribute("data-sortable-initialized", true);
+    }
+  });
+
+  // For layers
+  nestedSortablesLayers.forEach((sortableElement) => {
+    if (!sortableElement.getAttribute("data-sortable-initialized")) {
+      new Sortable(sortableElement, {
+        handle: ".moveList",
+        animation: 150,
+        ghostClass: "ghost",
+        fallbackOnBody: true,
+        swapThreshold: 0.65,
+        group: {
+          name: "layers",
+          pull: true,
+          put: ["layers"],
         },
         onEnd: function (evt) {
           const item = evt.item;
@@ -505,63 +552,44 @@ function initializeNestedSortables() {
           item.setAttribute("data-groupid", toGroupId);
           item.setAttribute("data-themeid", toThemeId);
 
-          // Si item est un layer
-          if (item.classList.contains("layers-list-item")) {
-            config.themes[toThemeId].layers.forEach((layer) => {
-              if (layer.id === item.getAttribute("data-layerid")) {
-                layer["data-groupid"] = toGroupId;
-                layer["data-themeid"] = toThemeId;
-              }
-            });
-            // Cherche l'index de départ en fonction de si le layer bougé vient d'un groupe ou un thème
-            const index = fromGroupId
+          config.themes[toThemeId].layers.forEach((layer) => {
+            if (layer.id === item.getAttribute("data-layerid")) {
+              layer["data-groupid"] = toGroupId;
+              layer["data-themeid"] = toThemeId;
+            }
+          });
+          // Cherche l'index de départ en fonction de si le layer bougé vient d'un groupe ou un thème
+          const index = fromGroupId
+            ? config.themes[fromThemeId].groups
+                .find((group) => group.id === fromGroupId)
+                .layers.findIndex((layer) => layer.id === item.id)
+            : config.themes[fromThemeId].layers.findIndex(
+                (layer) => layer.id === item.id
+              );
+          // Si l'index éxiste, suppr l'item de la position de départ et l'ajoute à l'arrivée
+          if (index !== -1) {
+            // Si le thème n'a pas de layer, on set theme.layers à []
+            if (!config.themes[fromThemeId].layers)
+              config.themes[fromThemeId].layers = [];
+            // Si le groupe d'arrivé n'a pas de layers, on set group.layers à []
+            if (toGroupId)
+              if (
+                !config.themes[toThemeId].groups.find((group) => group.id === toGroupId)
+                  .layers
+              )
+                config.themes[toThemeId].groups.find(
+                  (group) => group.id === toGroupId
+                ).layers = [];
+            const [itemToMove] = fromGroupId
               ? config.themes[fromThemeId].groups
                   .find((group) => group.id === fromGroupId)
-                  .layers.findIndex((layer) => layer.id === item.id)
-              : config.themes[fromThemeId].layers.findIndex(
-                  (layer) => layer.id === item.id
-                );
-
-            // Si l'index éxiste, suppr l'item de la position de départ et l'ajoute à l'arrivée
-            if (index !== -1) {
-              // Si le thème n'a pas de layer, on set theme.layers à []
-              if (!config.themes[fromThemeId].layers)
-                config.themes[fromThemeId].layers = [];
-              // Si le groupe d'arrivé n'a pas de layers, on set group.layers à []
-              if (toGroupId)
-                if (
-                  !config.themes[toThemeId].groups.find((group) => group.id === toGroupId)
-                    .layers
-                )
-                  config.themes[toThemeId].groups.find(
-                    (group) => group.id === toGroupId
-                  ).layers = [];
-
-              const [itemToMove] = fromGroupId
-                ? config.themes[fromThemeId].groups
-                    .find((group) => group.id === fromGroupId)
-                    .layers.splice(index, 1)
-                : config.themes[fromThemeId].layers.splice(index, 1);
-              toGroupId
-                ? config.themes[toThemeId].groups
-                    .find((group) => group.id === toGroupId)
-                    .layers.splice(newIndex, 0, itemToMove)
-                : config.themes[toThemeId].layers.splice(newIndex, 0, itemToMove);
-            }
-          } else {
-            // sinon item est un groupe
-            config.themes[toThemeId].groups.forEach((group) => {
-              if (group.id === item.getAttribute("data-groupid")) {
-                group["data-themeid"] = toThemeId;
-              }
-            });
-            const index = config.themes[fromThemeId].groups.findIndex(
-              (group) => group.id === item.id
-            );
-            if (index !== -1) {
-              const [itemToMove] = config.themes[fromThemeId].groups.splice(index, 1);
-              config.themes[toThemeId].groups.push(itemToMove);
-            }
+                  .layers.splice(index, 1)
+              : config.themes[fromThemeId].layers.splice(index, 1);
+            toGroupId
+              ? config.themes[toThemeId].groups
+                  .find((group) => group.id === toGroupId)
+                  .layers.splice(newIndex, 0, itemToMove)
+              : config.themes[toThemeId].layers.splice(newIndex, 0, itemToMove);
           }
         },
       });
@@ -578,7 +606,7 @@ var addTheme = function (title, collapsed, themeid, icon, url, layersvisibility)
   if (url) {
     //external theme
     $("#themes-list").append(`
-            <div class="list-group-item bg-light themes-list-item my-2" data-theme-url="${url}" data-theme="${title}" data-themeid="${themeid}" data-theme-collapsed="${collapsed}" data-theme-icon="${icon}" data-theme-layersvisibility="${layersvisibility}">
+            <div class="theme_item list-group-item bg-light themes-list-item my-2" data-theme-url="${url}" data-theme="${title}" data-themeid="${themeid}" data-theme-collapsed="${collapsed}" data-theme-icon="${icon}" data-theme-layersvisibility="${layersvisibility}">
                 <div class="theme-infos">
                     <span class="theme-name moveList" contentEditable="true">${title}</span><span class="theme-infos-layer">Ext.</span>
                 </div>
@@ -590,7 +618,7 @@ var addTheme = function (title, collapsed, themeid, icon, url, layersvisibility)
             </div>`);
   } else {
     $("#themes-list").append(
-      `<div class="list-group-item bg-light themes-list-item nested-1 my-2" id="${themeid}" data-theme="${title}" data-themeid="${themeid}" data-theme-collapsed="${collapsed}" data-theme-icon="${icon}">
+      `<div class="theme_item list-group-item bg-light themes-list-item nested-1 my-2" id="${themeid}" data-theme="${title}" data-themeid="${themeid}" data-theme-collapsed="${collapsed}" data-theme-icon="${icon}">
           <div class="theme-infos ">
               <span type="button" class="selected-icon ${icon} picker-button" data-bs-target="#iconPicker" data-bs-toggle="modal"></span>
               <input type="text" class="theme-name form-control col-6 d-inline" value="${title}" aria-label="title">
@@ -607,8 +635,8 @@ var addTheme = function (title, collapsed, themeid, icon, url, layersvisibility)
               <button class="btn btn-sm btn-secondary" onclick="deleteThemeItem(this);" ><span class="theme-remove" title="Supprimer"><i class="bi bi-x-circle"></i></span></button>               
           </div>
           <div>
-            <div id="themeGroups-${themeid}" class="group_list theme-group-list list-group mt-3 mb-2 p-2 nested-sortable"> Groupes </div>
-            <div id="themeLayers-${themeid}" class="layer_item theme-layer-list list-group mt-3 mb-2 p-2 nested-sortable"> Couches </div>
+            <div id="themeGroups-${themeid}" class="group_list theme-group-list list-group mt-3 mb-2 p-2 nested-sortable-groups"> Groupes </div>
+            <div id="themeLayers-${themeid}" class="layer_item theme-layer-list list-group mt-3 mb-2 p-2 nested-sortable-layers"> Couches </div>
           </div>
       </div>`
     );
