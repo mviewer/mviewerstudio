@@ -507,7 +507,7 @@ function initializeNestedSortables() {
           item.setAttribute("data-groupid", toGroupId);
           item.setAttribute("data-themeid", toThemeId);
 
-          // Si item est un layer
+          // if item is a layer
           if (item.classList.contains("layers-list-item")) {
             config.themes[toThemeId].layers.forEach((layer) => {
               if (layer.id === item.getAttribute("data-layerid")) {
@@ -515,7 +515,7 @@ function initializeNestedSortables() {
                 layer["data-themeid"] = toThemeId;
               }
             });
-            // Cherche l'index de départ en fonction de si le layer bougé vient d'un groupe ou un thème
+            // search start index - depends if moved layer come from group or theme
             const index = fromGroupId
               ? config.themes[fromThemeId].groups
                   .find((group) => group.id === fromGroupId)
@@ -524,12 +524,12 @@ function initializeNestedSortables() {
                   (layer) => layer.id === item.id
                 );
 
-            // Si l'index éxiste, suppr l'item de la position de départ et l'ajoute à l'arrivée
+            // delete start index item and insert last, only if exists
             if (index !== -1) {
               // Si le thème n'a pas de layer, on set theme.layers à []
               if (!config.themes[fromThemeId].layers)
                 config.themes[fromThemeId].layers = [];
-              // Si le groupe d'arrivé n'a pas de layers, on set group.layers à []
+              // if target group is empty (no layers), we set empty group.layers list
               if (toGroupId)
                 if (
                   !config.themes[toThemeId].groups.find((group) => group.id === toGroupId)
@@ -551,7 +551,7 @@ function initializeNestedSortables() {
                 : config.themes[toThemeId].layers.splice(newIndex, 0, itemToMove);
             }
           } else {
-            // sinon item est un groupe
+            // Else item is a group
             config.themes[toThemeId].groups.forEach((group) => {
               if (group.id === item.getAttribute("data-groupid")) {
                 group["data-themeid"] = toThemeId;
@@ -567,13 +567,13 @@ function initializeNestedSortables() {
           }
         },
       });
-      // Marquer cet élément comme "initialisé" pour éviter les doublons
+      // tag element as "initiliazed" to avoid duplicate
       sortableElement.setAttribute("data-sortable-initialized", true);
     }
   });
 }
 
-// Initialisation au chargement du DOM
+// init on DOM loading
 initializeNestedSortables();
 
 var addTheme = function (title, collapsed, themeid, icon, url, layersvisibility) {
