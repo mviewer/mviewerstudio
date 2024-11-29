@@ -637,8 +637,8 @@ var addTheme = function (title, collapsed, themeid, icon, url, layersvisibility)
               <button class="btn btn-sm btn-secondary" onclick="deleteThemeItem(this);" ><span class="theme-remove" title="Supprimer"><i class="bi bi-x-circle"></i></span></button>               
           </div>
           <div>
-            <div id="themeGroups-${themeid}" class="group_list theme-group-list list-group mt-3 mb-2 p-2 nested-sortable-groups"> Groupes </div>
-            <div id="themeLayers-${themeid}" class="layer_item theme-layer-list list-group mt-3 mb-2 p-2 nested-sortable-layers"> Couches </div>
+            <div id="themeGroups-${themeid}" class="group_list theme-group-list list-group mt-3 mb-2 p-2 nested-sortable-groups ${mv.getNewTheme() ? "hideBlock" : ""}"> Groupes </div>
+            <div id="themeLayers-${themeid}" class="layer_item theme-layer-list list-group mt-3 mb-2 p-2 nested-sortable-layers"> Données </div>
           </div>
       </div>`
     );
