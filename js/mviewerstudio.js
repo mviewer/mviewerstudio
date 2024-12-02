@@ -274,6 +274,8 @@ var newConfiguration = function (infos) {
     "opt-togglealllayersfromtheme",
     "SwitchCustomBackground",
     "SwitchAdvanced",
+	"search-closeafterclick",
+	"search-querymaponclick",
   ].forEach((id) => {
     document.querySelector(`#${id}`).checked = false;
   });
@@ -764,13 +766,14 @@ var getConfig = () => {
       'url="' + $("#opt-searchlocalities-url").val() + '"',
       'attribution="' + $("#opt-searchlocalities-attribution").val() + '" />',
     ].join(" ");
-    if ($("#search-querymaponclick").is(":checked")) {
-      search_params.querymaponclick = true;
+    if ($("#search-querymaponclick").prop("checked")) {
+      search_params.querymaponclick = "true";
     }
-    if ($("#search-closeafterclick").is(":checked")) {
-      search_params.closeafterclick = true;
+    if ($("#search-closeafterclick").prop("checked")) {
+      search_params.closeafterclick = "true";
     }
     search_params.localities = true;
+	search_params.inputlabel = $("#opt-searchlocalities-inputlabel").val();
   }
   if (
     $("#frm-globalsearch").val() === "elasticsearch" &&
@@ -805,6 +808,8 @@ var getConfig = () => {
     search_params.features +
     '" static="' +
     search_params.static +
+    '" inputlabel="' +
+    search_params.inputlabel +
     '" querymaponclick="' +
     search_params.querymaponclick +
     '" closeafterclick="' +
