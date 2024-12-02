@@ -274,8 +274,8 @@ var newConfiguration = function (infos) {
     "opt-togglealllayersfromtheme",
     "SwitchCustomBackground",
     "SwitchAdvanced",
-	"search-closeafterclick",
-	"search-querymaponclick",
+    "search-closeafterclick",
+    "search-querymaponclick",
   ].forEach((id) => {
     document.querySelector(`#${id}`).checked = false;
   });
@@ -773,7 +773,7 @@ var getConfig = () => {
       search_params.closeafterclick = "true";
     }
     search_params.localities = true;
-	search_params.inputlabel = $("#opt-searchlocalities-inputlabel").val();
+    search_params.inputlabel = $("#opt-searchlocalities-inputlabel").val();
   }
   if (
     $("#frm-globalsearch").val() === "elasticsearch" &&
