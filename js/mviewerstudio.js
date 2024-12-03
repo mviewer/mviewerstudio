@@ -554,12 +554,6 @@ function initializeNestedSortables() {
           item.setAttribute("data-groupid", toGroupId);
           item.setAttribute("data-themeid", toThemeId);
 
-          config.themes[toThemeId].layers.forEach((layer) => {
-            if (layer.id === item.getAttribute("data-layerid")) {
-              layer["data-groupid"] = toGroupId;
-              layer["data-themeid"] = toThemeId;
-            }
-          });
           // Cherche l'index de départ en fonction de si le layer bougé vient d'un groupe ou un thème
           const index = fromGroupId
             ? config.themes[fromThemeId].groups
@@ -593,6 +587,13 @@ function initializeNestedSortables() {
                   .layers.splice(newIndex, 0, itemToMove)
               : config.themes[toThemeId].layers.splice(newIndex, 0, itemToMove);
           }
+
+          config.themes[toThemeId].layers.forEach((layer) => {
+            if (layer.id === item.getAttribute("data-layerid")) {
+              layer["data-groupid"] = toGroupId;
+              layer["data-themeid"] = toThemeId;
+            }
+          });
         },
       });
       // Marquer cet élément comme "initialisé" pour éviter les doublons
