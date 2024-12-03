@@ -610,7 +610,7 @@ var addTheme = function (title, collapsed, themeid, icon, url, layersvisibility)
     $("#themes-list").append(`
             <div class="theme_item list-group-item bg-light themes-list-item my-2" data-theme-url="${url}" data-theme="${title}" data-themeid="${themeid}" data-theme-collapsed="${collapsed}" data-theme-icon="${icon}" data-theme-layersvisibility="${layersvisibility}">
                 <div class="theme-infos">
-                    <span class="theme-name moveList" contentEditable="true">${title}</span><span class="theme-infos-layer">Ext.</span>
+                    <span class="theme-name moveList">${title}</span><span class="theme-infos-layer">Ext.</span>
                 </div>
                 <div class="theme-options-btn">
                     <button class="btn btn-sm btn-secondary" ><span class="theme-move moveList" id18="move" title="Déplacer"><i class="bi bi-arrows-move"></i></span></button>
