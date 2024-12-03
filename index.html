@@ -649,15 +649,39 @@
                                                         </div>
                                                     </div>    
                                                     <div class="row my-2 align-items-stretch">
-                                                            <div class="col-md-6" id="opt-searchl-url" style="display: none;">
+                                                            <div class="col-md-4" id="opt-searchl-url" style="display: none;">
                                                                 <label for="opt-searchlocalities-url" i18n="tabs.app.search.address_search.url" class="form-label">URL</label>
                                                                 <input class="form-control checkedurl" id="opt-searchlocalities-url" type="text" placeholder="Url du service">
                                                             </div>
-                                                            <div class="col-md-6" id="opt-searchl-attribution" style="display: none;">
+                                                            <div class="col-md-4" id="opt-searchl-attribution" style="display: none;">
                                                                 <label for="opt-searchlocalities-attribution" i18n="tabs.app.search.address_search.attribution" class="form-label">Attribution</label>
                                                                 <input class="form-control" id="opt-searchlocalities-attribution" type="text"  placeholder="Attribution du service"  i18n="tabs.app.search.address_search.attribution.ph">
                                                             </div>   
+                                                            <div class="col-md-4 advanced" id="opt-inputlabel" style="display: none;">
+                                                                <label for="opt-searchlocalities-inputlabel" i18n="tabs.app.search.address_search.inputlabel" class="form-label">Texte écrit dans la zone de saisie</label><span class="tooltip-info" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="tooltip.search.inputlabel"><i class="ri-information-line"></i></span>
+                                                                <input class="form-control" id="opt-searchlocalities-inputlabel" type="text"  placeholder="Rechercher"  i18n="tabs.app.search.address_search.inputlabel.ph">
+                                                            </div>   
                                                     </div>
+													<ul class="list-group">
+														<li class="list-group-item advanced" style="display: none;">
+															<div class="list-flex">
+																<span i18n="tabs.app.search.querymaponclick">Ouverture de la fiche d'information au clic</span>                                          
+																<div class="custom-control custom-switch">
+																	<input type="checkbox" class="custom-control-input" name="checkboxes" id="search-querymaponclick">
+																	<label class="custom-control-label" for="search-querymaponclick"></label>
+																</div>
+															</div>
+														</li>
+														<li class="list-group-item advanced" style="display: none;">
+															<div class="list-flex">
+																<span i18n="tabs.app.search.closeafterclick">Ferme la liste de résultat après clic</span>                                          
+																<div class="custom-control custom-switch">
+																	<input type="checkbox" class="custom-control-input" name="checkboxes" id="search-closeafterclick">
+																	<label class="custom-control-label" for="search-closeafterclick"></label>
+																</div>
+															</div>
+														</li>
+													</ul>
                                                 </div>                                                
                                             </li>
                                             <li class="list-group-item advanced" style="display: none;">

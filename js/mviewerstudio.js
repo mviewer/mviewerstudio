@@ -274,6 +274,8 @@ var newConfiguration = function (infos) {
     "opt-togglealllayersfromtheme",
     "SwitchCustomBackground",
     "SwitchAdvanced",
+    "search-closeafterclick",
+    "search-querymaponclick",
   ].forEach((id) => {
     document.querySelector(`#${id}`).checked = false;
   });
@@ -750,14 +752,28 @@ var getConfig = () => {
   if ($("#optProxyUrl").val() && _conf.proxy) {
     savedProxy = `${padding(0)}<proxy url="${$("#optProxyUrl").val() || _conf.proxy}"/>`;
   }
-  var search_params = { bbox: false, localities: false, features: false, static: false };
+  var search_params = {
+    bbox: false,
+    localities: false,
+    features: false,
+    static: false,
+    querymaponclick: false,
+    closeafterclick: false,
+  };
   if ($("#SwitchAdressSearch").is(":checked")) {
     olscompletion = [
       padding(0) + '<olscompletion type="' + $("#frm-searchlocalities").val() + '"',
       'url="' + $("#opt-searchlocalities-url").val() + '"',
       'attribution="' + $("#opt-searchlocalities-attribution").val() + '" />',
     ].join(" ");
+    if ($("#search-querymaponclick").prop("checked")) {
+      search_params.querymaponclick = "true";
+    }
+    if ($("#search-closeafterclick").prop("checked")) {
+      search_params.closeafterclick = "true";
+    }
     search_params.localities = true;
+    search_params.inputlabel = $("#opt-searchlocalities-inputlabel").val();
   }
   if (
     $("#frm-globalsearch").val() === "elasticsearch" &&
@@ -792,6 +808,12 @@ var getConfig = () => {
     search_params.features +
     '" static="' +
     search_params.static +
+    '" inputlabel="' +
+    search_params.inputlabel +
+    '" querymaponclick="' +
+    search_params.querymaponclick +
+    '" closeafterclick="' +
+    search_params.closeafterclick +
     '"/>';
 
   var maxextentStr = "";
