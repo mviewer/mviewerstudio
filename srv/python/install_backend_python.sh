@@ -1,7 +1,14 @@
 #!/bin/bash
 
-# Install required packages
+#==========================================================================================
+# Script name   : install_backend_python.sh
+# Autor         : PSC mviewer
+# Description   : This script ease mviewerstudio install
+# Usage         : ./install_backend_python.sh [parent_directory] [branch] [directory_name]
+# Documentation : https://mviewerstudio.readthedocs.io/fr/stable/doc_tech/install_python.html
+#==========================================================================================
 
+# Install required packages
 apt install libxslt1-dev libxml2-dev python3 python3-pip python3-venv
 pip install virtualenv
 
@@ -12,7 +19,12 @@ WORKING_PATH="$1"
 # To use a specific branch - will use master if no set
 BRANCH="$2"
 
-MVIEWERSTUDIO_DIR="mviewerstudio"
+MVIEWERSTUDIO_DIR="$3"
+
+# use default mviewerstudio dir name if not set from param
+if [ -z "${MVIEWERSTUDIO_DIR}"]; then
+    MVIEWERSTUDIO_DIR="mviewerstudio"
+fi
 
 # custom install path
 if [ "${WORKING_PATH}" ]; then
