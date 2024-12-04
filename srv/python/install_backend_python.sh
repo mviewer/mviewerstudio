@@ -25,7 +25,7 @@ MVIEWERSTUDIO_DIR="$3"
 REPO_URL="https://github.com/mviewer/mviewerstudio.git"
 
 # use default mviewerstudio dir name if not set from param
-if [ -z "${MVIEWERSTUDIO_DIR}"]; then
+if [ -z "${MVIEWERSTUDIO_DIR}" ]; then
     MVIEWERSTUDIO_DIR="mviewerstudio"
 fi
 
