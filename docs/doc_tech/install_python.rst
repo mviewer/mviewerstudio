@@ -75,17 +75,21 @@ Téléchargez le script d'installation
     sudo apt install curl
     curl -O https://raw.githubusercontent.com/mviewer/mviewerstudio/master/srv/python/install_backend_python.sh
 
-Le script utilise 2 paramètres optionnels :
+Le script utilise 3 paramètres :
 
-- ``<path>`` : Le chemin dans lequel installer mviewerstudio (par défaut le répertoire d'exécution du script)
-- ``<branch>`` : La branche à installer (par défaut master)
+- ``<parent_directory>`` : Le chemin dans lequel installer mviewerstudio
+- ``<branch>`` : La branche à installer
+- ``<directory_name>`` : La branche à installer (Option - par défaut le nom sera ``mviewerstudio``)
 
 Exemple pour installer mviewerstudio dans le répertoire ``/git`` en utilisant la branche ``develop`` :
 
 .. code-block:: sh
 
-    sh ./install_backend_python.sh /home/monuser develop
+    sh ./install_backend_python.sh /home/monuser/git develop mviewerstudio_develop
 
+Suite à cette commande exemple, le mviewerstudio sera donc accessible sous le chemin suivant et sera directement aligné avec la branche ``develop``: 
+
+``/home/monuser/git/mviewerstudio_develop``
 
 Configuration
 =============
