@@ -416,14 +416,18 @@ var addGroup = (themeid, title, groupId) => {
   return item;
 };
 
-var editLayer = function (item, themeid, layerid, groupid) {
+var editLayer = function (item, themeid, layerid) {
   mv.setCurrentThemeId(themeid);
   mv.setCurrentLayerId(layerid);
+
   var element = $(item).parent().parent();
   element.addClass("active");
   if (!layerid) {
     layerid = element.attr("data-layerid");
   }
+  var groupid = element.attr("data-groupid");
+  mv.setCurrentGroupId(groupid);
+
   if (layerid != "undefined") {
     $("#mod-layerOptions").modal("show");
     mv.showLayerOptions(element, themeid, layerid, groupid);
