@@ -219,7 +219,7 @@
                             <a class="nav-link d-none" id="toolsbarStudio-unpublish" onclick="mv.unpublish(config.id);" href="#"><i class="ri-eye-off-fill"></i> <span i18n="studio.toolsbar.unpublish">Dépublier</span></a>               
                             <a class="nav-link d-none" id="toolsbarStudio-delete" onclick="showAlertDelApp(config.id);" href="#"><i class="ri-delete-bin-2-line"></i> <span i18n="studio.toolsbar.delete">Supprimer</span></a>                
                             <a class="nav-link" id="toolsbarStudio-View" onclick="previewAppsWithoutSave(config.id);" href="#"><i class="ri-eye-2-line"></i> <span i18n="studio.toolsbar.preview">Prévisualiser</span></a>                          
-                            <a class="nav-link" id="toolsbarStudio-Save" onclick="mv.saveAllThemes();" href="#"><i class="ri-save-line"></i> <span i18n="studio.toolsbar.save">Enregistrer</span></a>
+                            <a class="nav-link" id="toolsbarStudio-Save" onclick="mv.saveAllThemes(), mv.setNewTheme(false);" href="#"><i class="ri-save-line"></i> <span i18n="studio.toolsbar.save">Enregistrer</span></a>
                         </ul>
                         <div class="custom-control custom-switch mt-2" id="btnSwitchAdvanced">
                             <input type="checkbox" class="custom-control-input" id="SwitchAdvanced">
@@ -723,9 +723,9 @@
                                             <div id="themes-list" class="list-group"></div>
                                             <div class="my-3 text-right">
                                                 <button id="btn-addTheme" i18n="modal.param.theme.new" title="Créer une nouvelle thématique" class="btn btn-info"
-                                                        onclick="addTheme(mviewer.tr('modal.new.theme'), true, createId('theme'), 'fas fa-caret-right');">
+                                                        onclick="mv.setNewTheme(true), addTheme(mviewer.tr('modal.new.theme'), true, createId('theme'), 'fas fa-caret-right');">
                                                     <span><i class="bi bi-plus-lg"></i> </span>
-                                                    <span i18n="tabs.data.themespanel.create">Créer</span>
+                                                    <span i18n="tabs.data.themespanel.create">Ajouter une thématique</span>
                                                 </button>
                                                 <button id="btn-importTheme" title="Importer une thématique depuis un autre mviewer" class="btn btn-outline-info" onclick="$('#mod-themesview input').prop('checked', false);" data-bs-toggle="modal" data-bs-target="#mod-themesview">
                                                     <span><i class="bi bi-download"></i> </span>
@@ -995,7 +995,7 @@
                 </div>
                 <div class="modal-body">
                     <p i18n="modal.exit.subtitle">Êtes-vous sûr de vouloir quitter votre projet en cours ?</p>
-                    <a class="cardsClose save-close zoomCard" onclick="saveStudio(true);">
+                    <a class="cardsClose save-close zoomCard" onclick="saveStudio(true),mv.setNewTheme(false);">
                         <i class="ri-save-line"></i>
                         <span i18n="modal.exit.save">Enregister mon application et quitter le studio</span>
                     </a>
@@ -1111,7 +1111,7 @@
                 <div class="modal-header align-items-center">
                     <h5 class="modal-title" i18n="modal.layer.edit">Paramètres de la donnée</h5>
                     <span id="layerTypeLabel"></span>
-                    <button type="button" onclick="mv.setCurrentThemeId('')" class="close" data-bs-toggle="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <button type="button" onclick="mv.setCurrentThemeId(''), mv.setCurrentGroupId('')" class="close" data-bs-toggle="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 </div>
                 <div class="modal-body">
                     <ul class="nav nav-pills mb-3" id="layer_sections_menu" role="tablist">
@@ -1671,8 +1671,8 @@
                 </div>
                 <div class="modal-footer">                    
                     <button type="button" onclick="mv.form2xml()" data-bs-target="#mod-codeview" data-bs-toggle="modal" class="btn btn-outline-info advanced" i18n="view" style="display: none;">Voir</button>
-                    <button type="button" onclick="mv.saveLayerOptions(), mv.setCurrentThemeId('')" data-bs-toggle="modal" class="btn btn-primary" i18n="save">Enregistrer</button>
-                    <button type="button" onclick="mv.setCurrentThemeId('')" class="btn btn-outline-primary" data-bs-toggle="modal" i18n="close">Fermer</button>
+                    <button type="button" onclick="mv.saveLayerOptions(), mv.setCurrentThemeId(''), mv.setCurrentGroupId('')" data-bs-toggle="modal" class="btn btn-primary" i18n="save">Enregistrer</button>
+                    <button type="button" onclick="mv.setCurrentThemeId(''), mv.setCurrentGroupId('')" class="btn btn-outline-primary" data-bs-toggle="modal" i18n="close">Fermer</button>
                 </div>
             </div>
         </div>
@@ -1926,7 +1926,7 @@
         </div>
     </div>
     <!-- Modal-->
-    <div class="modal fade" id="genericModal" role="dialog" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="genericModal" aria-hidden="true">
+    <div class="modal fade" id="genericModal" role="dialog" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="genericModal">
         <div class="modal-dialog modal-md">
             <div class="modal-content" id="genericModalContent">
             </div>
