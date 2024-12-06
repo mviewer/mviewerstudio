@@ -390,7 +390,7 @@ var addLayer = function (title, layerid, themeid, groupid) {
             <div class="layer-options-btn" style="display:inline-flex; justify-content: end;">
                 <button class="btn btn-sm btn-secondary" onclick={mv.setCurrentThemeId("${themeid}");}><span class="layer-move moveList" i18n="move" title="Déplacer"><i class="bi bi-arrows-move"></i></span></button>
                 <button class="btn btn-sm btn-secondary deleteLayerButton" onclick="deleteLayerItem(this, '${themeid}');"><span class="layer-remove" i18n="delete" title="Supprimer"><i class="bi bi-x-circle"></i></span></button>
-                <button class="btn btn-sm btn-info" onclick="editLayer(this, '${themeid}', '${layerid}', '${groupid}'), mv.setCurrentGroupId('${groupid}');"><span class="layer-edit" i18n="edit_layer" title="Editer cette couche"><i class="bi bi-gear-fill"></i></span></button>
+                <button class="btn btn-sm btn-info" onclick="mv.setCurrentGroupId(this), editLayer(this, '${themeid}', '${layerid}');"><span class="layer-edit" i18n="edit_layer" title="Editer cette couche"><i class="bi bi-gear-fill"></i></span></button>
             </div>
         </div>`);
   return item;
@@ -425,8 +425,7 @@ var editLayer = function (item, themeid, layerid) {
   if (!layerid) {
     layerid = element.attr("data-layerid");
   }
-  var groupid = element.attr("data-groupid");
-  mv.setCurrentGroupId(groupid);
+  var groupid = mv.getCurrentGroupId();
 
   if (layerid != "undefined") {
     $("#mod-layerOptions").modal("show");
@@ -552,9 +551,8 @@ function initializeNestedSortables() {
           const toThemeId = evt.to.closest(".themes-list-item")?.id;
           const toGroupId = evt.to.closest(".group-item")?.id
             ? evt.to.closest(".group-item").id
-            : null;
+            : "undefined";
           const newIndex = evt.newIndex;
-
           item.setAttribute("data-groupid", toGroupId);
           item.setAttribute("data-themeid", toThemeId);
 
@@ -572,7 +570,7 @@ function initializeNestedSortables() {
             if (!config.themes[fromThemeId].layers)
               config.themes[fromThemeId].layers = [];
             // Si le groupe d'arrivé n'a pas de layers, on set group.layers à []
-            if (toGroupId)
+            if (toGroupId !== "undefined")
               if (
                 !config.themes[toThemeId].groups.find((group) => group.id === toGroupId)
                   .layers
@@ -585,7 +583,7 @@ function initializeNestedSortables() {
                   .find((group) => group.id === fromGroupId)
                   .layers.splice(index, 1)
               : config.themes[fromThemeId].layers.splice(index, 1);
-            toGroupId
+            toGroupId !== "undefined"
               ? config.themes[toThemeId].groups
                   .find((group) => group.id === toGroupId)
                   .layers.splice(newIndex, 0, itemToMove)
