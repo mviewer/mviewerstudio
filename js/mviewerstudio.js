@@ -492,6 +492,7 @@ function initializeNestedSortables() {
         handle: ".moveList",
         animation: 150,
         ghostClass: "ghost",
+        forceFallback: true,
         fallbackOnBody: true,
         swapThreshold: 0.65,
         group: {
@@ -533,8 +534,8 @@ function initializeNestedSortables() {
     if (!sortableElement.getAttribute("data-sortable-initialized")) {
       new Sortable(sortableElement, {
         handle: ".moveList",
-        animation: 150,
         ghostClass: "ghost",
+        forceFallback: true,
         fallbackOnBody: true,
         swapThreshold: 0.65,
         group: {
@@ -578,11 +579,13 @@ function initializeNestedSortables() {
                 config.themes[toThemeId].groups.find(
                   (group) => group.id === toGroupId
                 ).layers = [];
+            // On récupère l'élément à bouger
             const [itemToMove] = fromGroupId
               ? config.themes[fromThemeId].groups
                   .find((group) => group.id === fromGroupId)
                   .layers.splice(index, 1)
               : config.themes[fromThemeId].layers.splice(index, 1);
+            // On ajoute l'élément dans le groupe d'arrivé
             toGroupId !== "undefined"
               ? config.themes[toThemeId].groups
                   .find((group) => group.id === toGroupId)
