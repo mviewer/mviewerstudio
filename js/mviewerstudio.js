@@ -488,7 +488,7 @@ function initializeNestedSortables() {
   // For groups
   nestedSortablesGroups.forEach((sortableElement) => {
     if (!sortableElement.getAttribute("data-sortable-initialized")) {
-      new Sortable(sortableElement, {
+      let groupSortable = new Sortable(sortableElement, {
         handle: ".moveList",
         animation: 150,
         ghostClass: "ghost",
@@ -525,6 +525,7 @@ function initializeNestedSortables() {
           }
         },
       });
+      mv.sortableInstances.push(groupSortable);
       sortableElement.setAttribute("data-sortable-initialized", true);
     }
   });
@@ -532,7 +533,7 @@ function initializeNestedSortables() {
   // For layers
   nestedSortablesLayers.forEach((sortableElement) => {
     if (!sortableElement.getAttribute("data-sortable-initialized")) {
-      new Sortable(sortableElement, {
+      let layerSortable = new Sortable(sortableElement, {
         handle: ".moveList",
         ghostClass: "ghost",
         forceFallback: true,
@@ -601,6 +602,8 @@ function initializeNestedSortables() {
           });
         },
       });
+      mv.sortableInstances.push(layerSortable);
+
       // Marquer cet élément comme "initialisé" pour éviter les doublons
       sortableElement.setAttribute("data-sortable-initialized", true);
     }
@@ -1400,6 +1403,9 @@ var loadApplicationParametersFromFile = function () {
 };
 
 var loadApplicationParametersFromRemoteFile = function (url) {
+  // bug fix - clean all instances to avoid to dupplicate Sortable instance
+  mv.sortableInstances.forEach((x) => x.destroy());
+  mv.sortableInstances = [];
   const waitRequests = [
     fetch(url, {
       method: "GET",
