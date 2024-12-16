@@ -774,7 +774,7 @@ var deleteTheme = function (themeid) {
 };
 
 var deleteLayer = function (layerid, themeid, groupid) {
-  if (groupid !== undefined) {
+  if (groupid == undefined || !groupid || groupid == "undefined") {
     var index = config.themes[themeid].layers.findIndex(function (l) {
       return l.id === layerid;
     });
