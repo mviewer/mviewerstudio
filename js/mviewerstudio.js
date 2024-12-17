@@ -272,6 +272,8 @@ var newConfiguration = function (infos) {
     "opt-showhelp",
     "opt-coordinates",
     "opt-togglealllayersfromtheme",
+    "opt-mapprint",
+    "opt-addlayerstools",
     "SwitchCustomBackground",
     "SwitchAdvanced",
     "search-closeafterclick",
@@ -733,6 +735,8 @@ var getConfig = () => {
     'togglealllayersfromtheme="' +
       ($("#opt-togglealllayersfromtheme").prop("checked") === true) +
       '"',
+    'mapprint="' + ($("#opt-mapprint").prop("checked") === true) + '"',
+    'addlayerstools="' + ($("#opt-addlayerstools").prop("checked") === true) + '"',
   ];
 
   config.title = $("#opt-title").val();
