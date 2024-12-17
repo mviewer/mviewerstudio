@@ -516,12 +516,19 @@ function initializeNestedSortables() {
               group["data-themeid"] = toThemeId;
             }
           });
+          // search old index position
           const index = config.themes[fromThemeId].groups.findIndex(
             (group) => group.id === item.id
           );
+          // if index exists from config, change position
           if (index !== -1) {
-            const [itemToMove] = config.themes[fromThemeId].groups.splice(index, 1);
-            config.themes[toThemeId].groups.push(itemToMove);
+            // remove config position
+            let itemToMove = config.themes[fromThemeId].groups.splice(
+              evt.oldDraggableIndex,
+              1
+            )[0];
+            // insert to correct position
+            config.themes[fromThemeId].groups.splice(evt.newIndex, 0, itemToMove);
           }
         },
       });
