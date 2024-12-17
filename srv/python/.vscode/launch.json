@@ -1,0 +1,31 @@
+{
+        // Use IntelliSense to learn about possible attributes.
+        // Hover to view descriptions of existing attributes.
+        // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+        "version": "0.2.0",
+        "configurations": [
+                {
+                        "name": "Python Debugger: Flask",
+                        "type": "python",
+                        "request": "launch",
+                        "module": "flask",
+                        "env": {
+                                "FLASK_APP": "mviewerstudio_backend/app.py",
+                                "FLASK_DEBUG": "1",
+                                "CONF_PATH_FROM_MVIEWER":"apps/store",
+                                "EXPORT_CONF_FOLDER":"/home/user/git/mviewer/apps/store/",
+                                "MVIEWERSTUDIO_PUBLISH_PATH":"/home/user/git/mviewer/apps/public",
+                                "CONF_PUBLISH_PATH_FROM_MVIEWER":"apps/public",
+                                "DEFAULT_ORG":"geobretagne",
+
+                        },
+                        "args": [
+                                "run",
+                                "--no-debugger",
+                                "--no-reload"
+                        ],
+                        "jinja": true,
+                        "autoStartBrowser": false
+                }
+        ]
+}

@@ -353,26 +353,14 @@ var deleteThemeItem = function (btn) {
 
 var deleteLayerItem = function (btn, themeid) {
   var el = $(btn).closest(".layers-list-item")[0];
-  deleteLayer(el.getAttribute("data-layerid"), themeid);
+  deleteLayer(el.getAttribute("data-layerid"), themeid, el.getAttribute("data-groupid"));
   el && el.parentNode.removeChild(el);
 };
 
-var sortableThemeList = Sortable.create(document.getElementById("themes-list"), {
-  handle: ".moveList",
-  animation: 150,
-  ghostClass: "ghost",
-  onEnd: function (evt) {
-    sortThemes();
-  },
-});
-
-sortThemes = function () {
-  var orderedThemes = {};
-  $(".themes-list-item").each(function (i, item) {
-    var id = $(this).attr("data-themeid");
-    orderedThemes[id] = config.themes[id];
-  });
-  config.themes = orderedThemes;
+var deleteGroupItem = function (btn, themeid) {
+  var el = $(btn).closest(".list-group-item")[0];
+  deleteGroup(el.id, themeid);
+  el && el.parentNode.removeChild(el);
 };
 
 setConf = (key, value) => {
@@ -393,31 +381,57 @@ $("input[type=file]").change(function () {
   loadApplicationParametersFromFile();
 });
 
-var addLayer = function (title, layerid, themeid) {
+var addLayer = function (title, layerid, themeid, groupid) {
   // test if theme is saved
   if (!config.themes[themeid]) {
     saveThemes();
   }
-  var item = $(`#themeLayers-${themeid}`).append(`
-        <div class="list-group-item layers-list-item" data-layerid="${layerid}">
+  var item = $(groupid ? `#${groupid} .list-group` : `#themeLayers-${themeid}`).append(`
+        <div id="${layerid}" class="layer_item list-group-item layers-list-item nested-3" data-layerid="${layerid}" data-themeid="${themeid}" data-groupid="${groupid}">
             <span class="layer-name moveList">${title}</span>
             <div class="layer-options-btn" style="display:inline-flex; justify-content: end;">
                 <button class="btn btn-sm btn-secondary" onclick={mv.setCurrentThemeId("${themeid}");}><span class="layer-move moveList" i18n="move" title="Déplacer"><i class="bi bi-arrows-move"></i></span></button>
                 <button class="btn btn-sm btn-secondary deleteLayerButton" onclick="deleteLayerItem(this, '${themeid}');"><span class="layer-remove" i18n="delete" title="Supprimer"><i class="bi bi-x-circle"></i></span></button>
-                <button class="btn btn-sm btn-info" onclick="editLayer(this, '${themeid}', '${layerid}');"><span class="layer-edit" i18n="edit_layer" title="Editer cette couche"><i class="bi bi-gear-fill"></i></span></button>
+                <button class="btn btn-sm btn-info" onclick="mv.setCurrentGroupId(this), editLayer(this, '${themeid}', '${layerid}');"><span class="layer-edit" i18n="edit_layer" title="Editer cette couche"><i class="bi bi-gear-fill"></i></span></button>
             </div>
         </div>`);
+  return item;
+};
+
+var addGroup = (themeid, title, groupId) => {
+  // test if theme is saved
+  if (!config.themes[themeid]) {
+    saveThemes();
+  }
+  const item = $(`#themeGroups-${themeid}`).append(`
+    <div id="${groupId}" class="group-item list-group-item nested-2" data-themeid="${themeid}">
+      <div class="layers-list-item">
+        <input type="text" class="group-name form-control col-4 d-inline" value="${title}" aria-label="title">
+        <div class="layer-options-btn" style="display:inline-flex; justify-content: end;">
+            <button class="btn btn-sm btn-secondary" onclick={mv.setCurrentThemeId("${themeid}");}><span class="layer-move moveList" i18n="move" title="Déplacer"><i class="bi bi-arrows-move"></i></span></button>
+            <button class="btn btn-sm btn-secondary deleteLayerButton" onclick="deleteGroupItem(this, '${themeid}'), displayGroupsPanel('${themeid}');"><span class="group-remove" i18n="delete" title="Supprimer"><i class="bi bi-x-circle"></i></span></button>
+        </div>
+      </div>
+      <div class="layer_item list-group list-group-item nested-sortable-layers mt-3 mb-2 min-h-1"></div>
+    </div>`);
+  initializeNestedSortables();
+  return item;
 };
 
 var editLayer = function (item, themeid, layerid) {
   mv.setCurrentThemeId(themeid);
   mv.setCurrentLayerId(layerid);
+
   var element = $(item).parent().parent();
-  var layerid = element.attr("data-layerid");
   element.addClass("active");
+  if (!layerid) {
+    layerid = element.attr("data-layerid");
+  }
+  var groupid = mv.getCurrentGroupId();
+
   if (layerid != "undefined") {
     $("#mod-layerOptions").modal("show");
-    mv.showLayerOptions(element, themeid, layerid);
+    mv.showLayerOptions(element, themeid, layerid, groupid);
   } else {
     $("#input-ogc-filter").val("");
     $("#csw-results .csw-result").remove();
@@ -426,8 +440,6 @@ var editLayer = function (item, themeid, layerid) {
 };
 
 var importThemes = function () {
-  console.groupCollapsed("importThemes");
-  //console.log("external theme to import", _conf.external_themes.data);
   $("#tableThemaExt .selected").each(function (id, item) {
     var url = $(item).attr("data-url");
     var id = $(item).attr("data-theme-id");
@@ -437,11 +449,32 @@ var importThemes = function () {
   $("#mod-themesview").modal("hide");
 };
 
+sortThemes = function () {
+  var orderedThemes = {};
+  $(".themes-list-item").each(function (i, item) {
+    var id = $(this).attr("data-themeid");
+    orderedThemes[id] = config.themes[id];
+  });
+  config.themes = orderedThemes;
+};
+
+//D'n'D themes
+var sortableThemeList = Sortable.create(document.getElementById("themes-list"), {
+  handle: ".moveList",
+  animation: 150,
+  ghostClass: "ghost",
+  onEnd: function (evt) {
+    sortThemes();
+  },
+});
+
 var sortableElement = function (targetId, callback) {
   Sortable.create(document.getElementById(targetId), {
     handle: ".moveList",
     animation: 150,
     ghostClass: "ghost",
+    fallbackOnBody: true,
+    swapThreshold: 0.65,
     onEnd: function (evt) {
       callback(evt);
     },
@@ -449,13 +482,153 @@ var sortableElement = function (targetId, callback) {
 };
 sortableElement("themes-list", sortThemes);
 
+//D'n'D groups && layers
+function initializeNestedSortables() {
+  const nestedSortablesGroups = document.querySelectorAll(".nested-sortable-groups");
+  const nestedSortablesLayers = document.querySelectorAll(".nested-sortable-layers");
+
+  // For groups
+  nestedSortablesGroups.forEach((sortableElement) => {
+    if (!sortableElement.getAttribute("data-sortable-initialized")) {
+      let groupSortable = new Sortable(sortableElement, {
+        handle: ".moveList",
+        animation: 150,
+        ghostClass: "ghost",
+        forceFallback: true,
+        fallbackOnBody: true,
+        swapThreshold: 0.65,
+        group: {
+          name: "groups",
+          pull: true,
+          put: ["groups"],
+        },
+        onEnd: function (evt) {
+          const item = evt.item;
+          const fromThemeId = evt.from.closest(".themes-list-item")?.id;
+          const toThemeId = evt.to.closest(".themes-list-item")?.id;
+          const toGroupId = evt.to.closest(".group-item")?.id
+            ? evt.to.closest(".group-item").id
+            : null;
+
+          item.setAttribute("data-groupid", toGroupId);
+          item.setAttribute("data-themeid", toThemeId);
+
+          config.themes[toThemeId].groups.forEach((group) => {
+            if (group.id === item.getAttribute("data-groupid")) {
+              group["data-themeid"] = toThemeId;
+            }
+          });
+          // search old index position
+          const index = config.themes[fromThemeId].groups.findIndex(
+            (group) => group.id === item.id
+          );
+          // if index exists from config, change position
+          if (index !== -1) {
+            // remove config position
+            let itemToMove = config.themes[fromThemeId].groups.splice(
+              evt.oldDraggableIndex,
+              1
+            )[0];
+            // insert to correct position
+            config.themes[fromThemeId].groups.splice(evt.newIndex, 0, itemToMove);
+          }
+        },
+      });
+      mv.sortableInstances.push(groupSortable);
+      sortableElement.setAttribute("data-sortable-initialized", true);
+    }
+  });
+
+  // For layers
+  nestedSortablesLayers.forEach((sortableElement) => {
+    if (!sortableElement.getAttribute("data-sortable-initialized")) {
+      let layerSortable = new Sortable(sortableElement, {
+        handle: ".moveList",
+        ghostClass: "ghost",
+        forceFallback: true,
+        fallbackOnBody: true,
+        swapThreshold: 0.65,
+        group: {
+          name: "layers",
+          pull: true,
+          put: ["layers"],
+        },
+        onEnd: function (evt) {
+          const item = evt.item;
+          const fromThemeId = evt.from.closest(".themes-list-item")?.id;
+          const fromGroupId = evt.from.closest(".group-item")?.id
+            ? evt.from.closest(".group-item").id
+            : null;
+          const toThemeId = evt.to.closest(".themes-list-item")?.id;
+          const toGroupId = evt.to.closest(".group-item")?.id
+            ? evt.to.closest(".group-item").id
+            : "undefined";
+          const newIndex = evt.newIndex;
+          item.setAttribute("data-groupid", toGroupId);
+          item.setAttribute("data-themeid", toThemeId);
+
+          // Cherche l'index de départ en fonction de si le layer bougé vient d'un groupe ou un thème
+          const index = fromGroupId
+            ? config.themes[fromThemeId].groups
+                .find((group) => group.id === fromGroupId)
+                .layers.findIndex((layer) => layer.id === item.id)
+            : config.themes[fromThemeId].layers.findIndex(
+                (layer) => layer.id === item.id
+              );
+          // Si l'index éxiste, suppr l'item de la position de départ et l'ajoute à l'arrivée
+          if (index !== -1) {
+            // Si le thème n'a pas de layer, on set theme.layers à []
+            if (!config.themes[fromThemeId].layers)
+              config.themes[fromThemeId].layers = [];
+            // Si le groupe d'arrivé n'a pas de layers, on set group.layers à []
+            if (toGroupId !== "undefined")
+              if (
+                !config.themes[toThemeId].groups.find((group) => group.id === toGroupId)
+                  .layers
+              )
+                config.themes[toThemeId].groups.find(
+                  (group) => group.id === toGroupId
+                ).layers = [];
+            // On récupère l'élément à bouger
+            const [itemToMove] = fromGroupId
+              ? config.themes[fromThemeId].groups
+                  .find((group) => group.id === fromGroupId)
+                  .layers.splice(index, 1)
+              : config.themes[fromThemeId].layers.splice(index, 1);
+            // On ajoute l'élément dans le groupe d'arrivé
+            toGroupId !== "undefined"
+              ? config.themes[toThemeId].groups
+                  .find((group) => group.id === toGroupId)
+                  .layers.splice(newIndex, 0, itemToMove)
+              : config.themes[toThemeId].layers.splice(newIndex, 0, itemToMove);
+          }
+
+          config.themes[toThemeId].layers.forEach((layer) => {
+            if (layer.id === item.getAttribute("data-layerid")) {
+              layer["data-groupid"] = toGroupId;
+              layer["data-themeid"] = toThemeId;
+            }
+          });
+        },
+      });
+      mv.sortableInstances.push(layerSortable);
+
+      // Marquer cet élément comme "initialisé" pour éviter les doublons
+      sortableElement.setAttribute("data-sortable-initialized", true);
+    }
+  });
+}
+
+// init on DOM loading
+initializeNestedSortables();
+
 var addTheme = function (title, collapsed, themeid, icon, url, layersvisibility) {
   if (url) {
     //external theme
     $("#themes-list").append(`
-            <div class="list-group-item list-group-item themes-list-item" data-theme-url="${url}" data-theme="${title}" data-themeid="${themeid}" data-theme-collapsed="${collapsed}" data-theme-icon="${icon}" data-theme-layersvisibility="${layersvisibility}">
+            <div class="theme_item list-group-item bg-light themes-list-item my-2" data-theme-url="${url}" data-theme="${title}" data-themeid="${themeid}" data-theme-collapsed="${collapsed}" data-theme-icon="${icon}" data-theme-layersvisibility="${layersvisibility}">
                 <div class="theme-infos">
-                    <span class="theme-name moveList" contentEditable="true">${title}</span><span class="theme-infos-layer">Ext.</span>
+                    <span class="theme-name moveList">${title}</span><span class="theme-infos-layer">Ext.</span>
                 </div>
                 <div class="theme-options-btn">
                     <button class="btn btn-sm btn-secondary" ><span class="theme-move moveList" id18="move" title="Déplacer"><i class="bi bi-arrows-move"></i></span></button>
@@ -465,10 +638,10 @@ var addTheme = function (title, collapsed, themeid, icon, url, layersvisibility)
             </div>`);
   } else {
     $("#themes-list").append(
-      `<div class="list-group-item themes-list-item" id="${themeid}" data-theme="${title}" data-themeid="${themeid}" data-theme-collapsed="${collapsed}" data-theme-icon="${icon}">
+      `<div class="theme_item list-group-item bg-light themes-list-item nested-1 my-2" id="${themeid}" data-theme="${title}" data-themeid="${themeid}" data-theme-collapsed="${collapsed}" data-theme-icon="${icon}">
           <div class="theme-infos ">
               <span type="button" class="selected-icon ${icon} picker-button" data-bs-target="#iconPicker" data-bs-toggle="modal"></span>
-              <input type="text" class="theme-name" value="${title}" aria-label="title">
+              <input type="text" class="theme-name form-control col-6 d-inline" value="${title}" aria-label="title">
               <span class="theme-infos-layer">0</span>
               <div class="custom-control custom-switch m-2">
                 <input type="checkbox" class="custom-control-input" id="${themeid}-theme-edit-collapsed" ${collapsed === "false" ? "checked" : ""}>
@@ -476,14 +649,18 @@ var addTheme = function (title, collapsed, themeid, icon, url, layersvisibility)
               </div>
           </div>
           <div class="theme-options-btn text-right">
+              <button onclick="mv.setCurrentThemeId('${themeid}'), mv.getConfGroups(), displayGroupsPanel('${themeid}');" class="btn btn-sm btn-outline-info" id="btn-addGroup-${themeid}" data-themeid="${themeid}" ><i class="bi bi-plus-lg"></i>Ajouter un groupe</button>
               <button onclick={mv.setCurrentThemeId("${themeid}");} class="btn btn-sm btn-outline-info" id="btn-addLayer-${themeid}" data-bs-target="#mod-layerNew" data-themeid="${themeid}" data-bs-toggle="modal"><i class="bi bi-plus-lg"></i> Ajouter une donnée</button>
               <button class="btn btn-sm btn-secondary"><span class="theme-move moveList" title="Déplacer"><i class="bi bi-arrows-move"></i></span></button>
               <button class="btn btn-sm btn-secondary" onclick="deleteThemeItem(this);" ><span class="theme-remove" title="Supprimer"><i class="bi bi-x-circle"></i></span></button>               
-          </div>                        
-          <div id="themeLayers-${themeid}" class="theme-layer-list list-group mt-3 mb-2"></div>
+          </div>
+          <div>
+            <div id="themeGroups-${themeid}" class="group_list theme-group-list list-group mt-3 mb-2 p-2 nested-sortable-groups ${mv.getNewTheme() ? "hideBlock" : ""}"> Groupes </div>
+            <div id="themeLayers-${themeid}" class="layer_item theme-layer-list list-group mt-3 mb-2 p-2 nested-sortable-layers"> Données </div>
+          </div>
       </div>`
     );
-    sortableElement("themeLayers-" + themeid, sortLayers);
+    initializeNestedSortables();
   }
   config.themes[themeid] = {
     title: title,
@@ -494,6 +671,15 @@ var addTheme = function (title, collapsed, themeid, icon, url, layersvisibility)
     url: url,
     layers: [],
   };
+};
+
+// Display groups div if at least one group in
+const displayGroupsPanel = (themeId) => {
+  if ($(`#${themeId} .group_list`).children().length !== 0) {
+    $(`#${themeId} .group_list`).removeClass("hideBlock").addClass("showBlock");
+  } else {
+    $(`#${themeId} .group_list`).removeClass("showBlock").addClass("hideBlock");
+  }
 };
 
 // Only one checkbox "collapsed" checked
@@ -541,6 +727,29 @@ var saveThemes = function () {
   }
 };
 
+var saveGroups = () => {
+  const themes = $(".themes-list-item");
+  for (i = 0; i < themes.length; i++) {
+    const theme = themes[i];
+    const themeId = theme.getAttribute("data-themeid");
+    const groups = $(`#${themeId}`).find(".group-item");
+
+    for (j = 0; j < groups.length; j++) {
+      const group = groups[j];
+      const groupId = group.id;
+
+      const gr = $(`div[id="${groupId}"]`);
+      const groupName = gr.find(".group-name").val();
+
+      if (config.themes[themeId].groups) {
+        config.themes[themeId].groups.find((group) => group.id === groupId).id = groupId;
+        config.themes[themeId].groups.find((group) => group.id === groupId).name =
+          groupName;
+      }
+    }
+  }
+};
+
 var editThemeExt = function (item) {
   $("#themes-list .list-group-item").removeClass("active");
   $(item).parent().parent().addClass("active");
@@ -573,11 +782,29 @@ var deleteTheme = function (themeid) {
   delete config.themes[themeid];
 };
 
-var deleteLayer = function (layerid, themeid) {
-  var index = config.themes[themeid].layers.findIndex(function (l) {
-    return l.id === layerid;
+var deleteLayer = function (layerid, themeid, groupid) {
+  if (groupid == undefined || !groupid || groupid == "undefined") {
+    var index = config.themes[themeid].layers.findIndex(function (l) {
+      return l.id === layerid;
+    });
+    config.themes[themeid].layers.splice(index, 1);
+  } else {
+    var index = config.themes[themeid].groups
+      .find((group) => group.id === groupid)
+      .layers.findIndex(function (l) {
+        return l.id === layerid;
+      });
+    config.themes[themeid].groups
+      .find((group) => group.id === groupid)
+      .layers.splice(index, 1);
+  }
+};
+
+var deleteGroup = function (groupid, themeid) {
+  var index = config.themes[themeid].groups.findIndex(function (g) {
+    return g.id === groupid;
   });
-  config.themes[themeid].layers.splice(index, 1);
+  config.themes[themeid].groups.splice(index, 1);
 };
 
 var createId = function (obj) {
@@ -870,6 +1097,7 @@ var getConfig = () => {
   // Respect theme order
   $(".themes-list-item").each(function (id, theme) {
     saveThemes();
+    saveGroups();
     var themeid = $(theme).attr("data-themeid");
     if (config.themes[themeid]) {
       var t = config.themes[themeid];
@@ -905,10 +1133,17 @@ var getConfig = () => {
             '">',
         ];
       }
+      // push groupes
+      $(t.groups).each((i, g) => {
+        var group = mv.writeGroupNode(g);
+        theme.push(group);
+      });
+      // push layers hors groupes
       $(t.layers).each(function (i, l) {
         var layer = mv.writeLayerNode(l);
         theme.push(layer);
       });
+
       themes.push(theme.join(" "));
       themes.push(padding(4) + "</theme>");
     }
@@ -934,7 +1169,6 @@ var getConfig = () => {
     themes.join(" "),
     padding(0) + "</config>",
   ];
-
   return conf;
 };
 
@@ -1121,6 +1355,7 @@ var saveAppWithPython = (exists, conf, url, close) => {
 
 var saveApplicationsConfig = (close, message = "") => {
   const conf = getConfig();
+
   if (!conf || !mv.validateXML(conf.join(""))) {
     return alertCustom(mviewer.tr("msg.xml_doc_invalid"), "danger");
   }
@@ -1197,6 +1432,9 @@ var loadApplicationParametersFromFile = function () {
 };
 
 var loadApplicationParametersFromRemoteFile = function (url) {
+  // bug fix - clean all instances to avoid to dupplicate Sortable instance
+  mv.sortableInstances.forEach((x) => x.destroy());
+  mv.sortableInstances = [];
   const waitRequests = [
     fetch(url, {
       method: "GET",
