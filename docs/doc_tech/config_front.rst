@@ -66,7 +66,7 @@ Ces paramètres sont à renseigner dans tous les cas.
 	- ``apps_folder`` : chemin d'accès depuis le répertoire apps (exemple store pour apps/store).
 	- ``public_folder`` : (pour backend Python seulement) - chemin d'accès depuis le répertoire apps pour les éléments publiés (exemple store pour apps/public).
 - ``external_themes`` : Utilisation du mécanisme d'import de thématiques externes (présentes dans d'autres mviewers).
-- ``proxy`` : Chemin du proxy par lequel les requêtes envoyées par mviewerstudio passeront. Valeur par défaut si ce paramètre est absent ``../proxy/?url=``.
+- ``proxy`` : Chemin du proxy par lequel les requêtes envoyées par mviewerstudio passeront si cette valeur est définie.
 - ``used`` : Booléen -> Utiliser ``"true"`` pour permettre le chargement et l'utilisation des thématiques externes.
 - ``logout_url`` : URL utilisée par le menu de déconnexion.
 - ``app_form_placeholders`` : Exemples de valeurs présentes dans le formulaire de création de l'application.
