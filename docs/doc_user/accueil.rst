@@ -29,7 +29,7 @@ Ouvrir une application existante
 
 Deux choix sont offerts à l'utilisateur :
 
-* Ouvrir un projet existant disponible sur un espace de stockage distant (serveur)
+* **Ouvrir un projet existant disponible sur un espace de stockage distant (serveur)**
 
 .. image:: ../_images/user/mviewerstudio_0_accueil_projet_existant_serveur.png
               :alt: Projet existant serveur
@@ -41,7 +41,7 @@ Il est également possible de filtrer les applications selon un mot clé, une da
 
 Cliquez sur "Modifier" pour accéder à l'éditeur d'application.
 
-* Ouvrir un projet existant disponible sur un espace de stockage local (fichier XML sur votre ordinateur)
+* **Ouvrir un projet existant disponible sur un espace de stockage local (fichier XML sur votre ordinateur)**
 
 .. image:: ../_images/user/mviewerstudio_0_accueil_projet_existant_local.png
               :alt: Projet existant local

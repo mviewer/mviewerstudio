@@ -8,14 +8,14 @@ Configurer le frontend mviewerstudio
 
 Le frontend Mviewerstudio dispose actuellement de deux backend :
 
-- Python (nouveau)
-- PHP (historique)
+- Python
+- PHP (obsolète)
 
 Selon le backend, il convient d'utiliser la bonne configuration pour la partie frontend.
 
 .. warning::
 	Une réflexion est en cours au sein de la communauté mviewerstudio afin de savoir s'il est pertinent de conserver deux backend.
-	Un des backend (potentiellement PHP) sera amené à disparaître sur le moyen terme.
+	Les dernières nouveautés de mviewerstudio n'ont pas été développés sur le backend PHP qui sera amené à disparaître.
 
 Pour savoir quelle configuration utiliser, vous trouverez deux fichiers à la racine du projet :
 
