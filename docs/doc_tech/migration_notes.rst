@@ -8,7 +8,7 @@
 Notes de migration
 ==================================
 
-Passer de v3.9.x à v4
+Passer de v3.9.x à v4.x
 ~~~~~~~~~~~~~~~~~~~~~~
 
 La version 4 de mviewerstudio propose un nouveau backend Python afin de disposer d'un système de stockage et de versionnement des configurations.
