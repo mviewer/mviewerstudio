@@ -1,8 +1,8 @@
 {
     "app_conf": {
         "studio_title": "GéoBretagne mviewer studio",
-        "mviewer_version":  "3.12",
-        "mviewerstudio_version":  "4.1",
+        "mviewer_version":  "3.13",
+        "mviewerstudio_version":  "4.2",
         "is_php": "true",
         "php": {
             "upload_service": "srv/php/store.php",
