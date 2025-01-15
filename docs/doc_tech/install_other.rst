@@ -6,43 +6,57 @@
 Autres types d'installations possibles
 ======================================
 
-SI vous ne pouvez installer mviewerstudio via python, il est aussi possible d'utiliser PHP ou docker.
-
 Installer avec le Backend PHP
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. warning:: L'installation via le backend PHP ne donne pas accès à toutes les fonctionnalités disponibles dans mviewerstudio (Exemple : gestion des versions, publication, création de templates...).
+.. warning:: PHP est officiellement annoncé en fin de vie, n'est plus maintenue et sera supprimé dans une prochaine version.
 
-
-Prérequis
-*********
-Apache 2, PHP 7
-
-Ainsi qu'une instance mviewer fonctionnelle (/mviewer).
-
-Install
-*********
-
-Clone du projet dans le répertoire apache :
-git clone https://github.com/mviewer/mviewerstudio
-
-Copie du fichier de conf :
-cp config-sample.json apps/config.json
-
-Modification des chemins d'accès dans le config.json :
-
-.. code-block:: sh
-
-    "upload_service": "srv/php/store.php",
-    "delete_service": "srv/php/delete.php",
-    "list_service": "srv/php/list.php",
-    "store_style_service": "srv/php/store/style.php",
-    "user_info": "srv/php/user_info.php",
-
+A partir de la version 4, veuillez suivre la documentation d'installation du backend Python (maintenu) pour disposer des nouvelles fonctionnalités.
+Pour plus d'informations sur PHP, vous devrez consulter la documentation de la version que vous souhaiter installer.
 
 Docker
 ~~~~~~~
 
-Vous pouvez utiliser la composition docker présente à la racine du dépot. Le Dockerfile permet de construire l'image pour un usage de production.
+Vous devez avoir installé docker au préalable.
 
-TODO
+1. Image docker
+
+Une image Docker est disponible avec toutes les informations d'installation :
+
+https://github.com/mviewer/mviewerstudio/edit/master/docker/readme.md
+
+
+2. Composition docker
+
+Vous pouvez également utiliser la composition docker disponible à la racine du projet afin d'obtenir mviewer, mviewerstudio et le backend python :
+
+https://github.com/mviewer/mviewerstudio/blob/master/docker-compose.yml
+
+Vous pouvez ouvrir ce fichier et l'adapter si besoin.
+
+Voici quelques commandes (mémo) avec docker / docker compose compose : 
+
+.. code-block:: sh
+
+	cd /mviewerstudio
+  	# start
+	docker compose up -d
+  	# stop
+	docker compose down # stop
+	# logs générales
+	docker compose logs -f
+  	# lister les conteneur et voirs les IDs
+  	docker ps -a
+	# logs d'un conteneur - remplacer ID par l'id du conteneur
+  	docker logs -f ID
+  	# bash dans un conteneur - remplacer ID par l'id du conteneur
+  	docker exec -it ID bash
+  
+
+Pour plus d'informations sud docker et docker compose :
+
+- https://docs.docker.com/engine/install/debian/
+
+- https://docs.docker.com/reference/cli/docker/compose/
+
+- https://wiki-tech.io/Conteneurisation/Docker/Docker-Compose

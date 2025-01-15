@@ -8,7 +8,7 @@
 Notes de migration
 ==================================
 
-Passer de v3.9.x à v4
+Passer de v3.9.x à v4.x
 ~~~~~~~~~~~~~~~~~~~~~~
 
 La version 4 de mviewerstudio propose un nouveau backend Python afin de disposer d'un système de stockage et de versionnement des configurations.
@@ -35,3 +35,8 @@ Si vous n'utiliser pas le backend Python, notez alors que vous ne pourrez pas di
 Si vous souhaiter utiliser le backend Python, mais que vous désirez conserver vos XML, il sera nécessaire de les réimporter unitairement en ouvrant le XML ``Depuis un ordinateur``.
 Vous devrez donc ouvrir le fichier afin de le re sauvegarder avec les informations nécessaires pour le bon fonctionnement de la v4.
 
+Passer de v4.1 à v4.2
+~~~~~~~~~~~~~~~~~~~~~~
+
+Suite aux modifications du backend pour afficher plus de logs, il est nécessaire de modifier le fichier mviewerstudio.service en ajoutant les options StandardOutput et StandardError comme ici :
+https://mviewerstudio.readthedocs.io/fr/stable/doc_tech/install_python.html#creation-du-service-et-activation-du-service

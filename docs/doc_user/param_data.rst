@@ -21,23 +21,32 @@ Le mot "données" correspond à un ou des jeu(x) de données que vous souhaitez 
 
 Deux options sont offertes à l'utilisateur pour définir ses thématiques :
 
-  1. Créer : pour créer votre thématique et y associer vos jeux de données "métier"
+  1. Ajouter : pour créer votre thématique et y associer vos jeux de données "métier"
   2. Importer : pour réutiliser une thématique déjà créée au sein de la communauté mviewer (ex. la thématique des découpages territoriaux qui contient les limites de communes, EPCI et départements)
 
-Option - Créer une thématique
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Option - Ajouter une thématique
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-En cliquant sur le bouton créer, une fenêtre de paramétrage de la thématique sélectionnée s'ouvre.
+En cliquant sur le bouton ajouter une thématique, le paramétrage de la thématique s'active.
 
 .. image:: ../_images/user/mviewerstudio_2_thematiques_creer.png
               :alt: Création thématique
               :align: center
 
+- |icone| : sélectionner l'icône illustrant la thématique. La recherche s'effectue en anglais.
+
 - ``Nom`` : renseigner le nom de la thématique (ex. Ports).
 
 - ``Déroulée par défaut`` : option permettant d'afficher le contenu de la thématique par défaut.
 
-- ``Icône`` : sélectionner l'icône illustrant la thématique. Pour rechercher un mot clé en anglais, utiliser la recherche du navigateur (taper CRTL+F).
+- ``Ajouter un groupe`` : ajout d'un groupe au sein de la thématique.
+
+- ``Ajouter une donnée`` : ajout d'une donnée au sein de la thématique. Par défaut, la donnée sera sans aucun groupe (si des groupes on été créés).
+
+- |deplacement| : déplacer la thématique via drag and drop.
+
+- |suppression| : supprime la thématique.
+
 
 Option - Importer une thématique externe
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -68,9 +77,9 @@ Une nouvelle fenêtre s'ouvre avec l'option suivante :
 Ajouter une donnée
 -------------------------------------------
 
-Depuis la fenêtre ``Paramètres de la thématique sélectionnée`` il est possible d'ajouter des données à cette thématique via le bouton |ajout_donnees|.
+Le bouton |ajout_donnees| permet d'ajouter des données dans l'application.
 
-L'ajout d'un nouveau jeu de données peut se faire avec une recherche dans un catalogue et en saisissant les paramètres de base.
+L'ajout d'un nouveau jeu de données peut se faire avec une recherche dans un catalogue ou en saisissant les paramètres de base.
 
 .. |ajout_donnees| image:: ../_images/user/mviewerstudio_2_thematiques_bouton_ajouter_donnees.png
   :alt: Ajouter une donnée 
@@ -111,6 +120,23 @@ Si le jeu de donnée n'est pas disponible dans un catalogue, il est possible de 
 * ``URL`` : paramètre de type URL (URL du service web)
 * ``Lien vers le fichier de style`` : pour les couches de type vector-tms uniquement, il indique l’URL vers le fichier de style au format JSON.
 * ``Nom du style`` : pour les couches de type vector-tms uniquement, titre à utiliser pour la liste des styles associés
+
+Ajouter un groupe
+-------------------------------------------
+
+Le bouton |ajout_groupe| permet d'ajouter des données dans l'application. Il n'y a pas de limites du nombre de groupes par thématique.
+
+.. image:: ../_images/user/mviewerstudio_2_ajout_groupe.png
+              :alt: Groupe ajoutée
+              :align: center
+
+
+Il vous suffira de taper le nom du groupe. Le déplacement de données dans le groupe se fait via drag and drop.
+
+.. |ajout_groupe| image:: ../_images/user/mviewerstudio_2_thematiques_bouton_ajouter_groupe.png
+  :alt: Ajouter un groupe 
+  :width: 100 pt
+
 
 Paramétrer ses données
 -------------------------------------------
@@ -276,6 +302,7 @@ Il est maintenant nécessaire de peupler le bloc de gauche avec des composants e
 * ``Chiffre clé`` : composant permettant d’afficher un chiffre clé à mettre en avant et nécessitant une valeur de type « nombre » en entrée.
 * ``Liste`` : composant permettant d’afficher une liste et nécessitant un champ composé d’une liste comme indiqué dans la `documentation mviewer <https://mviewerdoc.readthedocs.io/fr/latest/doc_tech/config_tpl.html#iterer-sur-un-champ-de-type-json>`_.
 * ``Texte`` : composant permettant d’afficher un texte et nécessitant une valeur de type texte en entrée.
+* ``Saisie libre`` : composant permettant de saisir librement le contenu du template comme dans un fichier Mustache (.mst).
 
 Sélectionnez un composant et cliquez sur "Enregistrer" pour l’ajouter. Il n’est possible d’ajouter qu’un composant à la fois, veuillez réitérer l’opération pour ajouter des composants supplémentaires. 
 
@@ -368,6 +395,14 @@ Une fois les composants ajoutés, il est nécessaire de configurer chaque compos
      - x
      - x
      -
+   * - Saisie libre
+     -
+     -
+     - x
+     -
+     -
+     -
+     - x
 
 
 **Valeur**
@@ -487,3 +522,17 @@ Pour supprimer définitivement la fiche d’information personnalisée, cliquez 
 **Modifier la position**
 
 Si vous modifiez la position de la fiche d’information après avoir configuré un template, il est préférable de vérifier l’affichage des composants et d’ajuster la disposition si nécessaire. 
+
+
+.. |icone| image:: ../_images/user/mviewerstudio_2_icone.png
+              :alt: Icône 
+	      :width: 20 pt
+
+
+.. |deplacement| image:: ../_images/user/mviewerstudio_2_deplacement.png
+              :alt: Déplacer 
+	      :width: 20 pt
+
+.. |suppression| image:: ../_images/user/mviewerstudio_2_suppression.png
+              :alt: Supprimer 
+	      :width: 20 pt

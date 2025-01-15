@@ -132,7 +132,7 @@ class Config:
             self.xml = self._read_xml_data(data)
         else:
             self.xml = self._read_xml(xml)
-        logger.debug("READ XML >> OK")
+        logger.debug(f"READ XML : SUCCESS")
         if self.xml is not None and app.register:
             self.register = app.register
             # read org
@@ -144,23 +144,23 @@ class Config:
                     if current_user
                     else app.config["DEFAULT_ORG"]
                 )
-            logger.debug("GET ORG FROM XML OR FROM AUTHENT >> OK")
+            logger.debug("READ ORG FROM XML OR AUTHENT : SUCCESS")
             # target workspace path
             self.workspace = getWorkspace(app, path.join(org, self.uuid))
             # create or update workspace
             logger.debug("CREATE WORKSPACE")
             self.create_workspace()
             # init or get repo
-            logger.debug("INIT GIT REPO")
+            logger.debug("INIT GIT REPO :")
             self.git = Git_manager(self.workspace)
             self.repo = self.git.repo
             # save xml and git commit
             file = app.register.read_json(self.uuid)
             if file:
                 self.directory = file[0]["directory"]
-            logger.debug("SAVE XML IN FILE SYSTEM")
+            logger.debug("TRY TO SAVE XML IN FILE SYSTEM")
             self.create_or_update_config(file)
-            logger.debug("SAVE XML IN FILE SYSTEM === OK")
+            logger.debug("SAVE XML : SUCCESS")
 
     def _read_xml(self, xml):
         """

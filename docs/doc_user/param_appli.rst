@@ -219,6 +219,12 @@ Activer la recherche pour offrir à vos utilisateurs la possibilité de se local
               :align: center
 
 * ``A l'adresse`` : localisation à l'adresse via le service de la Base adresse nationale ou tout autre service.
+ - ``URL`` : URL du service d'adresse (par défaut Base adresse nationale).
+ - ``Attribution`` : source du service.
+ - ``Texte écrit dans la zone de saisie`` :guilabel:`mode avancé` : texte quii sera écrit dans la zone de saisie de l'adresse (en haut à droite) dans mviewer.
+ - ``Ouverture de la fiche d'information au clic`` :guilabel:`mode avancé` : ouverture de la fiche d'information d'une donnée dès lors que l'on clic sur l'adresse choisie.
+ - ``Ferme la liste de résultat après clic`` :guilabel:`mode avancé` :  une fois le clic sur l'adresse choisie fait, la barre de résultat d'adresse s'efface.
+
 * ``Activer la recherche d'entités`` :guilabel:`mode avancé`: la recherche peut être activée si la donnée est de type GEOJSON. Cette fonctionnalité est également activable pour les données de type WMS à la condition que les entités qui composent cette donnée soient également indéxées dans Elasticsearch. 
 
 Page d'accueil (:guilabel:`mode avancé`)

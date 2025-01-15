@@ -53,7 +53,7 @@ cp -pr "${src}/css/mviewerstudio.css" "${target}/css/mviewerstudio.css"
 cp -pr "${src}/mviewerstudio.i18n.json" "${target}/mviewerstudio.i18n.json"
 
 echo "....END."
-exit 0
+#exit 0
 
 
 
