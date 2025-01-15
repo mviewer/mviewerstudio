@@ -6,50 +6,18 @@
 Configurer le frontend mviewerstudio
 ====================================
 
-Le frontend Mviewerstudio dispose actuellement de deux backend :
-
-- Python
-- PHP (obsolète)
-
-Selon le backend, il convient d'utiliser la bonne configuration pour la partie frontend.
-
-.. warning::
-	Une réflexion est en cours au sein de la communauté mviewerstudio afin de savoir s'il est pertinent de conserver deux backend.
-	Les dernières nouveautés de mviewerstudio n'ont pas été développés sur le backend PHP qui sera amené à disparaître.
-
-Pour savoir quelle configuration utiliser, vous trouverez deux fichiers à la racine du projet :
-
-- config-python-sample.json
-
-A utiliser si vous avez un backend Python. Ce fichier de configuration sera copié automatiquement via le script d'installation (ou à copier manuellement) dans le répertoire ``srv/python/mviewerstudiobackend/static/apps`` sous le nom ``config.json``.
-
-- config-php-sample.json
-
-A utiliser si vous avez un backend PHP. Ce fichier de configuration sera à copier manuellement à la racine sous le nom ``config.json``.
-
-Python - Structure du fichier de configuration
+Structure du fichier de configuration
 ----------------------------------------------
+
+La configuration s'effectue dans le fichier config-python-sample.json localisé à la racine du projet. Ce fichier de configuration sera copié automatiquement via le script d'installation (ou à copier manuellement) dans le répertoire ``srv/python/mviewerstudiobackend/static/apps`` sous le nom ``config.json``.
 
 Voici le fichier d'exemple à utiliser et à adapter selon votre environnement : 
 
 https://github.com/mviewer/mviewerstudio/blob/master/config-python-sample.json
 
 
-
-PHP - Structure du fichier de configuration
--------------------------------------------
-
-Pour PHP, il convient de bien renseigner le paramètre ``is_php`` à ``"true"`` et de bien renseigner les services pour l'entrée ``"php"``
-
-Voici le fichier d'exemple à utiliser et à adapter selon votre environnement : 
-
-https://github.com/mviewer/mviewerstudio/blob/master/config-php-sample.json
-
-
 Paramètres du fichier de configuration
 -------------------------------------------
-
-La configuration s'effectue dans le fichier config.json (voir au-dessus pour plus d'information sur le fichier).
 
 Paramètres généraux
 ~~~~~~~~~~~~~~~~~~~
@@ -80,7 +48,7 @@ Ces paramètres sont à renseigner dans tous les cas.
 - ``data_providers`` : cette section concerne le paramétrage des différents fournisseurs de données.
 
 
-Paramètres obligatoires avec Python
+Paramètres obligatoires
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Ces paramètres sont obligatoires avec un backend Python.
@@ -90,18 +58,3 @@ Ces paramètres sont obligatoires avec un backend Python.
 - ``store_style_service`` : URL vers le service (API) à utiliser pour sauvegarder un style. Valeur par défaut ``api/style``.
 - ``publish_url`` : URL de publication à utiliser (par exemple https//public-map/). Si besoin, Apache devra avoir une règle pour orienter cette URL vers le répertoire de publication (voir settings.py - MVIEWERSTUDIO_PUBLISH_PATH).
 - ``public_folder`` : voir détail plus bas.
-
-Paramètres obligatoires avec PHP
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Ces paramètres sont obligatoires avec un backend PHP.
-
-- ``php`` : Ensemble des URLs des services PHP à renseigner
-	- ``upload_service`` : Service web utilisé avec PHP seulement pour stocker les configurations mviewer créées avec le générateur. Valeur par défaut : srv/store.php. Ne pas oublier d'autoriser l'utilisateur apache à accéder en écriture au répertoire. Il est également possible d'utiliser le service "Doc service" de geOrchestra.
-	- ``delete_service`` : Service utilisé avec PHP seulement pour supprimer toutes les applications réalisées.
-	- ``list_service`` : Service utilisé avec PHP seulement pour lister toutes les applications sauvegardées.
-	- ``store_style_service`` : Service utilisé avec PHP seulement pour sauvegarder un style SLD.
-- ``user_info`` : url vers service retournant l'identité de la personne connectée.
-- ``is_php`` : A renseigner obligatoirement avec la valeur ``"true"`` avec un backend PHP. Il permet d'adapter le frontend mviewerstudio aux fonctionnalités compatibles PHP.
-
-
