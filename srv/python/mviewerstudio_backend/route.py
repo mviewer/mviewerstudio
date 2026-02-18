@@ -1,4 +1,13 @@
-from flask import Blueprint, jsonify, Response, request, current_app, redirect
+from flask import (
+    Blueprint,
+    jsonify,
+    Response,
+    request,
+    current_app,
+    redirect,
+    render_template_string,
+    send_from_directory,
+)
 from .utils.login_utils import current_user
 from .utils.config_utils import (
     Config,
@@ -46,6 +55,45 @@ def default_doc():
     Return home page.
     """
     return redirect("index.html")
+
+
+@basic_store.route("/swagger", methods=["GET"])
+@basic_store.route("/swagger/", methods=["GET"])
+def swagger_ui() -> Response:
+    """
+    Serve Swagger UI for backend API.
+    """
+    return render_template_string(
+        """
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>MviewerStudio API - Swagger</title>
+    <link rel="stylesheet" href="https://unpkg.com/swagger-ui-dist/swagger-ui.css" />
+  </head>
+  <body>
+    <div id="swagger-ui"></div>
+    <script src="https://unpkg.com/swagger-ui-dist/swagger-ui-bundle.js"></script>
+    <script>
+      SwaggerUIBundle({
+        url: "swagger.yaml",
+        dom_id: "#swagger-ui"
+      });
+    </script>
+  </body>
+</html>
+        """
+    )
+
+
+@basic_store.route("/swagger.yaml", methods=["GET"])
+def swagger_spec() -> Response:
+    """
+    Serve OpenAPI specification file.
+    """
+    return send_from_directory(path.dirname(__file__), "swagger.yaml")
 
 
 @basic_store.route("/api/user", methods=["GET"])

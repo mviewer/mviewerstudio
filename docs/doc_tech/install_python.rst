@@ -24,7 +24,7 @@ Vous aurez besoin :
     sudo apt install libxslt1-dev libxml2-dev python3 python3-pip python3-venv
     pip install virtualenv
 
-- d'une version Python >= 3.9
+- d'une version Python >= 3.11
 - d'une instance mviewer fonctionnelle (/mviewer)
 
 Procédures d'installation
@@ -148,6 +148,24 @@ Lancement de l'application avec Flask
     export CONF_PUBLISH_PATH_FROM_MVIEWER=apps/prod
     export DEFAULT_ORG=megalis
     flask run -p 5007
+
+
+Documentation Swagger (API)
+===========================
+
+Le backend Python expose une interface Swagger UI ainsi que le fichier OpenAPI :
+
+- Swagger UI : ``/swagger`` (ou ``/swagger/``)
+- Spécification OpenAPI : ``/swagger.yaml``
+
+Exemples :
+
+- sans préfixe d'URL : ``http://localhost:5007/swagger``
+- avec ``MVIEWERSTUDIO_URL_PATH_PREFIX=mviewerstudio`` : ``http://localhost:5007/mviewerstudio/swagger``
+
+.. note::
+   Ces routes sont servies directement par Flask via ``mviewerstudio_backend/route.py``.
+   Le fichier de spécification est ``srv/python/mviewerstudio_backend/swagger.yaml``.
 
 
 

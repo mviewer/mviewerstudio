@@ -36,6 +36,28 @@ Vous pouvez également consultez cette documentation sur le debugger Python dans
 https://code.visualstudio.com/docs/python/tutorial-flask
 
 
+Synchronisation API / Swagger
+-----------------------------
+
+Toute modification des routes backend (fichier ``srv/python/mviewerstudio_backend/route.py``)
+doit être synchronisée dans la spécification Swagger/OpenAPI
+(``srv/python/mviewerstudio_backend/swagger.yaml``).
+
+Accès à Swagger
+---------------
+
+Une fois le backend démarré, vous pouvez accéder à la documentation API :
+
+- Swagger UI : ``http://localhost:5007/swagger`` (ou ``/swagger/``)
+- Spécification OpenAPI : ``http://localhost:5007/swagger.yaml``
+
+Si un préfixe d'URL est configuré (ex: ``MVIEWERSTUDIO_URL_PATH_PREFIX=mviewerstudio``),
+les URLs deviennent :
+
+- Swagger UI : ``http://localhost:5007/mviewerstudio/swagger``
+- Spécification OpenAPI : ``http://localhost:5007/mviewerstudio/swagger.yaml``
+
+
 Configuration du debugger VS Code
 ---------------------------------
 

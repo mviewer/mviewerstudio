@@ -1,207 +1,661 @@
-openapi: 3.0.0
+openapi: 3.0.3
 info:
-  title: Mviewerstudio API
-  description: Description de l'API de  [mviewerstudio](https://github.com/mviewer/mviewerstudio).
+  title: MviewerStudio Backend API
+  description: API HTTP du backend MviewerStudio.
   version: 1.0.0
 servers:
-  - url: https://kartenn.region-bretagne.fr/mviewerstudio/
-    description: GéoBretagne instance
-  - url: https://gis.jdev.fr/mviewerstudio/#
-    description: JDev Instance (tests, développements)
+  - url: /
+
+tags:
+  - name: User
+  - name: Apps
+  - name: Versions
+  - name: Publication
+  - name: Templates
+  - name: Files
+  - name: Proxy
+
 paths:
-  /proxy:
-    get:
-      summary: Dev proxy path
-      description: Use as proxy for OGC URL and avoid local CORS error
-      parameters:
-        - name: url
-          in: query
-          description: 'Target URL'
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':    # status code
-          description: URL Content
-        '405':    # status code
-          description: not allowed
-        '400':
-          description: Bad request - url param missing
   /api/user:
     get:
-      summary: User informations.
-      description: Return informations from header (e.g georchestra header CAS informations)
+      tags: [User]
+      summary: Return current authenticated user
+      description: Return informations from headers (sec-proxy / geOrchestra style).
       responses:
-        '200':    # status code
-          description: SUCCESS
+        '200':
+          description: User payload
           content:
             application/json:
-              schema: 
-                type: array
-                items: 
-                  type: string
+              schema:
+                $ref: '#/components/schemas/User'
+
   /api/app:
     post:
-      summary: Create new app
+      tags: [Apps]
+      summary: Create XML configuration
+      description: Create a new app configuration from XML payload.
       requestBody:
-        description: Will save new app in dedicated directory
+        required: true
         content:
           text/xml:
             schema:
-              $ref: '#/components/schemas/Config'
-        required: true
+              type: string
+              example: "<config>...</config>"
       responses:
         '200':
-          description: Successful operation
+          description: App created
           content:
             application/json:
-              examples:
-                config:
-                  value:
-                    config:
-                      creator: anonymous
-                      date: '2023-02-23T14:18:25.727427'
-                      id: e507378c1fe7
-                      keywords: a,b,c,d
-                      subject: ''
-                      title: My new project title
-                      url: /e507378c1fe7/My_new_project_title.xml
-                      versions:
-                        - '1'
-                        - '2'
-                        - '3'
-                    filepath: /e507378c1fe7/My_new_project_title.xml
-                    success: true
-
+              schema:
+                $ref: '#/components/schemas/CreateOrUpdateAppResponse'
         '400':
-          description: Bad request - XML missing
-          content:
-            application/json:
-              examples:
-                badRequest:
-                  value:
-                    name: "Bad Request"
-                    description: "No XML found in the request body !"
-    get:
-      summary: Return all available apps
-      responses:
-        '200':
-          description: successful operation
-    delete:
-      summary: To delete apps
-      description: 'Pass a list of apps ids to delete'
+          $ref: '#/components/responses/BadRequest'
+    put:
+      tags: [Apps]
+      summary: Update XML configuration
+      description: Read XML UUID and update register and local filesystem.
       parameters:
-        - name: ids
+        - name: message
           in: query
-          description: List of apps to delete
-          required: true
+          required: false
           schema:
-            $ref: '#/components/schemas/ArrayOfInt'
+            type: string
+          description: Custom commit message.
+      requestBody:
+        required: true
+        content:
+          text/xml:
+            schema:
+              type: string
+              example: "<config>...</config>"
       responses:
+        '200':
+          description: App updated
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/CreateOrUpdateAppResponse'
+                  - type: object
+                    properties:
+                      diff:
+                        type: string
         '400':
-          description: ids param missing
+          $ref: '#/components/responses/BadRequest'
+    get:
+      tags: [Apps]
+      summary: List stored configurations
+      description: Return all mviewer configs for current user org, optionally filtered by search.
+      parameters:
+        - name: search
+          in: query
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: List of configs
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ConfigSummary'
+
+  /api/app/{id}:
+    delete:
+      tags: [Apps]
+      summary: Delete one mviewer config
+      parameters:
+        - $ref: '#/components/parameters/AppId'
+      responses:
+        '200':
+          description: Delete result
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  deleted_files:
+                    type: integer
+                  success:
+                    type: boolean
+                  deleted_publish:
+                    nullable: true
+                    oneOf:
+                      - type: boolean
+                      - type: string
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '405':
+          $ref: '#/components/responses/MethodNotAllowed'
+
+  /api/app/{id}/publish/{name}:
+    post:
+      tags: [Publication]
+      summary: Publish configuration
+      description: Copy XML and assets from draft workspace to publication directory.
+      parameters:
+        - $ref: '#/components/parameters/AppId'
+        - $ref: '#/components/parameters/PublishName'
+        - name: instance
+          in: query
+          required: false
+          schema:
+            type: string
+          description: Optional instance root path used to rewrite templates URLs.
+      requestBody:
+        required: true
+        content:
+          text/xml:
+            schema:
+              type: string
+      responses:
+        '200':
+          description: Publish result
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  online_file:
+                    type: string
+                  draft_file:
+                    type: string
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '409':
+          description: Conflict (already exists with inconsistent relation)
+    delete:
+      tags: [Publication]
+      summary: Unpublish configuration
+      parameters:
+        - $ref: '#/components/parameters/AppId'
+        - $ref: '#/components/parameters/PublishName'
+      responses:
+        '200':
+          description: Unpublish result
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  online_file:
+                    type: string
+                  draft_file:
+                    type: string
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+  /api/app/{id}/versions:
+    get:
+      tags: [Versions]
+      summary: Get all app versions
+      description: Gets all tags and commits for a given UUID application.
+      parameters:
+        - $ref: '#/components/parameters/AppId'
+      responses:
+        '200':
+          description: Versions payload
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  versions:
+                    type: object
+                    properties:
+                      tags:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/VersionTag'
+                      commits:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/VersionCommit'
+                  config:
+                    type: object
+                    additionalProperties: true
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+  /api/app/{id}/version/{version}:
+    put:
+      tags: [Versions]
+      summary: Switch app version
+      description: Switch current app workspace to a commit or tag.
+      parameters:
+        - $ref: '#/components/parameters/AppId'
+        - $ref: '#/components/parameters/Version'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                as_new:
+                  type: boolean
+      responses:
+        '200':
+          description: Switch result
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  detached:
+                    type: boolean
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+  /api/app/{id}/version/{version}/preview:
+    get:
+      tags: [Versions]
+      summary: Preview a specific version
+      description: Copy XML and assets of a specific version into preview directory and return preview URL.
+      parameters:
+        - $ref: '#/components/parameters/AppId'
+        - $ref: '#/components/parameters/Version'
+      responses:
+        '200':
+          description: Preview URL
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  file:
+                    type: string
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+  /api/app/{id}/preview:
+    post:
+      tags: [Versions]
+      summary: Preview uncommitted XML
+      description: Create a temporary preview XML from request body without saving changes.
+      parameters:
+        - $ref: '#/components/parameters/AppId'
+      requestBody:
+        required: true
+        content:
+          text/xml:
+            schema:
+              type: string
+      responses:
+        '200':
+          description: Preview file path
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  file:
+                    type: string
 
   /api/app/{id}/version:
     post:
-      summary: Create a new app version
+      tags: [Versions]
+      summary: Create a tag for app
       parameters:
-        - name: id
-          in: path
-          description: Target app ID
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/AppId'
       responses:
         '200':
-          description: successful operation
-        '400':
-          description: Bad request - Incorrect version name
+          description: Tag created
           content:
             application/json:
-              examples:
-                badRequest:
-                  value:
-                    name: "Bad Request"
-                    description: "This version ID does not exists !'"
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+        '400':
+          $ref: '#/components/responses/BadRequest'
     delete:
-      summary: Delete versions from list
-      description: 'Will delete all release excepted latest'
+      tags: [Versions]
+      summary: Delete app versions
+      description: Delete each app versions except master branch based on request payload.
       parameters:
-        - name: id
+        - $ref: '#/components/parameters/AppId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [versions]
+              properties:
+                versions:
+                  type: array
+                  items:
+                    type: string
+      responses:
+        '200':
+          description: Number of deleted versions
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  deleted:
+                    type: integer
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+  /api/style:
+    post:
+      tags: [Files]
+      summary: Store SLD style
+      description: Store SLD style content locally and return generated filepath.
+      requestBody:
+        required: true
+        content:
+          text/plain:
+            schema:
+              type: string
+      responses:
+        '200':
+          description: Stored style path
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  filepath:
+                    type: string
+
+  /api/app/{id}/template/{file_name}:
+    post:
+      tags: [Templates]
+      summary: Add layer template
+      parameters:
+        - $ref: '#/components/parameters/AppId'
+        - name: file_name
           in: path
-          description: Target app ID
           required: true
           schema:
             type: string
-        - name: versions
-          in: query
-          description: List of versions to delete
-          required: true
-          schema:
-            $ref: '#/components/schemas/ArrayOfInt'
+      requestBody:
+        required: true
+        content:
+          text/plain:
+            schema:
+              type: string
       responses:
         '200':
-          description: successful operation
-        '400':
-          description: Bad request - Incorrect version name
+          description: Template stored path
           content:
             application/json:
-              examples:
-                badRequest:
-                  value:
-                    name: "Bad Request"
-                    description: "Version does not exists!"
-  /api/app/{id}/version/{version}:
-    put:
-      summary: Change current app version
-      parameters:
-        - name: id
-          in: path
-          description: IDs of config to use
-          required: true
-          schema:
-            type: string
-        - name: version
-          in: path
-          description: version number to delete
-          required: true
-          schema:
-            type: integer
-      responses:
-        '200':
-          description: successful operation
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  filepath:
+                    type: string
         '400':
-          description: Bad request - Incorrect version name
-          content:
-            application/json:
-              examples:
-                badRequest:
-                  value:
-                    name: "Bad Request"
-                    description: "Version does not exists!"
-  /api/app/all:
+          $ref: '#/components/responses/BadRequest'
+
+  /api/app/{id}/template/{id_layer}:
     delete:
-      summary: Delete all apps metadata
-      description: Will clean store
+      tags: [Templates]
+      summary: Delete layer template
+      parameters:
+        - $ref: '#/components/parameters/AppId'
+        - name: id_layer
+          in: path
+          required: true
+          schema:
+            type: string
       responses:
         '200':
-          description: successful operation
+          description: Template removed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+  /api/app/{id}/exists:
+    get:
+      tags: [Apps]
+      summary: Check if app exists
+      parameters:
+        - $ref: '#/components/parameters/AppId'
+      responses:
+        '200':
+          description: Existence check
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  exists:
+                    type: boolean
+
+  /api/download/{id}:
+    get:
+      tags: [Files]
+      summary: Generate zip download link for app
+      parameters:
+        - $ref: '#/components/parameters/AppId'
+      responses:
+        '200':
+          description: Download link
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  url:
+                    type: string
+                  name:
+                    type: string
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+  /proxy/:
+    get:
+      tags: [Proxy]
+      summary: Proxy service (GET)
+      description: Proxy content from a whitelisted origin.
+      parameters:
+        - $ref: '#/components/parameters/ProxyUrl'
+      responses:
+        '200':
+          description: Proxied raw response
+          content:
+            '*/*':
+              schema:
+                type: string
+                format: binary
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '405':
+          $ref: '#/components/responses/MethodNotAllowed'
+    post:
+      tags: [Proxy]
+      summary: Proxy service (POST)
+      description: Forward XML body to a whitelisted origin.
+      parameters:
+        - $ref: '#/components/parameters/ProxyUrl'
+      requestBody:
+        required: true
+        content:
+          application/xml:
+            schema:
+              type: string
+      responses:
+        '200':
+          description: Proxied raw response
+          content:
+            '*/*':
+              schema:
+                type: string
+                format: binary
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '405':
+          $ref: '#/components/responses/MethodNotAllowed'
 
 components:
+  parameters:
+    AppId:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: string
+      description: Application UUID.
+    Version:
+      name: version
+      in: path
+      required: true
+      schema:
+        type: string
+      description: Git tag or commit SHA.
+    PublishName:
+      name: name
+      in: path
+      required: true
+      schema:
+        type: string
+      description: Publication name.
+    ProxyUrl:
+      name: url
+      in: query
+      required: true
+      schema:
+        type: string
+        format: uri
+      description: Target URL to proxy.
+
+  responses:
+    BadRequest:
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            name: Bad Request
+            description: Invalid request payload
+    MethodNotAllowed:
+      description: Method not allowed
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            name: Method Not Allowed
+            description: Not allowed !
+
   schemas:
-    ArrayOfInt:
-      type: array
-      items:
-        type: integer
-        format: int64
-        example: 1
-    Config:
+    Error:
       type: object
-      xml: 
-        name: config
       properties:
-        mviewerstudioversion:
+        name:
           type: string
-          example: 3.2
-          xml:
-            attribute: true
+        description:
+          type: string
+
+    User:
+      type: object
+      properties:
+        user_name:
+          type: string
+        first_name:
+          type: string
+        last_name:
+          type: string
+        organisation:
+          type: object
+          properties:
+            legal_name:
+              nullable: true
+              type: string
+        roles:
+          type: array
+          items:
+            type: string
+
+    ConfigSummary:
+      type: object
+      additionalProperties: true
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+        publisher:
+          type: string
+        creator:
+          type: string
+        url:
+          type: string
+        link:
+          type: string
+
+    CreateOrUpdateAppResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        filepath:
+          type: string
+        config:
+          type: object
+          additionalProperties: true
+
+    VersionTag:
+      type: object
+      properties:
+        name:
+          type: string
+        message:
+          type: string
+        commit:
+          type: string
+
+    VersionCommit:
+      type: object
+      properties:
+        message:
+          type: string
+        id:
+          type: string
+        author:
+          type: string
+        date:
+          type: string
+        current:
+          type: boolean
+        publication:
+          type: string
+        tag:
+          type: string
