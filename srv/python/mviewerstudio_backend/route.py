@@ -16,7 +16,7 @@ from shutil import rmtree, copyfile, copytree
 from flask.blueprints import BlueprintSetupState
 from urllib.parse import urlparse
 import requests
-from .utils.git_utils import Git_manager
+from .utils.git_utils import Git_manager, checkout
 from datetime import datetime
 
 from werkzeug.exceptions import BadRequest, MethodNotAllowed, Conflict
@@ -439,7 +439,10 @@ def preview_app_version(id, version) -> Response:
     )
     replace_templates_url(path_preview_file, relative_publish_dir)
     # restor branch
-    git.repo.git.checkout("master")
+    try:
+        checkout(git.repo, "master")
+    except Exception:
+        git.repo.git.checkout("master")
 
     preview_url = path.join(config["publisher"], preview_file)
 

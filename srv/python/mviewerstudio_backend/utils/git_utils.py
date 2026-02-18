@@ -1,19 +1,30 @@
 import git
-from os import path, remove
-from datetime import datetime
-from .login_utils import current_user
 import logging
-from time import sleep
+import fcntl
+from contextlib import contextmanager
+from datetime import datetime
+from os import path
+
+from .login_utils import current_user
 
 logger = logging.getLogger(__name__)
 
 
-def unlock_repo(repo):
+@contextmanager
+def repo_write_lock(repo):
     """
-    Force remove git lock file
+    Acquire an inter-process lock for write operations on this repository.
+    This serializes git write commands across Gunicorn workers.
     """
-    lock_file = path.join(repo.working_dir, ".git", "index.lock")
-    remove(lock_file)
+    lock_path = path.join(repo.working_dir, ".git", "mviewerstudio.lock")
+    lock_file = open(lock_path, "w")
+    fcntl.flock(lock_file.fileno(), fcntl.LOCK_EX)
+
+    try:
+        yield
+    finally:
+        fcntl.flock(lock_file.fileno(), fcntl.LOCK_UN)
+        lock_file.close()
 
 
 def init_repo(workspace):
@@ -64,18 +75,18 @@ def checkout(repo, target, hard=False):
     logger.debug(repo.working_dir)
 
     repo_dir = repo.working_dir
-    lock_file = path.join(repo.working_dir, ".git", "index.lock")
 
-    if path.exists(lock_file):
-        logger.error(f"GIT : REPO LOCKED {repo_dir}")
-        sleep(5)
+    with repo_write_lock(repo):
+        lock_file = path.join(repo.working_dir, ".git", "index.lock")
+        if path.exists(lock_file):
+            logger.debug(f"GIT : INDEX LOCK PRESENT {repo_dir}, waiting for lock release")
 
-    if hard:
-        logger.debug(f"GIT : RESET HARD {target}")
-        repo.git.reset("--hard", target)
-    else:
-        logger.debug(f"GIT : CHECKOUT {target}")
-        repo.git.checkout(target)
+        if hard:
+            logger.debug(f"GIT : RESET HARD {target}")
+            repo.git.reset("--hard", target)
+        else:
+            logger.debug(f"GIT : CHECKOUT {target}")
+            repo.git.checkout(target)
 
 
 class Git_manager:
@@ -98,7 +109,8 @@ class Git_manager:
         :param msg: str tag message
         """
         logger.debug("GIT : CREATE TAG")
-        self.repo.create_tag(datetime.now().strftime("%Y-%m-%d-%H-%M-%S"), message=msg)
+        with repo_write_lock(self.repo):
+            self.repo.create_tag(datetime.now().strftime("%Y-%m-%d-%H-%M-%S"), message=msg)
 
     def delete_version(self, version_name):
         """
@@ -107,13 +119,17 @@ class Git_manager:
         """
         # delete tag
         logger.debug("GIT : DELETE VERSION")
-        tag = self.repo.tags[version_name]
-        if tag:
-            # delete version from tag object
-            logger.debug("GIT : DELETE TAG")
-            self.repo.delete_tag(tag)
-        if len(self.repo.tags) == 1:
-            self.switch_version(self.repo.tags[0].name, True)
+        switch_to_tag = None
+        with repo_write_lock(self.repo):
+            tag = self.repo.tags[version_name]
+            if tag:
+                # delete version from tag object
+                logger.debug("GIT : DELETE TAG")
+                self.repo.delete_tag(tag)
+            if len(self.repo.tags) == 1:
+                switch_to_tag = self.repo.tags[0].name
+        if switch_to_tag:
+            self.switch_version(switch_to_tag, True)
 
     def clean_branch(self):
         """
@@ -131,9 +147,10 @@ class Git_manager:
         """
         # delete tag
         logger.debug("GIT : DELETE TAG (USER DELETE VERSION)")
-        for tag in self.repo.tags:
-            if int(tag.name) > 1:
-                self.repo.delete_tag(tag)
+        with repo_write_lock(self.repo):
+            for tag in self.repo.tags:
+                if int(tag.name) > 1:
+                    self.repo.delete_tag(tag)
 
     def switch_version(self, target, hard=False):
         """
@@ -150,9 +167,15 @@ class Git_manager:
             if commit.hexsha == target
         ]:
             return
-        self.clean_branch()
 
-        checkout(self.repo, target, hard)
+        with repo_write_lock(self.repo):
+            self.clean_branch()
+            if hard:
+                logger.debug(f"GIT : RESET HARD {target}")
+                self.repo.git.reset("--hard", target)
+            else:
+                logger.debug(f"GIT : CHECKOUT {target}")
+                self.repo.git.checkout(target)
 
     def commit_changes(self, message):
         """
@@ -160,19 +183,23 @@ class Git_manager:
         :param message: string message to insert in commit or tag
         """
         logger.debug("GIT : COMMIT CHANGES ON SAVE")
-        if not self.repo.tags:
-            self.repo.git.add("*")
-            self.repo.git.commit("-m", message)
-            self.create_version(message)
-        elif self.repo.git.diff("--name-only"):
-            self.repo.git.add("*")
-            self.repo.git.commit("-m", message)
+        with repo_write_lock(self.repo):
+            if not self.repo.tags:
+                self.repo.git.add("*")
+                self.repo.git.commit("-m", message)
+                self.repo.create_tag(
+                    datetime.now().strftime("%Y-%m-%d-%H-%M-%S"), message=message
+                )
+            elif self.repo.git.diff("--name-only"):
+                self.repo.git.add("*")
+                self.repo.git.commit("-m", message)
 
     def create_publication_commit(self, message):
         logger.debug("GIT : CREATE PULICATION COMMIT AS NEW VERSION")
-        self.repo.git.add("*")
-        self.repo.git.commit("-m", message)
-        self.create_version(message)
+        with repo_write_lock(self.repo):
+            self.repo.git.add("*")
+            self.repo.git.commit("-m", message)
+            self.repo.create_tag(datetime.now().strftime("%Y-%m-%d-%H-%M-%S"), message=message)
 
     def get_version(self, name):
         """
