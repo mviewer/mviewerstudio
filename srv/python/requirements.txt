@@ -1,5 +1,5 @@
 flask>=2
-gunicorn>20,<21
+gunicorn>20
 lxml>=4.9.2
 GitPython>=3
 requests

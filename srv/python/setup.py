@@ -12,11 +12,11 @@ setup(
     url="https://github.com/mviewer/mviewerstudio",
     packages=find_packages(),
     install_requires=REQUIREMENTS,
+    python_requires=">=3.11",
     classifiers=[
         "Programming Language :: Python",
         "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.7",
-        "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.11",
         "Framework :: Flask",
         "Topic :: Internet :: WWW/HTTP",
         "Topic :: Internet :: WWW/HTTP :: WSGI :: Application",
