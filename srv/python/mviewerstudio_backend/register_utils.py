@@ -7,7 +7,6 @@ import logging, uuid, json, hashlib
 
 import git
 
-
 logger = logging.getLogger(__name__)
 
 
