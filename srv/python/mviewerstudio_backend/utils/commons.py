@@ -94,10 +94,9 @@ Ease make_archive use
 
 
 def custom_make_archive(source, destination):
-    base = path.basename(destination)
-    name = base.split(".")[0]
-    format = base.split(".")[1]
+    base_name, ext = path.splitext(destination)
+    archive_format = ext.lstrip(".")
     archive_from = path.dirname(source)
-    archive_to = path.basename(source.strip(sep))
-    make_archive(name, format, archive_from, archive_to)
-    move("%s.%s" % (name, format), destination)
+    archive_to = path.basename(source.rstrip(sep))
+
+    make_archive(base_name, archive_format, archive_from, archive_to)
