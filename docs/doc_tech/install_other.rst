@@ -3,19 +3,13 @@
 
 .. _install_other:
 
-Autres types d'installations possibles
-======================================
+Installation avec Docker
+========================
 
-Installer avec le Backend PHP
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-.. warning:: PHP est officiellement annoncé en fin de vie, n'est plus maintenue et sera supprimé dans une prochaine version.
-
-A partir de la version 4, veuillez suivre la documentation d'installation du backend Python (maintenu) pour disposer des nouvelles fonctionnalités.
-Pour plus d'informations sur PHP, vous devrez consulter la documentation de la version que vous souhaiter installer.
+Cette page complète la procédure d'installation du backend Python avec un déploiement conteneurisé.
 
 Docker
-~~~~~~~
+~~~~~~
 
 Vous devez avoir installé docker au préalable.
 
@@ -28,7 +22,7 @@ https://github.com/mviewer/mviewerstudio/edit/master/docker/readme.md
 
 2. Composition docker
 
-Vous pouvez également utiliser la composition docker disponible à la racine du projet afin d'obtenir mviewer, mviewerstudio et le backend python :
+Vous pouvez également utiliser la composition docker disponible à la racine du projet afin d'obtenir mviewer, mviewerstudio et le backend Python :
 
 https://github.com/mviewer/mviewerstudio/blob/master/docker-compose.yml
 
