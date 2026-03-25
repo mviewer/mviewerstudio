@@ -832,28 +832,6 @@ var createBaseLayerDef = function (bsl) {
   return parameters;
 };
 
-var deleteMyApplications = function () {
-  if (!_conf?.php?.delete_service) {
-    return alert(mviewer.tr("msg.config_error"));
-  }
-  $.ajax({
-    type: "GET",
-    url: _conf.php.delete_service,
-    success: function (data) {
-      alert(data.deleted_files + mviewer.tr("msg.deleted_apps"));
-      mv.getListeApplications();
-    },
-    error: function (xhr, ajaxOptions, thrownError) {
-      console.error("map files deletion failed", {
-        xhr: xhr,
-        ajaxOptions: ajaxOptions,
-        thrownError: thrownError,
-      });
-      alert(mviewer.tr("msg.delete_req_error"));
-    },
-  });
-};
-
 var deleteApplication = (id) => {
   return fetch(`${_conf.api}/${id}`, {
     method: "DELETE",
@@ -1176,30 +1154,6 @@ var getConfig = () => {
   return conf;
 };
 
-let previewWithPhp = (conf) => {
-  if (!_conf?.php?.upload_service) {
-    alertCustom(mviewer.tr("msg.alert_wrong_config"), "error");
-  }
-  // Save the map serverside
-  $.ajax({
-    type: "POST",
-    url: _conf.php.upload_service,
-    data: conf.join(""),
-    dataType: "json",
-    contentType: "text/xml",
-    success: function (data) {
-      // Preview the map
-      var url = "";
-      if (data.success && data.filepath) {
-        // Build a short and readable URL for the map
-        let url = mv.produceUrl(data.filepath);
-        window.open(url, "mvs_vizualize");
-        alertCustom(mviewer.tr("msg.download_success"), "success");
-      }
-    },
-  });
-};
-
 let previewAppsWithoutSave = (id, showPublish) => {
   if (config.relation && _conf.publish_url && showPublish) {
     const filePath = `${mv.getAuthentUserInfos("groupSlugName")}/${config.relation}`;
@@ -1209,9 +1163,6 @@ let previewAppsWithoutSave = (id, showPublish) => {
   const confXml = getConfig();
   if (!confXml || (confXml && !mv.validateXML(confXml.join("")))) {
     return alertCustom("XML invalide !", "danger");
-  }
-  if (_conf.is_php) {
-    return previewWithPhp(confXml);
   }
   if (!id || !config.isFile) {
     return alertCustom(mviewer.tr("msg.preview_no_save"), "danger");
@@ -1236,9 +1187,6 @@ let previewAppsWithoutSave = (id, showPublish) => {
 };
 
 const downloadXML = () => {
-  if (_conf.is_php) {
-    return downloadXML4PHP();
-  }
   fetch(`api/download/${config.id}`)
     .then((r) => r.json())
     .then((r) => {
@@ -1250,37 +1198,6 @@ const downloadXML = () => {
       document.body.removeChild(link);
       delete link;
     });
-};
-const downloadXML4PHP = () => {
-  const conf = getConfig();
-  if (mv.validateXML(conf.join(""))) {
-    var element = document.createElement("a");
-    element.setAttribute(
-      "href",
-      "data:text/xml;charset=utf-8," + encodeURIComponent(conf.join(""))
-    );
-    element.setAttribute(
-      "download",
-      document.querySelector("#opt-title").value || moment().format("MMDDYYYYhhmmss")
-    );
-    element.style.display = "none";
-    document.body.appendChild(element);
-    element.click();
-    document.body.removeChild(element);
-  }
-};
-
-var saveAppWithPhp = (conf) => {
-  $.ajax({
-    type: "POST",
-    url: _conf.php.upload_service,
-    data: conf.join(""),
-    dataType: "json",
-    contentType: "text/xml",
-    success: function (data) {
-      alert(mviewer.tr("msg.file_saved_on_server") + " (" + data.filepath + ").");
-    },
-  });
 };
 
 var saveTemplateToGetUrl = () =>
@@ -1319,13 +1236,9 @@ var saveTemplateToGetUrl = () =>
     });
   });
 var saveApplicationParameters = (close) => {
-  if (_conf?.is_php) {
+  saveTemplateToGetUrl().then(() => {
     saveApplicationsConfig(close);
-  } else {
-    saveTemplateToGetUrl().then(() => {
-      saveApplicationsConfig(close);
-    });
-  }
+  });
 };
 
 var saveAppWithPython = (exists, conf, url, close) => {
@@ -1338,8 +1251,7 @@ var saveAppWithPython = (exists, conf, url, close) => {
   })
     .then((r) => (r.ok ? r.json() : Promise.reject(r)))
     .then((r) => {
-      if (!_conf.is_php && !close) {
-        // don't execute this code with php backend
+      if (!close) {
         config.isFile = true;
         document.querySelector("#toolsbarStudio-delete").classList.remove("d-none");
         document.querySelector("#layerOptionBtn").classList.remove("d-none");
@@ -1362,9 +1274,6 @@ var saveApplicationsConfig = (close, message = "") => {
 
   if (!conf || !mv.validateXML(conf.join(""))) {
     return alertCustom(mviewer.tr("msg.xml_doc_invalid"), "danger");
-  }
-  if (_conf.is_php) {
-    return saveAppWithPhp(conf);
   }
   // Save the map serverside
   const url = message ? `${_conf.api}?message=${message}` : _conf.api;
@@ -1454,33 +1363,28 @@ var loadApplicationParametersFromRemoteFile = function (url) {
         alertCustom(mviewer.tr("msg.retrieval_req_error"), "danger");
       }),
   ];
-  if (!_conf.is_php) {
-    waitRequests.push(
-      fetch(_conf.api)
-        .then((r) => {
-          return r.ok ? r.json() : Promise.reject(r);
-        })
-        .then((r) => {
-          return r.filter((app) => app.id == config.id);
-        })
-        .catch(() => alert(mviewer.tr("msg.retrieval_req_error"), "danger"))
-    );
-  }
+  waitRequests.push(
+    fetch(_conf.api)
+      .then((r) => {
+        return r.ok ? r.json() : Promise.reject(r);
+      })
+      .then((r) => {
+        return r.filter((app) => app.id == config.id);
+      })
+      .catch(() => alert(mviewer.tr("msg.retrieval_req_error"), "danger"))
+  );
   Promise.all(waitRequests).then((values) => {
     const data = values[0];
     mv.parseApplication(data, true);
-    if (!_conf.is_php && values[1]) {
+    if (values[1]) {
       const appMeta = values[1][0];
       if (appMeta?.versions) {
         config.versions = appMeta.versions;
       }
     }
     showStudio();
-    if (!_conf.is_php) {
-      // don't execute this code with php backend
-      document.querySelector("#toolsbarStudio-delete").classList.remove("d-none");
-      document.querySelector("#layerOptionBtn").classList.remove("d-none");
-    }
+    document.querySelector("#toolsbarStudio-delete").classList.remove("d-none");
+    document.querySelector("#layerOptionBtn").classList.remove("d-none");
   });
 };
 
@@ -1674,7 +1578,7 @@ $("#mod-importfile").on("shown.bs.modal", function () {
 var uploadSldFileToBackend = function (e) {
   var reader = new FileReader();
   e.files[0].text().then(function (sldFile) {
-    const url = _conf.is_php ? _conf.php.store_style_service : _conf.store_style_service;
+    const url = _conf.store_style_service;
     $.ajax(url, {
       data: sldFile,
       method: "POST",

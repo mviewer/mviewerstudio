@@ -3,10 +3,6 @@ function showStudio() {
   document.getElementById("containerHome").hidden = true;
   document.getElementById("containerStudio").hidden = false;
   map.updateSize();
-  let onlineCard = document.getElementById("onlineCard");
-  if (_conf.is_php && onlineCard) {
-    onlineCard.remove();
-  }
 }
 
 function goHome() {
