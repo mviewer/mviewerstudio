@@ -47,6 +47,7 @@ Cette partie est dédiée aux personnes qui ont vocation à déployer et configu
    doc_tech/install_other
    doc_tech/config_front
    doc_tech/migration_notes
+   doc_tech/move_to_python
    doc_tech/dev_corner
 
 
@@ -75,4 +76,3 @@ Sauf indication contraire, cette documentation est sous licence **Creative Commo
 .. _mviewer: https://github.com/mviewer/mviewer
 
 .. _GitHub: https://github.com/mviewer/mviewerstudio/
-
