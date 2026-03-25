@@ -7,7 +7,7 @@
 Installer mviewerstudio avec Python
 ###################################
 
-Mviewerstudio est une application web développée en HTML / CSS / PHP / Python. Elle nécessite simplement d'être déployée sur un serveur WEB qui peut être APACHE, NGINX, TOMCAT…
+Mviewerstudio est une application web développée en HTML / CSS / JavaScript avec un backend Python. Elle nécessite simplement d'être déployée sur un serveur WEB qui peut être APACHE, NGINX, TOMCAT…
 
 Installation
 ************

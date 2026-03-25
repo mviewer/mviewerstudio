@@ -25,10 +25,9 @@ La version 4 utilise des propriétés et des informations du XML rajoutées par 
 Ces XML sont notamment versionnés et non dupliqués à chaque modification.
 Les XML réalisés avec la version de mviewerstudio < 4 ne sont pas compatibles avec le backend Python de la v4.
 
-2. **Choix du backend**
+2. **Migration vers le backend Python**
 
-Le backend PHP reste toutefois utilisable et identique à la version 3.9.x sans nouveautés. Vos XML seront réutilisables en l'état.
-Si vous n'utiliser pas le backend Python, notez alors que vous ne pourrez pas disposer des dernières nouveautés telles que le versionnement, la publication ou encore le générateur de template.
+Le backend Python est désormais l'unique backend maintenu. Les XML issus des versions antérieures doivent donc être réimportés puis réenregistrés pour bénéficier du stockage, du versionnement et de la publication.
 
 3. **Migrer vos XML manuellement**
 
