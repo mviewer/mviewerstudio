@@ -1,7 +1,7 @@
 # mviewerstudio Dockerfile
 
-## Which one ?
-The maintained dockerfile is the python one. The php one is there for historical reasons and will probably soon be dropped.
+## Image
+Only python Dockerfile will be maintained (PHP backend is fully deprecated).
 
 ## Environment variables
 
