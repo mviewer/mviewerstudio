@@ -1,7 +1,0 @@
-black
-pytest
-mypy
-types-Werkzeug # mypy
-types-Flask
-sphinx<7.0.0
-PyStemmer

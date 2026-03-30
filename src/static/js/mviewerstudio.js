@@ -17,7 +17,7 @@ $(document).ready(function () {
       )
     );
   }
-  fetch("apps/config.json", {
+  fetch("config.json", {
     method: "GET",
     header: {
       contentType: "application/json",

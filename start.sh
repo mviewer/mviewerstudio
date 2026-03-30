@@ -4,15 +4,10 @@ set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 VENV_DIR="${ROOT_DIR}/.venv"
-INSTALL_SCRIPT="${ROOT_DIR}/install/install_gb.sh"
 FRONT_CONFIG="${ROOT_DIR}/src/static/apps/config.json"
+FRONT_CONFIG_SAMPLE="${ROOT_DIR}/config-python-sample.json"
 
 needs_install=false
-
-if [ ! -x "${INSTALL_SCRIPT}" ]; then
-    echo "Install script not found or not executable: ${INSTALL_SCRIPT}"
-    exit 1
-fi
 
 if [ ! -d "${VENV_DIR}" ]; then
     needs_install=true
@@ -23,16 +18,23 @@ if [ ! -f "${FRONT_CONFIG}" ]; then
 fi
 
 if [ "${needs_install}" = true ]; then
-    echo "Environment not ready. Running install/install_gb.sh..."
-    "${INSTALL_SCRIPT}"
+    echo "Environment not ready. Installing local dependencies..."
+    sudo apt install -y libxslt1-dev libxml2-dev python3 python3-pip python3-venv git
+    python3 -m venv "${VENV_DIR}"
+    . "${VENV_DIR}/bin/activate"
+    pip install -r "${ROOT_DIR}/install/requirements.txt" -r "${ROOT_DIR}/install/dev-requirements.txt"
+    pip install -e "${ROOT_DIR}/src"
+    if [ ! -f "${FRONT_CONFIG}" ]; then
+        cp "${FRONT_CONFIG_SAMPLE}" "${FRONT_CONFIG}"
+    fi
+else
+    . "${VENV_DIR}/bin/activate"
 fi
 
-. "${VENV_DIR}/bin/activate"
-
 if ! command -v flask >/dev/null 2>&1; then
-    echo "Flask not available in the current virtualenv. Running install/install_gb.sh..."
-    "${INSTALL_SCRIPT}"
-    . "${VENV_DIR}/bin/activate"
+    echo "Flask not available in the current virtualenv. Reinstalling local dependencies..."
+    pip install -r "${ROOT_DIR}/install/requirements.txt" -r "${ROOT_DIR}/install/dev-requirements.txt"
+    pip install -e "${ROOT_DIR}/src"
 fi
 
 export CONF_PATH_FROM_MVIEWER="${CONF_PATH_FROM_MVIEWER:-apps/store}"
