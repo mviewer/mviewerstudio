@@ -20,19 +20,13 @@ RUN chown -R apprunner:apprunner /home/apprunner/apps
 
 WORKDIR /home/apprunner
 
-COPY --chown=apprunner:apprunner srv/python .
+COPY --chown=apprunner:apprunner src ./src
+COPY --chown=apprunner:apprunner install ./install
 # We need to install the app so that the config is properly read (there might be something to fix on
 # app-factory.py, calling app.config.from_object requires the package to be installed
-RUN pip install --user -r requirements.txt && pip install --user .
+RUN pip install --user -r install/requirements.txt && pip install --user ./src
 
 VOLUME [ "/home/apprunner/apps" ]
-
-COPY css/        mviewerstudio_backend/static/css
-COPY img/        mviewerstudio_backend/static/img
-COPY index.html  mviewerstudio_backend/static/index.html
-COPY js/         mviewerstudio_backend/static/js
-COPY lib/        mviewerstudio_backend/static/lib
-COPY mviewerstudio.i18n.json      mviewerstudio_backend/static/mviewerstudio.i18n.json
 
 ENV EXPORT_CONF_FOLDER=/home/apprunner/apps/store \
     CONF_PATH_FROM_MVIEWER=apps/store \
@@ -42,6 +36,6 @@ ENV EXPORT_CONF_FOLDER=/home/apprunner/apps/store \
     MVIEWERSTUDIO_URL_PATH_PREFIX=mviewerstudio/
 
 # You will probably have to override this one on runtime with your custom config
-COPY config-python-sample.json mviewerstudio_backend/static/apps/config.json
+COPY config-python-sample.json src/static/apps/config.json
 
-CMD ["gunicorn", "-w 1", "-b 0.0.0.0:8000", "mviewerstudio_backend.app:app"]
+CMD ["gunicorn", "-w 1", "-b 0.0.0.0:8000", "app:app"]

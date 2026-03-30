@@ -1,0 +1,27 @@
+{
+  "name": "mviewerstudio",
+  "version": "4.0.0",
+  "description": "mviewerstudio",
+  "main": "index.html",
+  "directories": {
+    "doc": "docs",
+    "lib": "lib"
+  },
+  "scripts": {
+    "pretty": "prettier --write \"./mviewerstudio.i18n.json\" \"./js/**/*.{js,json}\" \"./lib/**/*.{js,json}\"",
+    "prettier-check": "prettier --check  \"./mviewerstudio.i18n.json\" \"./js/**/*.{js,json}\" \"./lib/**/*.{js,json}\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mviewer/mviewerstudio.git"
+  },
+  "author": "psc mviewer",
+  "license": "GPLv3",
+  "bugs": {
+    "url": "https://github.com/mviewer/mviewerstudio/issues"
+  },
+  "homepage": "https://github.com/mviewer/mviewerstudio#readme",
+  "devDependencies": {
+    "prettier": "^3.0.3"
+  }
+}
