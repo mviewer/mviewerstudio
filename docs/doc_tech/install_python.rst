@@ -73,7 +73,7 @@ Téléchargez le script d'installation
 .. code-block:: sh
 
     sudo apt install curl
-    curl -O https://raw.githubusercontent.com/mviewer/mviewerstudio/master/srv/python/install_backend_python.sh
+    curl -O https://raw.githubusercontent.com/mviewer/mviewerstudio/master/install/install.sh
 
 Le script utilise 3 paramètres :
 
@@ -85,7 +85,7 @@ Exemple pour installer mviewerstudio dans le répertoire ``/git`` en utilisant l
 
 .. code-block:: sh
 
-    sh ./install_backend_python.sh /home/monuser/git develop mviewerstudio_develop
+    sh ./install.sh /home/monuser/git develop mviewerstudio_develop
 
 Suite à cette commande exemple, le mviewerstudio sera donc accessible sous le chemin suivant et sera directement aligné avec la branche ``develop``: 
 
