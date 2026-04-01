@@ -23,7 +23,7 @@ services:
   mviewerstudio:
     build:
       context: .
-      dockerfile: docker/Dockerfile-python-backend
+      dockerfile: docker/Dockerfile
     image: mviewer/mviewerstudio:latest
 #    ports:
 #      - "8000:8000"
