@@ -4,8 +4,7 @@ set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 VENV_DIR="${ROOT_DIR}/.venv"
-FRONT_CONFIG="${ROOT_DIR}/src/static/apps/config.json"
-FRONT_CONFIG_SAMPLE="${ROOT_DIR}/config-python-sample.json"
+FRONT_CONFIG="${ROOT_DIR}/src/static/config.json"
 
 needs_install=false
 
@@ -24,9 +23,6 @@ if [ "${needs_install}" = true ]; then
     . "${VENV_DIR}/bin/activate"
     pip install -r "${ROOT_DIR}/install/requirements.txt" -r "${ROOT_DIR}/install/dev-requirements.txt"
     pip install -e "${ROOT_DIR}/src"
-    if [ ! -f "${FRONT_CONFIG}" ]; then
-        cp "${FRONT_CONFIG_SAMPLE}" "${FRONT_CONFIG}"
-    fi
 else
     . "${VENV_DIR}/bin/activate"
 fi
@@ -35,6 +31,11 @@ if ! command -v flask >/dev/null 2>&1; then
     echo "Flask not available in the current virtualenv. Reinstalling local dependencies..."
     pip install -r "${ROOT_DIR}/install/requirements.txt" -r "${ROOT_DIR}/install/dev-requirements.txt"
     pip install -e "${ROOT_DIR}/src"
+fi
+
+if [ ! -f "${FRONT_CONFIG}" ]; then
+    echo "Missing front config: ${FRONT_CONFIG}"
+    exit 1
 fi
 
 export CONF_PATH_FROM_MVIEWER="${CONF_PATH_FROM_MVIEWER:-apps/store}"

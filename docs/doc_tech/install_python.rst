@@ -97,7 +97,7 @@ Configuration
 Configuration du front
 ----------------------
 
-Récupérez le fichier ``config-python-sample.json`` (à la racine du projet) et copier son contenu dans le fichier ``/srv/python/mviewerstudio_backend/static/apps/config.json``.
+Récupérez le fichier ``src/static/config.json`` et adaptez son contenu selon votre environnement.
 Adaptez ensuite les paramètres selon votre environnement (aidez-vous de la page :ref:`config_front`).
 
 .. warning::

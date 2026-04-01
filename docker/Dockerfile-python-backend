@@ -35,7 +35,4 @@ ENV EXPORT_CONF_FOLDER=/home/apprunner/apps/store \
     DEFAULT_ORG=public \
     MVIEWERSTUDIO_URL_PATH_PREFIX=mviewerstudio/
 
-# You will probably have to override this one on runtime with your custom config
-COPY config-python-sample.json src/static/apps/config.json
-
 CMD ["gunicorn", "-w 1", "-b 0.0.0.0:8000", "app:app"]

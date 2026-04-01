@@ -25,8 +25,8 @@ Références utiles
   https://mviewerstudio.readthedocs.io/fr/stable/doc_tech/migration_notes.html
 - Docker :
   https://github.com/mviewer/mviewerstudio/blob/master/docker/readme.md
-- Exemple de configuration Python :
-  https://github.com/mviewer/mviewerstudio/blob/master/config-python-sample.json
+- Exemple de configuration frontend :
+  https://github.com/mviewer/mviewerstudio/blob/master/src/static/config.json
 
 Ce qui change
 -------------
@@ -78,14 +78,13 @@ https://github.com/mviewer/mviewerstudio/blob/master/docker/readme.md
 Remplacer la configuration frontend
 -----------------------------------
 
-L'ancienne configuration PHP doit être remplacée par une configuration fondée
-sur le backend Python.
+L'ancienne configuration PHP doit être remplacée par la configuration frontend
+du studio, compatible avec le backend Python.
 
 Base de départ :
 
-- copier ``config-python-sample.json`` :
-  https://github.com/mviewer/mviewerstudio/blob/master/config-python-sample.json
-- l'installer comme ``srv/python/mviewerstudio_backend/static/apps/config.json``
+- partir de ``src/static/config.json`` :
+  https://github.com/mviewer/mviewerstudio/blob/master/src/static/config.json
 - adapter les URLs et chemins à votre environnement
 
 Les paramètres les plus importants à revoir sont :
@@ -174,7 +173,7 @@ Résolution de problèmes
 -----------------------
 
 - Si le frontend ne charge pas la configuration, vérifier
-  ``srv/python/mviewerstudio_backend/static/apps/config.json``.
+  ``src/static/config.json``.
 - Si les applications ne s'enregistrent pas, vérifier les droits sur
   ``EXPORT_CONF_FOLDER``.
 - Si la publication échoue, vérifier ``MVIEWERSTUDIO_PUBLISH_PATH`` et
@@ -188,7 +187,7 @@ En résumé
 La migration PHP vers Python consiste à :
 
 1. installer le backend Python,
-2. remplacer la configuration frontend par celle du backend Python,
+2. remplacer l'ancienne configuration PHP par la configuration frontend du studio,
 3. configurer les variables d'environnement et les répertoires de stockage,
 4. réimporter puis réenregistrer les anciens XML,
 5. valider les flux de brouillon, prévisualisation et publication.

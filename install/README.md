@@ -35,7 +35,7 @@ Ce mode :
 - utilise le checkout courant
 - crée l'environnement virtuel dans `.venv`
 - installe les dépendances Python
-- copie `config-python-sample.json` vers `src/static/apps/config.json` si le fichier n'existe pas
+- utilise le fichier de configuration front `src/static/config.json`
 
 ### Utilisation avec clonage
 
@@ -67,7 +67,7 @@ Si `parent_directory` n'est pas fourni, aucun clonage n'est effectué.
 
 Le script affiche les prochaines étapes, notamment :
 
-- le chemin du fichier de configuration front : `src/static/apps/config.json`
+- le chemin du fichier de configuration front : `src/static/config.json`
 - les variables d'environnement backend à exporter
 - la commande pour démarrer Flask
 
@@ -113,7 +113,7 @@ This mode:
 - uses the current checkout
 - creates the virtual environment in `.venv`
 - installs Python dependencies
-- copies `config-python-sample.json` to `src/static/apps/config.json` if the file does not exist
+- uses the front configuration file `src/static/config.json`
 
 ### Usage with clone
 
@@ -145,7 +145,7 @@ If `parent_directory` is not provided, the script does not clone anything.
 
 The script prints the next steps, including:
 
-- the front configuration file path: `src/static/apps/config.json`
+- the front configuration file path: `src/static/config.json`
 - the backend environment variables to export
 - the command to start Flask
 

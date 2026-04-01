@@ -66,12 +66,11 @@ clone_if_needed() {
 
 setup_front_config() {
     local project_dir="$1"
-    local front_config="${project_dir}/src/static/apps/config.json"
-    local front_config_sample="${project_dir}/config-python-sample.json"
+    local front_config="${project_dir}/src/static/config.json"
 
     if [ ! -f "${front_config}" ]; then
-        echo "Creating front config from sample..."
-        cp "${front_config_sample}" "${front_config}"
+        echo "Missing front config: ${front_config}"
+        exit 1
     fi
 }
 
@@ -87,7 +86,7 @@ Project root: ${project_dir}
 Next steps:
 
 1. Review the front config file:
-   ${project_dir}/src/static/apps/config.json
+   ${project_dir}/src/static/config.json
 
 2. Export the backend environment variables before starting the app:
    export CONF_PATH_FROM_MVIEWER=apps/store

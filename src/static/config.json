@@ -178,7 +178,7 @@
                     "title": "Catalogue DataGrandEst",
                     "url": "https://datagrandest.fr/geonetwork/srv/fre/csw",
                     "baseref": "https://datagrandest.fr/geonetwork/srv/eng/catalog.search?node=srv#/metadata/"
-                }       
+                }
             ],
             "wms": [{
                 "title": "Serveur WMS de la Région",

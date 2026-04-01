@@ -9,11 +9,11 @@ Configurer le frontend mviewerstudio
 Structure du fichier de configuration
 ----------------------------------------------
 
-La configuration s'effectue dans le fichier config-python-sample.json localisé à la racine du projet. Ce fichier de configuration sera copié automatiquement via le script d'installation (ou à copier manuellement) dans le répertoire ``srv/python/mviewerstudiobackend/static/apps`` sous le nom ``config.json``.
+La configuration du frontend s'effectue dans le fichier ``src/static/config.json`` localisé dans le projet. Ce fichier pilote l'interface web de mviewerstudio et doit être adapté selon votre environnement.
 
-Voici le fichier d'exemple à utiliser et à adapter selon votre environnement : 
+Voici le fichier de configuration frontend à utiliser et à adapter selon votre environnement :
 
-https://github.com/mviewer/mviewerstudio/blob/master/config-python-sample.json
+https://github.com/mviewer/mviewerstudio/blob/master/src/static/config.json
 
 
 Paramètres du fichier de configuration

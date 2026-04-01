@@ -36,7 +36,7 @@ services:
       - MVIEWERSTUDIO_URL_PATH_PREFIX=mviewerstudio
     volumes:
       - "apps:/home/apprunner/apps"
-      - "./config-python-sample.json:/home/apprunner/mviewerstudio_backend/static/apps/config.json"
+      - "./src/static/config.json:/home/apprunner/src/static/config.json"
 
   # Served under /mviewer/ see docker/nginx/default.conf.template
   mviewer:
