@@ -31,12 +31,12 @@ services:
       - CONF_PATH_FROM_MVIEWER=apps/store
       - CONF_PUBLISH_PATH_FROM_MVIEWER=apps/public
       - DEFAULT_ORG=my_org
-      - EXPORT_CONF_FOLDER=/home/apprunner/apps/store
-      - MVIEWERSTUDIO_PUBLISH_PATH=/home/apprunner/apps/public
+      - EXPORT_CONF_FOLDER=/home/mvuser/apps/store
+      - MVIEWERSTUDIO_PUBLISH_PATH=/home/mvuser/apps/public
       - MVIEWERSTUDIO_URL_PATH_PREFIX=mviewerstudio
     volumes:
-      - "apps:/home/apprunner/apps"
-      - "./src/static/config.json:/home/apprunner/src/static/config.json"
+      - "apps:/home/mvuser/apps"
+      - "./src/static/config.json:/home/mvuser/src/static/config.json"
 
   # Served under /mviewer/ see docker/nginx/default.conf.template
   mviewer:
