@@ -1,7 +1,7 @@
 from werkzeug.local import LocalProxy
 from flask import has_app_context, request, current_app
-from models.user import User
-from utils.commons import replace_special_chars
+from ..models.user import User
+from .commons import replace_special_chars
 from typing import Optional
 import logging
 

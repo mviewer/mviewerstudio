@@ -7,9 +7,10 @@ from flask import (
     redirect,
     render_template_string,
     send_from_directory,
+    url_for,
 )
-from utils.login_utils import current_user
-from utils.config_utils import (
+from .utils.login_utils import current_user
+from .utils.config_utils import (
     Config,
     write_file,
     edit_xml_string,
@@ -17,15 +18,15 @@ from utils.config_utils import (
     replace_templates_url,
     read_xml_file_content,
 )
-from utils.commons import clean_preview, init_preview, create_zip, make_archive
+from .utils.commons import clean_preview, init_preview, create_zip, make_archive
 import hashlib, uuid
-from utils.register_utils import from_xml_path
+from .utils.register_utils import from_xml_path
 from os import path, mkdir, remove
 from shutil import rmtree, copyfile, copytree
 from flask.blueprints import BlueprintSetupState
 from urllib.parse import urlparse
 import requests
-from utils.git_utils import Git_manager
+from .utils.git_utils import Git_manager
 from datetime import datetime
 
 from werkzeug.exceptions import BadRequest, MethodNotAllowed, Conflict
@@ -54,7 +55,7 @@ def default_doc():
     """
     Return home page.
     """
-    return redirect("index.html")
+    return redirect(url_for("basic-store.static", filename="index.html"))
 
 
 @basic_store.route("/swagger", methods=["GET"])

@@ -1,8 +1,9 @@
 from flask import Flask
 from os import path, mkdir
 import logging
-from error_handlers import ERROR_HANDLERS
-from route import basic_store
+from .error_handlers import ERROR_HANDLERS
+from .route import basic_store
+from .settings import Config
 
 logger = logging.getLogger(__name__)
 
@@ -16,7 +17,7 @@ def setup_logging(app: Flask) -> None:
 
 
 def load_config(app: Flask) -> None:
-    app.config.from_object("settings.Config")
+    app.config.from_object(Config)
     app.config.from_envvar("CONFIG_FILE", silent=True)
 
 

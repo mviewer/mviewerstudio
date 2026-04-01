@@ -33,6 +33,6 @@ ENV EXPORT_CONF_FOLDER=/home/mvuser/apps/store \
     MVIEWERSTUDIO_PUBLISH_PATH=/home/mvuser/apps/public \
     CONF_PUBLISH_PATH_FROM_MVIEWER=apps/public \
     DEFAULT_ORG=public \
-    MVIEWERSTUDIO_URL_PATH_PREFIX=mviewerstudio/
+    MVIEWERSTUDIO_URL_PATH_PREFIX=mviewerstudio
 
 CMD ["gunicorn", "-w 1", "-b 0.0.0.0:8000", "src.app:app"]

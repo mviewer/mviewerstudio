@@ -1,7 +1,7 @@
 import hashlib
 from os import path, mkdir
 from dataclasses import dataclass
-from models.register import RegisterModel, ConfigModel
+from .models.register import RegisterModel, ConfigModel
 from typing import List
 import logging, uuid, json, hashlib
 

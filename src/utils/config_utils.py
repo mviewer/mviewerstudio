@@ -4,10 +4,10 @@ import xml.etree.ElementTree as ET
 import re
 import glob
 
-from utils.commons import replace_special_chars
-from models.config import ConfigModel
-from utils.login_utils import current_user
-from utils.git_utils import Git_manager
+from .commons import replace_special_chars
+from ..models.config import ConfigModel
+from .login_utils import current_user
+from .git_utils import Git_manager
 
 logger = logging.getLogger(__name__)
 

@@ -19,6 +19,7 @@ srv/python/build
 
 # venv
 **/venv
+**pycache**
 
 # static (python backend)
 srv/python/mviewerstudio_backend/static

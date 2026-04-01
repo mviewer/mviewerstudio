@@ -1,7 +1,7 @@
 import git
 from os import path, remove
 from datetime import datetime
-from utils.login_utils import current_user
+from .login_utils import current_user
 import logging
 from time import sleep
 

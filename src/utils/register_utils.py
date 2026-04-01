@@ -1,11 +1,11 @@
 from os import path, remove, listdir
 from os.path import isdir
-from models.register import RegisterModel
+from ..models.register import RegisterModel
 import logging, json
-from utils.config_utils import Config
+from .config_utils import Config
 import glob
-from utils.login_utils import current_user
-from utils.git_utils import init_or_get_repo, checkout
+from .login_utils import current_user
+from .git_utils import init_or_get_repo, checkout
 
 logger = logging.getLogger(__name__)
 
