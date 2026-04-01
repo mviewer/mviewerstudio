@@ -8,31 +8,31 @@ RUN apt-get update && \
         git \
     && rm -rf /var/lib/apt/lists/*
 
-RUN useradd -r -m apprunner
+RUN useradd -r -m mvuser
 
-USER apprunner
+USER mvuser
 
-ENV HOME=/home/apprunner
+ENV HOME=/home/mvuser
 ENV PATH=$HOME/.local/bin:$PATH
 
-RUN mkdir -p /home/apprunner/apps/store
-RUN chown -R apprunner:apprunner /home/apprunner/apps
+RUN mkdir -p /home/mvuser/apps/store
+RUN chown -R mvuser:mvuser /home/mvuser/apps
 
-WORKDIR /home/apprunner
+WORKDIR /home/mvuser
 
-COPY --chown=apprunner:apprunner src ./src
-COPY --chown=apprunner:apprunner install ./install
+COPY --chown=mvuser:mvuser src ./src
+COPY --chown=mvuser:mvuser install ./install
 # We need to install the app so that the config is properly read (there might be something to fix on
 # app-factory.py, calling app.config.from_object requires the package to be installed
 RUN pip install --user -r install/requirements.txt && pip install --user ./src
 
-VOLUME [ "/home/apprunner/apps" ]
+VOLUME [ "/home/mvuser/apps" ]
 
-ENV EXPORT_CONF_FOLDER=/home/apprunner/apps/store \
+ENV EXPORT_CONF_FOLDER=/home/mvuser/apps/store \
     CONF_PATH_FROM_MVIEWER=apps/store \
-    MVIEWERSTUDIO_PUBLISH_PATH=/home/apprunner/apps/public \
+    MVIEWERSTUDIO_PUBLISH_PATH=/home/mvuser/apps/public \
     CONF_PUBLISH_PATH_FROM_MVIEWER=apps/public \
     DEFAULT_ORG=public \
     MVIEWERSTUDIO_URL_PATH_PREFIX=mviewerstudio/
 
-CMD ["gunicorn", "-w 1", "-b 0.0.0.0:8000", "app:app"]
+CMD ["gunicorn", "-w 1", "-b 0.0.0.0:8000", "src.app:app"]
