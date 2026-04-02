@@ -10,11 +10,11 @@
                         "request": "launch",
                         "module": "flask",
                         "env": {
-                                "FLASK_APP": "mviewerstudio_backend/app.py",
+                                "FLASK_APP": "src/app.py",
                                 "FLASK_DEBUG": "1",
                                 "CONF_PATH_FROM_MVIEWER":"apps/store",
-                                "EXPORT_CONF_FOLDER":"/home/user/git/mviewer/apps/store/",
-                                "MVIEWERSTUDIO_PUBLISH_PATH":"/home/user/git/mviewer/apps/public",
+                                "EXPORT_CONF_FOLDER":"/home/gaetan/projects/mviewer/mviewer/apps/store/",
+                                "MVIEWERSTUDIO_PUBLISH_PATH":"/home/gaetan/projects/mviewer/mviewer/apps/public",
                                 "CONF_PUBLISH_PATH_FROM_MVIEWER":"apps/public",
                                 "DEFAULT_ORG":"geobretagne",
 
