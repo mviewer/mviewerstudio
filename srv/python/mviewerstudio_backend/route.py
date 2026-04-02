@@ -305,7 +305,7 @@ def list_stored_configs() -> Response:
         )
     return jsonify(configs)
 
-@basic_store.route("/api/app/qgis", methods=["GET", "POST"])
+@basic_store.route("/api/app/qgis/projects", methods=["GET", "POST"])
 def list_stored_qgs_configs() -> Response:
     """
     List or upload QGIS project files from/to the configured QGS directory.
