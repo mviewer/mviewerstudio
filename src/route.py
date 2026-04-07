@@ -55,7 +55,7 @@ def default_doc():
     """
     Return home page.
     """
-    return redirect(url_for("basic-store.static", filename="index.html"))
+    return redirect("index.html")
 
 
 @basic_store.route("/swagger", methods=["GET"])
