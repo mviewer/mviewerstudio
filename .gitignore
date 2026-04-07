@@ -1,3 +1,7 @@
+# debug vscode
+.vscode/*
+.vscode/*
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -9,7 +13,7 @@ __pycache__/
 
 *.egg-info/
 *.egg
-srv/python/build
+src/python/build
 
 
 # IDE stuff
@@ -22,7 +26,7 @@ srv/python/build
 **pycache**
 
 # static (python backend)
-srv/python/mviewerstudio_backend/static
+src/static/config.json
 
 # pyenv
 .python-version

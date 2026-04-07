@@ -1,7 +1,7 @@
 .. Authors :
 .. mviewer team
 
-.. _install_other:
+.. _install_docker:
 
 Installation avec Docker
 ========================

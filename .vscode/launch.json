@@ -10,7 +10,7 @@
                         "request": "launch",
                         "module": "flask",
                         "env": {
-                                "FLASK_APP": "src/app.py",
+                                "FLASK_APP": "/home/user/git/mviewerstudio/src/app.py",
                                 "FLASK_DEBUG": "1",
                                 "CONF_PATH_FROM_MVIEWER":"apps/store",
                                 "EXPORT_CONF_FOLDER":"/home/gaetan/projects/mviewer/mviewer/apps/store/",
