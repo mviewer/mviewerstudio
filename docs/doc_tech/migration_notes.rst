@@ -41,7 +41,7 @@ Suite aux modifications du backend pour afficher plus de logs, il est nécessair
 https://mviewerstudio.readthedocs.io/fr/stable/doc_tech/install_python.html#creation-du-service-et-activation-du-service
 
 
-Passer de v4.2.1 à v4.2.2
+Passer de v4.2.x à v4.3.0
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
 1. **Suppression du PHP**
