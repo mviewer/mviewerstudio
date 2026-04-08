@@ -49,7 +49,15 @@ Passer de v4.2.x à v4.3.0
 Comme annoncé, le backend PHP a été supprimé au profit du backend Python.
 Il n'est donc plus nécessaire d'installer PHP et de configurer le backend PHP pour faire fonctionner mviewerstudio.
 
-Ce backend n'étant déjà plus maintenu. Il est fortement conseillé de migrer vers le backend Python pour bénéficier des dernières fonctionnalités et des correctifs de sécurité.
+.. warning::
+
+    Qu'est-ce qu change ?
+    - Le backend PHP n'est plus supporté.
+    - Le frontend appelle uniquement l'API Python.
+    - Les brouillons, publications et versions reposent sur le backend Python.
+    - Les anciens XML issus du mode PHP ne sont pas directement exploitables comme des applications Python versionnées. Il faut les réimporter manuellement dans mviewerstudio avec le backend python.
+
+Il est donc fortement conseillé de migrer vers le backend Python pour bénéficier des dernières fonctionnalités et des correctifs de sécurité.
 
 2. **Modification de la gestion des fichiers static**
 
@@ -66,7 +74,7 @@ Il en est de même pour la configuration du frontend qui est à modifier directe
 
 3. **Impact sur l'installation**
 
-La procédure d'installation a été simplifiée puisque le backend PHP n'exite plus et que seules les ressource associées à Python restent dans le code source.
+La procédure d'installation a été simplifiée puisque le backend PHP n'existe plus et que seules les ressource associées à Python restent dans le code source.
 
 4. **Impact sur le service gunicorn**
 
