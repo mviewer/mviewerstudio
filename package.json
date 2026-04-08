@@ -8,8 +8,8 @@
     "lib": "lib"
   },
   "scripts": {
-    "pretty": "prettier --write \"./mviewerstudio.i18n.json\" \"./js/**/*.{js,json}\" \"./lib/mv.js\"",
-    "prettier-check": "prettier --check \"./mviewerstudio.i18n.json\" \"./js/**/*.{js,json}\" \"./lib/mv.js\""
+    "pretty": "prettier --write \"./src/static/mviewerstudio.i18n.json\" \"./src/static/js/**/*.{js,json}\" \"./src/static/lib/mv.js\"",
+    "prettier-check": "prettier --check \"./src/static/mviewerstudio.i18n.json\" \"./src/static/js/**/*.{js,json}\" \"./src/static/lib/mv.js\""
   },
   "repository": {
     "type": "git",
