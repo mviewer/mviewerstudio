@@ -1,47 +1,46 @@
-# Byte-compiled / optimized / DLL files
+# Python cache
 __pycache__/
 *.py[cod]
 *$py.class
 
-# test
+# Test / tooling cache
 .pytest_cache/
 .mypy_cache/
 
+# Build / packaging
 *.egg-info/
 *.egg
-src/python/build
+build/
+dist/
 
-
-# IDE stuff
-.idea
-.vscode
+# IDE
+.idea/
+.vscode/
 *.iml
 
-# venv
-**/venv
-**pycache**
+# Virtual environments
+.venv/
+venv/
+env/
 
-# static (python backend)
+# Static config
 src/static/config.json
 
-# log
-logs/*
-logs/*
+# Logs
+logs/
 
-# pyenv
+# Pyenv
 .python-version
-?venv/
-pydocs*
-__pycache__/
-?__pycache__/
 
-# store
+# Docs
+pydocs*
+
+# App data
 store/
 public/
 
-# npm
-node*
-package-*
-
-# config
-src/static/config.json
+# Node
+node_modules/
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
