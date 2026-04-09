@@ -24,7 +24,7 @@ Vous aurez besoin :
     sudo apt install libxslt1-dev libxml2-dev python3 python3-pip python3-venv
     pip install virtualenv
 
-- d'une version Python >= 3.11
+- d'une version Python >= 3.9
 - d'une instance mviewer fonctionnelle (/mviewer)
 
 Procédures d'installation
@@ -32,7 +32,7 @@ Procédures d'installation
 
 .. note::
     Avant de réaliser l'installation, vous devez avoir connaissance de la différence entre un environnement de
-    ``production`` et un environnement de ``développements``.
+    ``production`` et un environnement de ``développement``.
 
     ``L’environnement de production`` est la destination finale d’une application web ou d’un site web.
     C'est l'environnement final qui sera accessible par vos utilisateurs.
