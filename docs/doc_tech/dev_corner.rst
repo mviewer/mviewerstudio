@@ -78,7 +78,7 @@ Configuration du debugger VS Code
 
 4. Dans VS Code assurez-vous de sélectionner le bon virtualenv (voir les documentations précédentes)
 
-5. Ouvrir le fichier `/srv/python/mviewerstudio_backend/static/apps/config.json` et adapter les bonnes valeurs
+5. Ouvrir le fichier ``src/static/config.json`` et adapter les bonnes valeurs
 
 Ici, mviewer est accessible en local sur http://localhost:5051 (via NodeJs) et les répertoires `apps/store` et `apps/public` ont été créés à la main, et accessible en lecture / écriture par l'utilisateur qui exécute le backend via VS Code.
 

@@ -7,7 +7,7 @@
 Installer mviewerstudio avec Python
 ###################################
 
-Mviewerstudio est une application web développée en HTML / CSS / PHP / Python. Elle nécessite simplement d'être déployée sur un serveur WEB qui peut être APACHE, NGINX, TOMCAT…
+Mviewerstudio est une application web développée en HTML / CSS / JavaScript avec un backend Python. Elle nécessite simplement d'être déployée sur un serveur WEB qui peut être APACHE, NGINX, TOMCAT…
 
 Installation
 ************
@@ -73,7 +73,7 @@ Téléchargez le script d'installation
 .. code-block:: sh
 
     sudo apt install curl
-    curl -O https://raw.githubusercontent.com/mviewer/mviewerstudio/master/srv/python/install_backend_python.sh
+    curl -O https://raw.githubusercontent.com/mviewer/mviewerstudio/master/install/install.sh
 
 Le script utilise 3 paramètres :
 
@@ -85,7 +85,7 @@ Exemple pour installer mviewerstudio dans le répertoire ``/git`` en utilisant l
 
 .. code-block:: sh
 
-    sh ./install_backend_python.sh /home/monuser/git develop mviewerstudio_develop
+    sh ./install.sh /home/monuser/git develop mviewerstudio_develop
 
 Suite à cette commande exemple, le mviewerstudio sera donc accessible sous le chemin suivant et sera directement aligné avec la branche ``develop``: 
 
@@ -97,7 +97,7 @@ Configuration
 Configuration du front
 ----------------------
 
-Récupérez le fichier ``config-python-sample.json`` (à la racine du projet) et copier son contenu dans le fichier ``/srv/python/mviewerstudio_backend/static/apps/config.json``.
+Récupérez le fichier ``src/static/config.json`` et adaptez son contenu selon votre environnement.
 Adaptez ensuite les paramètres selon votre environnement (aidez-vous de la page :ref:`config_front`).
 
 .. warning::
@@ -215,52 +215,18 @@ Créer le répertoire mviewerstudio dans /var/log
        sudo mkdir /var/log/mviewerstudio
        sudo chown monuser /var/log/mviewerstudio
 
-Vous devez créer un fichier dans `/etc/systemd/system/mviewerstudio.service`:
+Copier maintenant le fichier disponible dans install/mviewerstudio.service dans `/etc/systemd/system/mviewerstudio.service`.
+
+Enfin, adaptez son contenu (notamment le user, le port, les chemins et l'emplacement des logs).
 
  .. code-block:: sh
 
        sudo nano /etc/systemd/system/mviewerstudio.service
 
 
-Ajoutez ensuite ce contenu en adaptant les valeurs (chemin, user...) selon votre environnement :
+N'oubliez pas d'adapter le niveau des logs et les droits des répertoires (à créer si nécessaire) selon l'utilisateur défini dans le fichier mviewerstudio.service (dans la configuration par défaut, l'utilisateur `mviewer` devra pouvoir écrire dans `/var/log/mviewerstudio`).
 
-fichier `mviewerstudio.service`
-
-  .. warning::
-    Nous conseillons de laisser la valeur du worker à 1 (voir issue #389)
-
- .. code-block:: sh
-
-       [Unit]
-        Description=mviewerstudio
-        After=network.target
-
-        [Service]
-        User=monuser
-        Environment="EXPORT_CONF_FOLDER=/var/www/mviewer/apps/store/"
-        Environment="CONF_PUBLISH_PATH_FROM_MVIEWER=apps/prod"
-        Environment="CONF_PATH_FROM_MVIEWER=apps/store"
-        Environment="MVIEWERSTUDIO_PUBLISH_PATH=/var/www/mviewer/apps/prod"
-        Environment="DEFAULT_ORG=public"
-        Environment="LOG_LEVEL=INFO"
-        WorkingDirectory=/home/monuser/mviewerstudio/srv/python
-        ExecStart=/home/monuser/mviewerstudio/srv/python/.venv/bin/gunicorn \
-            -b 127.0.0.1:5007 \
-            --workers=1 \
-            --access-logfile /var/log/mviewerstudio/gunicorn-access.log \
-            --log-level info \
-            --error-logfile /var/log/mviewerstudio/gunicorn-error.log \
-            mviewerstudio_backend.app:app
-
-        StandardOutput=append:/var/log/mviewerstudio//mviewerstudio.log
-        StandardError=append:/var/log/mviewerstudio/mviewerstudio.log
-
-        [Install]
-        WantedBy=multi-user.target
-
-N'oubliez pas d'adapter le niveau des logs, le répertoire des logs (à créer si nécessaire) avec les bons droits (`monuser` dans cette confiugration devra pouvoir écrire dans `/var/log/mviewerstudio`).
-
-Notre service tournera donc sur le port `5007` une fois démarré.
+Le porte par défaut est sera le `5007` (à adapter dans mviewerstudio.service).
 
 Activation et démarrage du service :
 
@@ -277,6 +243,7 @@ A partir de maintenant, il est possible de stopper, redémarrer ou afficher le s
        sudo systemctl stop mviewerstudio
        sudo systemctl restart mviewerstudio
        sudo systemctl status mviewerstudio.service
+
 
 3) Proxyfication du service
 ---------------------------------
@@ -319,18 +286,17 @@ Rechargement de la conf apache
 Mise à jour de l'application
 ****************************
 
-Pour mettre à jour le code source (e.g branche ``develop``), vous pouvez utilisez le script ``mviewerstudio/srv/python/sync.sh`` après un ``git pull``.
+Dans cette version (> à 4.2.1), la synchronisation entre la racine et le backend n'est plus à réaliser à la main car, avec un seul backend, tous les fichiers static sont dans /srv/static.
 
-Il permet de copier / coller les sources vers le répertoire ``static`` du backend Python.
-
-Pour la mise à jour, voici donc les commandes à exécuter à partir du répertoire ``/mviewerstudio`` :
+Pour la mise à jour du code source, voici donc les commandes à exécuter à partir du répertoire ``/mviewerstudio``  (en partant du principe que vous êtes bien sur la branche master):
 
 .. code-block:: sh
 
-    cd /full/path/mviewerstudio
     git pull
-    cd srv/python
-    sh ./sync.sh pull /full/path/mviewerstudio
+
+.. warning::
+
+    A chaque version, vous devrez comparer le fichier `src/static/config.json`  avec la configuration disponible dans le dépôt github. Ceci afin de vous assurez que vous avez bien toutes les clés de configuration nécessaires au bon fonctionnement de votre instance.
 
 Si besoin, réaliser un restart de votre service (e.g gunicorn) :
 

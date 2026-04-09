@@ -9,11 +9,11 @@ Configurer le frontend mviewerstudio
 Structure du fichier de configuration
 ----------------------------------------------
 
-La configuration s'effectue dans le fichier config-python-sample.json localisé à la racine du projet. Ce fichier de configuration sera copié automatiquement via le script d'installation (ou à copier manuellement) dans le répertoire ``srv/python/mviewerstudiobackend/static/apps`` sous le nom ``config.json``.
+La configuration du frontend s'effectue dans le fichier ``src/static/config.json`` localisé dans le projet. Ce fichier pilote l'interface web de mviewerstudio et doit être adapté selon votre environnement.
 
-Voici le fichier d'exemple à utiliser et à adapter selon votre environnement : 
+Voici le fichier de configuration frontend à utiliser et à adapter selon votre environnement :
 
-https://github.com/mviewer/mviewerstudio/blob/master/config-python-sample.json
+https://github.com/mviewer/mviewerstudio/blob/master/src/static/config.json
 
 
 Paramètres du fichier de configuration
@@ -32,7 +32,7 @@ Ces paramètres sont à renseigner dans tous les cas.
 - ``mviewer_short_url`` : Utilisation du système d'URL courtes (mviewer/#monappli au lieu de mviewer/?config=apps/monappli.xml).
 	- ``used`` : true | false.
 	- ``apps_folder`` : chemin d'accès depuis le répertoire apps (exemple store pour apps/store).
-	- ``public_folder`` : (pour backend Python seulement) - chemin d'accès depuis le répertoire apps pour les éléments publiés (exemple store pour apps/public).
+	- ``public_folder`` : chemin d'accès depuis le répertoire apps pour les éléments publiés (exemple store pour apps/public).
 - ``external_themes`` : Utilisation du mécanisme d'import de thématiques externes (présentes dans d'autres mviewers).
 - ``proxy`` : Chemin du proxy par lequel les requêtes envoyées par mviewerstudio passeront si cette valeur est définie.
 - ``used`` : Booléen -> Utiliser ``"true"`` pour permettre le chargement et l'utilisation des thématiques externes.
@@ -51,7 +51,7 @@ Ces paramètres sont à renseigner dans tous les cas.
 Paramètres obligatoires
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Ces paramètres sont obligatoires avec un backend Python.
+Ces paramètres sont obligatoires.
 
 - ``api``: URL vers le service (API) du backend Python. Valeur par défaut : ``api/app``.
 - ``user_info``: URL vers le service (API) permettant de récupérer les informations de l'utilisateur connecté. Valeur par défaut ``api/user``.

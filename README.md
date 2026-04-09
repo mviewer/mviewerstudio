@@ -2,8 +2,7 @@
 
 mviewer studio est une application web dont le but est de faciliter la création d'une configuration pour [mviewer](https://github.com/mviewer/mviewer) à l'aide d'une interface graphique ergonomique et simple.
 
-Application écrite en Javascript pour le front.
-2 backends disponibles : écrits en Python pour l'un et en PHP pour l'autre.
+Application écrite en Javascript pour le front, avec un backend Python unique.
 
 Référez-vous à la documentation pour plus d'information :
 
