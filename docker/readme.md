@@ -20,3 +20,10 @@ The default configuration (env vars defined in the dockerfile and json config fi
 
 
 It is also configured to serve the frontend (static files) with gunicorn, which is usually not recommended. Later versions might use an nginx container to serve the frontend.
+
+## Build mviewerstudio image
+
+Use docker compose to build image :
+
+`docker compose build mviewerstudio`
+
