@@ -1,5 +1,8 @@
 FROM python:3.11-slim
 
+ARG UID=1000
+ARG GID=1000
+
 #install git & studio dependencies
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
@@ -8,7 +11,7 @@ RUN apt-get update && \
         git \
     && rm -rf /var/lib/apt/lists/*
 
-RUN useradd -r -m mvuser
+RUN groupadd -g ${GID} mvuser && useradd -m -u ${UID} -g ${GID} mvuser
 
 USER mvuser
 
@@ -16,7 +19,6 @@ ENV HOME=/home/mvuser
 ENV PATH=$HOME/.local/bin:$PATH
 
 RUN mkdir -p /home/mvuser/apps/store
-RUN chown -R mvuser:mvuser /home/mvuser/apps
 
 WORKDIR /home/mvuser
 

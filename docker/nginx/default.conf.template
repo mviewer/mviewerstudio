@@ -2,8 +2,16 @@ server {
     listen       80;
     server_name  ${NGINX_HOST};
 
+    location = /mviewer {
+        return 302 /mviewer/$is_args$args;
+    }
+
     location /mviewer/ {
-        proxy_pass http://mviewer:8080/;
+        proxy_pass http://mviewer/;
+    }
+
+    location /apps/ {
+        alias /usr/share/nginx/html/apps/;
     }
 
     location /${MVIEWERSTUDIO_URL_PATH_PREFIX}/ {
@@ -20,7 +28,6 @@ server {
 
     location / {
         server_name_in_redirect off;
-        return 302 /${MVIEWERSTUDIO_URL_PATH_PREFIX};
+        return 302 /${MVIEWERSTUDIO_URL_PATH_PREFIX}/;
     }
 }
-
