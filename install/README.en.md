@@ -3,7 +3,7 @@
 ### Requirements
 
 - A Linux system with `bash`
-- Python 3 and `venv`
+- Python >= 3.9 and `venv`
 - `git` to clone the repository
 - `apt` (optional) to automatically install system packages
 
@@ -11,6 +11,13 @@ The script will attempt to automatically install the following packages:
 ```sh
 libxslt1-dev libxml2-dev python3 python3-pip python3-venv git
 ```
+
+### Online Documentation (more detailed)
+
+- 📘 [User Documentation (FR)](https://mviewerstudio.readthedocs.io/fr/stable/doc_user/accueil.html)
+- 🔧 [Installation Guide (FR)](https://mviewerstudio.readthedocs.io/fr/stable/doc_tech/install_python.html)
+- ⚙️ [Configuration and Administration (FR)](https://mviewerstudio.readthedocs.io/fr/stable/doc_tech/config_front.html)
+- 💻 [Technical Documentation (FR)](https://mviewerstudio.readthedocs.io/fr/stable/doc_tech/dev_corner.html)
 
 ---
 

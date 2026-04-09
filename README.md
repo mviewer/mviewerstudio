@@ -42,7 +42,7 @@ Pour des instructions détaillées, voir [Guide d'installation](install/README.m
 ## ✅ Prérequis
 
 - Système Linux avec `bash`
-- Python 3 et `venv`
+- Python >= 3.9 et `venv`
 - `git`
 - `apt` (optionnel, pour installation automatique)
 
