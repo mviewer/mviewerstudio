@@ -22,23 +22,12 @@ Vous aurez besoin :
 .. code-block:: sh
 
     sudo apt install libxslt1-dev libxml2-dev python3 python3-pip python3-venv
-    pip install virtualenv
 
 - d'une version Python >= 3.9
 - d'une instance mviewer fonctionnelle (/mviewer)
 
 Procédures d'installation
 =========================
-
-.. note::
-    Avant de réaliser l'installation, vous devez avoir connaissance de la différence entre un environnement de
-    ``production`` et un environnement de ``développement``.
-
-    ``L’environnement de production`` est la destination finale d’une application web ou d’un site web.
-    C'est l'environnement final qui sera accessible par vos utilisateurs.
-
-    ``L’environnement de développement`` représente le contexte dans lequel vous allez réaliser des développements, des modifications du code ou des tests
-    avant de réaliser le passage de l'application dans l'environnement de production final.
 
 Installation manuelle
 ---------------------
@@ -47,20 +36,12 @@ Installation manuelle
 
     #Récupération des sources
     git clone https://github.com/mviewer/mviewerstudio.git
-    #Positionnement sur la branche ou la version choisie
     cd mviewerstudio
-    git checkout develop
-    STATIC_DIR=srv/python/mviewerstudio_backend/static
-    #Création du dossier apps
-    mkdir -p "${STATIC_DIR}/apps"
-    #Copie des dossiers ressources dans le dossier static
-    cp -r css img js lib index.html mviewerstudio.i18n.json "${STATIC_DIR}"
     #Création de l'environnement virtuel Python et installation des dépendances
-    cd srv/python
     python3 -m venv .venv
     source .venv/bin/activate
-    pip install -r requirements.txt -r dev-requirements.txt
-    pip install -e .
+    pip install -r install/requirements.txt -r install/dev-requirements.txt
+    pip install -e src
 
 
 
@@ -68,24 +49,23 @@ Installation manuelle
 Installation scriptée
 ---------------------
 
-Téléchargez le script d'installation
-
 .. code-block:: sh
 
-    sudo apt install curl
-    curl -O https://raw.githubusercontent.com/mviewer/mviewerstudio/master/install/install.sh
+    git clone https://github.com/mviewer/mviewerstudio.git
+    cd mviewerstudio
+    bash ./install/install.sh
 
 Le script utilise 3 paramètres :
 
 - ``<parent_directory>`` : Le chemin dans lequel installer mviewerstudio
 - ``<branch>`` : La branche à installer
-- ``<directory_name>`` : La branche à installer (Option - par défaut le nom sera ``mviewerstudio``)
+- ``<directory_name>`` : Le nom du répertoire cible (optionnel, par défaut ``mviewerstudio``)
 
 Exemple pour installer mviewerstudio dans le répertoire ``/git`` en utilisant la branche ``develop`` :
 
 .. code-block:: sh
 
-    sh ./install.sh /home/monuser/git develop mviewerstudio_develop
+    bash ./install/install.sh /home/monuser/git develop mviewerstudio_develop
 
 Suite à cette commande exemple, le mviewerstudio sera donc accessible sous le chemin suivant et sera directement aligné avec la branche ``develop``: 
 
@@ -129,7 +109,7 @@ Pour utiliser les services types OGC (catalogue ou serveurs cartographiques), vo
 Le Proxy interne proposé par mviewer ("/mviewerstudio/proxy/?url=") utilise un paramètre ``PROXY_WHITE_LIST`` qui doit être complété par tous les domaines (FQDN) des services que vous utiliserez.
 Ce paramètre est accessible dans :
 
-- /srv/python/mviewerstudio_backend/settings.py
+- ``src/settings.py``
 
 
 
@@ -139,9 +119,9 @@ Lancement de l'application avec Flask
 
 .. code-block:: sh
 
-    cd mviewerstudio/srv/python
+    cd mviewerstudio
     source .venv/bin/activate
-    export FLASK_APP=python/mviewerstudio_backend.app
+    export FLASK_APP=src/app.py
     export CONF_PATH_FROM_MVIEWER=apps/store
     export EXPORT_CONF_FOLDER=/home/monuser/mviewer/apps/store/
     export MVIEWERSTUDIO_PUBLISH_PATH=/home/monuser/mviewer/apps/prod
@@ -164,8 +144,8 @@ Exemples :
 - avec ``MVIEWERSTUDIO_URL_PATH_PREFIX=mviewerstudio`` : ``http://localhost:5007/mviewerstudio/swagger``
 
 .. note::
-   Ces routes sont servies directement par Flask via ``mviewerstudio_backend/route.py``.
-   Le fichier de spécification est ``srv/python/mviewerstudio_backend/swagger.yaml``.
+   Ces routes sont servies directement par Flask via ``src/route.py``.
+   Le fichier de spécification est ``src/swagger.yaml``.
 
 
 

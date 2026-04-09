@@ -24,7 +24,7 @@ Prérequis
 Généralités
 -----------
 
-Le debugger VS Code permet d'utiliser le virtualenv (répertoire .venv) installé dans le répertoire `srv/python`.
+Le debugger VS Code permet d'utiliser le virtualenv (répertoire `.venv`) installé à la racine du projet.
 
 Vous pouvez suivre cette documentation à propos des virtualenv dans VS code :
 
@@ -39,9 +39,9 @@ https://code.visualstudio.com/docs/python/tutorial-flask
 Synchronisation API / Swagger
 -----------------------------
 
-Toute modification des routes backend (fichier ``srv/python/mviewerstudio_backend/route.py``)
+Toute modification des routes backend (fichier ``src/route.py``)
 doit être synchronisée dans la spécification Swagger/OpenAPI
-(``srv/python/mviewerstudio_backend/swagger.yaml``).
+(``src/swagger.yaml``).
 
 Accès à Swagger
 ---------------
@@ -61,13 +61,13 @@ les URLs deviennent :
 Configuration du debugger VS Code
 ---------------------------------
 
-1. Ouvrir le répertoire /srv/python/ dans VS Code.
+1. Ouvrir la racine du projet dans VS Code.
 2. Ouvrir le fichier .vscode/launch.json (voir la section suivante si non existant)
 3. Modifier les variables d'environnement (aidez-vous de la page :ref:`install_python`) selon votre environnement
 
 .. code-block:: sh
 
-	"FLASK_APP": "mviewerstudio_backend/app.py",
+	"FLASK_APP": "src/app.py",
 	"FLASK_DEBUG": "1",
 	"CONF_PATH_FROM_MVIEWER":"apps/store",
 	"EXPORT_CONF_FOLDER":"/home/user/git/mviewer/apps/store/",
@@ -105,7 +105,7 @@ Si le fichier n'est pas disponible, vous pouvez le créer via le générateur VS
 
 1. Création manuelle
 
-Dans `/srv/python`, vous devrez créer un répertoire (si inexistant) `.vscode` et un fichier `launch.json`.
+À la racine du projet, vous devrez créer un répertoire (si inexistant) `.vscode` et un fichier `launch.json`.
 
 .. warning::
     Le type `python` semble déprécié mais fonctionne encore. Le type `debugpy` n'est pas compatible avec cette documentation.
@@ -126,7 +126,7 @@ Dans le fichier launch.json, collez ce fichier et reprenez la section `Configura
 				"request": "launch",
 				"module": "flask",
 				"env": {
-					"FLASK_APP": "mviewerstudio_backend/app.py",
+					"FLASK_APP": "src/app.py",
 					"FLASK_DEBUG": "1",
 					"CONF_PATH_FROM_MVIEWER":"apps/store",
 					"EXPORT_CONF_FOLDER":"/home/user/git/mviewer/apps/store/",
@@ -148,7 +148,7 @@ Dans le fichier launch.json, collez ce fichier et reprenez la section `Configura
 
 2. Création via l'outil VS Code
 
-Ouvrez le répertoire srv/python dans VS Code.
+Ouvrez la racine du projet dans VS Code.
 
 - A gauche, cliquez sur `Run and Debug`.
 
@@ -160,5 +160,5 @@ Ouvrez le répertoire srv/python dans VS Code.
 
 - Dans la 3è étape, cliquez sur `Default`
 
-- Dans le nouveau fichier `.vscode/launch.json`, modifier les valeurs et surtout la valeur de "FLASK_APP" pour pointer vers le fichier `srv/python/mviewer_backend/app.py`
+- Dans le nouveau fichier `.vscode/launch.json`, modifier les valeurs et surtout la valeur de "FLASK_APP" pour pointer vers le fichier `src/app.py`
 
