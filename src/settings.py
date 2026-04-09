@@ -16,7 +16,8 @@ class Config:
         "geobretagne.fr,ows.region-bretagne.fr,kartenn.region-bretagne.fr",
     ).split(",")
     MVIEWERSTUDIO_PUBLISH_PATH = os.getenv(
-        "MVIEWERSTUDIO_PUBLISH_PATH", "/home/gaetan/projects/mviewer/mviewer/apps/public"
+        "MVIEWERSTUDIO_PUBLISH_PATH",
+        "/home/gaetan/projects/mviewer/mviewer/apps/public",
     )
     DEFAULT_ORG = os.getenv("DEFAULT_ORG", "public")
     MVIEWERSTUDIO_URL_PATH_PREFIX = os.getenv("MVIEWERSTUDIO_URL_PATH_PREFIX", "")

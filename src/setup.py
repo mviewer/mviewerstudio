@@ -17,7 +17,9 @@ setup(
     author="mviewer community",
     author_email="",
     url="https://github.com/mviewer/mviewerstudio",
-    packages=find_namespace_packages(include=["models", "models.*", "utils", "utils.*"]),
+    packages=find_namespace_packages(
+        include=["models", "models.*", "utils", "utils.*"]
+    ),
     py_modules=[
         "app",
         "app_factory",

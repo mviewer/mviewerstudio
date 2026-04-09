@@ -5,7 +5,7 @@ services:
     build:
       context: .
       dockerfile: docker/Dockerfile
-    image: mviewerstudio:develop
+    image: mviewer/mviewerstudio:latest
 #    ports:
 #      - "8000:8000"
     environment:
