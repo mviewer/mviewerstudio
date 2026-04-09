@@ -23,6 +23,10 @@ libxslt1-dev libxml2-dev python3 python3-pip python3-venv git
 
 ## Quick Installation (with the script)
 
+This procedure is only for installation for local testing or in a development environment.
+
+Installation in a production environment is described in the technical documentation and requires configuring a service file (systemctl) via gunicorn.
+
 ### Step 1: Clone the repository
 
 ```sh
@@ -99,7 +103,7 @@ pip install -r install/requirements.txt
 
 ---
 
-## Starting the application
+## Starting the Application
 
 ### Step 1: Activate the virtual environment
 
@@ -109,7 +113,7 @@ source .venv/bin/activate
 
 ### Step 2: Configure environment variables (if necessary)
 
-Check `src/static/config.json` for front-end configurations.
+Check `src/static/config.json` for front configurations.
 
 ### Step 3: Launch Flask
 

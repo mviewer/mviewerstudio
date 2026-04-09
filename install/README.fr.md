@@ -23,6 +23,10 @@ libxslt1-dev libxml2-dev python3 python3-pip python3-venv git
 
 ## Installation rapide (avec le script)
 
+Cette procédure concerne uniquement une installation pour un test en local ou dans un environnement de développement.
+
+L'installation dans un environnement de production est décrite dans la documentation technique et nécessite de configurer un fichier de service (systemctl) via gunicorn.
+
 ### Étape 1 : Cloner le dépôt
 
 ```sh
