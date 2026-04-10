@@ -1,8 +1,8 @@
 {
     "app_conf": {
         "studio_title": "Mviewer Studio",
-        "mviewer_version":  "4",
-        "mviewerstudio_version":  "4.2.1",
+        "mviewer_version":  "4.1",
+        "mviewerstudio_version":  "4.3",
         "api": "api/app",
         "store_style_service": "api/style",
         "mviewer_instance": "/mviewer/",
