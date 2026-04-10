@@ -73,7 +73,7 @@ Exécuter ces commandes :
        # Vérifiez que vous êtes bien sur la branche master
 
 
-Modifiez maintenant le contenu du fichier `mviewerstudio.service` en suivant les indications de la section précédente.
+Modifiez maintenant le contenu du fichier `mviewerstudio.service` en s'aidant de la page :ref:`install_python`).
 
 Modifiez enfin le fichier de configuration du frontend `src/static/config.json` pour adapter les paramètres à votre installation (reprenez votre fichier précédent).
 
