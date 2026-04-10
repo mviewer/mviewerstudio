@@ -8,18 +8,18 @@
 
 ---
 
-## 🚀 Quick Start
+## 🚀 Quick Start docker compose
 
-```bash
+```
+# code source
 git clone https://github.com/mviewer/mviewerstudio.git
 cd mviewerstudio
-bash ./install/install.sh
-flask --app src/app.py run -p 5007
+# docker
+docker compose up -d
 ```
+Accédez à : **http://localhost/mviewerstudio**
 
-Accédez à : **http://localhost:5007**
-
-Pour des instructions détaillées, voir [Guide d'installation](install/README.md)
+Pour des instructions détaillées avec Flask ou Docker, voir le [Guide d'installation](install/README.md)
 
 ---
 
