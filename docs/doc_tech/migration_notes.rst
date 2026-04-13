@@ -52,7 +52,7 @@ Pour migrer vers cette nouvelle version, il est nécessaire de modifier le fichi
 - WorkingDirectory - Doit pointer vers le répertoire où mviewerstudio est installé
 - ExecStart - l'argument WSGI/ASGI (application target) de gunicorn doit être modifié pour pointer vers l'emplacement du module python et l'objet associé (`src.app:app` par défaut). 
 
-5. **Récupération du code source**
+5. **Processus à partir d'une installation existante**
 
 .. warning::
 
@@ -77,7 +77,7 @@ Modifiez maintenant le contenu du fichier `mviewerstudio.service` en s'aidant de
 
 Modifiez enfin le fichier de configuration du frontend `src/static/config.json` pour adapter les paramètres à votre installation (reprenez votre fichier précédent).
 
-6. **Impact sur les cartes mviewer**
+6. **Impact sur les cartes mviewer créées à partir de mviewerstudio**
 
 Aucun impact.
 
