@@ -55,7 +55,7 @@ Installation scriptée
     cd mviewerstudio
     bash ./install/install.sh
 
-Le script utilise 3 paramètres :
+Le script peut utiliser 3 paramètres :
 
 - ``<parent_directory>`` : Le chemin dans lequel installer mviewerstudio
 - ``<branch>`` : La branche à installer
