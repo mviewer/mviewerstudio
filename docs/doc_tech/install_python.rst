@@ -93,7 +93,7 @@ Adaptez ensuite les paramètres selon votre environnement (aidez-vous de la page
 Variables d'environnement du backend
 ------------------------------------
 
-Ces variables doivent être définies dans l'environnement soit via la console (commande export ou fichier .bashrc) ou le service
+Ces variables doivent être définies dans l'environnement soit via la console (commande export ou fichier .bashrc) ou le service :
 
 - ``CONF_PATH_FROM_MVIEWER``: répertoire d'accès à partir de l'instance mviewer.
 - ``CONF_PUBLISH_PATH_FROM_MVIEWER``: répertoire de publication à partir de l'instance mviewer.
@@ -258,7 +258,7 @@ Pour la mise à jour du code source, voici donc les commandes à exécuter à pa
 
     A chaque version, vous devrez comparer le fichier `src/static/config.json`  avec la configuration disponible dans le dépôt github. Ceci afin de vous assurez que vous avez bien toutes les clés de configuration nécessaires au bon fonctionnement de votre instance.
 
-Si vous parter d'une version < 4.3, alors il faudra mettre à jour votre service comme mentionné ci-dessus, puis recharger la configuration et redémarrer de votre service (e.g gunicorn) :
+Si vous parter d'une version antérieure (< 4.3), alors il faudra mettre à jour votre service comme mentionné ci-dessus, puis recharger la configuration et redémarrer de votre service (e.g gunicorn) :
 
 .. code-block:: sh
 
@@ -281,7 +281,7 @@ Pour tout redémarrage de gunicorn, vérifier que le service a bien démarré :
 
 
 Documentation Swagger (API)
-===========================
+****************************
 
 Le backend Python expose une interface Swagger UI ainsi que le fichier OpenAPI :
 
