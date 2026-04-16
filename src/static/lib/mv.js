@@ -1051,11 +1051,20 @@ var mv = (function () {
     form2xml: function () {
       var el = $(".layers-list-item.active");
       var layerid = el.attr("data-layerid");
-      var themeid = $("#theme-edit").attr("data-themeid");
+      var themeid = $("#theme-edit").attr("data-themeid") || mv.getCurrentThemeId();
       function getLayerbyId(l) {
         return l.id === layerid;
       }
-      var layer = config.themes[themeid].layers.find(mv.getLayerById);
+      var layer = null;
+      if (themeid && config.themes[themeid]) {
+        layer = config.themes[themeid].layers.find(getLayerbyId);
+      }
+      if (!layer) {
+        layer = mv.getLayerById(layerid);
+      }
+      if (!layer) {
+        return;
+      }
       var xml = mv.writeLayerNode(layer);
       $("#mod-codeview pre").text(xml);
     },
