@@ -7,7 +7,7 @@
 Installer mviewerstudio avec Python
 ###################################
 
-Mviewerstudio est une application web développée en HTML / CSS / PHP / Python. Elle nécessite simplement d'être déployée sur un serveur WEB qui peut être APACHE, NGINX, TOMCAT…
+Mviewerstudio est une application web développée en HTML / CSS / JavaScript avec un backend Python. Elle nécessite simplement d'être déployée sur un serveur WEB qui peut être APACHE, NGINX, TOMCAT…
 
 Installation
 ************
@@ -22,23 +22,12 @@ Vous aurez besoin :
 .. code-block:: sh
 
     sudo apt install libxslt1-dev libxml2-dev python3 python3-pip python3-venv
-    pip install virtualenv
 
-- d'une version Python >= 3.11
+- d'une version Python >= 3.9
 - d'une instance mviewer fonctionnelle (/mviewer)
 
 Procédures d'installation
 =========================
-
-.. note::
-    Avant de réaliser l'installation, vous devez avoir connaissance de la différence entre un environnement de
-    ``production`` et un environnement de ``développements``.
-
-    ``L’environnement de production`` est la destination finale d’une application web ou d’un site web.
-    C'est l'environnement final qui sera accessible par vos utilisateurs.
-
-    ``L’environnement de développement`` représente le contexte dans lequel vous allez réaliser des développements, des modifications du code ou des tests
-    avant de réaliser le passage de l'application dans l'environnement de production final.
 
 Installation manuelle
 ---------------------
@@ -47,20 +36,12 @@ Installation manuelle
 
     #Récupération des sources
     git clone https://github.com/mviewer/mviewerstudio.git
-    #Positionnement sur la branche ou la version choisie
     cd mviewerstudio
-    git checkout develop
-    STATIC_DIR=srv/python/mviewerstudio_backend/static
-    #Création du dossier apps
-    mkdir -p "${STATIC_DIR}/apps"
-    #Copie des dossiers ressources dans le dossier static
-    cp -r css img js lib index.html mviewerstudio.i18n.json "${STATIC_DIR}"
     #Création de l'environnement virtuel Python et installation des dépendances
-    cd srv/python
     python3 -m venv .venv
     source .venv/bin/activate
-    pip install -r requirements.txt -r dev-requirements.txt
-    pip install -e .
+    pip install -r install/requirements.txt -r install/dev-requirements.txt
+    pip install -e src
 
 
 
@@ -68,24 +49,23 @@ Installation manuelle
 Installation scriptée
 ---------------------
 
-Téléchargez le script d'installation
-
 .. code-block:: sh
 
-    sudo apt install curl
-    curl -O https://raw.githubusercontent.com/mviewer/mviewerstudio/master/srv/python/install_backend_python.sh
+    git clone https://github.com/mviewer/mviewerstudio.git
+    cd mviewerstudio
+    bash ./install/install.sh
 
-Le script utilise 3 paramètres :
+Le script peut utiliser 3 paramètres :
 
 - ``<parent_directory>`` : Le chemin dans lequel installer mviewerstudio
 - ``<branch>`` : La branche à installer
-- ``<directory_name>`` : La branche à installer (Option - par défaut le nom sera ``mviewerstudio``)
+- ``<directory_name>`` : Le nom du répertoire cible (optionnel, par défaut ``mviewerstudio``)
 
 Exemple pour installer mviewerstudio dans le répertoire ``/git`` en utilisant la branche ``develop`` :
 
 .. code-block:: sh
 
-    sh ./install_backend_python.sh /home/monuser/git develop mviewerstudio_develop
+    bash ./install/install.sh /home/monuser/git develop mviewerstudio_develop
 
 Suite à cette commande exemple, le mviewerstudio sera donc accessible sous le chemin suivant et sera directement aligné avec la branche ``develop``: 
 
@@ -97,7 +77,7 @@ Configuration
 Configuration du front
 ----------------------
 
-Récupérez le fichier ``config-python-sample.json`` (à la racine du projet) et copier son contenu dans le fichier ``/srv/python/mviewerstudio_backend/static/apps/config.json``.
+Récupérez le fichier ``src/static/config.json`` et adaptez son contenu selon votre environnement.
 Adaptez ensuite les paramètres selon votre environnement (aidez-vous de la page :ref:`config_front`).
 
 .. warning::
@@ -113,7 +93,7 @@ Adaptez ensuite les paramètres selon votre environnement (aidez-vous de la page
 Variables d'environnement du backend
 ------------------------------------
 
-Ces variables doivent être définies dans l'environnement (console batch ou service)
+Ces variables doivent être définies dans l'environnement soit via la console (commande export ou fichier .bashrc) ou le service :
 
 - ``CONF_PATH_FROM_MVIEWER``: répertoire d'accès à partir de l'instance mviewer.
 - ``CONF_PUBLISH_PATH_FROM_MVIEWER``: répertoire de publication à partir de l'instance mviewer.
@@ -129,44 +109,25 @@ Pour utiliser les services types OGC (catalogue ou serveurs cartographiques), vo
 Le Proxy interne proposé par mviewer ("/mviewerstudio/proxy/?url=") utilise un paramètre ``PROXY_WHITE_LIST`` qui doit être complété par tous les domaines (FQDN) des services que vous utiliserez.
 Ce paramètre est accessible dans :
 
-- /srv/python/mviewerstudio_backend/settings.py
+- ``src/settings.py``
 
 
 
-Lancement de l'application avec Flask
+Lancement de l'application avec Flask (mode developpement)
 =====================================
 
 
 .. code-block:: sh
 
-    cd mviewerstudio/srv/python
+    cd mviewerstudio
     source .venv/bin/activate
-    export FLASK_APP=python/mviewerstudio_backend.app
+    export FLASK_APP=src/app.py
     export CONF_PATH_FROM_MVIEWER=apps/store
-    export EXPORT_CONF_FOLDER=/home/monuser/mviewer/apps/store/
-    export MVIEWERSTUDIO_PUBLISH_PATH=/home/monuser/mviewer/apps/prod
+    export EXPORT_CONF_FOLDER=/var/www/mviewer/apps/store/
+    export MVIEWERSTUDIO_PUBLISH_PATH=/var/www/mviewer/apps/prod
     export CONF_PUBLISH_PATH_FROM_MVIEWER=apps/prod
-    export DEFAULT_ORG=megalis
+    export DEFAULT_ORG=monorg
     flask run -p 5007
-
-
-Documentation Swagger (API)
-===========================
-
-Le backend Python expose une interface Swagger UI ainsi que le fichier OpenAPI :
-
-- Swagger UI : ``/swagger`` (ou ``/swagger/``)
-- Spécification OpenAPI : ``/swagger.yaml``
-
-Exemples :
-
-- sans préfixe d'URL : ``http://localhost:5007/swagger``
-- avec ``MVIEWERSTUDIO_URL_PATH_PREFIX=mviewerstudio`` : ``http://localhost:5007/mviewerstudio/swagger``
-
-.. note::
-   Ces routes sont servies directement par Flask via ``mviewerstudio_backend/route.py``.
-   Le fichier de spécification est ``srv/python/mviewerstudio_backend/swagger.yaml``.
-
 
 
 Mise en production
@@ -190,10 +151,10 @@ Mode opératoire
 - Servir le backend python et le front de studio avec un service Linux
 - Proxyfier ce service avec Nginx ou Apache
 
-1) Création des dossiers de stockage dans le dossier mviewer/apps
+1) Création des dossiers de stockage des applications mviewer et de log
 -----------------------------------------------------------------
 
-Création du répertoire de stockage des brouillons (store) et des applications publiées (prod).
+Création du répertoire de stockage des brouillons (store) et des applications publiées (prod) dans mon application mviewer.
 
 
  .. code-block:: sh
@@ -203,64 +164,29 @@ Création du répertoire de stockage des brouillons (store) et des applications 
        mkdir /var/www/mviewer/apps/prod
        sudo chown monuser /var/www/mviewer/apps/prod
 
-
-
-2) Création du service et activation du service
------------------------------------------------
-
-Créer le répertoire mviewerstudio dans /var/log
+Création du répertoire de log mviewerstudio
 
 .. code-block:: sh
 
        sudo mkdir /var/log/mviewerstudio
        sudo chown monuser /var/log/mviewerstudio
 
-Vous devez créer un fichier dans `/etc/systemd/system/mviewerstudio.service`:
+
+2) Création du service et activation du service
+-----------------------------------------------
+
+Copier maintenant le fichier disponible dans install/mviewerstudio.service dans `/etc/systemd/system/mviewerstudio.service`.
+
+Enfin, adaptez son contenu (notamment le user, le port, les chemins et l'emplacement des logs).
 
  .. code-block:: sh
 
        sudo nano /etc/systemd/system/mviewerstudio.service
 
 
-Ajoutez ensuite ce contenu en adaptant les valeurs (chemin, user...) selon votre environnement :
+N'oubliez pas d'adapter le niveau des logs et les droits des répertoires (à créer si nécessaire) selon l'utilisateur défini dans le fichier mviewerstudio.service (dans la configuration par défaut, l'utilisateur `monuser` devra pouvoir écrire dans `/var/log/mviewerstudio`).
 
-fichier `mviewerstudio.service`
-
-  .. warning::
-    Nous conseillons de laisser la valeur du worker à 1 (voir issue #389)
-
- .. code-block:: sh
-
-       [Unit]
-        Description=mviewerstudio
-        After=network.target
-
-        [Service]
-        User=monuser
-        Environment="EXPORT_CONF_FOLDER=/var/www/mviewer/apps/store/"
-        Environment="CONF_PUBLISH_PATH_FROM_MVIEWER=apps/prod"
-        Environment="CONF_PATH_FROM_MVIEWER=apps/store"
-        Environment="MVIEWERSTUDIO_PUBLISH_PATH=/var/www/mviewer/apps/prod"
-        Environment="DEFAULT_ORG=public"
-        Environment="LOG_LEVEL=INFO"
-        WorkingDirectory=/home/monuser/mviewerstudio/srv/python
-        ExecStart=/home/monuser/mviewerstudio/srv/python/.venv/bin/gunicorn \
-            -b 127.0.0.1:5007 \
-            --workers=1 \
-            --access-logfile /var/log/mviewerstudio/gunicorn-access.log \
-            --log-level info \
-            --error-logfile /var/log/mviewerstudio/gunicorn-error.log \
-            mviewerstudio_backend.app:app
-
-        StandardOutput=append:/var/log/mviewerstudio//mviewerstudio.log
-        StandardError=append:/var/log/mviewerstudio/mviewerstudio.log
-
-        [Install]
-        WantedBy=multi-user.target
-
-N'oubliez pas d'adapter le niveau des logs, le répertoire des logs (à créer si nécessaire) avec les bons droits (`monuser` dans cette confiugration devra pouvoir écrire dans `/var/log/mviewerstudio`).
-
-Notre service tournera donc sur le port `5007` une fois démarré.
+Le porte par défaut est sera le `5007` (à adapter dans mviewerstudio.service).
 
 Activation et démarrage du service :
 
@@ -277,6 +203,7 @@ A partir de maintenant, il est possible de stopper, redémarrer ou afficher le s
        sudo systemctl stop mviewerstudio
        sudo systemctl restart mviewerstudio
        sudo systemctl status mviewerstudio.service
+
 
 3) Proxyfication du service
 ---------------------------------
@@ -319,30 +246,31 @@ Rechargement de la conf apache
 Mise à jour de l'application
 ****************************
 
-Pour mettre à jour le code source (e.g branche ``develop``), vous pouvez utilisez le script ``mviewerstudio/srv/python/sync.sh`` après un ``git pull``.
+Dans cette version (> à 4.2.1), la synchronisation entre la racine et le backend n'est plus à réaliser à la main car, avec un seul backend, tous les fichiers static sont dans /src/static.
 
-Il permet de copier / coller les sources vers le répertoire ``static`` du backend Python.
-
-Pour la mise à jour, voici donc les commandes à exécuter à partir du répertoire ``/mviewerstudio`` :
+Pour la mise à jour du code source, voici donc les commandes à exécuter à partir du répertoire ``/mviewerstudio``  (en partant du principe que vous êtes bien sur la branche master):
 
 .. code-block:: sh
 
-    cd /full/path/mviewerstudio
     git pull
-    cd srv/python
-    sh ./sync.sh pull /full/path/mviewerstudio
 
-Si besoin, réaliser un restart de votre service (e.g gunicorn) :
+.. warning::
+
+    A chaque version, vous devrez comparer le fichier `src/static/config.json`  avec la configuration disponible dans le dépôt github. Ceci afin de vous assurez que vous avez bien toutes les clés de configuration nécessaires au bon fonctionnement de votre instance.
+
+Si vous parter d'une version antérieure (< 4.3), alors il faudra mettre à jour votre service comme mentionné ci-dessus, puis recharger la configuration et redémarrer de votre service (e.g gunicorn) :
 
 .. code-block:: sh
 
-    systemctl restart mviewerstudio
+    sudo nano /etc/systemd/system/mviewerstudio.service
+    sudo systemctl daemon-reload
+    sudo systemctl restart mviewerstudio
 
 Pour tout redémarrage de gunicorn, vérifier que le service a bien démarré :
 
 .. code-block:: sh
 
-    systemctl status mviewerstudio
+    sudo systemctl status mviewerstudio
 
 .. warning::
 
@@ -350,4 +278,22 @@ Pour tout redémarrage de gunicorn, vérifier que le service a bien démarré :
     Le service peut alors démarrer et s'arréter.
 
     Si vous constater dans le fichier de log d'erreur gunicorn que c'est bien le cas, redémarrer le service avec la commande ``systemctl restart mviewerstudio``
+
+
+Documentation Swagger (API)
+****************************
+
+Le backend Python expose une interface Swagger UI ainsi que le fichier OpenAPI :
+
+- Swagger UI : ``/swagger`` (ou ``/swagger/``)
+- Spécification OpenAPI : ``/swagger.yaml``
+
+Exemples :
+
+- sans préfixe d'URL : ``http://localhost:5007/swagger``
+- avec ``MVIEWERSTUDIO_URL_PATH_PREFIX=mviewerstudio`` : ``http://localhost:5007/mviewerstudio/swagger``
+
+.. note::
+   Ces routes sont servies directement par Flask via ``src/route.py``.
+   Le fichier de spécification est ``src/swagger.yaml``.
 

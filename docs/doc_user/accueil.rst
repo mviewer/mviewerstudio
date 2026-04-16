@@ -115,6 +115,6 @@ Les liens en bas de page renvoient vers :
 
 .. _mviewer: https://github.com/mviewer/mviewer
 
-.. _délégué: https://cms.geobretagne.fr/sites/default/files/documents/202410_geobretagne_manuel_administrateur.pdf
+.. _délégué: https://cms.geobretagne.fr/formation/kit-de-formation-geobretagne-publier-et-diffuser-une-donnee
 
-.. _GéoBretagne: https://cms.geobretagne.fr/sites/default/files/documents/202410_geobretagne_manuel_administrateur.pdf
+.. _GéoBretagne: https://cms.geobretagne.fr/formation/kit-de-formation-geobretagne-publier-et-diffuser-une-donnee

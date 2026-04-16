@@ -16,13 +16,12 @@ jobs:
           python-version: '3.12'
 
       - name: "python backend - install requirements"
-        working-directory: srv/python
         run: |
-          pip install -r requirements.txt -r dev-requirements.txt
-          pip install -e .
+          pip install -r install/requirements.txt -r install/dev-requirements.txt
+          pip install -e ./src
 
       - name: "python backend - Checking format"
-        working-directory: srv/python
+        working-directory: src
         run: |
           black . --check    
         

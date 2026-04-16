@@ -1,8 +1,35 @@
-version: '3'
-volumes:
-  apps:
-
 services:
+  # Python version
+  # Served under /${MVIEWERSTUDIO_URL_PATH_PREFIX}/ see docker/nginx/default.conf.template
+  mviewerstudio:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    image: mviewer/mviewerstudio:latest
+#    ports:
+#      - "8000:8000"
+    environment:
+      - CONF_PATH_FROM_MVIEWER=apps/store
+      - CONF_PUBLISH_PATH_FROM_MVIEWER=apps/public
+      - DEFAULT_ORG=my_org
+      - EXPORT_CONF_FOLDER=/home/mvuser/apps/store
+      - MVIEWERSTUDIO_PUBLISH_PATH=/home/mvuser/apps/public
+      - MVIEWERSTUDIO_URL_PATH_PREFIX=mviewerstudio
+    volumes:
+      - "./apps:/home/mvuser/apps"
+      - "./src/static/config.json:/home/mvuser/src/static/config.json"
+  # Served under /mviewer/ see docker/nginx/default.conf.template
+  mviewer:
+    depends_on:
+      - mviewerstudio
+    # this image is automatically built in
+    # the mviewer/mviewer github repository
+    # See https://github.com/mviewer/mviewer/pull/236
+    image: mviewer/mviewer
+    # ports:
+    #   - "5051:80"
+    volumes:
+        - "./apps:/usr/share/nginx/html/apps:ro"
   # Reverse-proxy using nginx. Groups mviewer and mviewerstudio under respective paths
   # Config can be found under ./docker/nginx/default.conf.template
   www:
@@ -14,40 +41,7 @@ services:
       - MVIEWERSTUDIO_URL_PATH_PREFIX=mviewerstudio
     volumes:
       - ./docker/nginx:/etc/nginx/templates
+      - "./apps:/usr/share/nginx/html/apps:ro"
     depends_on:
       - mviewerstudio
       - mviewer
-
-  # Python version
-  # Served under /${MVIEWERSTUDIO_URL_PATH_PREFIX}/ see docker/nginx/default.conf.template
-  mviewerstudio:
-    build:
-      context: .
-      dockerfile: docker/Dockerfile-python-backend
-    image: mviewer/mviewerstudio:latest
-#    ports:
-#      - "8000:8000"
-    environment:
-      - CONF_PATH_FROM_MVIEWER=apps/store
-      - CONF_PUBLISH_PATH_FROM_MVIEWER=apps/public
-      - DEFAULT_ORG=my_org
-      - EXPORT_CONF_FOLDER=/home/apprunner/apps/store
-      - MVIEWERSTUDIO_PUBLISH_PATH=/home/apprunner/apps/public
-      - MVIEWERSTUDIO_URL_PATH_PREFIX=mviewerstudio
-    volumes:
-      - "apps:/home/apprunner/apps"
-      - "./config-python-sample.json:/home/apprunner/mviewerstudio_backend/static/apps/config.json"
-
-  # Served under /mviewer/ see docker/nginx/default.conf.template
-  mviewer:
-    depends_on:
-      - mviewerstudio
-    # this image is automatically built in
-    # the mviewer/mviewer github repository
-    # See https://github.com/mviewer/mviewer/pull/236
-    image: mviewer/mviewer
-#    ports:
-#      - "5051:80"
-    volumes:
-        - "apps:/usr/share/nginx/html/apps"
-#

@@ -1,7 +1,7 @@
 # mviewerstudio Dockerfile
 
-## Which one ?
-The maintained dockerfile is the python one. The php one is there for historical reasons and will probably soon be dropped.
+## Image
+Only python Dockerfile will be maintained (PHP backend is fully deprecated).
 
 ## Environment variables
 
@@ -13,10 +13,17 @@ The maintained dockerfile is the python one. The php one is there for historical
 
 ## Default configuration
 
-The default configuration (env vars defined in the dockerfile and json config file copied) assume that:
+The default configuration (env vars defined in the dockerfile and json config file present in `src/static/config.json`) assume that:
 - the mviewer _apps_ folder is mounted at EXPORT_CONF_FOLDER=/home/apprunner/apps
 - /home/apprunner/apps/store and /home/apprunner/apps/prod are existing folders (you might need to create them manually beforehand)
-- it is using config-python-sample.json, which at some point you will probably want to override with your own config.
+- it is using `src/static/config.json`, which you will probably want to adapt to your own environment.
 
 
 It is also configured to serve the frontend (static files) with gunicorn, which is usually not recommended. Later versions might use an nginx container to serve the frontend.
+
+## Build mviewerstudio image
+
+Use docker compose to build image :
+
+`docker compose build mviewerstudio`
+

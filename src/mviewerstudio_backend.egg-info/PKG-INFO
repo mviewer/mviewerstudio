@@ -1,0 +1,26 @@
+Metadata-Version: 2.4
+Name: mviewerstudio_backend
+Version: 0.2
+Summary: A simple API for mviewerstudio
+Home-page: https://github.com/mviewer/mviewerstudio
+Author: mviewer community
+Author-email: 
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Framework :: Flask
+Classifier: Topic :: Internet :: WWW/HTTP
+Classifier: Topic :: Internet :: WWW/HTTP :: WSGI :: Application
+Requires-Python: >=3.11
+Requires-Dist: flask>=2
+Requires-Dist: gunicorn>20
+Requires-Dist: lxml>=4.9.2
+Requires-Dist: GitPython>=3
+Requires-Dist: requests
+Requires-Dist: Unidecode
+Dynamic: author
+Dynamic: classifier
+Dynamic: home-page
+Dynamic: requires-dist
+Dynamic: requires-python
+Dynamic: summary
