@@ -30,7 +30,7 @@ setup(
         "test",
     ],
     install_requires=REQUIREMENTS,
-    python_requires=">=3.11",
+    python_requires=">=3.9",
     classifiers=[
         "Programming Language :: Python",
         "Programming Language :: Python :: 3",
