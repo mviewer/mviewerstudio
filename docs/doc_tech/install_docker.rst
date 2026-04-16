@@ -8,9 +8,6 @@ Installation avec Docker
 
 Cette page complète la procédure d'installation du backend Python avec un déploiement conteneurisé.
 
-Docker
-~~~~~~
-
 Vous devez avoir installé docker au préalable.
 
 1. Image docker
