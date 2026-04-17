@@ -364,7 +364,7 @@
     "msg.delete_req_error": "Echec de la requête de suppression.\nVeuillez consulter votre administrateur.",
     "msg.retrieval_req_error": "Echec de la requête de récupération de l'application.\nVeuillez consulter votre administrateur.",
     "msg.xml_doc_invalid": "Document xml invalide",
-    "msg.creator_mismatch": "Le chargement est refusé : le champ dc:creator de cette configuration ne correspond pas à l'utilisateur courant.",
+    "msg.creator_mismatch": "Le chargement est refusé : Vous n'êtes pas le propriétaire de cette carte.",
     "msg.xml_save": "Document non sauvegardé. \nVeuillez consulter votre administrateur.",
     "template.add_component": "Ajouter un composant",
     "template.preview": "Aperçu",
