@@ -149,7 +149,6 @@ $(document).ready(function () {
       if (_conf.default_params && _conf.default_params.layer) {
         mv.setDefaultLayerProperties(_conf.default_params.layer);
       }
-
     })
     .catch((err) => {
       console.log(err);
@@ -1394,25 +1393,27 @@ var loadApplicationParametersFromRemoteFile = function (url) {
         return r.filter((app) => app.id == config.id);
       })
   );
-  Promise.all(waitRequests).then((values) => {
-    const data = values[0];
-    if (!data) return;
-    mv.parseApplication(data, true);
-    if (values[1]) {
-      const appMeta = values[1][0];
-      if (appMeta?.versions) {
-        config.versions = appMeta.versions;
+  Promise.all(waitRequests)
+    .then((values) => {
+      const data = values[0];
+      if (!data) return;
+      mv.parseApplication(data, true);
+      if (values[1]) {
+        const appMeta = values[1][0];
+        if (appMeta?.versions) {
+          config.versions = appMeta.versions;
+        }
       }
-    }
-    showStudio();
-    document.querySelector("#toolsbarStudio-delete").classList.remove("d-none");
-    document.querySelector("#layerOptionBtn").classList.remove("d-none");
-  }).catch((err) => {
-    if (err?.status === 403) {
-      return alertCustom(mviewer.tr("msg.creator_mismatch"), "danger");
-    }
-    return alertCustom(mviewer.tr("msg.retrieval_req_error"), "danger");
-  });
+      showStudio();
+      document.querySelector("#toolsbarStudio-delete").classList.remove("d-none");
+      document.querySelector("#layerOptionBtn").classList.remove("d-none");
+    })
+    .catch((err) => {
+      if (err?.status === 403) {
+        return alertCustom(mviewer.tr("msg.creator_mismatch"), "danger");
+      }
+      return alertCustom(mviewer.tr("msg.retrieval_req_error"), "danger");
+    });
 };
 
 var loadApplicationParametersFromWMC = function (url) {
