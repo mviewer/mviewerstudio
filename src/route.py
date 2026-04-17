@@ -7,7 +7,6 @@ from flask import (
     redirect,
     render_template_string,
     send_from_directory,
-    url_for,
 )
 from .utils.login_utils import current_user
 from .utils.config_utils import (
@@ -18,7 +17,14 @@ from .utils.config_utils import (
     replace_templates_url,
     read_xml_file_content,
 )
-from .utils.commons import clean_preview, init_preview, create_zip, make_archive
+from .utils.commons import clean_preview, init_preview, create_zip
+from .utils.route_utils import (
+    validate_xml_creator,
+    get_xml_identifier,
+    get_existing_config_or_404,
+    authorize_config_mutation,
+    fetch_remote_xml,
+)
 import hashlib, uuid
 from .utils.register_utils import from_xml_path
 from os import path, mkdir, remove
@@ -42,6 +48,11 @@ logger = logging.getLogger(__name__)
 
 @basic_store.record_once
 def basic_store_init(state: BlueprintSetupState):
+    """
+    Create backend storage directories required by the application at startup.
+
+    :param state: blueprint setup state provided by Flask
+    """
     p = state.app.config["EXPORT_CONF_FOLDER"]
     styles_path = path.join(p, "styles")
     if not path.exists(p):
@@ -104,6 +115,25 @@ def user() -> Response:
     return jsonify(current_user.as_dict())
 
 
+@basic_store.route("/api/app/load", methods=["GET", "POST"])
+def load_config() -> Response:
+    """
+    Load a configuration XML through the backend and enforce dc:creator access
+    control before returning it to the client.
+    """
+    xml_text = ""
+
+    if request.method == "GET":
+        xml_text = fetch_remote_xml(request.args.get("url"))
+    else:
+        if not request.data:
+            raise BadRequest("No XML found in the request body !")
+        xml_text = request.data.decode("utf-8")
+
+    xml_text = validate_xml_creator(xml_text)
+    return Response(xml_text, mimetype="application/xml")
+
+
 @basic_store.route("/api/app", methods=["POST"])
 def create_config() -> Response:
     """
@@ -139,6 +169,14 @@ def update_config() -> Response:
     message = request.args.get("message")
     if not request.data:
         raise BadRequest("No XML found in the request body !")
+    xml_text = request.data.decode("utf-8")
+    config_id = get_xml_identifier(xml_text)
+    current_config = current_app.register.read_json(config_id)
+    if not current_config:
+        raise BadRequest(
+            "This config does not exists yet ! Use creation POST request instead."
+        )
+    authorize_config_mutation(current_config[0])
     config = Config(request.data, current_app)
     if not config:
         raise BadRequest("This XML UUID doesn't exists !")
@@ -154,13 +192,6 @@ def update_config() -> Response:
     config_data = config.as_data()
     # clean preview space if not empty
     clean_preview(current_app, config_data.url)
-
-    current_config = current_app.register.read_json(config_data.id)
-
-    if not current_config:
-        raise BadRequest(
-            "This config does not exists yet ! Use creation POST request instead."
-        )
 
     current_app.register.update(config_data.as_dict())
     return jsonify(
@@ -208,6 +239,7 @@ def publish_config(id, name) -> Response:
     :param id: configuration UUID
     """
     logger.debug("PUBLISH : %s " % id)
+    register_config = authorize_config_mutation(get_existing_config_or_404(id))
 
     xml_publish_name = name
 
@@ -247,12 +279,14 @@ def publish_config(id, name) -> Response:
 
     # read config if exists
     if request.method == "POST":
+        posted_id = get_xml_identifier(request.data.decode("utf-8"))
+        if posted_id != id:
+            raise BadRequest("XML identifier does not match route id !")
         config = Config(request.data, current_app)
     else:
-        config = current_app.register.read_json(id)
         config = from_xml_path(
             current_app,
-            path.join(current_app.config["EXPORT_CONF_FOLDER"], config[0]["url"]),
+            path.join(current_app.config["EXPORT_CONF_FOLDER"], register_config["url"]),
         )
     if not config:
         raise BadRequest("This config doesn't exists !")
@@ -322,32 +356,19 @@ def delete_config_workspace(id=None) -> Response:
         raise BadRequest("Empty list : no value to delete !")
 
     logger.debug("START DELETE CONFIG : %s" % id)
-    workspace = path.join(
-        current_app.config["EXPORT_CONF_FOLDER"], current_user.normalize_name, id
-    )
     # update json
     config = current_app.register.read_json(id)
-    if not config or not path.exists(workspace):
+    if not config:
         logger.debug("DELETE : ERROR - ID OR DIRECTORY NOT EXISTS :")
         return jsonify({"deleted_files": 0, "success": False})
 
-    config = config[0]
-    # control if alowed
-    if (
-        current_user.username != "anonymous"
-        and config["creator"] != current_user.username
-    ):
-        logger.debug("DELETE : NOT ALLOWED - ONLY THE OWNER CAN DELETE THIS APP")
-        return MethodNotAllowed("Not allowed !")
-    # control if org is default org
-    if (
-        current_user.username == "anonymous"
-        and config["publisher"] != current_app.config["DEFAULT_ORG"]
-    ):
-        logger.debug(
-            "DELETE : NOT ALLOWED FOR THIS ANONYMOUS USER - ORG IS NOT DEFAULT"
-        )
-        return MethodNotAllowed("Not allowed !")
+    config = authorize_config_mutation(config[0])
+    workspace = path.join(
+        current_app.config["EXPORT_CONF_FOLDER"], config["publisher"], id
+    )
+    if not path.exists(workspace):
+        logger.debug("DELETE : ERROR - ID OR DIRECTORY NOT EXISTS :")
+        return jsonify({"deleted_files": 0, "success": False})
     # control org and creator not only org - to delete the correct publish file
     map_relation = False
     if "relation" in config and config["relation"]:
@@ -413,7 +434,7 @@ def switch_app_version(id, version="1") -> Response:
 
     if not config:
         raise BadRequest("This config doesn't exists !")
-    config = config[0]
+    config = authorize_config_mutation(config[0])
     workspace = path.join(
         current_app.config["EXPORT_CONF_FOLDER"],
         current_user.normalize_name,
@@ -557,11 +578,12 @@ def delete_app_versions(id) -> Response:
     if not post_data["versions"]:
         raise BadRequest("Empty list - Nothing to delete !")
 
-    config = current_app.register.read_json(id)
-    if not config:
-        raise BadRequest("This config doesn't exists !")
-    config = config[0]
-    workspace = path.join(current_app.config["EXPORT_CONF_FOLDER"], config["id"])
+    config = authorize_config_mutation(get_existing_config_or_404(id))
+    workspace = path.join(
+        current_app.config["EXPORT_CONF_FOLDER"],
+        current_user.normalize_name,
+        config["id"],
+    )
     git = Git_manager(workspace)
 
     for version in post_data["versions"]:
@@ -577,10 +599,7 @@ def create_app_version(id) -> Response:
     Create a tag for a given UUID application.
     :param id: app UUID
     """
-    config = current_app.register.read_json(id)
-    if not config:
-        raise BadRequest("This config doesn't exists !")
-    config = config[0]
+    config = authorize_config_mutation(get_existing_config_or_404(id))
     workspace = path.join(
         current_app.config["EXPORT_CONF_FOLDER"],
         current_user.normalize_name,
@@ -617,6 +636,12 @@ def store_style() -> Response:
 
 @basic_store.route("/api/app/<id>/template/<file_name>", methods=["POST"])
 def add_layer_template(id, file_name) -> Response:
+    """
+    Store a layer template file in the current draft workspace.
+
+    :param id: application UUID
+    :param file_name: template file name without extension
+    """
     template = request.data.decode("utf-8")
     config = current_app.register.read_json(id)
     if not config:
@@ -651,10 +676,13 @@ def add_layer_template(id, file_name) -> Response:
 
 @basic_store.route("/api/app/<id>/template/<id_layer>", methods=["DELETE"])
 def delete_layer_template(id, id_layer) -> Response:
-    config = current_app.register.read_json(id)
-    if not config:
-        raise BadRequest("This config doesn't exists !")
-    config = config[0]
+    """
+    Remove the template reference from a layer and delete the draft file.
+
+    :param id: application UUID
+    :param id_layer: layer identifier owning the template
+    """
+    config = authorize_config_mutation(get_existing_config_or_404(id))
     xml_path = path.join(current_app.config["EXPORT_CONF_FOLDER"], config["url"])
     # read XML and remove template
     parser = read_xml_file_content(xml_path)

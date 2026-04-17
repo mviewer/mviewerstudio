@@ -133,13 +133,15 @@ $(document).ready(function () {
         }
       }
 
-      if (API.xml) {
-        loadApplicationParametersFromRemoteFile(API.xml);
-      } else if (API.wmc) {
-        loadApplicationParametersFromWMC(API.wmc);
-      } else {
-        newConfiguration();
-      }
+      Promise.resolve(getUser()).finally(() => {
+        if (API.xml) {
+          loadApplicationParametersFromRemoteFile(API.xml);
+        } else if (API.wmc) {
+          loadApplicationParametersFromWMC(API.wmc);
+        } else {
+          newConfiguration();
+        }
+      });
 
       updateProviderSearchButtonState();
 
@@ -148,8 +150,6 @@ $(document).ready(function () {
         mv.setDefaultLayerProperties(_conf.default_params.layer);
       }
 
-      // Get user info
-      getUser();
     })
     .catch((err) => {
       console.log(err);
@@ -196,7 +196,7 @@ var config;
 
 const getUser = () => {
   if (!_conf.user_info) return;
-  fetch(_conf.user_info, {
+  return fetch(_conf.user_info, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -208,6 +208,10 @@ const getUser = () => {
       var userGroupSlugName = "";
       var selectGroupPopup = false;
       if (data) {
+        mv.updateUserInfo({
+          userName: data.user_name,
+          name: `${data.first_name} ${data.last_name}`,
+        });
         if (data.organisation && data.organisation.legal_name) {
           userGroupFullName = data.organisation.legal_name;
         } else if (data && data.user_groups) {
@@ -226,8 +230,6 @@ const getUser = () => {
           });
         } else {
           mv.updateUserInfo({
-            userName: data.user_name,
-            name: `${data.first_name} ${data.last_name}`,
             groupSlugName: userGroupSlugName || data.normalize_name,
             groupFullName: userGroupFullName,
           });
@@ -1328,19 +1330,42 @@ var loadApplicationParametersFromFile = function () {
     var reader = new FileReader();
     reader.readAsText(file, "UTF-8");
     reader.onload = function (evt) {
-      var xml = $.parseXML(evt.target.result);
-      let idApp = xml.getElementsByTagName("dc:identifier")[0]?.innerHTML;
-      if (!idApp) {
-        return mv.parseApplication(xml);
-      }
-      // control if ID already exists in studio register
-      mv.appExists(idApp, (r) => mv.parseApplication(xml, r.exists));
+      fetch(`${_conf.api}/load`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "text/xml",
+        },
+        body: evt.target.result,
+      })
+        .then((r) => (r.ok ? r.text() : Promise.reject(r)))
+        .then((xmlAsString) => $.parseXML(xmlAsString))
+        .then((xml) => {
+          let idApp = xml.getElementsByTagName("dc:identifier")[0]?.innerHTML;
+          if (!idApp) {
+            mv.parseApplication(xml);
+            showStudio();
+            return;
+          }
+          // control if ID already exists in studio register
+          mv.appExists(idApp, (r) => {
+            mv.parseApplication(xml, r.exists);
+            showStudio();
+          });
+        })
+        .catch((err) => {
+          if (err?.status === 403) {
+            return alertCustom(mviewer.tr("msg.creator_mismatch"), "danger");
+          }
+          if (err?.status === 400) {
+            return alertCustom(mviewer.tr("msg.xml_doc_invalid"), "danger");
+          }
+          return alertCustom(mviewer.tr("msg.file_read_error"), "danger");
+        });
     };
     reader.onerror = function (evt) {
       //alert(mviewer.tr('msg.file_read_error'));
       alertCustom(mviewer.tr("msg.file_read_error"), "danger");
     };
-    showStudio();
   }
 };
 
@@ -1349,7 +1374,7 @@ var loadApplicationParametersFromRemoteFile = function (url) {
   mv.sortableInstances.forEach((x) => x.destroy());
   mv.sortableInstances = [];
   const waitRequests = [
-    fetch(url, {
+    fetch(`${_conf.api}/load?url=${encodeURIComponent(url)}`, {
       method: "GET",
       cache: "no-cache",
     })
@@ -1358,10 +1383,7 @@ var loadApplicationParametersFromRemoteFile = function (url) {
       })
       .then((xmlAsString) =>
         new window.DOMParser().parseFromString(xmlAsString, "text/xml")
-      )
-      .catch((r) => {
-        alertCustom(mviewer.tr("msg.retrieval_req_error"), "danger");
-      }),
+      ),
   ];
   waitRequests.push(
     fetch(_conf.api)
@@ -1371,10 +1393,10 @@ var loadApplicationParametersFromRemoteFile = function (url) {
       .then((r) => {
         return r.filter((app) => app.id == config.id);
       })
-      .catch(() => alert(mviewer.tr("msg.retrieval_req_error"), "danger"))
   );
   Promise.all(waitRequests).then((values) => {
     const data = values[0];
+    if (!data) return;
     mv.parseApplication(data, true);
     if (values[1]) {
       const appMeta = values[1][0];
@@ -1385,6 +1407,11 @@ var loadApplicationParametersFromRemoteFile = function (url) {
     showStudio();
     document.querySelector("#toolsbarStudio-delete").classList.remove("d-none");
     document.querySelector("#layerOptionBtn").classList.remove("d-none");
+  }).catch((err) => {
+    if (err?.status === 403) {
+      return alertCustom(mviewer.tr("msg.creator_mismatch"), "danger");
+    }
+    return alertCustom(mviewer.tr("msg.retrieval_req_error"), "danger");
   });
 };
 
