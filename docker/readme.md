@@ -21,6 +21,8 @@ The default configuration (env vars defined in the dockerfile and json config fi
 
 It is also configured to serve the frontend (static files) with gunicorn, which is usually not recommended. Later versions might use an nginx container to serve the frontend.
 
+Starting with version 4.3, the docker image assumes that the `EXPORT_CONF_FOLDER` directory is writeable for user 1000:1000.
+
 ## Build mviewerstudio image
 
 Use docker compose to build image :
