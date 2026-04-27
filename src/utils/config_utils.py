@@ -1,10 +1,10 @@
 from os import path, makedirs, remove, mkdir
+from shutil import move, rmtree
 import logging
 import xml.etree.ElementTree as ET
 import re
 import glob
 
-from .commons import replace_special_chars
 from ..models.config import ConfigModel
 from .login_utils import current_user
 from .git_utils import Git_manager
@@ -116,7 +116,7 @@ DCAT-RDF Metadata are given by front end (see imported ConfigModel).
 
 
 class Config:
-    def __init__(self, data="", app=None, xml=None) -> None:
+    def __init__(self, data="", app=None, xml=None, xml_path=None) -> None:
         """
         :param data: xml as data from request.data
         :param user: user object from authent infos
@@ -128,6 +128,7 @@ class Config:
         self.url = None
         self.app = app
         self.directory = None
+        self.source_xml_path = xml_path
         if not xml:
             self.xml = self._read_xml_data(data)
         else:
@@ -217,45 +218,54 @@ class Config:
         Create config workspace and save XML as file.
         Will init git file as version manager.
         """
+        if self.meta.find(".//{*}identifier"):
+            self.uuid = self.meta.find(".//{*}identifier").text
+
+        xml_file_name = "%s.xml" % self.uuid
+        self.directory = self.uuid
+        self.full_xml_path = path.join(self.workspace, xml_file_name)
+
+        org = (
+            self.meta.find("{*}publisher").text
+            if not current_user
+            else current_user.normalize_name
+        )
+        self.url = path.join(org, self.uuid, xml_file_name)
+
+        old_xml_path = None
+        old_resources_dir = None
         if file and file[0]["url"]:
-            # file already exists
-            # we keep xml file name
-            self.uuid = file[0]["id"]
-            self.full_xml_path = path.join(
+            old_xml_path = path.join(
                 self.app.config["EXPORT_CONF_FOLDER"], file[0]["url"]
             )
-            self.url = file[0]["url"]
-        else:
-            # get meta info from XML
-            if self.meta.find(".//{*}identifier"):
-                self.uuid = self.meta.find(".//{*}identifier").text
+            old_resources_dir = path.join(self.workspace, file[0]["directory"])
+        elif self.source_xml_path:
+            old_xml_path = self.source_xml_path
+            old_resources_dir = path.splitext(self.source_xml_path)[0]
 
-            # normalize file name
-            app_name = self.meta.find("{*}title").text[:20]
-            normalized_file_name = replace_special_chars(app_name)
-            self.directory = normalized_file_name
-            # save file
-            normalized_xml_file_name = "%s.xml" % normalized_file_name
-            self.full_xml_path = path.join(self.workspace, normalized_xml_file_name)
-            if not current_user:
-                self.url = path.join(
-                    self.meta.find("{*}publisher").text,
-                    self.uuid,
-                    normalized_xml_file_name,
-                )
-            else:
-                self.url = path.join(
-                    current_user.normalize_name, self.uuid, normalized_xml_file_name
-                )
-            # create resources dir to save mst, customs, etc.
-            app_dir = path.join(self.workspace, normalized_file_name)
-            if not path.exists(app_dir):
-                mkdir(app_dir)
-                mkdir(path.join(app_dir, "img"))
-                mkdir(path.join(app_dir, "css"))
-                mkdir(path.join(app_dir, "customlayers"))
-                mkdir(path.join(app_dir, "customcontrols"))
-                mkdir(path.join(app_dir, "templates"))
+        app_dir = path.join(self.workspace, self.directory)
+        if (
+            old_resources_dir
+            and old_resources_dir != app_dir
+            and path.exists(old_resources_dir)
+        ):
+            if path.exists(app_dir):
+                rmtree(app_dir)
+            move(old_resources_dir, app_dir)
+
+        if not path.exists(app_dir):
+            mkdir(app_dir)
+        for sub_dir in ["img", "css", "customlayers", "customcontrols", "templates"]:
+            full_sub_dir = path.join(app_dir, sub_dir)
+            if not path.exists(full_sub_dir):
+                mkdir(full_sub_dir)
+
+        if (
+            old_xml_path
+            and old_xml_path != self.full_xml_path
+            and path.exists(old_xml_path)
+        ):
+            remove(old_xml_path)
 
         # write file
         self.write()
