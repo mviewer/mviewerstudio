@@ -10,6 +10,7 @@
     <!-- Custom stylesheet bootstrap and mstudio for this app-->
     <link rel="stylesheet" href="css/bootstrap.css">
     <link rel="stylesheet" href="css/mviewerstudio.css" type="text/css">
+    <link rel="stylesheet" href="css/xmleditor.css" type="text/css">
     <!-- Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@2.2.0/fonts/remixicon.css">
@@ -214,6 +215,7 @@
                                 </button>
                                 <div class="dropdown-menu">
                                   <a class="dropdown-item" onclick="mv.getVersionsByApp(this)" data-bs-toggle="modal" data-bs-target="#mod-appversions" i18n="release.btn.tooltip">Historique des modifications</a>
+                                  <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#mod-xmleditor" i18n="xmleditor.btn.text">Editer le XML</a>
                                 </div>
                             </div>                                
                             <a class="nav-link d-none" id="toolsbarStudio-unpublish" onclick="mv.unpublish(config.id);" href="#"><i class="ri-eye-off-fill"></i> <span i18n="studio.toolsbar.unpublish">Dépublier</span></a>               
@@ -1900,9 +1902,30 @@
                 <div class="modal-body">
                     <div id="appsListTable"></div>
                 </div>
-                <div class="modal-footer d-none">                    
+                <div class="modal-footer d-none">
                     <button id="validVersionFooterBtn" onclick="mv.createVersion()" type="button" class="btn btn-primary" i18n="save">Enregistrer</button>
                     <button id="cancelVersionFooterBtn" onclick="mv.cleanVersionHistoryUI()" type="button" class="btn btn-outline-primary" data-bs-dismiss="modal" aria-label="Close" i18n="cancel">Annuler</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal xml editor-->
+    <div class="modal fade" id="mod-xmleditor" role="dialog" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="mod-xmleditor-title" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="mod-xmleditor-title" i18n="modal.xmleditor.title">Edition du XML</h5>
+                    <button type="button" class="close" onclick="" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body">
+                    <div class="xml-editor">
+                        <div class="xml-editor__line-numbers" id="xml-editor-line-numbers" aria-hidden="true">1</div>
+                        <textarea class="xml-editor__textarea" id="xml-editor-textarea" spellcheck="false" aria-label="Edition XML" placeholder="Saisir ou coller le XML ici" i18n="modal.xmleditor.placeholder"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="validXmlEditorFooterBtn" type="button" class="btn btn-primary" i18n="modal.xmleditor.save">Sauvegarder</button>
+                    <button id="cancelXmlEditorFooterBtn" type="button" class="btn btn-outline-primary" data-bs-dismiss="modal" aria-label="Close" i18n="cancel">Annuler</button>
                 </div>
             </div>
         </div>
@@ -2025,6 +2048,7 @@
 <script src="lib/bootstrap-table/bootstrap-table-fr-FR.min.js"></script>
 <script src="lib/moment.js"></script>
 <script src="lib/mustache-2.3.0/mustache.min.js"></script>
+<script src="js/xmleditor.js"></script>
 <script type="module" src="lib/template-generator/main.js"></script>
 </body>
 </html>

@@ -1,0 +1,67 @@
+#mod-xmleditor .modal-body {
+    padding: 1rem;
+}
+
+.xml-editor {
+    display: grid;
+    grid-template-columns: minmax(3rem, max-content) 1fr;
+    height: 65vh;
+    min-height: 360px;
+    overflow: hidden;
+    background: #000;
+    border: 1px solid #2b2f36;
+    border-radius: 0.25rem;
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+    font-size: 0.875rem;
+    line-height: 1.5;
+}
+
+.xml-editor__line-numbers,
+.xml-editor__textarea {
+    padding: 1rem 0.75rem;
+    line-height: inherit;
+}
+
+.xml-editor__line-numbers {
+    overflow: hidden;
+    min-width: 3.5rem;
+    color: #8d96a0;
+    background: #101216;
+    border-right: 1px solid #2b2f36;
+    text-align: right;
+    white-space: pre;
+    user-select: none;
+}
+
+.xml-editor__textarea {
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    color: #f5f7fa;
+    background: #000;
+    border: 0;
+    border-radius: 0;
+    caret-color: #fff;
+    outline: 0;
+    resize: none;
+    tab-size: 2;
+    white-space: pre;
+}
+
+.xml-editor__textarea::placeholder {
+    color: #7b8490;
+}
+
+.xml-editor__textarea::selection {
+    background: #285f9e;
+}
+
+.xml-editor__textarea::-webkit-scrollbar {
+    width: 8px;
+    height: 10px;
+}
+
+.xml-editor__textarea::-webkit-scrollbar-thumb {
+    background: #767987;
+    border-radius: 8px;
+}
