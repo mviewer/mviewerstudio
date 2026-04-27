@@ -148,7 +148,7 @@ def update_config() -> Response:
         description = message
     if not description:
         description = "Change XML"
-    diff = config.git.repo.git.diff()
+    diff = config.git.get_changes_diff()
     config.git.commit_changes(description)
     # get config as class model data
     config_data = config.as_data()
