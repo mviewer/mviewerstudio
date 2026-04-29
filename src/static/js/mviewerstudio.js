@@ -1328,13 +1328,22 @@ var loadApplicationParametersFromFile = function () {
     var reader = new FileReader();
     reader.readAsText(file, "UTF-8");
     reader.onload = function (evt) {
-      var xml = $.parseXML(evt.target.result);
-      let idApp = xml.getElementsByTagName("dc:identifier")[0]?.innerHTML;
-      if (!idApp) {
-        return mv.parseApplication(xml);
+      try {
+        var xml = $.parseXML(evt.target.result);
+        let idApp = xml.getElementsByTagName("dc:identifier")[0]?.innerHTML;
+        if (!idApp) {
+          return mv.parseApplication(xml);
+        }
+        // control if ID already exists in studio register
+        mv.appExists(idApp, (r) => mv.parseApplication(xml, r.exists));
+      } catch (e) {
+        // Not XML, check if QGIS project
+        if (file.type === "application/x-qgis-project" || file.name.endsWith(".qgs")) {
+          qgis.sendQgisProject(file);
+        } else {
+          alertCustom("Unsupported file type", "danger");
+        }
       }
-      // control if ID already exists in studio register
-      mv.appExists(idApp, (r) => mv.parseApplication(xml, r.exists));
     };
     reader.onerror = function (evt) {
       //alert(mviewer.tr('msg.file_read_error'));

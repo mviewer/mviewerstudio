@@ -21,7 +21,7 @@ from .utils.config_utils import (
 from .utils.commons import clean_preview, init_preview, create_zip, make_archive
 import hashlib, uuid
 from .utils.register_utils import from_xml_path
-from os import path, mkdir, remove
+from os import makedirs, path, mkdir, remove, walk
 from shutil import rmtree, copyfile, copytree
 from flask.blueprints import BlueprintSetupState
 from urllib.parse import urlparse
@@ -31,6 +31,9 @@ from datetime import datetime
 
 from werkzeug.exceptions import BadRequest, MethodNotAllowed, Conflict
 
+from werkzeug.utils import secure_filename
+from zipfile import BadZipFile, ZipFile
+
 import logging
 
 basic_store = Blueprint(
@@ -38,6 +41,115 @@ basic_store = Blueprint(
 )
 
 logger = logging.getLogger(__name__)
+
+
+def _qgs_project_payload(qgs_dir: str, absolute_file: str) -> dict:
+    relative_file = path.relpath(absolute_file, qgs_dir)
+    filename = path.basename(absolute_file)
+    project_name = path.splitext(filename)[0]
+
+    return {
+        "name": filename,
+        "fileName": filename,
+        "projectName": project_name,
+        "path": relative_file,
+        "lastModified": datetime.fromtimestamp(
+            path.getmtime(absolute_file)
+        ).isoformat(),
+    }
+
+
+def _extract_qgs_zip(
+    uploaded_file, qgs_dir: str, filename: str
+) -> tuple[str, list[dict]]:
+    archive_name = path.splitext(filename)[0]
+    destination_dir = path.join(qgs_dir, archive_name)
+
+    if path.exists(destination_dir):
+        rmtree(destination_dir, ignore_errors=True)
+
+    mkdir(destination_dir)
+
+    try:
+        with ZipFile(uploaded_file.stream) as archive:
+            file_members = [
+                member
+                for member in archive.infolist()
+                if member.filename and not member.filename.endswith("/")
+            ]
+            root_prefix = None
+
+            top_level_parts = {
+                member.filename.split("/", 1)[0]
+                for member in file_members
+                if "/" in member.filename.strip("/")
+            }
+            if len(top_level_parts) == 1 and len(file_members) > 0:
+                root_prefix = f"{top_level_parts.pop()}/"
+
+            for member in file_members:
+                member_name = member.filename
+                normalized_name = member_name
+                if root_prefix and normalized_name.startswith(root_prefix):
+                    normalized_name = normalized_name[len(root_prefix) :]
+
+                normalized_name = normalized_name.strip("/")
+                if not normalized_name:
+                    continue
+
+                destination = path.abspath(path.join(destination_dir, normalized_name))
+                if path.commonpath(
+                    [path.abspath(destination_dir), destination]
+                ) != path.abspath(destination_dir):
+                    raise BadRequest("ZIP archive contains invalid paths")
+
+                parent_dir = path.dirname(destination)
+                if parent_dir and not path.exists(parent_dir):
+                    makedirs(parent_dir, exist_ok=True)
+
+                with archive.open(member) as source, open(destination, "wb") as target:
+                    copyfileobj(source, target)
+    except BadZipFile:
+        rmtree(destination_dir, ignore_errors=True)
+        raise BadRequest("Invalid ZIP archive")
+    except Exception:
+        if path.exists(destination_dir):
+            rmtree(destination_dir, ignore_errors=True)
+        raise
+
+    extracted_projects = []
+    for root, _, files in walk(destination_dir):
+        for extracted_file in files:
+            if extracted_file.lower().endswith(".qgs"):
+                extracted_projects.append(
+                    _qgs_project_payload(qgs_dir, path.join(root, extracted_file))
+                )
+
+    if not extracted_projects:
+        rmtree(destination_dir, ignore_errors=True)
+        raise BadRequest("ZIP archive does not contain any .qgs file")
+
+    extracted_projects.sort(key=lambda item: item["path"].lower())
+    return destination_dir, extracted_projects
+
+
+def _store_qgs_file(uploaded_file, qgs_dir: str, filename: str) -> dict:
+    project_name = path.splitext(filename)[0]
+    destination_dir = path.join(qgs_dir, project_name)
+
+    if path.exists(destination_dir):
+        rmtree(destination_dir, ignore_errors=True)
+
+    mkdir(destination_dir)
+    destination = path.join(destination_dir, filename)
+
+    try:
+        uploaded_file.save(destination)
+    except Exception:
+        rmtree(destination_dir, ignore_errors=True)
+        raise
+
+    return _qgs_project_payload(qgs_dir, destination)
 
 
 @basic_store.record_once
@@ -307,6 +419,60 @@ def publish_config(id, name) -> Response:
     # online file from public dir
     online_file = path.join(current_user.normalize_name, "%s.xml" % xml_publish_name)
     return jsonify({"online_file": online_file, "draft_file": draft_file})
+
+
+@basic_store.route("/api/app/qgis/projects", methods=["GET", "POST"])
+def list_stored_qgs_configs() -> Response:
+    """
+    List or upload QGIS project files from/to the configured QGS directory.
+    """
+    qgs_dir = current_app.config.get("QGS_FOLDER")
+
+    if request.method == "POST":
+        if not qgs_dir:
+            raise BadRequest("Missing QGS folder configuration")
+
+        uploaded_file = request.files.get("file")
+        if not uploaded_file or not uploaded_file.filename:
+            raise BadRequest("Missing QGS file")
+
+        filename = secure_filename(uploaded_file.filename)
+        lower_filename = filename.lower()
+        if not lower_filename.endswith((".qgs", ".zip", ".qgz")):
+            raise BadRequest(
+                "Only .qgs files, .zip archives or .qgz archives are supported"
+            )
+
+        if not path.exists(qgs_dir):
+            mkdir(qgs_dir)
+
+        if lower_filename.endswith((".zip", ".qgz")):
+            _, extracted_projects = _extract_qgs_zip(uploaded_file, qgs_dir, filename)
+            response_payload = extracted_projects[0].copy()
+            response_payload["success"] = True
+            response_payload["projects"] = extracted_projects
+            response_payload["archiveName"] = filename
+            return jsonify(response_payload)
+
+        response_payload = _store_qgs_file(uploaded_file, qgs_dir, filename)
+        response_payload["success"] = True
+        response_payload["projects"] = [response_payload.copy()]
+        return jsonify(response_payload)
+
+    if not qgs_dir or not path.exists(qgs_dir):
+        return jsonify([])
+
+    qgs_files = []
+    for root, _, files in walk(qgs_dir):
+        for filename in files:
+            if not filename.lower().endswith(".qgs"):
+                continue
+
+            absolute_file = path.join(root, filename)
+            qgs_files.append(_qgs_project_payload(qgs_dir, absolute_file))
+
+    qgs_files.sort(key=lambda item: item["path"].lower())
+    return jsonify(qgs_files)
 
 
 @basic_store.route("/api/app/<id>", methods=["DELETE"])

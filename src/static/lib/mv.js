@@ -567,22 +567,42 @@ var mv = (function () {
 
     getConfLayers: function (button) {
       var themeid = button.getAttribute("data-themeid");
+      var qgsProjectList = document.getElementById("qgs-project-list");
+      var selectedQgsOption =
+        qgsProjectList && qgsProjectList.selectedIndex > 0
+          ? qgsProjectList.options[qgsProjectList.selectedIndex]
+          : null;
       // CAS 2 : Ajout d'une couche via ces paramètres
-      if (document.getElementById("newlayer-type").value != "") {
+      if (document.getElementById("newlayer-type").value != "" || selectedQgsOption) {
         // Récupère les valeurs des paramètres communs saisis
-        var layertype = document.getElementById("newlayer-type").value;
-        var layerid = document.getElementById("newlayer-id").value;
-        var layername = document.getElementById("newlayer-name").value;
-        var layerurl = document.getElementById("newlayer-url").value;
+        var layertype = selectedQgsOption
+          ? "wms"
+          : document.getElementById("newlayer-type").value;
+        var layerid = selectedQgsOption
+          ? selectedQgsOption.dataset.layerName || selectedQgsOption.value
+          : document.getElementById("newlayer-id").value;
+        var layername = selectedQgsOption
+          ? selectedQgsOption.dataset.layerTitle || selectedQgsOption.value
+          : document.getElementById("newlayer-name").value;
+        var layerurl = selectedQgsOption
+          ? document.getElementById("newlayer-qgs-url").value
+          : document.getElementById("newlayer-url").value;
 
         // Test si valeur nulle
         let isInvalid = false;
-        [...commonParamType.querySelectorAll("input")].forEach(function (x) {
-          if (!x.value) {
-            x.classList.add("is-invalid");
+        if (selectedQgsOption) {
+          if (!layerurl) {
+            document.getElementById("newlayer-qgs-url").classList.add("is-invalid");
             isInvalid = true;
           }
-        });
+        } else {
+          [...commonParamType.querySelectorAll("input")].forEach(function (x) {
+            if (!x.value) {
+              x.classList.add("is-invalid");
+              isInvalid = true;
+            }
+          });
+        }
         if (isInvalid) {
           alertCustom(mviewer.tr("msg.missing.infos"), "danger");
           return;
@@ -701,6 +721,9 @@ var mv = (function () {
         x.value = "";
         x.classList.remove("is-invalid");
       });
+      if (typeof qgis !== "undefined" && qgis.resetQgsProjectInputs) {
+        qgis.resetQgsProjectInputs();
+      }
     },
 
     resetSearch: function () {

@@ -21,3 +21,7 @@ class Config:
     )
     DEFAULT_ORG = os.getenv("DEFAULT_ORG", "public")
     MVIEWERSTUDIO_URL_PATH_PREFIX = os.getenv("MVIEWERSTUDIO_URL_PATH_PREFIX", "")
+
+    QGS_FOLDER = os.getenv(
+        "QGS_FOLDER", "/home/gaetan/projects/qgis/compo-jm/volumes/qgis-srv"
+    )
