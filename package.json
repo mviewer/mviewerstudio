@@ -9,7 +9,8 @@
   },
   "scripts": {
     "pretty": "prettier --write \"./src/static/mviewerstudio.i18n.json\" \"./src/static/js/**/*.{js,json}\" \"./src/static/lib/mv.js\"",
-    "prettier-check": "prettier --check \"./src/static/mviewerstudio.i18n.json\" \"./src/static/js/**/*.{js,json}\" \"./src/static/lib/mv.js\""
+    "prettier-check": "prettier --check \"./src/static/mviewerstudio.i18n.json\" \"./src/static/js/**/*.{js,json}\" \"./src/static/lib/mv.js\"",
+    "scan": "node security-scripts/security-audit.js"
   },
   "repository": {
     "type": "git",
