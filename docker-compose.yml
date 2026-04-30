@@ -5,6 +5,7 @@ services:
     build:
       context: .
       dockerfile: docker/Dockerfile
+    pull_policy: build
     image: mviewer/mviewerstudio:latest
 #    ports:
 #      - "8000:8000"
