@@ -1,6 +1,6 @@
 flask>=2
 gunicorn>20
 lxml>=4.9.2
-GitPython>=3
+GitPython>=3.1.47
 requests
 Unidecode
