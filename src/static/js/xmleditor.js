@@ -118,7 +118,9 @@
    */
   const reloadConfiguration = (xml, appMeta) => {
     const switchAdvanced = document.getElementById("SwitchAdvanced");
-    const wizardActiveItem = document.getElementById("stepStudio").querySelector(".active");
+    const wizardActiveItem = document
+      .getElementById("stepStudio")
+      .querySelector(".active");
     resetSortableInstances();
     mv.parseApplication(xml, true);
 
