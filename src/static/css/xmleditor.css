@@ -2,6 +2,14 @@
     padding: 1rem;
 }
 
+.xml-editor__warning {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    border-color: #f59f00;
+    margin-bottom: 0.75rem;
+}
+
 .xml-editor {
     display: grid;
     grid-template-columns: minmax(3rem, max-content) 1fr;

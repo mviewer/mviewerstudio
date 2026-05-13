@@ -117,6 +117,8 @@
    * @returns {void}
    */
   const reloadConfiguration = (xml, appMeta) => {
+    const switchAdvanced = document.getElementById("SwitchAdvanced");
+    const wizardActiveItem = document.getElementById("stepStudio").querySelector(".active");
     resetSortableInstances();
     mv.parseApplication(xml, true);
 
@@ -127,6 +129,11 @@
     showStudio();
     document.querySelector("#toolsbarStudio-delete").classList.remove("d-none");
     document.querySelector("#layerOptionBtn").classList.remove("d-none");
+
+    // after reload, re-activate wizard step and advanced options
+    switchAdvanced.checked = true;
+    switchAdvanced.dispatchEvent(new Event("change"));
+    wizardActiveItem.dispatchEvent(new Event("click"));
   };
 
   /**

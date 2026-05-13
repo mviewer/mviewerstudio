@@ -1918,6 +1918,10 @@
                     <button type="button" class="close" onclick="" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 </div>
                 <div class="modal-body">
+                    <div class="alert alert-warning xml-editor__warning" role="alert">
+                        <i class="ri-alert-line" aria-hidden="true"></i>
+                        <span i18n="modal.xmleditor.reload_warning">La sauvegarde va forcer le rechargement du XML. Toutes modifications non sauvegardées via l'IHM seront perdues.</span>
+                    </div>
                     <div class="xml-editor">
                         <div class="xml-editor__line-numbers" id="xml-editor-line-numbers" aria-hidden="true">1</div>
                         <textarea class="xml-editor__textarea" id="xml-editor-textarea" spellcheck="false" aria-label="Edition XML" placeholder="Saisir ou coller le XML ici" i18n="modal.xmleditor.placeholder"></textarea>
