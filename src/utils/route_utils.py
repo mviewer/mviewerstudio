@@ -89,22 +89,34 @@ def authorize_config_mutation(config: dict) -> dict:
 
 
 def fetch_remote_xml(url: str, timeout: int = 10) -> str:
-    """
-    Retrieve a remote XML document over HTTP(S).
-
-    :param url: remote XML URL
-    :param timeout: request timeout in seconds
-    :returns: remote response body as text
-    :raises BadRequest: when the URL is missing, invalid, or unreachable
-    """
     if not url:
         raise BadRequest("Missing url parameter !")
+
     parsed_url = urlparse(url)
     if parsed_url.scheme not in ["http", "https"]:
         raise BadRequest("URL must use http or https !")
+
     try:
-        response = requests.get(url, timeout=timeout)
+        response = requests.get(
+            url,
+            timeout=timeout,
+            headers={
+                "User-Agent": "Kartenn-MVS/1.0",
+                "Accept": "application/xml,text/xml,*/*",
+            },
+            allow_redirects=True,
+        )
+        current_app.logger.warning(
+            "Remote XML fetch: url=%s status=%s final_url=%s content_type=%s",
+            url,
+            response.status_code,
+            response.url,
+            response.headers.get("Content-Type"),
+        )
         response.raise_for_status()
-    except requests.RequestException:
-        raise BadRequest("Could not retrieve XML !")
+
+    except requests.RequestException as exc:
+        current_app.logger.exception("Could not retrieve XML from %s", url)
+        raise BadRequest(f"Could not retrieve XML: {exc}")
+
     return response.text
