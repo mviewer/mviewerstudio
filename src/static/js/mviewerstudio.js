@@ -379,7 +379,7 @@ sortLayers = function (fromIndex, toIndex) {
   arr.splice(toIndex, 0, element);
 };
 
-$("input[type=file]").change(function () {
+$("#filebutton").change(function () {
   loadApplicationParametersFromFile();
 });
 
@@ -1322,35 +1322,40 @@ var extractFeatures = function (fld, option) {
   }
 };
 
+var parseMviewerApplicationXml = function (xml) {
+  let idApp = xml.getElementsByTagName("dc:identifier")[0]?.innerHTML;
+  if (!idApp) {
+    return mv.parseApplication(xml);
+  }
+  mv.appExists(idApp, (r) => mv.parseApplication(xml, r.exists));
+};
+
 var loadApplicationParametersFromFile = function () {
   var file = document.getElementById("filebutton").files[0];
-  if (file) {
-    var reader = new FileReader();
-    reader.readAsText(file, "UTF-8");
-    reader.onload = function (evt) {
-      try {
-        var xml = $.parseXML(evt.target.result);
-        let idApp = xml.getElementsByTagName("dc:identifier")[0]?.innerHTML;
-        if (!idApp) {
-          return mv.parseApplication(xml);
-        }
-        // control if ID already exists in studio register
-        mv.appExists(idApp, (r) => mv.parseApplication(xml, r.exists));
-      } catch (e) {
-        // Not XML, check if QGIS project
-        if (file.type === "application/x-qgis-project" || file.name.endsWith(".qgs")) {
-          qgis.sendQgisProject(file);
-        } else {
-          alertCustom("Unsupported file type", "danger");
-        }
-      }
-    };
-    reader.onerror = function (evt) {
-      //alert(mviewer.tr('msg.file_read_error'));
-      alertCustom(mviewer.tr("msg.file_read_error"), "danger");
-    };
-    showStudio();
+  if (!file) {
+    return;
   }
+
+  if (window.qgis && typeof qgis.loadApplicationParametersFromFileInput === "function") {
+    qgis.loadApplicationParametersFromFileInput();
+    return;
+  }
+
+  $("#local-file-name").val(file.name);
+  var reader = new FileReader();
+  reader.readAsText(file, "UTF-8");
+  reader.onload = function (evt) {
+    try {
+      var xml = $.parseXML(evt.target.result);
+      parseMviewerApplicationXml(xml);
+    } catch (e) {
+      alertCustom(mviewer.tr("msg.xml_doc_invalid"), "danger");
+    }
+  };
+  reader.onerror = function () {
+    alertCustom(mviewer.tr("msg.file_read_error"), "danger");
+  };
+  showStudio();
 };
 
 var loadApplicationParametersFromRemoteFile = function (url) {

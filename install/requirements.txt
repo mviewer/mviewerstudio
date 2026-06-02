@@ -4,3 +4,4 @@ lxml>=4.9.2
 GitPython>=3
 requests
 Unidecode
+git+https://github.com/jdev-org/pymviewer.git#egg=pymviewer

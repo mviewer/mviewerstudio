@@ -3,6 +3,11 @@ import logging
 import xml.etree.ElementTree as ET
 import re
 import glob
+import json
+from shutil import copyfile
+from urllib.parse import urlparse
+from urllib.request import urlretrieve
+from typing import Literal, overload
 
 from .commons import replace_special_chars
 from ..models.config import ConfigModel
@@ -46,6 +51,30 @@ def write_file(xml, xml_path):
     file.close()
 
 
+def read_static_app_conf():
+    config_path = path.join(path.dirname(__file__), "..", "static", "config.json")
+    with open(path.abspath(config_path), "r") as config_file:
+        return json.load(config_file).get("app_conf", {})
+
+
+def normalize_url_part(value):
+    return value.strip("/")
+
+
+def is_geojson_source(url):
+    parsed_url = urlparse(url)
+    return path.splitext(parsed_url.path)[1].lower() in [".json", ".geojson"]
+
+
+def geojson_file_name(url, layer_id):
+    parsed_url = urlparse(url)
+    file_name = path.basename(parsed_url.path)
+    if file_name:
+        base_name, extension = path.splitext(file_name)
+        return "%s%s" % (replace_special_chars(base_name), extension.lower())
+    return "%s.geojson" % replace_special_chars(layer_id or "layer")
+
+
 def clean_xml_from_dir(path):
     """
     Remove each XML found in dir
@@ -53,6 +82,24 @@ def clean_xml_from_dir(path):
     """
     for file in glob.glob("%s/*.xml" % path):
         remove(file)
+
+
+@overload
+def read_xml_file_content(
+    path: str, node: Literal[""] = "", all: Literal[False] = False
+) -> ET.Element: ...
+
+
+@overload
+def read_xml_file_content(
+    path: str, node: str, all: Literal[False] = False
+) -> ET.Element | None: ...
+
+
+@overload
+def read_xml_file_content(
+    path: str, node: str, all: Literal[True]
+) -> list[ET.Element]: ...
 
 
 def read_xml_file_content(path, node="", all=False):
@@ -212,6 +259,71 @@ class Config:
     def write(self):
         write_file(self.xml, self.full_xml_path)
 
+    def _app_resources_dir(self):
+        app_dir_name = self.directory or path.splitext(path.basename(self.full_xml_path))[0]
+        app_dir = path.join(path.dirname(self.full_xml_path), app_dir_name)
+        if not path.exists(app_dir):
+            mkdir(app_dir)
+        return app_dir
+
+    def _geojson_public_url(self, relative_file_path):
+        base_url = self._geojson_public_base_url()
+        return "%s/%s" % (base_url, normalize_url_part(relative_file_path))
+
+    def _geojson_public_base_url(self):
+        app_conf = read_static_app_conf()
+        mviewer_instance = app_conf.get("mviewer_instance", "").rstrip("/")
+        conf_path = normalize_url_part(app_conf.get("conf_path_from_mviewer", ""))
+        config_dir = path.dirname(self.url)
+        relative_parts = [
+            normalize_url_part(conf_path),
+            normalize_url_part(config_dir),
+        ]
+        relative_url = "/".join([part for part in relative_parts if part])
+        return "%s/%s" % (mviewer_instance, relative_url) if mviewer_instance else relative_url
+
+    def _copy_or_download_geojson(self, source_url, target_path):
+        parsed_url = urlparse(source_url)
+        if parsed_url.scheme in ["http", "https"]:
+            urlretrieve(source_url, target_path)
+            return True
+        if parsed_url.scheme:
+            return False
+
+        source_path = path.abspath(source_url)
+        if not path.exists(source_path):
+            return False
+        copyfile(source_path, target_path)
+        return True
+
+    def store_geojson_layers(self):
+        layers = self.xml.findall(".//layer[@type='geojson']")
+        if not layers:
+            return
+
+        resources_dir = self._app_resources_dir()
+        geojson_dir = path.join(resources_dir, "geojson")
+        if not path.exists(geojson_dir):
+            mkdir(geojson_dir)
+
+        for layer in layers:
+            source_url = layer.get("url")
+            if not source_url or not is_geojson_source(source_url):
+                continue
+            if source_url.startswith(self._geojson_public_base_url()):
+                continue
+
+            file_name = geojson_file_name(source_url, layer.get("id"))
+            target_path = path.join(geojson_dir, file_name)
+            if not self._copy_or_download_geojson(source_url, target_path):
+                logger.warning("GeoJSON source could not be copied: %s", source_url)
+                continue
+
+            relative_file_path = path.join(
+                path.basename(resources_dir), "geojson", file_name
+            )
+            layer.set("url", self._geojson_public_url(relative_file_path))
+
     def create_or_update_config(self, file=None):
         """
         Create config workspace and save XML as file.
@@ -257,6 +369,7 @@ class Config:
                 mkdir(path.join(app_dir, "customcontrols"))
                 mkdir(path.join(app_dir, "templates"))
 
+        self.store_geojson_layers()
         # write file
         self.write()
 

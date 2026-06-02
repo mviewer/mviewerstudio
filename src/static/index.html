@@ -72,8 +72,8 @@
                     <h3 class="text-primary m-2 mb-4"><strong><span i18n="home.welcome_question">Que voulez-vous faire ?</span></strong> </h3>
                     <div id="cardsHome">
                         <!--Open config-->
-                        <a data-bs-toggle="modal" data-bs-target="#mod-importfile" href="#">
-                            <div class="card text-white bg-warning p-3 m-2 zoomCard h-100 noborder" style="max-width: 18rem;">
+                        <a class="home-card-link" data-bs-toggle="modal" data-bs-target="#mod-importfile" href="#">
+                            <div class="card home-card text-white bg-warning p-3 zoomCard h-100 noborder">
                                 <div class="card-body mb-5">
                                 <span class="iconCard-home">
                                     <i class="bi bi-upload" style="font-size: 20px;vertical-align: revert;"></i>
@@ -85,8 +85,8 @@
                         </a> 
                         <!--Open config-->
                         <!--New config-->
-                        <a onclick="newConfiguration(); showStudio()">
-                            <div class="card text-white bg-info p-3 m-2 zoomCard h-100 noborder" style="max-width: 18rem;">
+                        <a class="home-card-link" onclick="newConfiguration(); showStudio()">
+                            <div class="card home-card text-white bg-info p-3 zoomCard h-100 noborder">
                                 <div class="card-body mb-5">
                                 <span class="iconCard-home">
                                     <i class="bi bi-file-earmark-plus" style="font-size: 20px;vertical-align: revert;"></i>
@@ -97,8 +97,8 @@
                             </div>
                         </a>
                         <!--Send qgis project to local qgis server-->
-                        <a id="sendQgisProject" onclick="">
-                            <div class="card text-white bg-info p-3 m-2 zoomCard h-100 noborder" style="margin-top: 25px !important; max-width: 18rem; background-color: #609930 !important;">
+                        <a class="home-card-link" id="sendQgisProject" onclick="">
+                            <div class="card home-card text-white bg-info p-3 zoomCard h-100 noborder" style="background-color: #609930 !important;">
                                 <div class="card-body mb-5">
                                 <span class="iconCard-home">
                                     <i class="bi bi-file-earmark-plus" style="font-size: 20px;vertical-align: revert;"></i>
@@ -1057,6 +1057,11 @@
                             <span i18n="modal.file.local">Depuis votre ordinateur</span> 
                           </a>
                         </li>
+                        <li class="nav-item" role="presentation">
+                          <a class="nav-link" onclick="mv.cleanLocalFileField(this)"data-bs-toggle="pill" data-bs-target="#loadQgis" type="button" role="tab" aria-controls="pills-local" aria-selected="false">
+                            <span>Depuis un projet Qgis</span> 
+                          </a>
+                        </li>
                       </ul>
                       <div class="tab-content mb-4">
                         <div class="tab-pane fade show active" id="serverside" role="tabpanel" tabindex="0">
@@ -1088,17 +1093,38 @@
                             </div>
                         </div>
                         <div class="tab-pane fade" id="local" role="tabpanel" tabindex="0">
-                            <label i18n="modal.file.selectlocal">Sélectionner un fichier de configuration .XML :</label>
+                            <label i18n="modal.file.selectlocal">Sélectionner un fichier de configuration .XML (mviewer) ou .QGS (Qgis):</label>
                             <div class="input-group mb-3">
-                                <input type="text" class="form-control" i18n="load.app.file.ph" placeholder="monapplication.xml" aria-describedby="button-addon2">
+                                <input type="text" class="form-control" id="local-file-name" i18n="load.app.file.ph" placeholder="monapplication.xml" aria-describedby="button-addon2" readonly>
                                 <div class="input-group-append">
-                                    <button class="btn btn-info" type="button" onclick="$('#filebutton').click();">
+                                    <button class="btn btn-info" type="button" id="button-addon2" onclick="$('#filebutton').click();">
                                         <i class="bi bi-folder2-open"></i>
                                         <span i18n="modal.file.browse">Parcourir</span>
                                     </button>
                                 </div>                                
                             </div>
-                            <input type="file" name="filebutton" style="display: none;" id="filebutton">
+                            <input type="file" name="filebutton" accept=".xml,.qgs,.qgis,text/xml,application/xml,application/x-qgis-project" style="display: none;" id="filebutton">
+                        </div>
+                        <div class="tab-pane fade" id="loadQgis" role="tabpanel" tabindex="0">
+                            <label>Sélectionner un fichier de configuration Qgis local :</label>
+                            <div class="input-group mb-3">
+                                <input type="text" class="form-control" id="qgis-local-file-name" placeholder="data.qgs ou archive.zip" aria-describedby="qgis-button-addon" readonly>
+                                <div class="input-group-append">
+                                    <button class="btn btn-info" type="button" id="qgis-button-addon" onclick="$('#qgis-filebutton').click();">
+                                        <i class="bi bi-folder2-open"></i>
+                                        <span i18n="modal.file.browse">Parcourir</span>
+                                    </button>
+                                </div>                                
+                            </div>
+                            <input type="file" name="qgis-filebutton" accept=".qgs,.qgis,.zip,.qgz,text/xml,application/x-qgis-project,application/zip,application/x-zip-compressed" style="display: none;" id="qgis-filebutton">
+
+                            <label>... ou renseigner l'URL GetCapabilities du projet Qgis :</label>
+                            <div class="input-group search-apps-ui">
+                                <input autocomplete="off" type="text" class="form-control" id="getQgisApp" placeholder="ex: https://monserveur.com/qgisserver?SERVICE=WMS&REQUEST=GetCapabilities&MAP=data.qgs">
+                                <div class="input-group-append">
+                                    <button id="createConfigFromQgisAppUrl" type="button" class="btn btn-info"><i class="ri-search-2-line"></i></button>
+                                </div>
+                            </div>
                         </div>
                       </div>
                 </div>
@@ -1536,7 +1562,7 @@
                                         <div class="input-group mb-3">
                                             <input type="text" type="textarea" class="form-control" id="frm-filter" placeholder="Expression CQL"  i18n="modal.layer.filter.cql.ph">
                                             <div class="input-group-append">
-                                              <button class="btn btn-info" type="button" id="button-addon2" onclick="$('#filter_wizard').toggle();"><i class="bi bi-plus-lg"></i> <span i18n="modal.layer.filter.serverside.create">Créer un filtre</span></button>
+                                              <button class="btn btn-info" type="button" id="filter-addon2" onclick="$('#filter_wizard').toggle();"><i class="bi bi-plus-lg"></i> <span i18n="modal.layer.filter.serverside.create">Créer un filtre</span></button>
                                             </div>
                                         </div>
                                     </div>                                    
@@ -2064,7 +2090,8 @@
 <script src="js/wizard.js"></script>
 <script src="js/manageDisplayContainer.js"></script>
 <script src="lib/icon-picker/iconPickerComponent.js"></script>
-<script src="js/utils/qgis.js"></script>
+<script src="js/utils/qgis/qgisToMviewer.js"></script>
+<script src="js/utils/qgis/qgis.js"></script>
 <script src="js/mviewerstudio.js"></script>
 <script type="module" src="lib/icon-picker/icon-picker.js"></script>
 <script src="lib/bootstrap-table/bootstrap-table.min.js"></script>

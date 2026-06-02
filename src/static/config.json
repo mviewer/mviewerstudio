@@ -5,9 +5,14 @@
         "mviewerstudio_version":  "4.3",
         "api": "api/app",
         "store_style_service": "api/style",
-        "mviewer_instance": "/mviewer/",
-        "publish_url": "/mviewer/?config=apps/public/{{config}}.xml",
+        "mviewer_instance": "http://localhost:5051/",
+        "publish_url": "http://localhost:5051/?config=apps/public/{{config}}.xml",
         "conf_path_from_mviewer": "apps/store/",
+        "qgis": {
+            "used": true,
+            "qgisserver_version": "3.28",
+            "url": "http://localhost:90/ogc/"
+        },
         "mviewer_short_url": {
             "used": false,
             "apps_folder": "store",
@@ -18,7 +23,7 @@
             "url": "https://geobretagne.fr/minicatalog/csv"
         },
         "user_info": "api/user",
-        "proxy": "proxy/?url=",
+        "proxy": "",
         "user_info_visible": true,
         "app_form_placeholders": {
             "app_title": "Kartenn",
