@@ -1,11 +1,9 @@
-from pathlib import Path
 from tempfile import TemporaryDirectory
 from os import mkdir, path, walk
 
 import requests
 from flask import current_app, jsonify, request
 from flask.typing import ResponseReturnValue
-from qgisxmviewer import create_mviewer_config_from_wms_capabilities
 from werkzeug.exceptions import BadRequest, MethodNotAllowed
 from werkzeug.utils import secure_filename
 
@@ -19,6 +17,8 @@ from .shared import (
     _store_qgs_file,
     basic_store,
 )
+
+from qgisxmviewer import create_mviewer_config_from_wms_capabilities
 
 
 def _configured_qgis_projects_url() -> str:
