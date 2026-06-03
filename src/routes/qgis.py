@@ -1,3 +1,4 @@
+from pathlib import Path
 from tempfile import TemporaryDirectory
 from os import mkdir, path, walk
 
@@ -18,7 +19,7 @@ from .shared import (
     basic_store,
 )
 
-from qgisxmviewer import create_mviewer_config_from_wms_capabilities
+from qgisxmviewer import create_mviewer_xml_text_from_wms_capabilities
 
 
 def _configured_qgis_projects_url() -> str:
@@ -72,16 +73,12 @@ def _mviewer_xml_from_capabilities_url(capabilities_url: str) -> str:
 
     service_base_url = _build_qgis_service_base_url(capabilities_url)
     with TemporaryDirectory(prefix="mviewerstudio-qgis-") as temp_dir:
-        temp_path = Path(temp_dir)
-        capabilities_path = temp_path / "GetCapabilities.xml"
-        output_path = temp_path / "config.xml"
+        capabilities_path = Path(temp_dir) / "GetCapabilities.xml"
         capabilities_path.write_bytes(response.content)
-        create_mviewer_config_from_wms_capabilities(
+        return create_mviewer_xml_text_from_wms_capabilities(
             capabilities_path,
-            output_path,
             service_base_url,
         )
-        return output_path.read_text(encoding="utf-8")
 
 
 @basic_store.route("/api/app/qgis/projects", methods=["GET", "POST"])
