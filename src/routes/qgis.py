@@ -3,12 +3,14 @@ from pathlib import Path
 from uuid import uuid4
 from tempfile import TemporaryDirectory
 from os import mkdir, path, walk
+from shutil import rmtree
 from urllib.parse import quote
 import xml.etree.ElementTree as ET
 
 import requests
 from flask import current_app, jsonify, redirect, request
 from flask.typing import ResponseReturnValue
+from werkzeug.exceptions import HTTPException
 from werkzeug.exceptions import BadRequest, MethodNotAllowed
 from werkzeug.utils import secure_filename
 
@@ -91,10 +93,140 @@ def _mviewer_xml_from_capabilities_url(capabilities_url: str) -> str:
     with TemporaryDirectory(prefix="mviewerstudio-qgis-") as temp_dir:
         capabilities_path = Path(temp_dir) / "GetCapabilities.xml"
         capabilities_path.write_bytes(response.content)
-        return create_mviewer_xml_text_from_wms_capabilities(
+        xml_content = create_mviewer_xml_text_from_wms_capabilities(
             capabilities_path,
             service_base_url,
         )
+    return _apply_root_layer_bbox_to_mviewer_xml(xml_content, response.content)
+
+
+def _xml_local_name(tag: str) -> str:
+    """Return the local XML name without its optional namespace."""
+    return tag.rsplit("}", 1)[-1] if "}" in tag else tag
+
+
+def _find_direct_child(element: ET.Element, child_name: str) -> ET.Element | None:
+    """Return the first direct child matching the provided local name."""
+    for child in list(element):
+        if _xml_local_name(child.tag) == child_name:
+            return child
+    return None
+
+
+def _find_direct_children(element: ET.Element, child_name: str) -> list[ET.Element]:
+    """Return all direct children matching the provided local name."""
+    return [child for child in list(element) if _xml_local_name(child.tag) == child_name]
+
+
+def _format_bbox_value(value: float) -> str:
+    """Serialize a bbox numeric value without trailing zeros when possible."""
+    return f"{value:.12g}"
+
+
+def _parse_bbox_attributes(bbox_node: ET.Element) -> tuple[float, float, float, float] | None:
+    """Return bbox coordinates from a WMS ``BoundingBox``-like XML node."""
+    try:
+        return (
+            float(bbox_node.attrib["minx"]),
+            float(bbox_node.attrib["miny"]),
+            float(bbox_node.attrib["maxx"]),
+            float(bbox_node.attrib["maxy"]),
+        )
+    except (KeyError, TypeError, ValueError):
+        return None
+
+
+def _root_layer_bbox_from_capabilities(
+    capabilities_content: bytes, target_projection: str | None
+) -> str | None:
+    """Return the root-layer bbox matching the target projection when available."""
+    try:
+        capabilities_root = ET.fromstring(capabilities_content)
+    except ET.ParseError:
+        return None
+
+    capability_node = _find_direct_child(capabilities_root, "Capability")
+    root_layer_node = (
+        _find_direct_child(capability_node, "Layer") if capability_node is not None else None
+    )
+    if root_layer_node is None:
+        return None
+
+    bounding_boxes = _find_direct_children(root_layer_node, "BoundingBox")
+    normalized_projection = (target_projection or "").upper()
+
+    matching_bbox_node = None
+    if normalized_projection:
+        matching_bbox_node = next(
+            (
+                bbox_node
+                for bbox_node in bounding_boxes
+                if (
+                    bbox_node.attrib.get("CRS") or bbox_node.attrib.get("SRS") or ""
+                ).upper()
+                == normalized_projection
+            ),
+            None,
+        )
+
+    if matching_bbox_node is None and len(bounding_boxes) == 1:
+        matching_bbox_node = bounding_boxes[0]
+
+    bbox_values = (
+        _parse_bbox_attributes(matching_bbox_node) if matching_bbox_node is not None else None
+    )
+    if bbox_values is None and normalized_projection in ("", "EPSG:4326", "CRS:84"):
+        latlon_bbox_node = _find_direct_child(root_layer_node, "LatLonBoundingBox")
+        bbox_values = (
+            _parse_bbox_attributes(latlon_bbox_node) if latlon_bbox_node is not None else None
+        )
+
+        if bbox_values is None:
+            geographic_bbox_node = _find_direct_child(root_layer_node, "EX_GeographicBoundingBox")
+            if geographic_bbox_node is not None:
+                west_node = _find_direct_child(geographic_bbox_node, "westBoundLongitude")
+                south_node = _find_direct_child(geographic_bbox_node, "southBoundLatitude")
+                east_node = _find_direct_child(geographic_bbox_node, "eastBoundLongitude")
+                north_node = _find_direct_child(geographic_bbox_node, "northBoundLatitude")
+                try:
+                    bbox_values = (
+                        float(west_node.text),
+                        float(south_node.text),
+                        float(east_node.text),
+                        float(north_node.text),
+                    )
+                except (AttributeError, TypeError, ValueError):
+                    bbox_values = None
+
+    if bbox_values is None:
+        return None
+
+    return ",".join(_format_bbox_value(value) for value in bbox_values)
+
+
+def _apply_root_layer_bbox_to_mviewer_xml(
+    xml_content: str, capabilities_content: bytes
+) -> str:
+    """Inject the root-layer bbox into generated mviewer map options."""
+    xml_root = ET.fromstring(xml_content)
+    mapoptions_node = xml_root.find("mapoptions")
+    if mapoptions_node is None:
+        return xml_content
+
+    projection = mapoptions_node.get("projection")
+    bbox = _root_layer_bbox_from_capabilities(capabilities_content, projection)
+    if not bbox:
+        return xml_content
+
+    minx, miny, maxx, maxy = [float(value) for value in bbox.split(",")]
+    center = ",".join(
+        _format_bbox_value(value)
+        for value in ((minx + maxx) / 2, (miny + maxy) / 2)
+    )
+
+    mapoptions_node.set("extent", bbox)
+    mapoptions_node.set("center", center)
+    return ET.tostring(xml_root, encoding="unicode")
 
 
 def _store_uploaded_qgis_project() -> dict:
@@ -116,14 +248,18 @@ def _store_uploaded_qgis_project() -> dict:
         mkdir(qgs_dir)
 
     if lower_filename.endswith((".zip", ".qgz")):
-        _, extracted_projects = _extract_qgs_zip(uploaded_file, qgs_dir, filename)
+        _, extracted_projects, overwritten = _extract_qgs_zip(
+            uploaded_file, qgs_dir, filename
+        )
         project_payload = extracted_projects[0].copy()
         project_payload["projects"] = extracted_projects
         project_payload["archiveName"] = filename
+        project_payload["overwritten"] = overwritten
         return project_payload
 
-    project_payload = _store_qgs_file(uploaded_file, qgs_dir, filename)
+    project_payload, overwritten = _store_qgs_file(uploaded_file, qgs_dir, filename)
     project_payload["projects"] = [project_payload.copy()]
+    project_payload["overwritten"] = overwritten
     return project_payload
 
 
@@ -228,6 +364,46 @@ def _studio_open_config_url(config_url: str) -> str:
     return f"{base_url}/index.html#?config={quote(config_url, safe='/:?&=%')}"
 
 
+def _stored_qgis_project_directory(project_name: str) -> str:
+    """Return the absolute directory of a stored QGIS project."""
+    qgs_dir = current_app.config.get("QGS_FOLDER")
+    if not qgs_dir:
+        raise BadRequest("Missing QGS folder configuration")
+    if not project_name:
+        raise BadRequest("Missing QGIS project name")
+
+    normalized_project_name = secure_filename(project_name)
+    project_dir = path.abspath(path.join(qgs_dir, normalized_project_name))
+    qgs_dir_absolute = path.abspath(qgs_dir)
+    if path.commonpath([qgs_dir_absolute, project_dir]) != qgs_dir_absolute:
+        raise BadRequest("Invalid QGIS project name")
+    return project_dir
+
+
+def _qgis_open_error_response(
+    error: Exception, project_name: str | None = None
+) -> ResponseReturnValue:
+    """Build a JSON error response for QGIS project open/create routes."""
+    if isinstance(error, HTTPException):
+        status_code = error.code or 500
+        reason = error.description
+        error_name = error.name
+    else:
+        status_code = 500
+        reason = str(error) or "Unexpected error while creating the QGIS configuration"
+        error_name = "Internal Server Error"
+
+    payload = {
+        "success": False,
+        "name": error_name,
+        "reason": reason,
+    }
+    if project_name:
+        payload["projectName"] = project_name
+
+    return jsonify(payload), status_code
+
+
 @basic_store.route("/api/app/qgis/projects", methods=["GET", "POST"])
 def list_stored_qgs_configs() -> ResponseReturnValue:
     """List stored QGIS projects or upload a new project/archive."""
@@ -280,41 +456,88 @@ def import_qgis_project() -> ResponseReturnValue:
         mkdir(qgs_dir)
 
     if lower_filename.endswith((".zip", ".qgz")):
-        _, extracted_projects = _extract_qgs_zip(uploaded_file, qgs_dir, filename)
+        _, extracted_projects, overwritten = _extract_qgs_zip(
+            uploaded_file, qgs_dir, filename
+        )
         project_payload = extracted_projects[0]
     else:
-        project_payload = _store_qgs_file(uploaded_file, qgs_dir, filename)
+        project_payload, overwritten = _store_qgs_file(uploaded_file, qgs_dir, filename)
 
     capabilities_url = _project_capabilities_url(project_payload["projectName"])
     xml_content = _mviewer_xml_from_capabilities_url(capabilities_url)
     response = current_app.response_class(xml_content, mimetype="application/xml")
     response.headers["X-Qgis-Project-Name"] = project_payload["projectName"]
     response.headers["X-Qgis-Capabilities-Url"] = capabilities_url
+    response.headers["X-Qgis-Project-Overwritten"] = str(overwritten).lower()
     return response
 
 
 @basic_store.route("/api/app/qgis/projects/open", methods=["POST"])
 def create_and_open_qgis_project_config() -> ResponseReturnValue:
     """Create a Studio config from an uploaded QGIS project and expose open URLs."""
-    project_payload = _store_uploaded_qgis_project()
-    capabilities_url = _project_capabilities_url(project_payload["projectName"])
-    config_data, _ = _create_config_from_qgis_capabilities(
-        capabilities_url, project_payload["projectName"]
-    )
-    config_url = _absolute_config_url(config_data["url"])
-    studio_url = _studio_open_config_url(config_url)
+    project_name = None
+    try:
+        project_payload = _store_uploaded_qgis_project()
+        project_name = project_payload["projectName"]
+        capabilities_url = _project_capabilities_url(project_name)
+        config_data, _ = _create_config_from_qgis_capabilities(
+            capabilities_url, project_name
+        )
+        config_url = _absolute_config_url(config_data["url"])
+        studio_url = _studio_open_config_url(config_url)
 
-    if request.args.get("redirect", "").lower() in {"1", "true", "yes"}:
-        return redirect(studio_url)
+        if request.args.get("redirect", "").lower() in {"1", "true", "yes"}:
+            return redirect(studio_url)
 
-    return jsonify(
-        {
-            "success": True,
-            "project": project_payload,
-            "capabilitiesUrl": capabilities_url,
-            "filepath": config_data["url"],
-            "configUrl": config_url,
-            "studioUrl": studio_url,
-            "config": config_data,
-        }
-    )
+        return jsonify(
+            {
+                "success": True,
+                "project": project_payload,
+                "capabilitiesUrl": capabilities_url,
+                "filepath": config_data["url"],
+                "configUrl": config_url,
+                "studioUrl": studio_url,
+                "config": config_data,
+            }
+        )
+    except Exception as error:
+        return _qgis_open_error_response(error, project_name)
+
+
+@basic_store.route("/api/app/qgis/projects/<project_name>/open", methods=["POST"])
+def create_and_open_stored_qgis_project_config(project_name: str) -> ResponseReturnValue:
+    """Create a Studio config from an existing stored QGIS project."""
+    try:
+        _stored_qgis_project_directory(project_name)
+        capabilities_url = _project_capabilities_url(project_name)
+        config_data, _ = _create_config_from_qgis_capabilities(capabilities_url, project_name)
+        config_url = _absolute_config_url(config_data["url"])
+        studio_url = _studio_open_config_url(config_url)
+
+        if request.args.get("redirect", "").lower() in {"1", "true", "yes"}:
+            return redirect(studio_url)
+
+        return jsonify(
+            {
+                "success": True,
+                "projectName": project_name,
+                "capabilitiesUrl": capabilities_url,
+                "filepath": config_data["url"],
+                "configUrl": config_url,
+                "studioUrl": studio_url,
+                "config": config_data,
+            }
+        )
+    except Exception as error:
+        return _qgis_open_error_response(error, project_name)
+
+
+@basic_store.route("/api/app/qgis/projects/<project_name>", methods=["DELETE"])
+def delete_stored_qgis_project(project_name: str) -> ResponseReturnValue:
+    """Delete a stored QGIS project directory."""
+    project_dir = _stored_qgis_project_directory(project_name)
+    if not path.exists(project_dir):
+        raise BadRequest("QGIS project does not exist")
+
+    rmtree(project_dir, ignore_errors=True)
+    return jsonify({"success": True, "projectName": project_name})

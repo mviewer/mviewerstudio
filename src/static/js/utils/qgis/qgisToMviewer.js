@@ -1,4 +1,4 @@
-var qgisToMviewer = (function () {
+const qgisToMviewer = (function () {
   const DEFAULT_THEME_ID = "qgis";
   const DEFAULT_THEME_NAME = "Projet QGIS";
 
@@ -625,3 +625,5 @@ var qgisToMviewer = (function () {
     },
   };
 })();
+
+export default qgisToMviewer;

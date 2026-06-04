@@ -159,6 +159,8 @@ $(document).ready(function () {
         newConfiguration();
       }
 
+      document.dispatchEvent(new CustomEvent("mviewerstudio:qgis:init-stored-projects"));
+
       updateProviderSearchButtonState();
 
       // Default params for layers
@@ -1354,8 +1356,11 @@ var loadApplicationParametersFromFile = function () {
     return;
   }
 
-  if (window.qgis && typeof qgis.loadApplicationParametersFromFileInput === "function") {
-    qgis.loadApplicationParametersFromFileInput();
+  const qgisImportEvent = new CustomEvent(
+    "mviewerstudio:qgis:load-application-parameters-from-file-input",
+    { cancelable: true }
+  );
+  if (!document.dispatchEvent(qgisImportEvent)) {
     return;
   }
 

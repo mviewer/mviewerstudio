@@ -1,5 +1,15 @@
+import qgisToMviewer from "./qgisToMviewer.js";
+
+const escapeHtmlAttribute = function (value) {
+  return String(value || "")
+    .replace(/&/g, "&amp;")
+    .replace(/"/g, "&quot;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
+};
+
 // QGIS project import utilities
-var qgis = {
+const qgis = {
   /**
    * Tracks whether the QGIS project search UI listeners have been registered.
    *
@@ -19,21 +29,22 @@ var qgis = {
    */
   _qgisLocalFileImportInitialized: false,
   /**
+   * Tracks whether the stored QGIS projects list listeners have been registered.
+   *
+   * @type {boolean}
+   */
+  _qgisProjectsListInitialized: false,
+  /**
    * Imports a QGIS project file content.
    *
    * @param {string} content Raw `.qgs` file content.
    * @returns {string|undefined} Generated mviewer XML, or `undefined` when the converter is unavailable.
    */
   importQgs: function (content) {
-    if (typeof qgisToMviewer === "undefined") {
-      alertCustom("QGIS to mviewer converter is not loaded", "danger");
-      return;
-    }
-
     const mviewerXml = qgisToMviewer.convertQgsContentToMviewerXml(content);
-    if (typeof mv !== "undefined" && typeof mv.parseApplication === "function") {
+    if (typeof window.mv !== "undefined" && typeof window.mv.parseApplication === "function") {
       const xmlDoc = new DOMParser().parseFromString(mviewerXml, "text/xml");
-      mv.parseApplication(xmlDoc);
+      window.mv.parseApplication(xmlDoc);
     }
     return mviewerXml;
   },
@@ -47,11 +58,13 @@ var qgis = {
     const idApp = xml.getElementsByTagName("dc:identifier")[0]?.innerHTML;
 
     if (!idApp) {
-      mv.parseApplication(xml);
+      window.mv.parseApplication(xml);
       return;
     }
 
-    mv.appExists(idApp, (response) => mv.parseApplication(xml, response.exists));
+    window.mv.appExists(idApp, (response) =>
+      window.mv.parseApplication(xml, response.exists)
+    );
   },
   /**
    * Returns `true` when the selected file is a QGIS project.
@@ -65,8 +78,7 @@ var qgis = {
     return (
       fileName.endsWith(".qgs") ||
       fileName.endsWith(".qgis") ||
-      (typeof qgisToMviewer !== "undefined" &&
-        qgisToMviewer.isQgisProjectDocument(xml))
+      qgisToMviewer.isQgisProjectDocument(xml)
     );
   },
   /**
@@ -83,12 +95,9 @@ var qgis = {
     return file
       .text()
       .then((content) => {
-        const xml = $.parseXML(content);
+        const xml = window.$.parseXML(content);
         if (this.isQgisProjectFile(file, xml)) {
-          if (typeof qgisToMviewer === "undefined") {
-            throw new Error("QGIS to mviewer converter is not loaded");
-          }
-          return $.parseXML(qgisToMviewer.convertQgsContentToMviewerXml(content));
+          return window.$.parseXML(qgisToMviewer.convertQgsContentToMviewerXml(content));
         }
         return xml;
       });
@@ -113,14 +122,10 @@ var qgis = {
     this.readImportFileAsMviewerXml(file)
       .then((xml) => {
         this.parseMviewerApplicationXml(xml);
-        showStudio();
+        window.showStudio();
       })
       .catch((error) => {
-        if (error?.message === "QGIS to mviewer converter is not loaded") {
-          alertCustom(error.message, "danger");
-          return;
-        }
-        alertCustom(mviewer.tr("msg.xml_doc_invalid"), "danger");
+        window.alertCustom(window.mviewer.tr("msg.xml_doc_invalid"), "danger");
       });
   },
   /**
@@ -129,8 +134,35 @@ var qgis = {
    * @returns {string} Base URL ending with a slash when configured.
    */
   getConfiguredQgisProjectsBaseUrl: function () {
-    const configuredUrl = _conf?.qgis?.url || "";
+    const configuredUrl = window._conf?.qgis?.url || "";
     return configuredUrl ? configuredUrl.replace(/\/?$/, "/") : "";
+  },
+  /**
+   * Returns `true` when the configured QGIS Server host matches the current Studio host.
+   *
+   * Localhost aliases are treated as equivalent so that local dev setups keep
+   * showing the stored-projects table.
+   *
+   * @returns {boolean} `true` when the QGIS Server is hosted on the same machine.
+   */
+  isConfiguredQgisServerOnCurrentHost: function () {
+    const configuredUrl = this.getConfiguredQgisProjectsBaseUrl();
+    if (!configuredUrl) {
+      return false;
+    }
+
+    const configuredHost = new URL(configuredUrl, window.location.href).hostname.toLowerCase();
+    const currentHost = window.location.hostname.toLowerCase();
+    const localhostAliases = ["localhost", "127.0.0.1", "::1"];
+
+    if (configuredHost === currentHost) {
+      return true;
+    }
+
+    return (
+      localhostAliases.includes(configuredHost) &&
+      localhostAliases.includes(currentHost)
+    );
   },
   /**
    * Builds the GetCapabilities URL for a QGIS project stored on the server.
@@ -221,15 +253,15 @@ var qgis = {
 
     return this.createMviewerXmlFromQgisUrl(projectUrl)
       .then((mviewerXml) => {
-        this.parseMviewerApplicationXml($.parseXML(mviewerXml));
-        showStudio();
+        this.parseMviewerApplicationXml(window.$.parseXML(mviewerXml));
+        window.showStudio();
       })
       .catch((error) => {
         const message =
           typeof error === "string"
             ? error
             : error?.message || "La conversion du projet QGIS a échoué";
-        alertCustom(message, "danger");
+        window.alertCustom(message, "danger");
       })
       .finally(() => {
         if (button) {
@@ -269,8 +301,8 @@ var qgis = {
         return this.createMviewerXmlFromQgisUrl(capabilitiesUrl);
       })
       .then((mviewerXml) => {
-        this.parseMviewerApplicationXml($.parseXML(mviewerXml));
-        showStudio();
+        this.parseMviewerApplicationXml(window.$.parseXML(mviewerXml));
+        window.showStudio();
       });
   },
   /**
@@ -297,11 +329,227 @@ var qgis = {
           : response.text().then((text) => Promise.reject(text))
       )
       .then((data) => {
-        alertCustom(`${data.fileName} uploaded`, "success");
+        window.alertCustom(`${data.fileName} uploaded`, "success");
+        this.refreshStoredQgisProjectsTable();
         return data;
       })
       .catch((error) => {
-        alertCustom(error || "QGS upload failed", "danger");
+        window.alertCustom(error || "QGS upload failed", "danger");
+        return Promise.reject(error);
+      });
+  },
+  /**
+   * Returns the list of QGIS projects currently stored on the server.
+   *
+   * @returns {Promise<Array<Object>>} Stored QGIS projects metadata.
+   */
+  fetchStoredQgisProjects: function () {
+    return fetch("api/app/qgis/projects", {
+      method: "GET",
+      cache: "no-cache",
+    }).then((response) =>
+      response.ok
+        ? response.json()
+        : response.text().then((text) => Promise.reject(text || response.statusText))
+    );
+  },
+  /**
+   * Renders the server-side QGIS projects table inside the import tab.
+   *
+   * @param {Array<Object>} projects Stored QGIS projects metadata.
+   * @returns {void}
+   */
+  renderStoredQgisProjectsTable: function (projects) {
+    const tableBody = document.getElementById("qgis-projects-table-body");
+    if (!tableBody) {
+      return;
+    }
+
+    if (!projects || projects.length === 0) {
+      tableBody.innerHTML =
+        '<tr><td colspan="2" class="text-muted">Aucune configuration QGIS disponible.</td></tr>';
+      return;
+    }
+
+    tableBody.innerHTML = projects
+      .map((project) => {
+        const projectName = project.projectName || "";
+        const capabilitiesUrl = this.buildProjectCapabilitiesUrl(projectName);
+        return `
+          <tr>
+            <td>${projectName}</td>
+            <td>
+              <div class="qgis-project-actions" role="group" aria-label="Actions QGIS">
+                <button
+                  type="button"
+                  class="btn qgis-project-action-btn qgis-project-action-btn-copy"
+                  data-bs-toggle="tooltip"
+                  data-bs-placement="top"
+                  data-bs-title="Copier l'URL GetCapabilities"
+                  data-qgis-action="copy-url"
+                  data-qgis-url="${escapeHtmlAttribute(capabilitiesUrl)}"
+                >
+                  <i class="ri-clipboard-line"></i>
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-outline-info qgis-project-action-btn"
+                  data-bs-toggle="tooltip"
+                  data-bs-placement="top"
+                  data-bs-title="Voir le GetCapabilities"
+                  data-qgis-action="view-capabilities"
+                  data-qgis-url="${escapeHtmlAttribute(capabilitiesUrl)}"
+                >
+                  <i class="ri-external-link-line"></i>
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-outline-success qgis-project-action-btn"
+                  data-bs-toggle="tooltip"
+                  data-bs-placement="top"
+                  data-bs-title="Créer une config mviewer"
+                  data-qgis-action="create-config"
+                  data-qgis-project-name="${escapeHtmlAttribute(projectName)}"
+                >
+                  <i class="ri-add-line"></i>
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-outline-danger qgis-project-action-btn"
+                  data-bs-toggle="tooltip"
+                  data-bs-placement="top"
+                  data-bs-title="Supprimer ce projet QGIS"
+                  data-qgis-action="delete-project"
+                  data-qgis-project-name="${escapeHtmlAttribute(projectName)}"
+                >
+                  <i class="ri-delete-bin-line"></i>
+                </button>
+              </div>
+            </td>
+          </tr>
+        `;
+      })
+      .join("");
+
+    if (typeof window._initTooltip === "function") {
+      window._initTooltip(false);
+    }
+  },
+  /**
+   * Copies a QGIS project GetCapabilities URL to the clipboard.
+   *
+   * @param {string} url GetCapabilities URL to copy.
+   * @returns {Promise<void>} Promise resolved when the URL has been copied.
+   */
+  copyQgisProjectUrl: function (url) {
+    if (!url) {
+      return Promise.reject(new Error("Missing QGIS project URL"));
+    }
+
+    return navigator.clipboard
+      .writeText(url)
+      .then(() => {
+        window.alertCustom("URL copiée dans le presse-papiers", "success");
+      })
+      .catch(() => {
+        window.alertCustom("Impossible de copier l'URL", "danger");
+      });
+  },
+  /**
+   * Opens a GetCapabilities URL in a separate browser tab.
+   *
+   * @param {string} url GetCapabilities URL to open.
+   * @returns {void}
+   */
+  viewStoredQgisProjectCapabilities: function (url) {
+    if (!url) {
+      window.alertCustom("URL QGIS manquante", "danger");
+      return;
+    }
+    window.open(url, "_blank", "noopener,noreferrer");
+  },
+  /**
+   * Creates a Studio config from a stored QGIS project and opens it in a new tab.
+   *
+   * @param {string} projectName Stored QGIS project name.
+   * @returns {Promise<void>} Promise resolved when the config has been created.
+   */
+  createStoredQgisProjectConfig: function (projectName) {
+    if (!projectName) {
+      return Promise.reject(new Error("Missing QGIS project name"));
+    }
+
+    return fetch(`api/app/qgis/projects/${encodeURIComponent(projectName)}/open`, {
+      method: "POST",
+    })
+      .then((response) =>
+        response.ok
+          ? response.json()
+          : response.text().then((text) => Promise.reject(text || response.statusText))
+      )
+      .then((data) => {
+        if (data?.studioUrl) {
+          window.open(data.studioUrl, "_blank", "noopener,noreferrer");
+        }
+        window.alertCustom("Configuration créée", "success");
+      })
+      .catch((error) => {
+        window.alertCustom(error || "La création de la configuration a échoué", "danger");
+        return Promise.reject(error);
+      });
+  },
+  /**
+   * Deletes a stored QGIS project then refreshes the server-side table.
+   *
+   * @param {string} projectName Stored QGIS project name.
+   * @returns {Promise<void>} Promise resolved when the project has been deleted.
+   */
+  deleteStoredQgisProject: function (projectName) {
+    if (!projectName) {
+      return Promise.reject(new Error("Missing QGIS project name"));
+    }
+    if (!window.confirm(`Supprimer le projet QGIS "${projectName}" ?`)) {
+      return Promise.resolve();
+    }
+
+    return fetch(`api/app/qgis/projects/${encodeURIComponent(projectName)}`, {
+      method: "DELETE",
+    })
+      .then((response) =>
+        response.ok
+          ? response.json()
+          : response.text().then((text) => Promise.reject(text || response.statusText))
+      )
+      .then(() => {
+        window.alertCustom("Projet QGIS supprimé", "success");
+        return this.refreshStoredQgisProjectsTable();
+      })
+      .catch((error) => {
+        window.alertCustom(error || "La suppression du projet QGIS a échoué", "danger");
+        return Promise.reject(error);
+      });
+  },
+  /**
+   * Fetches and refreshes the QGIS projects table.
+   *
+   * @returns {Promise<void>} Promise resolved when the table is up to date.
+   */
+  refreshStoredQgisProjectsTable: function () {
+    const tableBody = document.getElementById("qgis-projects-table-body");
+    if (tableBody) {
+      tableBody.innerHTML =
+        '<tr><td colspan="2" class="text-muted">Chargement…</td></tr>';
+    }
+
+    return this.fetchStoredQgisProjects()
+      .then((projects) => {
+        this.renderStoredQgisProjectsTable(projects);
+      })
+      .catch((error) => {
+        if (tableBody) {
+          tableBody.innerHTML =
+            '<tr><td colspan="2" class="text-danger">Impossible de charger les configurations QGIS.</td></tr>';
+        }
         return Promise.reject(error);
       });
   },
@@ -346,10 +594,10 @@ var qgis = {
   callQgisServerProjectFromName: function (projectName) {
     return this.callQgisServerProjectFromNameWithUrl(
       projectName,
-      _conf.qgis_server_url ||
-        _conf.qgis_server ||
-        _conf.qgis_server_base_url ||
-        _conf.data_providers?.wms?.[0]?.url
+      window._conf.qgis_server_url ||
+        window._conf.qgis_server ||
+        window._conf.qgis_server_base_url ||
+        window._conf.data_providers?.wms?.[0]?.url
     );
   },
   /**
@@ -362,10 +610,10 @@ var qgis = {
   callQgisServerProjectFromNameWithUrl: function (projectName, qgisServerUrl) {
     const serverUrl =
       qgisServerUrl ||
-      _conf.qgis_server_url ||
-      _conf.qgis_server ||
-      _conf.qgis_server_base_url ||
-      _conf.data_providers?.wms?.[0]?.url;
+      window._conf.qgis_server_url ||
+      window._conf.qgis_server ||
+      window._conf.qgis_server_base_url ||
+      window._conf.data_providers?.wms?.[0]?.url;
 
     if (!projectName || !serverUrl) {
       return Promise.reject(new Error("Missing QGIS project name or server URL"));
@@ -378,8 +626,8 @@ var qgis = {
     requestUrl.searchParams.set("MAP", projectName);
 
     const fetchUrl =
-      _conf.proxy && /^https?:\/\//.test(requestUrl.href)
-        ? `${_conf.proxy}${encodeURIComponent(requestUrl.href)}`
+      window._conf.proxy && /^https?:\/\//.test(requestUrl.href)
+        ? `${window._conf.proxy}${encodeURIComponent(requestUrl.href)}`
         : requestUrl.href;
 
     return fetch(fetchUrl, {
@@ -417,8 +665,8 @@ var qgis = {
     requestUrl.searchParams.set("REQUEST", "GetCapabilities");
 
     const fetchUrl =
-      _conf.proxy && /^https?:\/\//.test(requestUrl.href)
-        ? `${_conf.proxy}${encodeURIComponent(requestUrl.href)}`
+      window._conf.proxy && /^https?:\/\//.test(requestUrl.href)
+        ? `${window._conf.proxy}${encodeURIComponent(requestUrl.href)}`
         : requestUrl.href;
 
     return fetch(fetchUrl, {
@@ -440,10 +688,10 @@ var qgis = {
   getQgisServerProjectCapabilities: function (fileName, qgisServerUrl) {
     const serverUrl =
       qgisServerUrl ||
-      _conf.qgis_server_url ||
-      _conf.qgis_server ||
-      _conf.qgis_server_base_url ||
-      _conf.data_providers?.wms?.[0]?.url;
+      window._conf.qgis_server_url ||
+      window._conf.qgis_server ||
+      window._conf.qgis_server_base_url ||
+      window._conf.data_providers?.wms?.[0]?.url;
 
     if (!fileName || !serverUrl) {
       return Promise.reject(new Error("Missing QGIS project name or server URL"));
@@ -468,8 +716,8 @@ var qgis = {
     requestUrl.searchParams.set("REQUEST", "GetCapabilities");
 
     const fetchUrl =
-      _conf.proxy && /^https?:\/\//.test(requestUrl.href)
-        ? `${_conf.proxy}${encodeURIComponent(requestUrl.href)}`
+      window._conf.proxy && /^https?:\/\//.test(requestUrl.href)
+        ? `${window._conf.proxy}${encodeURIComponent(requestUrl.href)}`
         : requestUrl.href;
 
     return fetch(fetchUrl, {
@@ -640,9 +888,9 @@ var qgis = {
    * @returns {void}
    */
   showQgsProjectInputs: function () {
-    if (typeof mv !== "undefined") {
-      mv.resetSearch();
-      mv.resetConfLayer();
+    if (typeof window.mv !== "undefined") {
+      window.mv.resetSearch();
+      window.mv.resetConfLayer();
     }
 
     this.showQgsProjectTab();
@@ -656,6 +904,7 @@ var qgis = {
   initQgsProjectSearch: function () {
     const urlInput = document.getElementById("newlayer-qgs-url");
     const button = document.getElementById("qgs_search_layers_btn");
+    const select = document.getElementById("qgs-project-list");
     if (!urlInput || !button) {
       return;
     }
@@ -677,6 +926,17 @@ var qgis = {
         this.searchProjectLayers();
       }
     });
+    button.addEventListener("click", (event) => {
+      event.preventDefault();
+      if (!button.disabled) {
+        this.searchProjectLayers();
+      }
+    });
+    if (select) {
+      select.addEventListener("change", (event) => {
+        selectQgsLayer(event.currentTarget);
+      });
+    }
 
     syncButtonState();
     this._qgsProjectSearchInitialized = true;
@@ -759,11 +1019,75 @@ var qgis = {
           typeof error === "string"
             ? error
             : error?.message || "L'import du projet QGIS a échoué";
-        alertCustom(message, "danger");
+        window.alertCustom(message, "danger");
       });
     });
 
     this._qgisLocalFileImportInitialized = true;
+  },
+  /**
+   * Registers listeners for the stored QGIS projects table and loads data once.
+   *
+   * @returns {void}
+   */
+  initStoredQgisProjectsList: function () {
+    const container = document.getElementById("qgis-projects-list-container");
+    const refreshButton = document.getElementById("refresh-qgis-projects-list");
+    const loadQgisTab = document.querySelector('[data-bs-target="#loadQgis"]');
+    const tableBody = document.getElementById("qgis-projects-table-body");
+
+    if (!container || !refreshButton || !loadQgisTab || !tableBody) {
+      return;
+    }
+
+    if (!this.isConfiguredQgisServerOnCurrentHost()) {
+      container.classList.add("d-none");
+      return;
+    }
+
+    container.classList.remove("d-none");
+
+    if (this._qgisProjectsListInitialized) {
+      this.refreshStoredQgisProjectsTable();
+      return;
+    }
+
+    refreshButton.addEventListener("click", () => {
+      this.refreshStoredQgisProjectsTable().catch(() => {});
+    });
+
+    loadQgisTab.addEventListener("shown.bs.tab", () => {
+      this.refreshStoredQgisProjectsTable().catch(() => {});
+    });
+    tableBody.addEventListener("click", (event) => {
+      const actionButton = event.target.closest("[data-qgis-action]");
+      if (!actionButton) {
+        return;
+      }
+
+      const action = actionButton.dataset.qgisAction;
+      const url = actionButton.dataset.qgisUrl;
+      const projectName = actionButton.dataset.qgisProjectName;
+
+      if (action === "copy-url") {
+        this.copyQgisProjectUrl(url);
+        return;
+      }
+      if (action === "view-capabilities") {
+        this.viewStoredQgisProjectCapabilities(url);
+        return;
+      }
+      if (action === "create-config") {
+        this.createStoredQgisProjectConfig(projectName).catch(() => {});
+        return;
+      }
+      if (action === "delete-project") {
+        this.deleteStoredQgisProject(projectName).catch(() => {});
+      }
+    });
+
+    this.refreshStoredQgisProjectsTable().catch(() => {});
+    this._qgisProjectsListInitialized = true;
   },
 };
 
@@ -773,7 +1097,7 @@ var qgis = {
  * @param {HTMLSelectElement} selectElement Layer select input.
  * @returns {void}
  */
-function selectQgsLayer(selectElement) {
+const selectQgsLayer = function (selectElement) {
   const selectedOption = selectElement.options[selectElement.selectedIndex];
   const layerName = selectedOption ? selectedOption.dataset.layerName || "" : "";
   const layerTitle = selectedOption ? selectedOption.dataset.layerTitle || "" : "";
@@ -787,7 +1111,7 @@ function selectQgsLayer(selectElement) {
   if (nameInput) {
     nameInput.value = layerTitle || layerName;
   }
-}
+};
 
 document.addEventListener("DOMContentLoaded", function () {
   const sendQgisProjectLink = document.getElementById("sendQgisProject");
@@ -808,3 +1132,18 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 });
+
+document.addEventListener("mviewerstudio:qgis:init-stored-projects", function () {
+  qgis.initStoredQgisProjectsList();
+});
+
+document.addEventListener(
+  "mviewerstudio:qgis:load-application-parameters-from-file-input",
+  function (event) {
+    event.preventDefault();
+    qgis.loadApplicationParametersFromFileInput();
+  }
+);
+
+export { selectQgsLayer };
+export default qgis;
