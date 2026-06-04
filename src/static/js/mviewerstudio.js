@@ -3,20 +3,36 @@ var API = {};
 
 var mviewer = {};
 
-$(document).ready(function () {
-  //Get URL Parameters
-  if (window.location.search) {
-    $.extend(
-      API,
-      $.parseJSON(
-        '{"' +
-          decodeURIComponent(
-            window.location.search.substring(1).replace(/&/g, '","').replace(/=/g, '":"')
-          ) +
-          '"}'
-      )
-    );
+/**
+ * Reads URL parameters from both the query string and the ``#?`` hash syntax.
+ *
+ * This keeps backward compatibility with the existing query-string behavior
+ * while allowing external applications to open Studio with
+ * `index.html#?config=<xml-url>`.
+ *
+ * @returns {Object.<string, string>} Flat map of URL parameters.
+ */
+var readUrlParameters = function () {
+  const params = new URLSearchParams(window.location.search);
+  const hash = window.location.hash || "";
+  const hashQuery = hash.startsWith("#?") ? hash.slice(2) : hash.startsWith("#") ? hash.slice(1) : "";
+
+  if (hashQuery) {
+    new URLSearchParams(hashQuery).forEach((value, key) => {
+      params.set(key, value);
+    });
   }
+
+  const parsedParams = {};
+  params.forEach((value, key) => {
+    parsedParams[key] = value;
+  });
+
+  return parsedParams;
+};
+
+$(document).ready(function () {
+  API = readUrlParameters();
   fetch("config.json", {
     method: "GET",
     header: {
@@ -133,7 +149,9 @@ $(document).ready(function () {
         }
       }
 
-      if (API.xml) {
+      if (API.config) {
+        loadApplicationParametersFromRemoteFile(API.config);
+      } else if (API.xml) {
         loadApplicationParametersFromRemoteFile(API.xml);
       } else if (API.wmc) {
         loadApplicationParametersFromWMC(API.wmc);
