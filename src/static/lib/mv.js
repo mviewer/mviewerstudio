@@ -1787,6 +1787,18 @@ var mv = (function () {
       });
       map.getView().setCenter(mapoptions.attr("center").split(",").map(Number));
       map.getView().setZoom(parseInt(mapoptions.attr("zoom")));
+      if (mapoptions.attr("extent")) {
+        var extentValues = mapoptions
+          .attr("extent")
+          .split(",")
+          .map(Number)
+          .filter(function (value) {
+            return !Number.isNaN(value);
+          });
+        if (extentValues.length === 4) {
+          map.getView().fit(extentValues, { size: map.getSize() });
+        }
+      }
       //BaseLayers
       var baseLayersMode = $(xml).find("baselayers").attr("style") || "default";
       $("#frm-bl-mode option[value='" + baseLayersMode + "']").prop("selected", true);

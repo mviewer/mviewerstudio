@@ -73,6 +73,41 @@
 			vertical-align: middle;
 			margin-left: 3px;
 		}
+
+		.qgis-project-actions {
+			display: flex;
+			align-items: center;
+			gap: 0.45rem;
+			flex-wrap: wrap;
+		}
+
+		.qgis-project-action-btn {
+			width: 2.2rem;
+			height: 2.2rem;
+			padding: 0;
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+			border-radius: 0.45rem;
+		}
+
+		.qgis-project-action-btn i {
+			font-size: 1rem;
+			line-height: 1;
+		}
+
+		.qgis-project-action-btn-copy {
+			color: #7c3aed;
+			border: 1px solid #7c3aed;
+			background: #ffffff;
+		}
+
+		.qgis-project-action-btn-copy:hover,
+		.qgis-project-action-btn-copy:focus {
+			color: #ffffff;
+			background: #7c3aed;
+			border-color: #7c3aed;
+		}
 	
 		
 		/* Alert */

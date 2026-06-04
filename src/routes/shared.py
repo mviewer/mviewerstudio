@@ -4,7 +4,7 @@ import logging
 import xml.etree.ElementTree as ET
 from datetime import datetime
 from os import makedirs, mkdir, path, walk
-from shutil import rmtree, copyfileobj, move
+from shutil import rmtree, copyfileobj
 from typing import cast
 from urllib.parse import parse_qsl, urlencode, urlparse, urlunparse
 from zipfile import BadZipFile, ZipFile
@@ -135,15 +135,10 @@ def _qgs_project_payload(qgs_dir: str, absolute_file: str) -> dict:
 
 def _extract_qgs_zip(
     uploaded_file, qgs_dir: str, filename: str
-) -> tuple[str, list[dict]]:
+) -> tuple[str, list[dict], bool]:
     archive_name = path.splitext(filename)[0]
     destination_dir = path.join(qgs_dir, archive_name)
-
-    if path.exists(destination_dir):
-        rmtree(destination_dir, ignore_errors=True)
-
-    mkdir(destination_dir)
-
+    overwritten = False
     try:
         with ZipFile(uploaded_file.stream) as archive:
             file_members = [
@@ -161,6 +156,8 @@ def _extract_qgs_zip(
             if len(top_level_parts) == 1 and len(file_members) > 0:
                 root_prefix = f"{top_level_parts.pop()}/"
 
+            normalized_members = []
+            qgs_members = []
             for member in file_members:
                 normalized_name = member.filename
                 if root_prefix and normalized_name.startswith(root_prefix):
@@ -170,6 +167,25 @@ def _extract_qgs_zip(
                 if not normalized_name:
                     continue
 
+                normalized_members.append((member, normalized_name))
+                if normalized_name.lower().endswith(".qgs"):
+                    qgs_members.append(normalized_name)
+
+            if not qgs_members:
+                raise BadRequest("ZIP archive does not contain any .qgs file")
+
+            if len(qgs_members) == 1:
+                project_name = path.splitext(path.basename(qgs_members[0]))[0]
+                destination_dir = path.join(qgs_dir, project_name)
+            else:
+                destination_dir = path.join(qgs_dir, archive_name)
+
+            overwritten = path.exists(destination_dir)
+            if overwritten:
+                rmtree(destination_dir, ignore_errors=True)
+            mkdir(destination_dir)
+
+            for member, normalized_name in normalized_members:
                 destination = path.abspath(path.join(destination_dir, normalized_name))
                 if path.commonpath(
                     [path.abspath(destination_dir), destination]
@@ -183,7 +199,8 @@ def _extract_qgs_zip(
                 with archive.open(member) as source, open(destination, "wb") as target:
                     copyfileobj(source, target)
     except BadZipFile:
-        rmtree(destination_dir, ignore_errors=True)
+        if path.exists(destination_dir):
+            rmtree(destination_dir, ignore_errors=True)
         raise BadRequest("Invalid ZIP archive")
     except Exception:
         if path.exists(destination_dir):
@@ -196,40 +213,19 @@ def _extract_qgs_zip(
             if extracted_file.lower().endswith(".qgs"):
                 extracted_projects.append(path.join(root, extracted_file))
 
-    if not extracted_projects:
-        rmtree(destination_dir, ignore_errors=True)
-        raise BadRequest("ZIP archive does not contain any .qgs file")
-
-    if len(extracted_projects) == 1:
-        project_file = extracted_projects[0]
-        project_name = path.splitext(path.basename(project_file))[0]
-        final_destination_dir = path.join(qgs_dir, project_name)
-
-        if path.abspath(final_destination_dir) != path.abspath(destination_dir):
-            if path.exists(final_destination_dir):
-                rmtree(final_destination_dir, ignore_errors=True)
-            move(destination_dir, final_destination_dir)
-            destination_dir = final_destination_dir
-
-        extracted_projects = [
-            path.join(root, extracted_file)
-            for root, _, files in walk(destination_dir)
-            for extracted_file in files
-            if extracted_file.lower().endswith(".qgs")
-        ]
-
     extracted_payloads = [
         _qgs_project_payload(qgs_dir, absolute_file) for absolute_file in extracted_projects
     ]
     extracted_payloads.sort(key=lambda item: item["path"].lower())
-    return destination_dir, extracted_payloads
+    return destination_dir, extracted_payloads, overwritten
 
 
-def _store_qgs_file(uploaded_file, qgs_dir: str, filename: str) -> dict:
+def _store_qgs_file(uploaded_file, qgs_dir: str, filename: str) -> tuple[dict, bool]:
     project_name = path.splitext(filename)[0]
     destination_dir = path.join(qgs_dir, project_name)
+    overwritten = path.exists(destination_dir)
 
-    if path.exists(destination_dir):
+    if overwritten:
         rmtree(destination_dir, ignore_errors=True)
 
     mkdir(destination_dir)
@@ -241,7 +237,7 @@ def _store_qgs_file(uploaded_file, qgs_dir: str, filename: str) -> dict:
         rmtree(destination_dir, ignore_errors=True)
         raise
 
-    return _qgs_project_payload(qgs_dir, destination)
+    return _qgs_project_payload(qgs_dir, destination), overwritten
 
 
 @basic_store.record_once

@@ -1125,6 +1125,31 @@
                                     <button id="createConfigFromQgisAppUrl" type="button" class="btn btn-info"><i class="ri-search-2-line"></i></button>
                                 </div>
                             </div>
+
+                            <div class="mt-4" id="qgis-projects-list-container">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <label class="mb-0">Configurations QGIS Server disponibles :</label>
+                                    <button type="button" class="btn btn-outline-info btn-sm" id="refresh-qgis-projects-list">
+                                        <i class="bi bi-arrow-clockwise"></i>
+                                        <span>Actualiser</span>
+                                    </button>
+                                </div>
+                                <div class="table-responsive">
+                                    <table class="table table-sm align-middle mb-0">
+                                        <thead>
+                                            <tr>
+                                                <th>Projet</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="qgis-projects-table-body">
+                                            <tr>
+                                                <td colspan="2" class="text-muted">Chargement…</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
                         </div>
                       </div>
                 </div>
@@ -1794,7 +1819,7 @@
                               </a>
                         </li>
                         <li class="nav-item" role="presentation">
-                              <a class="nav-link" data-bs-toggle="pill" data-bs-target="#newlayer-qgs" type="button" role="tab" aria-controls="newlayer-qgs" aria-selected="false" onclick="window.qgis && qgis.showQgsProjectInputs();">
+                              <a class="nav-link" data-bs-toggle="pill" data-bs-target="#newlayer-qgs" type="button" role="tab" aria-controls="newlayer-qgs" aria-selected="false">
                                 <span>Depuis un projet qgis</span>
                               </a>
                         </li>
@@ -1906,7 +1931,7 @@
                                                 <div class="input-group">
                                                     <input type="text" class="form-control" id="newlayer-qgs-url" placeholder="Lien vers le projet QGIS Server">
                                                     <div class="input-group-append">
-                                                        <button class="btn btn-info" id="qgs_search_layers_btn" type="button" onclick="qgis.searchProjectLayers();" disabled><i class="bi bi-search"></i></button>
+                                                        <button class="btn btn-info" id="qgs_search_layers_btn" type="button" disabled><i class="bi bi-search"></i></button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -1916,7 +1941,7 @@
                                         <div class="col-md-12">
                                             <div class="form-group">
                                                 <label class="control-label" for="qgs-project-list">Couche du projet QGIS</label>
-                                                <select id="qgs-project-list" class="form-control" onchange="selectQgsLayer(this)">
+                                                <select id="qgs-project-list" class="form-control">
                                                     <option value="" selected>Choisir une couche</option>
                                                 </select>
                                             </div>
@@ -2090,9 +2115,8 @@
 <script src="js/wizard.js"></script>
 <script src="js/manageDisplayContainer.js"></script>
 <script src="lib/icon-picker/iconPickerComponent.js"></script>
-<script src="js/utils/qgis/qgisToMviewer.js"></script>
-<script src="js/utils/qgis/qgis.js"></script>
 <script src="js/mviewerstudio.js"></script>
+<script type="module" src="js/utils/qgis/qgis.js"></script>
 <script type="module" src="lib/icon-picker/icon-picker.js"></script>
 <script src="lib/bootstrap-table/bootstrap-table.min.js"></script>
 <script src="lib/bootstrap-table/bootstrap-table-fr-FR.min.js"></script>
