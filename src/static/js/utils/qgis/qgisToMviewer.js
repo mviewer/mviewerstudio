@@ -166,10 +166,7 @@ const qgisToMviewer = (function () {
     const title = text(mapLayer, "layername") || id;
     const cleanDatasource = datasource.split("|")[0];
 
-    if (
-      provider !== "ogr" ||
-      !/\.(geojson|json)(\?|#|$)/i.test(cleanDatasource)
-    ) {
+    if (provider !== "ogr" || !/\.(geojson|json)(\?|#|$)/i.test(cleanDatasource)) {
       return null;
     }
 
@@ -182,7 +179,7 @@ const qgisToMviewer = (function () {
       queryable: "true",
       searchable: "false",
       opacity: attr(mapLayer, "opacity", "1"),
-    })
+    });
 
     return {
       id: slugify(title, slugify(id, "qgis_geojson")),
@@ -439,11 +436,7 @@ const qgisToMviewer = (function () {
 
     if (rootLayer) {
       collectNamedLayers(rootLayer).forEach((layerNode, index) => {
-        const layer = capabilitiesLayerToMviewerLayer(
-          layerNode,
-          serviceUrl,
-          index === 0
-        );
+        const layer = capabilitiesLayerToMviewerLayer(layerNode, serviceUrl, index === 0);
         if (layer) {
           layers.push(layer);
         }
@@ -511,7 +504,7 @@ const qgisToMviewer = (function () {
 
     return [
       '<?xml version="1.0" encoding="UTF-8"?>',
-      '<config>',
+      "<config>",
       padding(4) +
         `<application title="${escapeXml(options.title)}" mouseposition="false" measuretools="true" mapprint="true" exportpng="true" togglealllayersfromtheme="true"/>`,
       padding(4) +

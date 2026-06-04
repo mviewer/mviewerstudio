@@ -15,7 +15,11 @@ var mviewer = {};
 var readUrlParameters = function () {
   const params = new URLSearchParams(window.location.search);
   const hash = window.location.hash || "";
-  const hashQuery = hash.startsWith("#?") ? hash.slice(2) : hash.startsWith("#") ? hash.slice(1) : "";
+  const hashQuery = hash.startsWith("#?")
+    ? hash.slice(2)
+    : hash.startsWith("#")
+      ? hash.slice(1)
+      : "";
 
   if (hashQuery) {
     new URLSearchParams(hashQuery).forEach((value, key) => {

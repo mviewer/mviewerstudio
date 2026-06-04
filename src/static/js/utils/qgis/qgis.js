@@ -42,7 +42,10 @@ const qgis = {
    */
   importQgs: function (content) {
     const mviewerXml = qgisToMviewer.convertQgsContentToMviewerXml(content);
-    if (typeof window.mv !== "undefined" && typeof window.mv.parseApplication === "function") {
+    if (
+      typeof window.mv !== "undefined" &&
+      typeof window.mv.parseApplication === "function"
+    ) {
       const xmlDoc = new DOMParser().parseFromString(mviewerXml, "text/xml");
       window.mv.parseApplication(xmlDoc);
     }
@@ -92,15 +95,13 @@ const qgis = {
       return Promise.reject(new Error("Missing import file"));
     }
 
-    return file
-      .text()
-      .then((content) => {
-        const xml = window.$.parseXML(content);
-        if (this.isQgisProjectFile(file, xml)) {
-          return window.$.parseXML(qgisToMviewer.convertQgsContentToMviewerXml(content));
-        }
-        return xml;
-      });
+    return file.text().then((content) => {
+      const xml = window.$.parseXML(content);
+      if (this.isQgisProjectFile(file, xml)) {
+        return window.$.parseXML(qgisToMviewer.convertQgsContentToMviewerXml(content));
+      }
+      return xml;
+    });
   },
   /**
    * Loads the file currently selected in the main import input.
@@ -151,7 +152,10 @@ const qgis = {
       return false;
     }
 
-    const configuredHost = new URL(configuredUrl, window.location.href).hostname.toLowerCase();
+    const configuredHost = new URL(
+      configuredUrl,
+      window.location.href
+    ).hostname.toLowerCase();
     const currentHost = window.location.hostname.toLowerCase();
     const localhostAliases = ["localhost", "127.0.0.1", "::1"];
 
@@ -160,8 +164,7 @@ const qgis = {
     }
 
     return (
-      localhostAliases.includes(configuredHost) &&
-      localhostAliases.includes(currentHost)
+      localhostAliases.includes(configuredHost) && localhostAliases.includes(currentHost)
     );
   },
   /**
@@ -191,7 +194,8 @@ const qgis = {
    */
   isGetCapabilitiesUrl: function (projectUrl) {
     const url = new URL(projectUrl, window.location.href);
-    const requestValue = url.searchParams.get("REQUEST") || url.searchParams.get("request");
+    const requestValue =
+      url.searchParams.get("REQUEST") || url.searchParams.get("request");
     return (requestValue || "").toLowerCase() === "getcapabilities";
   },
   /**
@@ -289,8 +293,7 @@ const qgis = {
 
     return this.sendQgisProject(file)
       .then((data) => {
-        const projectName =
-          data?.projectName || data?.projects?.[0]?.projectName || "";
+        const projectName = data?.projectName || data?.projects?.[0]?.projectName || "";
         const capabilitiesUrl = this.buildProjectCapabilitiesUrl(projectName);
 
         if (urlInput) {
@@ -855,9 +858,7 @@ const qgis = {
    * @returns {void}
    */
   showQgsProjectTab: function () {
-    const qgsProjectTab = document.querySelector(
-      '[data-bs-target="#newlayer-qgs"]'
-    );
+    const qgsProjectTab = document.querySelector('[data-bs-target="#newlayer-qgs"]');
     const qgsProjectPane = document.getElementById("newlayer-qgs");
 
     if (qgsProjectTab) {
@@ -957,7 +958,10 @@ const qgis = {
     const syncButtonState = () => {
       const hasValue = Boolean(urlInput.value.trim());
       button.disabled = !hasValue;
-      urlInput.classList.toggle("is-invalid", !hasValue && document.activeElement !== urlInput);
+      urlInput.classList.toggle(
+        "is-invalid",
+        !hasValue && document.activeElement !== urlInput
+      );
     };
 
     if (this._qgisImportUrlInitialized) {
