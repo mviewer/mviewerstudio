@@ -5,8 +5,13 @@ services:
     build:
       context: .
       dockerfile: docker/Dockerfile
+      network: host
+      args:
+        UID: "${UID:-1000}"
+        GID: "${GID:-1000}"
     pull_policy: build
-    image: mviewer/mviewerstudio:latest
+    image: mviewer/mviewerstudio:qgis
+    user: "${UID:-1000}:${GID:-1000}"
 #    ports:
 #      - "8000:8000"
     environment:
@@ -16,9 +21,21 @@ services:
       - EXPORT_CONF_FOLDER=/home/mvuser/apps/store
       - MVIEWERSTUDIO_PUBLISH_PATH=/home/mvuser/apps/public
       - MVIEWERSTUDIO_URL_PATH_PREFIX=mviewerstudio
+      - QGS_FOLDER=/home/mvuser/qgis
+      - QGIS_SERVER_INTERNAL_URL=http://qgis-server/ogc/
     volumes:
       - "./apps:/home/mvuser/apps"
+      - "./qgis:/home/mvuser/qgis"
       - "./src/static/config.json:/home/mvuser/src/static/config.json"
+  # QGIS Server exposed on localhost:90 to match src/static/config.json
+  qgis-server:
+    profiles:
+      - qgis
+    image: qgis/qgis-server:latest
+    ports:
+      - "90:80"
+    volumes:
+      - "./qgis:/io/data"
   # Served under /mviewer/ see docker/nginx/default.conf.template
   mviewer:
     depends_on:

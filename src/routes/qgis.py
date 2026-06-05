@@ -38,6 +38,10 @@ ET.register_namespace("dc", DC_NAMESPACE)
 
 def _configured_qgis_projects_url() -> str:
     """Return the configured QGIS projects base URL with a trailing slash."""
+    internal_base_url = (current_app.config.get("QGIS_SERVER_INTERNAL_URL") or "").strip()
+    if internal_base_url:
+        return internal_base_url.rstrip("/") + "/"
+
     qgis_config = read_static_app_conf().get("qgis", {})
     base_url = (qgis_config.get("url") or "").strip()
     if not base_url:
@@ -45,10 +49,39 @@ def _configured_qgis_projects_url() -> str:
     return base_url.rstrip("/") + "/"
 
 
+def _public_qgis_projects_url() -> str:
+    """Return the public QGIS projects base URL exposed to the browser."""
+    qgis_config = read_static_app_conf().get("qgis", {})
+    base_url = (qgis_config.get("url") or "").strip()
+    if not base_url:
+        raise BadRequest("Missing qgis.url configuration in static config")
+    return base_url.rstrip("/") + "/"
+
+
+def _fetchable_qgis_capabilities_url(capabilities_url: str) -> str:
+    """Return a backend-reachable capabilities URL while preserving the public URL."""
+    internal_base_url = (current_app.config.get("QGIS_SERVER_INTERNAL_URL") or "").strip()
+    if not internal_base_url:
+        return capabilities_url
+
+    public_base_url = _public_qgis_projects_url()
+    normalized_public_base_url = public_base_url.rstrip("/") + "/"
+    normalized_internal_base_url = internal_base_url.rstrip("/") + "/"
+
+    if capabilities_url.startswith(normalized_public_base_url):
+        suffix = capabilities_url[len(normalized_public_base_url) :]
+        return f"{normalized_internal_base_url}{suffix}"
+
+    return capabilities_url
+
+
 def _is_configured_qgis_url(url: str) -> bool:
     """Return ``True`` when the URL targets the configured QGIS projects base."""
-    configured_url = _configured_qgis_projects_url()
-    return url.startswith(configured_url)
+    configured_urls = {_public_qgis_projects_url()}
+    internal_base_url = (current_app.config.get("QGIS_SERVER_INTERNAL_URL") or "").strip()
+    if internal_base_url:
+        configured_urls.add(internal_base_url.rstrip("/") + "/")
+    return any(url.startswith(configured_url) for configured_url in configured_urls)
 
 
 def _project_capabilities_url(project_name: str) -> str:
@@ -56,9 +89,49 @@ def _project_capabilities_url(project_name: str) -> str:
     if not project_name:
         raise BadRequest("Missing QGIS project name")
     return (
-        f"{_configured_qgis_projects_url()}{project_name}"
+        f"{_public_qgis_projects_url()}{project_name}"
         "?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetCapabilities"
     )
+
+
+def _project_capabilities_url_from_relative_path(
+    relative_path: str | None, project_name: str
+) -> str:
+    """Build the public GetCapabilities URL for a stored QGIS project."""
+    if not project_name:
+        raise BadRequest("Missing QGIS project name")
+
+    projects_path = (current_app.config.get("QGIS_SERVER_PROJECTS_PATH") or "").strip()
+    if not projects_path or not relative_path:
+        return _project_capabilities_url(project_name)
+
+    base_url = _public_qgis_projects_url()
+    map_path = f"{projects_path.rstrip('/')}/{relative_path.lstrip('/')}"
+    separator = "&" if "?" in base_url else "?"
+    return (
+        f"{base_url}{separator}MAP={quote(map_path, safe='/')}"
+        "&SERVICE=WMS&VERSION=1.3.0&REQUEST=GetCapabilities"
+    )
+
+
+def _stored_qgis_project_payload(project_name: str) -> dict:
+    """Return the stored QGIS project payload for a project name."""
+    project_dir = _stored_qgis_project_directory(project_name)
+    qgs_dir = current_app.config.get("QGS_FOLDER")
+    if not qgs_dir:
+        raise BadRequest("Missing QGS folder configuration")
+
+    qgs_files = []
+    for root, _, files in walk(project_dir):
+        for filename in files:
+            if filename.lower().endswith(".qgs"):
+                qgs_files.append(path.join(root, filename))
+
+    if not qgs_files:
+        raise BadRequest("QGIS project does not exist")
+
+    qgs_files.sort()
+    return _qgs_project_payload(qgs_dir, qgs_files[0])
 
 
 def _mviewer_xml_from_capabilities_url(capabilities_url: str) -> str:
@@ -72,8 +145,9 @@ def _mviewer_xml_from_capabilities_url(capabilities_url: str) -> str:
     ):
         raise MethodNotAllowed("Not allowed !")
 
+    fetch_url = _fetchable_qgis_capabilities_url(capabilities_url)
     try:
-        response = requests.get(capabilities_url, timeout=30)
+        response = requests.get(fetch_url, timeout=30)
     except requests.RequestException as exc:
         raise BadRequest(
             f"Unable to fetch GetCapabilities document from {capabilities_url}: {exc}"

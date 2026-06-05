@@ -1,13 +1,14 @@
 server {
     listen       80;
     server_name  ${NGINX_HOST};
+    resolver 127.0.0.11 ipv6=off;
 
     location = /mviewer {
         return 302 /mviewer/$is_args$args;
     }
 
     location /mviewer/ {
-        proxy_pass http://mviewer/;
+        proxy_pass http://mviewer:8080/;
     }
 
     location /apps/ {
@@ -24,6 +25,14 @@ server {
         #proxy_set_header sec-username "testadmin";
         #proxy_set_header sec-roles "ROLE_ADMINISTRATOR;ROLE_MVIEWER_ADMIN";
         #proxy_set_header sec-org "geobretagne";
+    }
+
+    location /ogc/ {
+        set $qgis_upstream qgis-server:80;
+        proxy_pass http://$qgis_upstream$request_uri;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
     }
 
     location / {
