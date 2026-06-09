@@ -184,12 +184,18 @@ const qgis = {
     const baseUrl = this.getConfiguredQgisProjectsBaseUrl();
     if (!baseUrl) {
       throw new Error(
-        translateQgis("qgis.errors.missing_config_url", "La configuration qgis.url est manquante")
+        translateQgis(
+          "qgis.errors.missing_config_url",
+          "La configuration qgis.url est manquante"
+        )
       );
     }
     if (!projectName) {
       throw new Error(
-        translateQgis("qgis.errors.missing_project_name", "Le nom du projet QGIS est manquant")
+        translateQgis(
+          "qgis.errors.missing_project_name",
+          "Le nom du projet QGIS est manquant"
+        )
       );
     }
 

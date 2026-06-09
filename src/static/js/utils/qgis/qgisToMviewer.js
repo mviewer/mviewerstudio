@@ -361,7 +361,9 @@ const qgisToMviewer = (function () {
       "Capability",
       "capability",
     ]);
-    const rootLayer = capabilityNode ? firstMatchingChild(capabilityNode, ["Layer"]) : null;
+    const rootLayer = capabilityNode
+      ? firstMatchingChild(capabilityNode, ["Layer"])
+      : null;
     const serviceTitle = directChildText(serviceNode, ["Title"]);
     const rootTitle = directChildText(rootLayer, ["Title"]);
     const projection = findProjectionFromLayer(rootLayer);
