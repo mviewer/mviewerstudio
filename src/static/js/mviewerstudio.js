@@ -1383,6 +1383,7 @@ var loadApplicationParametersFromFile = function () {
     alertCustom(mviewer.tr("msg.file_read_error"), "danger");
   };
   showStudio();
+  document.getElementById("qgis-local-file-name").value = "";
 };
 
 var loadApplicationParametersFromRemoteFile = function (url) {
@@ -1614,6 +1615,11 @@ $(".checkedurl").change(mv.checkURL);
 $("#mod-importfile").on("shown.bs.modal", function () {
   document.getElementById("liste_applications").innerHTML = "";
   mv.getListeApplications();
+});
+
+$("#mod-importfile").on("shown.bs.modal", function () {
+  document.getElementById("qgis-local-file-name").value = "";
+  document.getElementById("qgis-filebutton").value = "";
 });
 
 var uploadSldFileToBackend = function (e) {

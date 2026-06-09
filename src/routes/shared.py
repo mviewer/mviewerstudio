@@ -49,7 +49,9 @@ def _allowed_proxy_origins() -> set[str]:
     forwarded_host = request.headers.get("X-Forwarded-Host")
     if forwarded_host:
         allowed_origins.update(
-            _normalize_origin(host) for host in forwarded_host.split(",") if host.strip()
+            _normalize_origin(host)
+            for host in forwarded_host.split(",")
+            if host.strip()
         )
     return allowed_origins
 
@@ -70,16 +72,16 @@ def _is_allowed_proxy_origin(url: str) -> bool:
     if target_hostname in allowed_hostnames:
         return True
 
-    return (
-        target_hostname in _localhost_aliases()
-        and bool(allowed_hostnames.intersection(_localhost_aliases()))
+    return target_hostname in _localhost_aliases() and bool(
+        allowed_hostnames.intersection(_localhost_aliases())
     )
 
 
 def _is_get_capabilities_url(url: str) -> bool:
     parsed_url = urlparse(url)
     query_params = {
-        key.lower(): value for key, value in parse_qsl(parsed_url.query, keep_blank_values=True)
+        key.lower(): value
+        for key, value in parse_qsl(parsed_url.query, keep_blank_values=True)
     }
     return query_params.get("request", "").lower() == "getcapabilities"
 
@@ -214,7 +216,8 @@ def _extract_qgs_zip(
                 extracted_projects.append(path.join(root, extracted_file))
 
     extracted_payloads = [
-        _qgs_project_payload(qgs_dir, absolute_file) for absolute_file in extracted_projects
+        _qgs_project_payload(qgs_dir, absolute_file)
+        for absolute_file in extracted_projects
     ]
     extracted_payloads.sort(key=lambda item: item["path"].lower())
     return destination_dir, extracted_payloads, overwritten
