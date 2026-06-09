@@ -1,4 +1,5 @@
 from datetime import datetime
+import logging
 from pathlib import Path
 from uuid import uuid4
 from tempfile import TemporaryDirectory
@@ -35,9 +36,17 @@ DC_NAMESPACE = "http://purl.org/dc/elements/1.1/"
 ET.register_namespace("rdf", RDF_NAMESPACE)
 ET.register_namespace("dc", DC_NAMESPACE)
 
+logger = logging.getLogger(__name__)
+
 
 def _configured_qgis_projects_url() -> str:
     """Return the configured QGIS projects base URL with a trailing slash."""
+    internal_base_url = (
+        current_app.config.get("QGIS_SERVER_INTERNAL_URL") or ""
+    ).strip()
+    if internal_base_url:
+        return internal_base_url.rstrip("/") + "/"
+
     qgis_config = read_static_app_conf().get("qgis", {})
     base_url = (qgis_config.get("url") or "").strip()
     if not base_url:
@@ -45,10 +54,43 @@ def _configured_qgis_projects_url() -> str:
     return base_url.rstrip("/") + "/"
 
 
+def _public_qgis_projects_url() -> str:
+    """Return the public QGIS projects base URL exposed to the browser."""
+    qgis_config = read_static_app_conf().get("qgis", {})
+    base_url = (qgis_config.get("url") or "").strip()
+    if not base_url:
+        raise BadRequest("Missing qgis.url configuration in static config")
+    return base_url.rstrip("/") + "/"
+
+
+def _fetchable_qgis_capabilities_url(capabilities_url: str) -> str:
+    """Return a backend-reachable capabilities URL while preserving the public URL."""
+    internal_base_url = (
+        current_app.config.get("QGIS_SERVER_INTERNAL_URL") or ""
+    ).strip()
+    if not internal_base_url:
+        return capabilities_url
+
+    public_base_url = _public_qgis_projects_url()
+    normalized_public_base_url = public_base_url.rstrip("/") + "/"
+    normalized_internal_base_url = internal_base_url.rstrip("/") + "/"
+
+    if capabilities_url.startswith(normalized_public_base_url):
+        suffix = capabilities_url[len(normalized_public_base_url) :]
+        return f"{normalized_internal_base_url}{suffix}"
+
+    return capabilities_url
+
+
 def _is_configured_qgis_url(url: str) -> bool:
     """Return ``True`` when the URL targets the configured QGIS projects base."""
-    configured_url = _configured_qgis_projects_url()
-    return url.startswith(configured_url)
+    configured_urls = {_public_qgis_projects_url()}
+    internal_base_url = (
+        current_app.config.get("QGIS_SERVER_INTERNAL_URL") or ""
+    ).strip()
+    if internal_base_url:
+        configured_urls.add(internal_base_url.rstrip("/") + "/")
+    return any(url.startswith(configured_url) for configured_url in configured_urls)
 
 
 def _project_capabilities_url(project_name: str) -> str:
@@ -56,9 +98,49 @@ def _project_capabilities_url(project_name: str) -> str:
     if not project_name:
         raise BadRequest("Missing QGIS project name")
     return (
-        f"{_configured_qgis_projects_url()}{project_name}"
+        f"{_public_qgis_projects_url()}{project_name}"
         "?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetCapabilities"
     )
+
+
+def _project_capabilities_url_from_relative_path(
+    relative_path: str | None, project_name: str
+) -> str:
+    """Build the public GetCapabilities URL for a stored QGIS project."""
+    if not project_name:
+        raise BadRequest("Missing QGIS project name")
+
+    projects_path = (current_app.config.get("QGIS_SERVER_PROJECTS_PATH") or "").strip()
+    if not projects_path or not relative_path:
+        return _project_capabilities_url(project_name)
+
+    base_url = _public_qgis_projects_url()
+    map_path = f"{projects_path.rstrip('/')}/{relative_path.lstrip('/')}"
+    separator = "&" if "?" in base_url else "?"
+    return (
+        f"{base_url}{separator}MAP={quote(map_path, safe='/')}"
+        "&SERVICE=WMS&VERSION=1.3.0&REQUEST=GetCapabilities"
+    )
+
+
+def _stored_qgis_project_payload(project_name: str) -> dict:
+    """Return the stored QGIS project payload for a project name."""
+    project_dir = _stored_qgis_project_directory(project_name)
+    qgs_dir = current_app.config.get("QGS_FOLDER")
+    if not qgs_dir:
+        raise BadRequest("Missing QGS folder configuration")
+
+    qgs_files = []
+    for root, _, files in walk(project_dir):
+        for filename in files:
+            if filename.lower().endswith(".qgs"):
+                qgs_files.append(path.join(root, filename))
+
+    if not qgs_files:
+        raise BadRequest("QGIS project does not exist")
+
+    qgs_files.sort()
+    return _qgs_project_payload(qgs_dir, qgs_files[0])
 
 
 def _mviewer_xml_from_capabilities_url(capabilities_url: str) -> str:
@@ -72,8 +154,9 @@ def _mviewer_xml_from_capabilities_url(capabilities_url: str) -> str:
     ):
         raise MethodNotAllowed("Not allowed !")
 
+    fetch_url = _fetchable_qgis_capabilities_url(capabilities_url)
     try:
-        response = requests.get(capabilities_url, timeout=30)
+        response = requests.get(fetch_url, timeout=30)
     except requests.RequestException as exc:
         raise BadRequest(
             f"Unable to fetch GetCapabilities document from {capabilities_url}: {exc}"
@@ -115,7 +198,9 @@ def _find_direct_child(element: ET.Element, child_name: str) -> ET.Element | Non
 
 def _find_direct_children(element: ET.Element, child_name: str) -> list[ET.Element]:
     """Return all direct children matching the provided local name."""
-    return [child for child in list(element) if _xml_local_name(child.tag) == child_name]
+    return [
+        child for child in list(element) if _xml_local_name(child.tag) == child_name
+    ]
 
 
 def _format_bbox_value(value: float) -> str:
@@ -123,7 +208,9 @@ def _format_bbox_value(value: float) -> str:
     return f"{value:.12g}"
 
 
-def _parse_bbox_attributes(bbox_node: ET.Element) -> tuple[float, float, float, float] | None:
+def _parse_bbox_attributes(
+    bbox_node: ET.Element,
+) -> tuple[float, float, float, float] | None:
     """Return bbox coordinates from a WMS ``BoundingBox``-like XML node."""
     try:
         return (
@@ -147,7 +234,9 @@ def _root_layer_bbox_from_capabilities(
 
     capability_node = _find_direct_child(capabilities_root, "Capability")
     root_layer_node = (
-        _find_direct_child(capability_node, "Layer") if capability_node is not None else None
+        _find_direct_child(capability_node, "Layer")
+        if capability_node is not None
+        else None
     )
     if root_layer_node is None:
         return None
@@ -173,21 +262,35 @@ def _root_layer_bbox_from_capabilities(
         matching_bbox_node = bounding_boxes[0]
 
     bbox_values = (
-        _parse_bbox_attributes(matching_bbox_node) if matching_bbox_node is not None else None
+        _parse_bbox_attributes(matching_bbox_node)
+        if matching_bbox_node is not None
+        else None
     )
     if bbox_values is None and normalized_projection in ("", "EPSG:4326", "CRS:84"):
         latlon_bbox_node = _find_direct_child(root_layer_node, "LatLonBoundingBox")
         bbox_values = (
-            _parse_bbox_attributes(latlon_bbox_node) if latlon_bbox_node is not None else None
+            _parse_bbox_attributes(latlon_bbox_node)
+            if latlon_bbox_node is not None
+            else None
         )
 
         if bbox_values is None:
-            geographic_bbox_node = _find_direct_child(root_layer_node, "EX_GeographicBoundingBox")
+            geographic_bbox_node = _find_direct_child(
+                root_layer_node, "EX_GeographicBoundingBox"
+            )
             if geographic_bbox_node is not None:
-                west_node = _find_direct_child(geographic_bbox_node, "westBoundLongitude")
-                south_node = _find_direct_child(geographic_bbox_node, "southBoundLatitude")
-                east_node = _find_direct_child(geographic_bbox_node, "eastBoundLongitude")
-                north_node = _find_direct_child(geographic_bbox_node, "northBoundLatitude")
+                west_node = _find_direct_child(
+                    geographic_bbox_node, "westBoundLongitude"
+                )
+                south_node = _find_direct_child(
+                    geographic_bbox_node, "southBoundLatitude"
+                )
+                east_node = _find_direct_child(
+                    geographic_bbox_node, "eastBoundLongitude"
+                )
+                north_node = _find_direct_child(
+                    geographic_bbox_node, "northBoundLatitude"
+                )
                 try:
                     bbox_values = (
                         float(west_node.text),
@@ -220,8 +323,7 @@ def _apply_root_layer_bbox_to_mviewer_xml(
 
     minx, miny, maxx, maxy = [float(value) for value in bbox.split(",")]
     center = ",".join(
-        _format_bbox_value(value)
-        for value in ((minx + maxx) / 2, (miny + maxy) / 2)
+        _format_bbox_value(value) for value in ((minx + maxx) / 2, (miny + maxy) / 2)
     )
 
     mapoptions_node.set("extent", bbox)
@@ -235,14 +337,24 @@ def _store_uploaded_qgis_project() -> dict:
     if not qgs_dir:
         raise BadRequest("Missing QGS folder configuration")
 
+    logger.info(
+        "QGIS upload request received: content_type=%s files=%s form=%s",
+        request.content_type,
+        list(request.files.keys()),
+        list(request.form.keys()),
+    )
     uploaded_file = request.files.get("file")
     if not uploaded_file or not uploaded_file.filename:
+        logger.info("QGIS upload rejected: missing file field in multipart payload")
         raise BadRequest("Missing QGS file")
 
     filename = secure_filename(uploaded_file.filename)
+    logger.info("QGIS upload received file=%s target_dir=%s", filename, qgs_dir)
     lower_filename = filename.lower()
     if not lower_filename.endswith((".qgs", ".zip", ".qgz")):
-        raise BadRequest("Only .qgs files, .zip archives or .qgz archives are supported")
+        raise BadRequest(
+            "Only .qgs files, .zip archives or .qgz archives are supported"
+        )
 
     if not path.exists(qgs_dir):
         mkdir(qgs_dir)
@@ -270,13 +382,15 @@ def _ensure_config_metadata(xml_content: str, project_name: str) -> str:
 
     if not xml_root.get("mviewerversion") and app_conf.get("mviewer_version"):
         xml_root.set("mviewerversion", str(app_conf["mviewer_version"]))
-    if not xml_root.get("mviewerstudioversion") and app_conf.get("mviewerstudio_version"):
+    if not xml_root.get("mviewerstudioversion") and app_conf.get(
+        "mviewerstudio_version"
+    ):
         xml_root.set("mviewerstudioversion", str(app_conf["mviewerstudio_version"]))
 
     application_node = xml_root.find("application")
-    app_title = (application_node.get("title") if application_node is not None else "") or (
-        project_name or "Projet QGIS"
-    )
+    app_title = (
+        application_node.get("title") if application_node is not None else ""
+    ) or (project_name or "Projet QGIS")
     creator = current_user.username if current_user else "anonymous"
     publisher = (
         current_user.normalize_name
@@ -352,7 +466,11 @@ def _absolute_config_url(config_path: str) -> str:
     relative_path = "/".join(
         part for part in [conf_path, normalize_url_part(config_path)] if part
     )
-    return f"{mviewer_instance}/{relative_path}" if mviewer_instance else f"/{relative_path}"
+    return (
+        f"{mviewer_instance}/{relative_path}"
+        if mviewer_instance
+        else f"/{relative_path}"
+    )
 
 
 def _studio_open_config_url(config_url: str) -> str:
@@ -421,7 +539,9 @@ def list_stored_qgs_configs() -> ResponseReturnValue:
     for root, _, files in walk(qgs_dir):
         for filename in files:
             if filename.lower().endswith(".qgs"):
-                qgs_files.append(_qgs_project_payload(qgs_dir, path.join(root, filename)))
+                qgs_files.append(
+                    _qgs_project_payload(qgs_dir, path.join(root, filename))
+                )
 
     qgs_files.sort(key=lambda item: item["path"].lower())
     return jsonify(qgs_files)
@@ -443,14 +563,24 @@ def import_qgis_project() -> ResponseReturnValue:
     if not qgs_dir:
         raise BadRequest("Missing QGS folder configuration")
 
+    logger.info(
+        "QGIS import request received: content_type=%s files=%s form=%s",
+        request.content_type,
+        list(request.files.keys()),
+        list(request.form.keys()),
+    )
     uploaded_file = request.files.get("file")
     if not uploaded_file or not uploaded_file.filename:
+        logger.info("QGIS import rejected: missing file field in multipart payload")
         raise BadRequest("Missing QGS file")
 
     filename = secure_filename(uploaded_file.filename)
+    logger.info("QGIS import received file=%s target_dir=%s", filename, qgs_dir)
     lower_filename = filename.lower()
     if not lower_filename.endswith((".qgs", ".zip", ".qgz")):
-        raise BadRequest("Only .qgs files, .zip archives or .qgz archives are supported")
+        raise BadRequest(
+            "Only .qgs files, .zip archives or .qgz archives are supported"
+        )
 
     if not path.exists(qgs_dir):
         mkdir(qgs_dir)
@@ -464,6 +594,12 @@ def import_qgis_project() -> ResponseReturnValue:
         project_payload, overwritten = _store_qgs_file(uploaded_file, qgs_dir, filename)
 
     capabilities_url = _project_capabilities_url(project_payload["projectName"])
+    logger.info(
+        "QGIS import resolved project=%s capabilities_url=%s overwritten=%s",
+        project_payload["projectName"],
+        capabilities_url,
+        overwritten,
+    )
     xml_content = _mviewer_xml_from_capabilities_url(capabilities_url)
     response = current_app.response_class(xml_content, mimetype="application/xml")
     response.headers["X-Qgis-Project-Name"] = project_payload["projectName"]
@@ -505,12 +641,16 @@ def create_and_open_qgis_project_config() -> ResponseReturnValue:
 
 
 @basic_store.route("/api/app/qgis/projects/<project_name>/open", methods=["POST"])
-def create_and_open_stored_qgis_project_config(project_name: str) -> ResponseReturnValue:
+def create_and_open_stored_qgis_project_config(
+    project_name: str,
+) -> ResponseReturnValue:
     """Create a Studio config from an existing stored QGIS project."""
     try:
         _stored_qgis_project_directory(project_name)
         capabilities_url = _project_capabilities_url(project_name)
-        config_data, _ = _create_config_from_qgis_capabilities(capabilities_url, project_name)
+        config_data, _ = _create_config_from_qgis_capabilities(
+            capabilities_url, project_name
+        )
         config_url = _absolute_config_url(config_data["url"])
         studio_url = _studio_open_config_url(config_url)
 

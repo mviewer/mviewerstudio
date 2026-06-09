@@ -15,6 +15,13 @@ const qgisToMviewer = (function () {
     return element && element.hasAttribute(name) ? element.getAttribute(name) : fallback;
   };
 
+  const normalizedTitle = function (value, fallback = DEFAULT_THEME_NAME) {
+    const title = String(value || "")
+      .replace(/\s+/g, " ")
+      .trim();
+    return title || fallback;
+  };
+
   const escapeXml = function (value) {
     return String(value || "")
       .replace(/&/g, "&amp;")
@@ -114,7 +121,7 @@ const qgisToMviewer = (function () {
         : "0,0";
 
     return {
-      title: projectTitle || "Projet QGIS",
+      title: normalizedTitle(projectTitle),
       projection: srs,
       center: center,
       extent: extent,
@@ -288,6 +295,28 @@ const qgisToMviewer = (function () {
     return node && node.textContent ? node.textContent.trim() : "";
   };
 
+  const firstDescendantByTagName = function (parent, tagNames) {
+    if (!parent) {
+      return null;
+    }
+
+    const queue = Array.from(parent.children || []);
+    while (queue.length > 0) {
+      const node = queue.shift();
+      if (!node) {
+        continue;
+      }
+
+      if (tagNames.includes(node.localName || node.nodeName)) {
+        return node;
+      }
+
+      queue.push(...Array.from(node.children || []));
+    }
+
+    return null;
+  };
+
   const findProjectionFromLayer = function (layerNode) {
     if (!layerNode) {
       return "EPSG:3857";
@@ -327,10 +356,15 @@ const qgisToMviewer = (function () {
   };
 
   const mapOptionsFromCapabilities = function (xmlDoc) {
-    const capabilityNode =
-      xmlDoc.querySelector("Capability") || xmlDoc.querySelector("capability");
-    const rootLayer = capabilityNode ? capabilityNode.querySelector("Layer") : null;
-    const serviceTitle = text(xmlDoc, "Service > Title");
+    const serviceNode = firstDescendantByTagName(xmlDoc.documentElement, ["Service"]);
+    const capabilityNode = firstDescendantByTagName(xmlDoc.documentElement, [
+      "Capability",
+      "capability",
+    ]);
+    const rootLayer = capabilityNode
+      ? firstMatchingChild(capabilityNode, ["Layer"])
+      : null;
+    const serviceTitle = directChildText(serviceNode, ["Title"]);
     const rootTitle = directChildText(rootLayer, ["Title"]);
     const projection = findProjectionFromLayer(rootLayer);
     const extent = parseBoundingBox(rootLayer, projection);
@@ -344,7 +378,7 @@ const qgisToMviewer = (function () {
         : "0,0";
 
     return {
-      title: serviceTitle || rootTitle || "Projet QGIS",
+      title: normalizedTitle(serviceTitle || rootTitle),
       projection: projection,
       center: center,
       extent: extent,
@@ -456,7 +490,7 @@ const qgisToMviewer = (function () {
         '<searchparameters bbox="false" localities="false" features="false" static="false"/>',
       padding(4) + "<themes>",
       padding(8) +
-        `<theme name="${escapeXml(DEFAULT_THEME_NAME)}" collapsed="false" id="${DEFAULT_THEME_ID}" icon="fas fa-map">`,
+        `<theme name="${escapeXml(options.title)}" collapsed="false" id="${DEFAULT_THEME_ID}" icon="fas fa-map">`,
       layers.map(layerXml).join(""),
       padding(8) + "</theme>",
       padding(4) + "</themes>",
@@ -517,7 +551,7 @@ const qgisToMviewer = (function () {
         '<searchparameters bbox="false" localities="false" features="false" static="false"/>',
       padding(4) + "<themes>",
       padding(8) +
-        `<theme name="${escapeXml(DEFAULT_THEME_NAME)}" collapsed="false" id="${DEFAULT_THEME_ID}" icon="fas fa-map">`,
+        `<theme name="${escapeXml(options.title)}" collapsed="false" id="${DEFAULT_THEME_ID}" icon="fas fa-map">`,
       layers.map(layerXml).join(""),
       padding(8) + "</theme>",
       padding(4) + "</themes>",

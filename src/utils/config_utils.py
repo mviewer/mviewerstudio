@@ -260,7 +260,9 @@ class Config:
         write_file(self.xml, self.full_xml_path)
 
     def _app_resources_dir(self):
-        app_dir_name = self.directory or path.splitext(path.basename(self.full_xml_path))[0]
+        app_dir_name = (
+            self.directory or path.splitext(path.basename(self.full_xml_path))[0]
+        )
         app_dir = path.join(path.dirname(self.full_xml_path), app_dir_name)
         if not path.exists(app_dir):
             mkdir(app_dir)
@@ -280,7 +282,11 @@ class Config:
             normalize_url_part(config_dir),
         ]
         relative_url = "/".join([part for part in relative_parts if part])
-        return "%s/%s" % (mviewer_instance, relative_url) if mviewer_instance else relative_url
+        return (
+            "%s/%s" % (mviewer_instance, relative_url)
+            if mviewer_instance
+            else relative_url
+        )
 
     def _copy_or_download_geojson(self, source_url, target_path):
         parsed_url = urlparse(source_url)

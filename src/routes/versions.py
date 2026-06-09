@@ -19,7 +19,11 @@ def get_all_app_versions(id) -> ResponseReturnValue:
     if not config:
         raise BadRequest("This config doesn't exists !")
     config = config[0]
-    org = current_user.normalize_name if current_user else current_app.config["DEFAULT_ORG"]
+    org = (
+        current_user.normalize_name
+        if current_user
+        else current_app.config["DEFAULT_ORG"]
+    )
     workspace = path.join(current_app.config["EXPORT_CONF_FOLDER"], org, config["id"])
     git = Git_manager(workspace)
     return jsonify({"versions": git.get_versions(), "config": config})

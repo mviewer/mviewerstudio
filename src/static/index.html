@@ -1059,7 +1059,7 @@
                         </li>
                         <li class="nav-item" role="presentation">
                           <a class="nav-link" onclick="mv.cleanLocalFileField(this)"data-bs-toggle="pill" data-bs-target="#loadQgis" type="button" role="tab" aria-controls="pills-local" aria-selected="false">
-                            <span>Depuis un projet Qgis</span> 
+                            <span i18n="qgis.tab.import_project">Depuis un projet Qgis</span> 
                           </a>
                         </li>
                       </ul>
@@ -1106,9 +1106,9 @@
                             <input type="file" name="filebutton" accept=".xml,.qgs,.qgis,text/xml,application/xml,application/x-qgis-project" style="display: none;" id="filebutton">
                         </div>
                         <div class="tab-pane fade" id="loadQgis" role="tabpanel" tabindex="0">
-                            <label>Sélectionner un fichier de configuration Qgis local :</label>
+                            <label i18n="qgis.file.local.label">Sélectionner un fichier de configuration Qgis local :</label>
                             <div class="input-group mb-3">
-                                <input type="text" class="form-control" id="qgis-local-file-name" placeholder="data.qgs ou archive.zip" aria-describedby="qgis-button-addon" readonly>
+                                <input type="text" class="form-control" id="qgis-local-file-name" i18n="qgis.file.local.placeholder" placeholder="data.qgs ou archive.zip" aria-describedby="qgis-button-addon" readonly>
                                 <div class="input-group-append">
                                     <button class="btn btn-info" type="button" id="qgis-button-addon" onclick="$('#qgis-filebutton').click();">
                                         <i class="bi bi-folder2-open"></i>
@@ -1118,9 +1118,9 @@
                             </div>
                             <input type="file" name="qgis-filebutton" accept=".qgs,.qgis,.zip,.qgz,text/xml,application/x-qgis-project,application/zip,application/x-zip-compressed" style="display: none;" id="qgis-filebutton">
 
-                            <label>... ou renseigner l'URL GetCapabilities du projet Qgis :</label>
+                            <label i18n="qgis.file.url.label">... ou renseigner l'URL GetCapabilities du projet Qgis :</label>
                             <div class="input-group search-apps-ui">
-                                <input autocomplete="off" type="text" class="form-control" id="getQgisApp" placeholder="ex: https://monserveur.com/qgisserver?SERVICE=WMS&REQUEST=GetCapabilities&MAP=data.qgs">
+                                <input autocomplete="off" type="text" class="form-control" id="getQgisApp" i18n="qgis.file.url.placeholder" placeholder="ex: https://monserveur.com/qgisserver?SERVICE=WMS&REQUEST=GetCapabilities&MAP=data.qgs">
                                 <div class="input-group-append">
                                     <button id="createConfigFromQgisAppUrl" type="button" class="btn btn-info"><i class="ri-search-2-line"></i></button>
                                 </div>
@@ -1128,23 +1128,23 @@
 
                             <div class="mt-4" id="qgis-projects-list-container">
                                 <div class="d-flex justify-content-between align-items-center mb-2">
-                                    <label class="mb-0">Configurations QGIS Server disponibles :</label>
+                                    <label class="mb-0" i18n="qgis.projects.available">Configurations QGIS Server disponibles :</label>
                                     <button type="button" class="btn btn-outline-info btn-sm" id="refresh-qgis-projects-list">
                                         <i class="bi bi-arrow-clockwise"></i>
-                                        <span>Actualiser</span>
+                                        <span i18n="qgis.projects.refresh">Actualiser</span>
                                     </button>
                                 </div>
                                 <div class="table-responsive">
                                     <table class="table table-sm align-middle mb-0">
                                         <thead>
                                             <tr>
-                                                <th>Projet</th>
-                                                <th>Action</th>
+                                                <th i18n="qgis.projects.project">Projet</th>
+                                                <th i18n="qgis.projects.action">Action</th>
                                             </tr>
                                         </thead>
                                         <tbody id="qgis-projects-table-body">
                                             <tr>
-                                                <td colspan="2" class="text-muted">Chargement…</td>
+                                                <td colspan="2" class="text-muted" i18n="qgis.projects.loading">Chargement…</td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -1820,7 +1820,7 @@
                         </li>
                         <li class="nav-item" role="presentation">
                               <a class="nav-link" data-bs-toggle="pill" data-bs-target="#newlayer-qgs" type="button" role="tab" aria-controls="newlayer-qgs" aria-selected="false">
-                                <span>Depuis un projet qgis</span>
+                                <span i18n="qgis.tab.from_project">Depuis un projet qgis</span>
                               </a>
                         </li>
                     </ul>
@@ -1879,7 +1879,7 @@
                                                     <option value="" selected i18n="provider.select.type">Choisir un type</option>
                                                     <option value="wms">WMS</option>
                                                     <option value="vector-tms" >Vector-TMS</option>
-                                                    <option value="vector-tms" >Depuis un projet Qgis</option>
+                                                    <option value="vector-tms" i18n="qgis.tab.from_project">Depuis un projet Qgis</option>
                                                 </select>
                                             </div>                                    
                                         </div> 
@@ -1922,14 +1922,14 @@
                         </div>
                     <!-- Depuis un projet QGIS -->
                         <div class="tab-pane fade" id="newlayer-qgs" role="tabpanel" tabindex="0">
-                                <h6>Paramètres du projet QGIS</h6>
+                                <h6 i18n="qgis.layer.title">Paramètres du projet QGIS</h6>
                                 <div class="mt-3" id="newLayerByQgs">
                                     <div class="row">
                                         <div class="col-md-12">
                                             <div class="form-group">
-                                                <label class="control-label" for="newlayer-qgs-url">URL du projet QGIS Server</label>
+                                                <label class="control-label" for="newlayer-qgs-url" i18n="qgis.layer.url">URL du projet QGIS Server</label>
                                                 <div class="input-group">
-                                                    <input type="text" class="form-control" id="newlayer-qgs-url" placeholder="Lien vers le projet QGIS Server">
+                                                    <input type="text" class="form-control" id="newlayer-qgs-url" i18n="qgis.layer.url.placeholder" placeholder="Lien vers le projet QGIS Server">
                                                     <div class="input-group-append">
                                                         <button class="btn btn-info" id="qgs_search_layers_btn" type="button" disabled><i class="bi bi-search"></i></button>
                                                     </div>
@@ -1940,9 +1940,9 @@
                                     <div class="row">
                                         <div class="col-md-12">
                                             <div class="form-group">
-                                                <label class="control-label" for="qgs-project-list">Couche du projet QGIS</label>
+                                                <label class="control-label" for="qgs-project-list" i18n="qgis.layer.select">Couche du projet QGIS</label>
                                                 <select id="qgs-project-list" class="form-control">
-                                                    <option value="" selected>Choisir une couche</option>
+                                                    <option value="" selected i18n="qgis.layer.select_placeholder">Choisir une couche</option>
                                                 </select>
                                             </div>
                                         </div>

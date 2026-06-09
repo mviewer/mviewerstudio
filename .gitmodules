@@ -1,0 +1,3 @@
+[submodule "pymviewer"]
+	path = pymviewer
+	url = https://github.com/jdev-org/pymviewer.git
