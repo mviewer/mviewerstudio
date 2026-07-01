@@ -8,6 +8,26 @@
 Notes de migration
 ==================================
 
+Passer de v4.3.x à v4.4.0
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+1. **Gestion d'un certificat local**
+
+Si vous utilisez un certificat sur votre poste/serveur, il est possible que vous deviez faire la manipulation suivante, sinon l'édition des projets précédents ne sera pas possible.
+
+Une fois la .venv lancée, modification du fichier /.venv/lib/python3.9/site-packages/certifi/cacert.pem et copie de votre certificat (entre les balise BEGIN et END), exemple : 
+
+.. code-block:: sh
+
+       #subject=DC = fr, DC = cr-bretagne, CN = cr-bretagne Root CA
+       #issuer=DC = fr, DC = cr-bretagne, CN = cr-bretagne Root CA
+       -----BEGIN CERTIFICATE-----
+       XXXX
+       XXX
+       -----END CERTIFICATE-----
+
+
+
 Passer de v4.2.x à v4.3.0
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
