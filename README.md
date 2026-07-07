@@ -42,7 +42,7 @@ Pour des instructions détaillées avec Flask ou Docker, voir le [Guide d'instal
 ## ✅ Prérequis
 
 - Système Linux avec `bash`
-- Python >= 3.9 et `venv`
+- Python >= 3.12 et `venv`
 - `git`
 - `apt` (optionnel, pour installation automatique)
 
