@@ -1062,6 +1062,19 @@
 			font-size: 16px;
 			font-weight: 500;
 		}
+
+		#newlayer-grist-step-badge .step-badge--grist {
+			display: inline-flex;
+			align-items: center;
+			padding: 10px 16px;
+			border-radius: 14px;
+			background-color: #f1e4ff;
+			color: #8c3dff;
+			font-size: 14px;
+			font-weight: 600;
+			line-height: 1;
+			white-space: nowrap;
+		}
 		
 		.ogc-results .list-group-item {
 			margin: 5px 0px;

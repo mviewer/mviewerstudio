@@ -700,6 +700,27 @@ document
     const themeId = button.getAttribute("data-themeid");
     const selectLayersButton = document.getElementById("selectLayersButton");
     selectLayersButton.setAttribute("data-themeid", themeId);
+    // init step badge
+    const stepBadgeContainer = document.getElementById("newlayer-grist-step-badge");
+    const StepBadge = mv.components && mv.components.stepBadge;
+    if (stepBadgeContainer && StepBadge) {
+      stepBadgeContainer.replaceChildren();
+      const stepBadge = new StepBadge({
+        step: 1,
+        maxSteps: 2,
+        classes: "step-badge--grist",
+      });
+      stepBadge.appendTo(stepBadgeContainer);
+      stepBadgeContainer._stepBadge = stepBadge;
+    }
+    // init api key UI - target id grist-api-key-area
+    const gristApiKeyContainer = document.getElementById("grist-api-key-area");
+    const GristApiKey = mv.components && mv.components.gristApiKey;
+    if (gristApiKeyContainer && GristApiKey) {
+      gristApiKeyContainer.replaceChildren();
+      const gristApiKey = new GristApiKey();
+      gristApiKeyContainer.appendChild(gristApiKey.render());
+    }
   });
 
 // Update layers counter
@@ -708,6 +729,11 @@ $("#mod-layerNew").on("click", "#selectLayersButton", function () {
   const th = $(`div[data-themeid="${themeId}"]`);
   var nb_layers = $(`#${themeId} .theme-layer-list`).children(".list-group-item").length;
   th.find(".theme-infos-layer").text(nb_layers);
+  const stepBadgeContainer = document.getElementById("newlayer-grist-step-badge");
+  if (stepBadgeContainer && mv.components && mv.components.stepBadge) {
+    const stepBadge = stepBadgeContainer._stepBadge;
+    stepBadge.changeStep(2);
+  }
 });
 
 // New save function to override old one to edit and save all the themes at the same time now.
