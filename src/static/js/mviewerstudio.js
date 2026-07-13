@@ -713,12 +713,37 @@ document
       stepBadge.appendTo(stepBadgeContainer);
       stepBadgeContainer._stepBadge = stepBadge;
     }
+    // init import grist area - target id newLayerByGrist
+    const importGristAreaContainer = document.getElementById("newLayerByGrist");
+    const ImportGristArea = mv.components && mv.components.importGristArea;
+    const hideImportGristArea = () => {
+      if (!importGristAreaContainer) {
+        return;
+      }
+      importGristAreaContainer.replaceChildren();
+      importGristAreaContainer.classList.add("d-none");
+    };
+    const showImportGristArea = () => {
+      if (!importGristAreaContainer || !ImportGristArea) {
+        return;
+      }
+      importGristAreaContainer.replaceChildren();
+      const importGristArea = new ImportGristArea();
+      importGristAreaContainer.appendChild(importGristArea.render());
+      importGristAreaContainer.classList.remove("d-none");
+    };
+
+    hideImportGristArea();
+
     // init api key UI - target id grist-api-key-area
     const gristApiKeyContainer = document.getElementById("grist-api-key-area");
     const GristApiKey = mv.components && mv.components.gristApiKey;
     if (gristApiKeyContainer && GristApiKey) {
       gristApiKeyContainer.replaceChildren();
-      const gristApiKey = new GristApiKey();
+      const gristApiKey = new GristApiKey("/grist", "https://grist.numerique.gouv.fr/account/developer", {
+        onValidApiKey: showImportGristArea,
+        onInvalidApiKey: hideImportGristArea,
+      });
       gristApiKeyContainer.appendChild(gristApiKey.render());
     }
   });

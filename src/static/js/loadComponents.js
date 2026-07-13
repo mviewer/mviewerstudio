@@ -4,7 +4,9 @@
  */
 import StepBadge from "./components/stepBadge.js";
 import GristApiKey from "./components/gristApiKey.js";
+import importGristArea from "./components/importGristArea.js";
 
 mv.components = mv.components || {};
 mv.components.stepBadge = StepBadge;
 mv.components.gristApiKey = GristApiKey;
+mv.components.importGristArea = importGristArea;

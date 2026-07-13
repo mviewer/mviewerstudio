@@ -1075,6 +1075,48 @@
 			line-height: 1;
 			white-space: nowrap;
 		}
+
+		.import-type-buttons__actions {
+			display: grid;
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+			gap: 12px;
+			margin-bottom: 16px;
+		}
+
+		.import-type-buttons__button {
+			display: flex;
+			flex-direction: column;
+			align-items: flex-start;
+			min-height: 60px;
+			padding: 12px 18px;
+			border: 1px solid #d8d8d8;
+			border-radius: 10px;
+			background: #fff;
+			color: #999;
+			text-align: left;
+		}
+
+		.import-type-buttons__button.active {
+			border-color: #b57aff;
+			background: #f7f0ff;
+			color: #8c3dff;
+		}
+
+		.import-type-buttons__title {
+			font-size: 16px;
+			font-weight: 500;
+			line-height: 1.2;
+		}
+
+		.import-type-buttons__description {
+			margin-top: 2px;
+			font-size: 12px;
+			line-height: 1.2;
+		}
+
+		.import-type-buttons__content {
+			padding-top: 4px;
+		}
 		
 		.ogc-results .list-group-item {
 			margin: 5px 0px;
