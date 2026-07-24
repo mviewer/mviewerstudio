@@ -24,6 +24,11 @@
         },
         "user_info": "api/user",
         "proxy": "",
+        "grist": {
+            "instance_url": "/grist",
+            "org_id": "santegraphie",
+            "workspace_name": "mviewerstudio"
+        },
         "user_info_visible": true,
         "app_form_placeholders": {
             "app_title": "Kartenn",
