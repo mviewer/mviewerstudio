@@ -69,33 +69,6 @@ const readJson = async (response) => {
 };
 
 /**
- * Normalize Grist API list responses, which may be arrays or keyed objects.
- *
- * @param {*[]|Object|null|undefined} payload Grist API response payload.
- * @param {string} key Object property that contains the list.
- * @returns {*[]} Normalized list.
- */
-const normalizeList = (payload, key) => {
-  if (Array.isArray(payload)) {
-    return payload;
-  }
-
-  if (Array.isArray(payload?.[key])) {
-    return payload[key];
-  }
-
-  if (Array.isArray(payload?.data)) {
-    return payload.data;
-  }
-
-  if (Array.isArray(payload?.data?.[key])) {
-    return payload.data[key];
-  }
-
-  return [];
-};
-
-/**
  * Check whether a value can be used as a Grist identifier.
  *
  * @param {*} id Candidate identifier.
@@ -170,7 +143,7 @@ export const getOrCreateWorkspace = async (gristApiKey) => {
     gristConfig.instanceUrl,
     gristApiKey
   ).then(readJson);
-  const org = normalizeList(orgsPayload, "orgs").find(
+  const org = (orgsPayload || []).find(
     (item) =>
       getGristId(item) === gristConfig.orgId ||
       getGristName(item) === gristConfig.orgId ||
@@ -183,10 +156,10 @@ export const getOrCreateWorkspace = async (gristApiKey) => {
 
   const workspacesPayload = await getOrgWorkspaces(
     gristConfig.instanceUrl,
-    gristConfig.orgId,
+    getGristId(org),
     gristApiKey
   ).then(readJson);
-  const workspace = normalizeList(workspacesPayload, "workspaces").find(
+  const workspace = (workspacesPayload || []).find(
     (item) => getGristName(item) === gristConfig.workspaceName
   );
 
@@ -204,7 +177,7 @@ export const getOrCreateWorkspace = async (gristApiKey) => {
 
   const createdWorkspace = await createOrgWorkspace(
     gristConfig.instanceUrl,
-    gristConfig.orgId,
+    getGristId(org),
     gristConfig.workspaceName,
     gristApiKey
   ).then(readJson);

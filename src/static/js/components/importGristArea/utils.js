@@ -26,33 +26,6 @@ const readJson = async (response) => {
 };
 
 /**
- * Normalize Grist API list responses, which may be arrays or keyed objects.
- *
- * @param {*[]|Object|null|undefined} payload Grist API response payload.
- * @param {string} key Object property that contains the list.
- * @returns {*[]} Normalized list.
- */
-const normalizeList = (payload, key) => {
-  if (Array.isArray(payload)) {
-    return payload;
-  }
-
-  if (Array.isArray(payload?.[key])) {
-    return payload[key];
-  }
-
-  if (Array.isArray(payload?.data)) {
-    return payload.data;
-  }
-
-  if (Array.isArray(payload?.data?.[key])) {
-    return payload.data[key];
-  }
-
-  return [];
-};
-
-/**
  * Read the most stable identifier exposed by a Grist entity.
  *
  * @param {*} item Grist entity.
@@ -153,6 +126,19 @@ const normalizeGristId = (value, fallback) => {
 };
 
 /**
+ * Convert a display value to a Grist-compatible table identifier.
+ *
+ * @param {*} value Source value.
+ * @param {string} fallback Fallback value when source is empty.
+ * @returns {string} Grist-compatible table identifier.
+ */
+const normalizeGristTableId = (value, fallback) => {
+  const tableId = normalizeGristId(value, fallback);
+
+  return tableId.charAt(0).toUpperCase() + tableId.slice(1);
+};
+
+/**
  * Generate unique Grist-compatible identifiers for a list of values.
  *
  * @param {Array} values Source values.
@@ -249,14 +235,42 @@ const ensureTableDoesNotExist = async (
     readJson
   );
   const usedTableIds = new Set(
-    normalizeList(payload, "tables").map((table) => getGristId(table))
+    (payload.tables || []).map((table) =>
+      String(getGristId(table)).toLowerCase()
+    )
   );
 
-  if (usedTableIds.has(tableId)) {
+  if (usedTableIds.has(String(tableId).toLowerCase())) {
     throw new Error(`La table Grist "${tableId}" existe deja.`);
   }
 
   return tableId;
+};
+
+/**
+ * Resolve the table id as stored by Grist.
+ *
+ * @param {string} instanceUrl Base URL of the Grist instance or nginx proxy.
+ * @param {string|number} docId Grist document id.
+ * @param {string} tableId Requested table id.
+ * @param {string} gristApiKey Grist API key.
+ * @returns {Promise<string>} Actual Grist table id.
+ * @throws {Error} When the table cannot be found after creation.
+ */
+const getActualTableId = async (instanceUrl, docId, tableId, gristApiKey) => {
+  const payload = await getDocTables(instanceUrl, docId, gristApiKey).then(
+    readJson
+  );
+  const table = (payload.tables || []).find(
+    (item) => String(getGristId(item)).toLowerCase() === tableId.toLowerCase()
+  );
+  const actualTableId = getGristId(table);
+
+  if (!actualTableId) {
+    throw new Error(`La table Grist "${tableId}" est introuvable apres creation.`);
+  }
+
+  return actualTableId;
 };
 
 /**
@@ -294,7 +308,7 @@ export const sendParsedFileToGrist = async (
   const tableId = await ensureTableDoesNotExist(
     gristConfig.instanceUrl,
     docId,
-    normalizeGristId(tableName, "Table_1"),
+    normalizeGristTableId(tableName, "Table_1"),
     gristApiKey
   );
   const columnIds = getUniqueGristIds(headers, "column");
@@ -316,10 +330,17 @@ export const sendParsedFileToGrist = async (
     gristApiKey
   ).then(readJson);
 
-  await postRecordsToTable(
+  const actualTableId = await getActualTableId(
     gristConfig.instanceUrl,
     docId,
     tableId,
+    gristApiKey
+  );
+
+  await postRecordsToTable(
+    gristConfig.instanceUrl,
+    docId,
+    actualTableId,
     {
       records: rows.map((row) => ({
         fields: columnIds.reduce((record, columnId, index) => {
@@ -331,5 +352,5 @@ export const sendParsedFileToGrist = async (
     gristApiKey
   ).then(readJson);
 
-  return { docId, tableId, rowsCount: rows.length };
+  return { docId, tableId: actualTableId, rowsCount: rows.length };
 };

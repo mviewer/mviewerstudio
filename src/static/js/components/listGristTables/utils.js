@@ -17,33 +17,6 @@ const readJson = async (response) => {
 };
 
 /**
- * Normalize Grist API list responses, which may be arrays or keyed objects.
- *
- * @param {*[]|Object|null|undefined} payload Grist API response payload.
- * @param {string} key Object property that contains the list.
- * @returns {*[]} Normalized list.
- */
-const normalizeList = (payload, key) => {
-  if (Array.isArray(payload)) {
-    return payload;
-  }
-
-  if (Array.isArray(payload?.[key])) {
-    return payload[key];
-  }
-
-  if (Array.isArray(payload?.data)) {
-    return payload.data;
-  }
-
-  if (Array.isArray(payload?.data?.[key])) {
-    return payload.data[key];
-  }
-
-  return [];
-};
-
-/**
  * Fetch preview rows from a selected Grist table and format them for the table
  * preview component.
  *
@@ -66,7 +39,7 @@ export const gristTableToPreview = async (selectedTable, gristApiKey) => {
     gristApiKey,
     { limit: 5 }
   ).then(readJson);
-  const rows = normalizeList(payload, "records").map((record) => ({
+  const rows = (payload.records || []).map((record) => ({
     ...(record?.fields || record),
   }));
   const fields = rows.reduce((headers, row) => {

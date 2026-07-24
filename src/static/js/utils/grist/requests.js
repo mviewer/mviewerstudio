@@ -51,26 +51,6 @@ const getTableRecordsUrl = (instanceUrl, docId, tableId, limit) => {
 
 const hasGristId = (id) => id !== undefined && id !== null && id !== "";
 
-const normalizeList = (payload, key) => {
-  if (Array.isArray(payload)) {
-    return payload;
-  }
-
-  if (Array.isArray(payload?.[key])) {
-    return payload[key];
-  }
-
-  if (Array.isArray(payload?.data)) {
-    return payload.data;
-  }
-
-  if (Array.isArray(payload?.data?.[key])) {
-    return payload.data[key];
-  }
-
-  return [];
-};
-
 /**
  * List organizations available to the current Grist API key.
  *
@@ -89,7 +69,7 @@ export const getUserOrgs = (instanceUrl, apiKey) => {
 /**
  * Get a Grist workspace description.
  *
- * The response contains the workspace documents in `data.docs`.
+ * The response contains the workspace documents in `docs`.
  *
  * @param {string} instanceUrl Base URL of the Grist instance or nginx proxy.
  * @param {string|number} workspaceId Grist workspace id.
@@ -119,7 +99,7 @@ export const getDescribeWorkspace = (instanceUrl, workspaceId, apiKey) => {
  * @param {string} instanceUrl Base URL of the Grist instance or nginx proxy.
  * @param {string|number} workspaceId Grist workspace id.
  * @param {string} apiKey Grist API key.
- * @returns {Promise<Object[]>} Documents found in the workspace.
+ * @returns {Promise<Object[]>} Documents from the Grist API `docs` field.
  * @throws {Error} When the Grist API response is not successful.
  */
 export const getWorkspaceDocsList = (instanceUrl, workspaceId, apiKey) => {
@@ -131,9 +111,7 @@ export const getWorkspaceDocsList = (instanceUrl, workspaceId, apiKey) => {
 
       return response.json();
     })
-    .then((workspaceDescription) => {
-      return normalizeList(workspaceDescription, "docs");
-    });
+    .then((workspaceDescription) => workspaceDescription.docs || []);
 };
 
 /**

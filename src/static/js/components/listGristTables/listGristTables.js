@@ -23,14 +23,6 @@ const readJson = (response) => {
   return response.json();
 };
 
-const normalizeList = (payload, key) => {
-  if (Array.isArray(payload)) {
-    return payload;
-  }
-
-  return payload?.[key] || [];
-};
-
 const getGristId = (item) => item?.id ?? item?.name ?? item?.domain;
 const getGristName = (item) => item?.name ?? item?.title ?? item?.id;
 
@@ -81,7 +73,7 @@ ListGristTables.prototype.getDocsTables = function () {
         getDocTables(gristConfig.instanceUrl, getGristId(doc), this.apiKey)
           .then(readJson)
           .then((payload) =>
-            normalizeList(payload, "tables").map((table) => ({
+            (payload.tables || []).map((table) => ({
               doc,
               table,
               docId: getGristId(doc),
