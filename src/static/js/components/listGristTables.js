@@ -2,19 +2,17 @@
  * Grist tables select field.
  *
  * Usage:
- * `const list = new mv.components.listGristTables({ apiKey });`
+ * `const list = new mv.components.grist.listGristTables({ apiKey });`
  * `target.appendChild(list.render());`
  */
+import { getDocTables } from "../utils/grist/requests.js";
 import {
-  createOrgWorkspace,
-  createWorkspaceDoc,
-  getDocTables,
-  getOrgWorkspaces,
-  getUserOrgs,
-  getWorkspaceDocsList,
-} from "../utils/grist/requests.js";
+  getGristConfig,
+  gristTableToPreview,
+  listDocs,
+} from "../utils/grist/utils.js";
+import Table from "./table.js";
 
-const DEFAULT_WORKSPACE_NAME = "mviewerstudio";
 let listGristTablesInstanceId = 0;
 
 const readJson = (response) => {
@@ -40,18 +38,19 @@ const ListGristTables = function (options = {}) {
   listGristTablesInstanceId += 1;
 
   this.id = `list-grist-tables-${listGristTablesInstanceId}`;
-  this.instanceUrl = options.instanceUrl || "/grist";
   this.apiKey = options.apiKey || "";
-  this.workspaceName = options.workspaceName || DEFAULT_WORKSPACE_NAME;
-  this.documentName = options.documentName || "";
   this.placeholder = options.placeholder || "Choisir une table Grist";
   this.autoload = options.autoload !== false;
   this.onChange = options.onChange || function () {};
 
   this.tables = [];
-  this.workspace = null;
-  this.document = null;
   this.loadPromise = null;
+  this.previewRequestId = 0;
+  this.previewTable = new Table({
+    maxRows: 5,
+    emptyMessage: "Aucune donnee a previsualiser.",
+    classes: "mb-0",
+  });
   this.element = document.createElement("div");
   this.element.className = "list-grist-tables";
 };
@@ -75,95 +74,29 @@ ListGristTables.prototype.setLoading = function (loading) {
   }
 };
 
-ListGristTables.prototype.getFirstOrg = function () {
-  return getUserOrgs(this.instanceUrl, this.apiKey)
-    .then(readJson)
-    .then((payload) => {
-      const orgs = normalizeList(payload, "orgs");
-
-      if (!orgs.length) {
-        throw new Error("No Grist organization found");
-      }
-
-      return orgs[0];
-    });
-};
-
-ListGristTables.prototype.ensureWorkspace = function (org) {
-  const orgId = getGristId(org);
-
-  return getOrgWorkspaces(this.instanceUrl, orgId, this.apiKey)
-    .then(readJson)
-    .then((payload) => {
-      const workspaces = normalizeList(payload, "workspaces");
-      const workspace = workspaces.find(
-        (item) => getGristName(item) === this.workspaceName
+ListGristTables.prototype.getDocsTables = function () {
+  return Promise.all([getGristConfig(), listDocs(this.apiKey)]).then(
+    ([gristConfig, docs]) => {
+      const tablesRequests = docs.map((doc) =>
+        getDocTables(gristConfig.instanceUrl, getGristId(doc), this.apiKey)
+          .then(readJson)
+          .then((payload) =>
+            normalizeList(payload, "tables").map((table) => ({
+              doc,
+              table,
+              docId: getGristId(doc),
+              docName: getGristName(doc),
+              tableId: getGristId(table),
+              tableName: getGristName(table),
+            }))
+          )
       );
 
-      if (workspace) {
-        return workspace;
-      }
-
-      return createOrgWorkspace(
-        this.instanceUrl,
-        orgId,
-        this.workspaceName,
-        this.apiKey
-      ).then(readJson);
-    });
-};
-
-ListGristTables.prototype.ensureDocument = function (workspace) {
-  if (!this.documentName) {
-    return Promise.resolve(null);
-  }
-
-  const workspaceId = getGristId(workspace);
-
-  return getWorkspaceDocsList(this.instanceUrl, workspaceId, this.apiKey)
-    .then(readJson)
-    .then((payload) => {
-      const docs = normalizeList(payload, "docs");
-      const doc = docs.find((item) => getGristName(item) === this.documentName);
-
-      if (doc) {
-        return doc;
-      }
-
-      return createWorkspaceDoc(
-        this.instanceUrl,
-        workspaceId,
-        this.documentName,
-        this.apiKey
-      ).then(readJson);
-    });
-};
-
-ListGristTables.prototype.getWorkspaceTables = function (workspace) {
-  const workspaceId = getGristId(workspace);
-
-  return getWorkspaceDocsList(this.instanceUrl, workspaceId, this.apiKey)
-    .then(readJson)
-    .then((payload) => normalizeList(payload, "docs"))
-    .then((docs) =>
-      Promise.all(
-        docs.map((doc) =>
-          getDocTables(this.instanceUrl, getGristId(doc), this.apiKey)
-            .then(readJson)
-            .then((payload) =>
-              normalizeList(payload, "tables").map((table) => ({
-                doc,
-                table,
-                docId: getGristId(doc),
-                docName: getGristName(doc),
-                tableId: getGristId(table),
-                tableName: getGristName(table),
-              }))
-            )
-        )
-      )
-    )
-    .then((tablesByDoc) => tablesByDoc.flat());
+      return Promise.all(tablesRequests).then((tablesByDoc) =>
+        tablesByDoc.flat()
+      );
+    }
+  );
 };
 
 ListGristTables.prototype.updateOptions = function () {
@@ -205,22 +138,13 @@ ListGristTables.prototype.load = function () {
   this.setLoading(true);
   this.setStatus("Chargement des tables Grist...");
 
-  this.loadPromise = this.getFirstOrg()
-    .then((org) => this.ensureWorkspace(org))
-    .then((workspace) => {
-      this.workspace = workspace;
-      return this.ensureDocument(workspace).then((document) => {
-        this.document = document;
-        return workspace;
-      });
-    })
-    .then((workspace) => this.getWorkspaceTables(workspace))
+  this.loadPromise = this.getDocsTables()
     .then((tables) => {
       this.tables = tables;
       this.updateOptions();
 
       if (!tables.length) {
-        this.setStatus("Aucune table trouvée dans le workspace mviewerstudio.");
+        this.setStatus("Aucune table trouvée dans le workspace configuré.");
         return tables;
       }
 
@@ -254,6 +178,56 @@ ListGristTables.prototype.getSelectedTable = function () {
   );
 };
 
+ListGristTables.prototype.updatePreview = function (selectedTable) {
+  const previewContainer = this.element.querySelector(
+    "[data-list-grist-tables-preview]"
+  );
+  const requestId = this.previewRequestId + 1;
+
+  this.previewRequestId = requestId;
+
+  if (!previewContainer) {
+    return;
+  }
+
+  previewContainer.replaceChildren();
+  previewContainer.classList.toggle("d-none", !selectedTable);
+
+  if (!selectedTable) {
+    return;
+  }
+
+  const loading = document.createElement("p");
+  loading.className = "text-muted mb-0";
+  loading.textContent = "Chargement de l'apercu...";
+  previewContainer.appendChild(loading);
+
+  gristTableToPreview(selectedTable, this.apiKey)
+    .then((previewData) => {
+      if (requestId !== this.previewRequestId) {
+        return;
+      }
+
+      this.previewTable.title = selectedTable.tableName || "Table Grist";
+      this.previewTable.subtitle = "Apercu des 5 premieres lignes";
+      previewContainer.replaceChildren(
+        this.previewTable.setData(previewData)
+      );
+    })
+    .catch((error) => {
+      if (requestId !== this.previewRequestId) {
+        return;
+      }
+
+      previewContainer.replaceChildren();
+      const message = document.createElement("p");
+      message.className = "text-danger mb-0";
+      message.textContent = "Impossible de previsualiser cette table Grist.";
+      previewContainer.appendChild(message);
+      console.error("Error loading Grist table preview:", error);
+    });
+};
+
 ListGristTables.prototype.render = function () {
   this.element.innerHTML = `
     <label class="list-grist-tables__label" for="${this.id}">
@@ -266,11 +240,16 @@ ListGristTables.prototype.render = function () {
       disabled
     ></select>
     <p class="list-grist-tables__status text-muted" data-list-grist-tables-status></p>
+    <div class="list-grist-tables__preview d-none" data-list-grist-tables-preview></div>
   `;
 
   this.element
     .querySelector("[data-list-grist-tables-select]")
-    ?.addEventListener("change", () => this.onChange(this.getSelectedTable()));
+    ?.addEventListener("change", () => {
+      const selectedTable = this.getSelectedTable();
+      this.onChange(selectedTable);
+      this.updatePreview(selectedTable);
+    });
 
   this.updateOptions();
   if (this.autoload) {

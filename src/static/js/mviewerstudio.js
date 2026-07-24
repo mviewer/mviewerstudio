@@ -715,7 +715,7 @@ document
     }
     // init import grist area - target id newLayerByGrist
     const importGristAreaContainer = document.getElementById("newLayerByGrist");
-    const ImportGristArea = mv.components && mv.components.importGristArea;
+    const ImportGristArea = mv.components && mv.components.grist && mv.components.grist.importGristArea;
     const hideImportGristArea = () => {
       if (!importGristAreaContainer) {
         return;
@@ -730,7 +730,6 @@ document
       importGristAreaContainer.replaceChildren();
       const importGristArea = new ImportGristArea({
         apiKey,
-        gristInstanceUrl: "/grist",
       });
       importGristAreaContainer.appendChild(importGristArea.render());
       importGristAreaContainer.classList.remove("d-none");
@@ -740,13 +739,17 @@ document
 
     // init api key UI - target id grist-api-key-area
     const gristApiKeyContainer = document.getElementById("grist-api-key-area");
-    const GristApiKey = mv.components && mv.components.gristApiKey;
+    const GristApiKey = mv.components && mv.components.grist && mv.components.grist.gristApiKey;
     if (gristApiKeyContainer && GristApiKey) {
       gristApiKeyContainer.replaceChildren();
-      const gristApiKey = new GristApiKey("/grist", "https://grist.numerique.gouv.fr/account/developer", {
-        onValidApiKey: showImportGristArea,
-        onInvalidApiKey: hideImportGristArea,
-      });
+      const gristApiKey = new GristApiKey(
+        _conf.grist.instance_url,
+        "https://grist.numerique.gouv.fr/account/developer",
+        {
+          onValidApiKey: showImportGristArea,
+          onInvalidApiKey: hideImportGristArea,
+        }
+      );
       gristApiKeyContainer.appendChild(gristApiKey.render());
     }
   });

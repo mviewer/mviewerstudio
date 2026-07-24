@@ -97,8 +97,6 @@ function normalizeClasses(classes) {
  * @param {boolean} [options.paginate=false] Enables pagination when rows exceed maxRows.
  * @param {number} [options.page=1] Initial page.
  * @param {string} [options.title] Preview title.
- * @param {boolean} [options.titleEditable=false] Enables title edition.
- * @param {Function} [options.onTitleChange] Callback called when title changes.
  * @param {string} [options.subtitle] Preview subtitle.
  * @param {string} [options.emptyMessage] Message shown when data is empty.
  * @param {string|string[]} [options.classes] Extra CSS classes added to the table.
@@ -109,8 +107,6 @@ function Table(options = {}) {
   this.paginate = Boolean(options.paginate);
   this.currentPage = Number(options.page) || 1;
   this.title = options.title || "";
-  this.titleEditable = Boolean(options.titleEditable);
-  this.onTitleChange = options.onTitleChange || function () {};
   this.subtitle = options.subtitle || "";
   this.emptyMessage = options.emptyMessage || "Aucune donnee a afficher.";
   this.classes = normalizeClasses(options.classes);
@@ -249,30 +245,14 @@ Table.prototype.render = function () {
   tableScroller.className = "table-preview__scroller";
   table.className = `table table-sm table-preview__table ${this.classes}`.trim();
 
-  if (this.title || this.subtitle || this.titleEditable) {
+  if (this.title || this.subtitle) {
     const header = document.createElement("div");
     header.className = "table-preview__header";
 
-    if (this.title || this.titleEditable) {
-      const title = this.titleEditable
-        ? document.createElement("input")
-        : document.createElement("h6");
-      title.className = this.titleEditable
-        ? "table-preview__title table-preview__title-input"
-        : "table-preview__title";
-
-      if (this.titleEditable) {
-        title.type = "text";
-        title.value = this.title;
-        title.setAttribute("aria-label", "Titre du tableau");
-        title.addEventListener("input", () => {
-          this.title = title.value;
-          this.onTitleChange(this.title);
-        });
-      } else {
-        title.textContent = this.title;
-      }
-
+    if (this.title) {
+      const title = document.createElement("h6");
+      title.className = "table-preview__title";
+      title.textContent = this.title;
       header.appendChild(title);
     }
 

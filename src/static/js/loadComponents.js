@@ -10,17 +10,19 @@ import ListGristTables from "./components/listGristTables.js";
 import Table from "./components/table.js";
 import Input from "./components/input.js";
 import * as gristValidation from "./utils/grist/validation.js";
+import * as gristUtils from "./utils/grist/utils.js";
 
 mv.components = mv.components || {};
+mv.components.grist = mv.components.grist || {};
 mv.utils = mv.utils || {};
 mv.utils.grist = mv.utils.grist || {};
 mv.components.stepBadge = StepBadge;
-mv.components.gristApiKey = GristApiKey;
-mv.components.importGristArea = importGristArea;
 mv.components.uploadFile = UploadFile;
-mv.components.listGristTables = ListGristTables;
 mv.components.table = Table;
 mv.components.input = Input;
+mv.components.grist.gristApiKey = GristApiKey;
+mv.components.grist.importGristArea = importGristArea;
+mv.components.grist.listGristTables = ListGristTables;
 mv.utils.grist.validation = gristValidation;
 
 gristValidation.bindNewLayerModalValidation();

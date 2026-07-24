@@ -2,7 +2,7 @@
  * Simple Grist API key form block.
  *
  * Usage:
- * `const block = new mv.components.gristApiKey();`
+ * `const block = new mv.components.grist.gristApiKey();`
  * `target.appendChild(block.render());`
  * 
  * This component use :

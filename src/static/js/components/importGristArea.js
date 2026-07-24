@@ -2,7 +2,7 @@
  * Import type selector for the Grist import step.
  *
  * Usage:
- * `const block = new mv.components.importGristArea();`
+ * `const block = new mv.components.grist.importGristArea();`
  * `target.appendChild(block.render());`
  */
 import UploadFile from "./uploadFile.js";
@@ -34,9 +34,9 @@ const importGristArea = function (activeType = "file", options = {}) {
   this.element = document.createElement("div");
   this.element.className = "import-type-buttons";
   this.tableNameInput = new Input({
-    label: "Nom de la table",
-    classes: "table-name-input mb-3",
-    placeholder: "Nom de la table",
+    label: "Nom de la table :",
+    classes: "table-name-input my-3",
+    placeholder: "Nom de la table...",
     onChange: (value) => {
       this.fileTableName = value;
       this.filePreviewTable.setTitle(
@@ -47,11 +47,6 @@ const importGristArea = function (activeType = "file", options = {}) {
   });
   this.filePreviewTable = new Table({
     maxRows: 5,
-    titleEditable: true,
-    onTitleChange: (value) => {
-      this.fileTableName = value;
-      this.tableNameInput.setValue(value);
-    },
     emptyMessage: "Aucune donnee a previsualiser.",
     classes: "mb-0",
   });
@@ -72,9 +67,7 @@ const importGristArea = function (activeType = "file", options = {}) {
     },
   });
   this.listGristTables = new ListGristTables({
-    instanceUrl: options.gristInstanceUrl || "/grist",
     apiKey: options.apiKey || "",
-    workspaceName: "mviewerstudio",
     autoload: false,
   });
 };
