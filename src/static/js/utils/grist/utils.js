@@ -1,7 +1,6 @@
 import {
   createOrgWorkspace,
   getOrgWorkspaces,
-  getTableRecords,
   getUserOrgs,
   getWorkspaceDocsList,
 } from "./requests.js";
@@ -96,6 +95,12 @@ const normalizeList = (payload, key) => {
   return [];
 };
 
+/**
+ * Check whether a value can be used as a Grist identifier.
+ *
+ * @param {*} id Candidate identifier.
+ * @returns {boolean} True when the identifier is present.
+ */
 const hasGristId = (id) => id !== undefined && id !== null && id !== "";
 
 /**
@@ -118,6 +123,12 @@ const getGristId = (item) => {
   );
 };
 
+/**
+ * Read the workspace id from the different shapes returned by the Grist API.
+ *
+ * @param {GristEntity|string|number|null|undefined} item Grist workspace entity.
+ * @returns {string|number|undefined} Workspace identifier.
+ */
 const getWorkspaceId = (item) => {
   if (typeof item === "string" || typeof item === "number") {
     return item;
@@ -229,43 +240,4 @@ export const listDocs = async (gristApiKey) => {
     workspaceId,
     gristApiKey
   );
-};
-
-/**
- * Fetch preview rows from a selected Grist table and format them for the table
- * preview component.
- *
- * @param {Object|null} selectedTable Selected table entry from ListGristTables.
- * @param {string|number} selectedTable.docId Grist document id.
- * @param {string|number} selectedTable.tableId Grist table id.
- * @param {string} gristApiKey Grist API key.
- * @returns {Promise<{data: Object[], meta: {fields: string[]}}>} Preview data.
- */
-export const gristTableToPreview = async (selectedTable, gristApiKey) => {
-  if (!selectedTable?.docId || !selectedTable?.tableId || !gristApiKey) {
-    return { data: [], meta: { fields: [] } };
-  }
-
-  const gristConfig = await getGristConfig();
-  const payload = await getTableRecords(
-    gristConfig.instanceUrl,
-    selectedTable.docId,
-    selectedTable.tableId,
-    gristApiKey,
-    { limit: 5 }
-  ).then(readJson);
-  const rows = normalizeList(payload, "records").map((record) => ({
-    ...(record?.fields || record),
-  }));
-  const fields = rows.reduce((headers, row) => {
-    Object.keys(row || {}).forEach((key) => {
-      if (!headers.includes(key)) {
-        headers.push(key);
-      }
-    });
-
-    return headers;
-  }, []);
-
-  return { data: rows, meta: { fields } };
 };

@@ -5,15 +5,16 @@
  * `const block = new mv.components.grist.importGristArea();`
  * `target.appendChild(block.render());`
  */
-import UploadFile from "./uploadFile.js";
-import ListGristTables from "./listGristTables.js";
-import Table from "./table.js";
-import Input from "./input.js";
-import verifyUploadedFile from "../utils/grist/verifyUploadedFile.js";
+import UploadFile from "../uploadFile/uploadFile.js";
+import ListGristTables from "../listGristTables/listGristTables.js";
+import Table from "../table/table.js";
+import Input from "../input/input.js";
+import verifyUploadedFile from "../../utils/grist/verifyUploadedFile.js";
 import {
   disableSelectLayersButton,
   updateSelectLayersButtonForImportedFile,
-} from "../utils/grist/validation.js";
+} from "../../utils/grist/validation.js";
+import { sendParsedFileToGrist } from "./utils.js";
 
 function getFileNameWithoutExtension(fileName) {
   return fileName ? fileName.replace(/\.[^.]+$/, "") : "";
@@ -30,6 +31,7 @@ const importGristArea = function (activeType = "file", options = {}) {
   this.file = null;
   this.fileVerification = null;
   this.fileTableName = "";
+  this.apiKey = options.apiKey || "";
   this.onFileChange = options.onFileChange || function () {};
   this.element = document.createElement("div");
   this.element.className = "import-type-buttons";
@@ -67,7 +69,7 @@ const importGristArea = function (activeType = "file", options = {}) {
     },
   });
   this.listGristTables = new ListGristTables({
-    apiKey: options.apiKey || "",
+    apiKey: this.apiKey,
     autoload: false,
   });
 };
@@ -104,6 +106,61 @@ importGristArea.prototype.getFileTableName = function () {
   return this.tableNameInput.getValue();
 };
 
+/**
+ * Display the status of the "Envoyer dans Grist" action.
+ *
+ * @param {string} message Status message.
+ * @param {string} [type="muted"] Bootstrap text color suffix.
+ */
+importGristArea.prototype.setSendToGristStatus = function (
+  message,
+  type = "muted"
+) {
+  const status = this.element.querySelector("[data-send-to-grist-status]");
+
+  if (!status) {
+    return;
+  }
+
+  status.className = `send-to-grist__status text-${type}`;
+  status.textContent = message;
+};
+
+/**
+ * Send the currently previewed file data to Grist.
+ *
+ * @param {HTMLButtonElement} button Button that triggered the upload.
+ */
+importGristArea.prototype.sendFileToGrist = function (button) {
+  const parsedData = this.fileVerification?.parsedData;
+
+  if (!this.fileVerification?.valid || !parsedData) {
+    this.setSendToGristStatus("Aucun fichier valide a envoyer.", "danger");
+    return;
+  }
+
+  button.disabled = true;
+  this.setSendToGristStatus("Envoi vers Grist...");
+
+  sendParsedFileToGrist(parsedData, this.getFileTableName(), this.apiKey)
+    .then((result) => {
+      this.setSendToGristStatus(
+        `${result.rowsCount} ligne(s) envoyee(s) dans Grist.`,
+        "success"
+      );
+    })
+    .catch((error) => {
+      this.setSendToGristStatus(
+        error?.message || "Impossible d'envoyer le fichier dans Grist.",
+        "danger"
+      );
+      console.error("Error sending file to Grist:", error);
+    })
+    .finally(() => {
+      button.disabled = false;
+    });
+};
+
 importGristArea.prototype.updateFilePreview = function () {
   const previewContainer = this.element.querySelector("[data-upload-file-preview]");
   const parsedData = this.fileVerification?.parsedData;
@@ -125,6 +182,20 @@ importGristArea.prototype.updateFilePreview = function () {
   this.filePreviewTable.title = this.fileTableName || "Fichier importe";
   this.filePreviewTable.subtitle = "Apercu des 5 premieres lignes";
   previewContainer.appendChild(this.filePreviewTable.setData(parsedData));
+
+  const sendButton = document.createElement("button");
+  const sendStatus = document.createElement("p");
+
+  sendButton.type = "button";
+  sendButton.className = "btn btn-primary mt-3";
+  sendButton.textContent = "Envoyer dans Grist";
+  sendButton.addEventListener("click", () => this.sendFileToGrist(sendButton));
+
+  sendStatus.className = "send-to-grist__status text-muted";
+  sendStatus.dataset.sendToGristStatus = "";
+
+  previewContainer.appendChild(sendButton);
+  previewContainer.appendChild(sendStatus);
 };
 
 importGristArea.prototype.render = function () {

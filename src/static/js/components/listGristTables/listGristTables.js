@@ -5,13 +5,13 @@
  * `const list = new mv.components.grist.listGristTables({ apiKey });`
  * `target.appendChild(list.render());`
  */
-import { getDocTables } from "../utils/grist/requests.js";
+import { getDocTables } from "../../utils/grist/requests.js";
 import {
   getGristConfig,
-  gristTableToPreview,
   listDocs,
-} from "../utils/grist/utils.js";
-import Table from "./table.js";
+} from "../../utils/grist/utils.js";
+import Table from "../table/table.js";
+import { gristTableToPreview } from "./utils.js";
 
 let listGristTablesInstanceId = 0;
 

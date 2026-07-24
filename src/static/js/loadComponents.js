@@ -2,15 +2,14 @@
  * Point d'entrée centralisé de chargement des composants frontend.
  * Ajouter ici chaque composant partagé exposé dans `js/components/`.
  */
-import StepBadge from "./components/stepBadge.js";
-import GristApiKey from "./components/gristApiKey.js";
-import importGristArea from "./components/importGristArea.js";
-import UploadFile from "./components/uploadFile.js";
-import ListGristTables from "./components/listGristTables.js";
-import Table from "./components/table.js";
-import Input from "./components/input.js";
+import StepBadge from "./components/stepBadge/stepBadge.js";
+import GristApiKey from "./components/gristApiKey/gristApiKey.js";
+import importGristArea from "./components/importGristArea/importGristArea.js";
+import UploadFile from "./components/uploadFile/uploadFile.js";
+import ListGristTables from "./components/listGristTables/listGristTables.js";
+import Table from "./components/table/table.js";
+import Input from "./components/input/input.js";
 import * as gristValidation from "./utils/grist/validation.js";
-import * as gristUtils from "./utils/grist/utils.js";
 
 mv.components = mv.components || {};
 mv.components.grist = mv.components.grist || {};

@@ -246,6 +246,34 @@ export const postTablesToDoc = (instanceUrl, docId, tablesData, apiKey) => {
 };
 
 /**
+ * Add records to a Grist table.
+ *
+ * @param {string} instanceUrl Base URL of the Grist instance or nginx proxy.
+ * @param {string|number} docId Grist document id.
+ * @param {string|number} tableId Grist table id.
+ * @param {Object} recordsData Records payload expected by the Grist API.
+ * @param {string} apiKey Grist API key.
+ * @returns {Promise<Response>} Fetch response from the Grist API.
+ */
+export const postRecordsToTable = (
+  instanceUrl,
+  docId,
+  tableId,
+  recordsData,
+  apiKey
+) => {
+  return fetch(
+    `${instanceUrl}/api/docs/${docId}/tables/${encodeURIComponent(tableId)}/records`,
+    {
+      method: "POST",
+      credentials: "omit",
+      headers: getJsonHeaders(apiKey),
+      body: JSON.stringify(recordsData),
+    }
+  );
+};
+
+/**
  * List tables from a Grist document.
  *
  * @param {string} instanceUrl Base URL of the Grist instance or nginx proxy.
