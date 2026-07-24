@@ -5,8 +5,22 @@
 import StepBadge from "./components/stepBadge.js";
 import GristApiKey from "./components/gristApiKey.js";
 import importGristArea from "./components/importGristArea.js";
+import UploadFile from "./components/uploadFile.js";
+import ListGristTables from "./components/listGristTables.js";
+import Table from "./components/table.js";
+import Input from "./components/input.js";
+import * as gristValidation from "./utils/grist/validation.js";
 
 mv.components = mv.components || {};
+mv.utils = mv.utils || {};
+mv.utils.grist = mv.utils.grist || {};
 mv.components.stepBadge = StepBadge;
 mv.components.gristApiKey = GristApiKey;
 mv.components.importGristArea = importGristArea;
+mv.components.uploadFile = UploadFile;
+mv.components.listGristTables = ListGristTables;
+mv.components.table = Table;
+mv.components.input = Input;
+mv.utils.grist.validation = gristValidation;
+
+gristValidation.bindNewLayerModalValidation();

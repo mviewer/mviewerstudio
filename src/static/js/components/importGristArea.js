@@ -5,15 +5,91 @@
  * `const block = new mv.components.importGristArea();`
  * `target.appendChild(block.render());`
  */
-const importGristArea = function (activeType = "file") {
+import UploadFile from "./uploadFile.js";
+import ListGristTables from "./listGristTables.js";
+import Table from "./table.js";
+import Input from "./input.js";
+import verifyUploadedFile from "../utils/grist/verifyUploadedFile.js";
+import {
+  disableSelectLayersButton,
+  updateSelectLayersButtonForImportedFile,
+} from "../utils/grist/validation.js";
+
+function getFileNameWithoutExtension(fileName) {
+  return fileName ? fileName.replace(/\.[^.]+$/, "") : "";
+}
+
+const importGristArea = function (activeType = "file", options = {}) {
+  if (typeof activeType === "object") {
+    options = activeType;
+    activeType = options.activeType || "file";
+  }
+
   this.activeType = activeType;
+  this.options = options;
+  this.file = null;
+  this.fileVerification = null;
+  this.fileTableName = "";
+  this.onFileChange = options.onFileChange || function () {};
   this.element = document.createElement("div");
   this.element.className = "import-type-buttons";
+  this.tableNameInput = new Input({
+    label: "Nom de la table",
+    classes: "table-name-input mb-3",
+    placeholder: "Nom de la table",
+    onChange: (value) => {
+      this.fileTableName = value;
+      this.filePreviewTable.setTitle(
+        this.fileTableName || "Fichier importe",
+        "Apercu des 5 premieres lignes"
+      );
+    },
+  });
+  this.filePreviewTable = new Table({
+    maxRows: 5,
+    titleEditable: true,
+    onTitleChange: (value) => {
+      this.fileTableName = value;
+      this.tableNameInput.setValue(value);
+    },
+    emptyMessage: "Aucune donnee a previsualiser.",
+    classes: "mb-0",
+  });
+  this.uploadFile = new UploadFile({
+    accept: [".csv", ".xls", ".xlsx"],
+    placeholder:
+      "Glissez-deposez un fichier CSV ou Excel,\nou selectionnez un fichier\nLe fichier doit contenir une information geographique (adresse, code administratif ou coordonnees X/Y).",
+    buttonLabel: "Choisir un fichier",
+    verifyFile: verifyUploadedFile,
+    onChange: (file, verification) => {
+      this.file = file;
+      this.fileVerification = verification;
+      this.fileTableName = getFileNameWithoutExtension(file?.name);
+      this.tableNameInput.setValue(this.fileTableName);
+      this.updateFilePreview();
+      updateSelectLayersButtonForImportedFile(verification);
+      this.onFileChange(file, verification, this.fileTableName);
+    },
+  });
+  this.listGristTables = new ListGristTables({
+    instanceUrl: options.gristInstanceUrl || "/grist",
+    apiKey: options.apiKey || "",
+    workspaceName: "mviewerstudio",
+    autoload: false,
+  });
 };
 
 importGristArea.prototype.setActiveType = function (type) {
   this.activeType = type;
   this.update();
+
+  if (type === "grist") {
+    disableSelectLayersButton();
+    this.listGristTables.load();
+    return;
+  }
+
+  updateSelectLayersButtonForImportedFile(this.fileVerification);
 };
 
 importGristArea.prototype.update = function () {
@@ -28,6 +104,34 @@ importGristArea.prototype.update = function () {
   gristButton?.classList.toggle("active", !isFileActive);
   fileContent?.classList.toggle("d-none", !isFileActive);
   gristContent?.classList.toggle("d-none", isFileActive);
+  this.updateFilePreview();
+};
+
+importGristArea.prototype.getFileTableName = function () {
+  return this.tableNameInput.getValue();
+};
+
+importGristArea.prototype.updateFilePreview = function () {
+  const previewContainer = this.element.querySelector("[data-upload-file-preview]");
+  const parsedData = this.fileVerification?.parsedData;
+  const canPreview = this.activeType === "file" && this.fileVerification?.valid && parsedData;
+
+  if (!previewContainer) {
+    return;
+  }
+
+  previewContainer.replaceChildren();
+  previewContainer.classList.toggle("d-none", !canPreview);
+
+  if (!canPreview) {
+    return;
+  }
+
+  previewContainer.appendChild(this.tableNameInput.render());
+
+  this.filePreviewTable.title = this.fileTableName || "Fichier importe";
+  this.filePreviewTable.subtitle = "Apercu des 5 premieres lignes";
+  previewContainer.appendChild(this.filePreviewTable.setData(parsedData));
 };
 
 importGristArea.prototype.render = function () {
@@ -51,10 +155,11 @@ importGristArea.prototype.render = function () {
       </button>
     </div>
     <div class="import-type-buttons__content" data-import-content="file">
-      <h6 class="mb-0">Importer un fichier</h6>
+      <div data-upload-file-area></div>
+      <div class="d-none" data-upload-file-preview></div>
     </div>
     <div class="import-type-buttons__content d-none" data-import-content="grist">
-      <h6 class="mb-0">Choisir une table Grist</h6>
+      <div data-list-grist-tables-area></div>
     </div>
   `;
 
@@ -66,7 +171,19 @@ importGristArea.prototype.render = function () {
     .querySelector('[data-import-type="grist"]')
     ?.addEventListener("click", () => this.setActiveType("grist"));
 
+  this.element
+    .querySelector("[data-upload-file-area]")
+    ?.appendChild(this.uploadFile.render());
+
+  this.element
+    .querySelector("[data-list-grist-tables-area]")
+    ?.appendChild(this.listGristTables.render());
+
   this.update();
+
+  if (this.activeType === "grist") {
+    this.listGristTables.load();
+  }
 
   return this.element;
 };

@@ -83,7 +83,7 @@ GristApiKey.prototype.loadApiKey = function () {
           alert.classList.add("d-none");
         }, 10000);
       }
-      console.error("Error fetching Grist API key:", error);
+      console.warn("Error fetching Grist API key:", error);
     });
 };
 
@@ -127,7 +127,7 @@ GristApiKey.prototype.validateApiKey = function () {
         throw new Error("Invalid Grist API key");
       }
 
-      this.showAlert("success", "Cle API GRIST valide.");
+      this.showAlert("success", "Cle API GRIST valide.", true);
       this.onValidApiKey(apiKey);
     })
     .catch((error) => {
@@ -182,7 +182,7 @@ GristApiKey.prototype.render = function () {
       class="alert alert-warning mt-3 mb-0 d-none"
       role="alert"
     >
-      Cle API GRIST non recuperee automatiquement. Saisissez-la manuellement.
+      Clé API GRIST non recupérée automatiquement. Saisissez-la manuellement.
     </div>
   `;
 

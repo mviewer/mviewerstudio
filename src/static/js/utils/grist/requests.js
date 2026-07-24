@@ -6,12 +6,13 @@
   -H 'Authorization: Bearer XXXXXXXXXXX'
  */
 export const getUserOrgs = (instanceUrl, apiKey) => {
-    return fetch(`${instanceUrl}/api/orgs`, {
-        method: "GET",
-        headers: {
-            "Authorization": `Bearer ${apiKey}`
-        }
-    });
+  return fetch(`${instanceUrl}/api/orgs`, {
+    method: "GET",
+    credentials: "omit",
+    headers: {
+      Authorization: `Bearer ${apiKey}`,
+    },
+  });
 };
 
 
@@ -30,13 +31,14 @@ export const getUserOrgs = (instanceUrl, apiKey) => {
  * @param {*} instanceUrl 
  * @returns 
  */
-const getWorkspaceDocsList = (instanceUrl, workspaceId) => {
-    return fetch(`${instanceUrl}/api/workspaces/${workspaceId}/docs`, {
-        method: "GET",
-        headers: {
-            "Authorization": `Bearer ${apiKey}`
-        }
-    });
+export const getWorkspaceDocsList = (instanceUrl, workspaceId, apiKey) => {
+  return fetch(`${instanceUrl}/api/workspaces/${workspaceId}/docs`, {
+    method: "GET",
+    credentials: "omit",
+    headers: {
+      Authorization: `Bearer ${apiKey}`,
+    },
+  });
 };
 
 /**
@@ -48,14 +50,44 @@ const getWorkspaceDocsList = (instanceUrl, workspaceId) => {
   -H 'Authorization: Bearer XXXXXXXXXXX'
  */
 
-const getOrgWorkspaces = (instanceUrl, apiKey) => {
-    return fetch(`${instanceUrl}/api/orgs`, {
-        method: "GET",
-        headers: {
-            "Authorization": `Bearer ${apiKey}`
-        }
-    });
-}
+export const getOrgWorkspaces = (instanceUrl, orgId, apiKey) => {
+  return fetch(`${instanceUrl}/api/orgs/${orgId}/workspaces`, {
+    method: "GET",
+    credentials: "omit",
+    headers: {
+      Authorization: `Bearer ${apiKey}`,
+    },
+  });
+};
+
+export const createOrgWorkspace = (instanceUrl, orgId, workspaceName, apiKey) => {
+  return fetch(`${instanceUrl}/api/orgs/${orgId}/workspaces`, {
+    method: "POST",
+    credentials: "omit",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${apiKey}`,
+    },
+    body: JSON.stringify({
+      name: workspaceName,
+    }),
+  });
+};
+
+export const createWorkspaceDoc = (instanceUrl, workspaceId, documentName, apiKey) => {
+  return fetch(`${instanceUrl}/api/workspaces/${workspaceId}/docs`, {
+    method: "POST",
+    credentials: "omit",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${apiKey}`,
+    },
+    body: JSON.stringify({
+      name: documentName,
+      isPinned: false,
+    }),
+  });
+};
 
 
 /**
@@ -73,7 +105,7 @@ const tablesUrl = (instanceUrl, docid) => {
  * @param {*} instanceUrl 
  * @returns 
  */
-const getApiKey = (instanceUrl) => {
+export const getApiKey = (instanceUrl) => {
   return fetch(`${instanceUrl}/api/profile/apikey`);
 };
 
@@ -83,7 +115,7 @@ const getApiKey = (instanceUrl) => {
  * @param {*} apiKey 
  * @returns 
  */
-const getUserInfo = (instanceUrl) => {
+export const getUserInfo = (instanceUrl) => {
   return fetch(`${instanceUrl}/api/profile/user`);
 };
 
@@ -101,9 +133,10 @@ const getUserInfo = (instanceUrl) => {
  * @param {Array} tablesData - An array of table data to be sent in the request body.
  * @param {string} apiKey - The Grist API key for authentication.
  */
-const postTablesToDoc = (instanceUrl, docid, tablesData, apiKey) => {
+export const postTablesToDoc = (instanceUrl, docid, tablesData, apiKey) => {
   return fetch(`${tablesUrl(instanceUrl, docid)}`, {
     method: "POST",
+    credentials: "omit",
     headers: {
       "Content-Type": "application/json",
       "Authorization": `Bearer ${apiKey}`
@@ -123,9 +156,10 @@ const postTablesToDoc = (instanceUrl, docid, tablesData, apiKey) => {
  * @param {*} apiKey 
  * @returns 
  */
-const getDocTables = (instanceUrl, docid, apiKey) => {
+export const getDocTables = (instanceUrl, docid, apiKey) => {
   return fetch(`${tablesUrl(instanceUrl, docid)}`, {
     method: "GET",
+    credentials: "omit",
     headers: {
       "Authorization": `Bearer ${apiKey}`
     }

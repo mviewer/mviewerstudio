@@ -723,12 +723,15 @@ document
       importGristAreaContainer.replaceChildren();
       importGristAreaContainer.classList.add("d-none");
     };
-    const showImportGristArea = () => {
+    const showImportGristArea = (apiKey) => {
       if (!importGristAreaContainer || !ImportGristArea) {
         return;
       }
       importGristAreaContainer.replaceChildren();
-      const importGristArea = new ImportGristArea();
+      const importGristArea = new ImportGristArea({
+        apiKey,
+        gristInstanceUrl: "/grist",
+      });
       importGristAreaContainer.appendChild(importGristArea.render());
       importGristAreaContainer.classList.remove("d-none");
     };
