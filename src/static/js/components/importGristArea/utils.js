@@ -7,6 +7,7 @@ import {
 } from "../../utils/grist/requests.js";
 import {
   getGristConfig,
+  getGristTableUrl,
   getOrCreateWorkspace,
 } from "../../utils/grist/utils.js";
 
@@ -38,6 +39,9 @@ const getGristId = (item) => {
 
   return item?.id ?? item?.data?.id ?? item?.name ?? item?.domain;
 };
+
+const getGristTableRef = (table) =>
+  table?.fields?.tableRef ?? table?.tableRef ?? getGristId(table);
 
 /**
  * Read the display name exposed by a Grist entity.
@@ -195,7 +199,7 @@ const getOrCreateDocument = async (gristApiKey, documentName) => {
   const gristConfig = await getGristConfig();
   const workspaceId = await getOrCreateWorkspace(gristApiKey);
   const docs = await getWorkspaceDocsList(
-    gristConfig.instanceUrl,
+    gristConfig.apiUrl,
     workspaceId,
     gristApiKey
   );
@@ -206,7 +210,7 @@ const getOrCreateDocument = async (gristApiKey, documentName) => {
   }
 
   const createdDoc = await createWorkspaceDoc(
-    gristConfig.instanceUrl,
+    gristConfig.apiUrl,
     workspaceId,
     documentName,
     gristApiKey
@@ -254,10 +258,10 @@ const ensureTableDoesNotExist = async (
  * @param {string|number} docId Grist document id.
  * @param {string} tableId Requested table id.
  * @param {string} gristApiKey Grist API key.
- * @returns {Promise<string>} Actual Grist table id.
+ * @returns {Promise<{tableId: string|number, tableRef: string|number}>} Actual Grist table identifiers.
  * @throws {Error} When the table cannot be found after creation.
  */
-const getActualTableId = async (instanceUrl, docId, tableId, gristApiKey) => {
+const getActualTable = async (instanceUrl, docId, tableId, gristApiKey) => {
   const payload = await getDocTables(instanceUrl, docId, gristApiKey).then(
     readJson
   );
@@ -270,7 +274,7 @@ const getActualTableId = async (instanceUrl, docId, tableId, gristApiKey) => {
     throw new Error(`La table Grist "${tableId}" est introuvable apres creation.`);
   }
 
-  return actualTableId;
+  return { tableId: actualTableId, tableRef: getGristTableRef(table) };
 };
 
 /**
@@ -280,7 +284,7 @@ const getActualTableId = async (instanceUrl, docId, tableId, gristApiKey) => {
  * @param {Object|Array} parsedData Parsed file data, usually a PapaParse result.
  * @param {string} tableName Grist table display name.
  * @param {string} gristApiKey Grist API key.
- * @returns {Promise<{docId: string|number, tableId: string, rowsCount: number}>} Upload result.
+ * @returns {Promise<{docId: string|number, tableId: string|number, tableRef: string|number, rowsCount: number, url: string}>} Upload result.
  */
 export const sendParsedFileToGrist = async (
   parsedData,
@@ -306,7 +310,7 @@ export const sendParsedFileToGrist = async (
   }
 
   const tableId = await ensureTableDoesNotExist(
-    gristConfig.instanceUrl,
+    gristConfig.apiUrl,
     docId,
     normalizeGristTableId(tableName, "Table_1"),
     gristApiKey
@@ -314,7 +318,7 @@ export const sendParsedFileToGrist = async (
   const columnIds = getUniqueGristIds(headers, "column");
 
   await postTablesToDoc(
-    gristConfig.instanceUrl,
+    gristConfig.apiUrl,
     docId,
     {
       tables: [
@@ -330,15 +334,15 @@ export const sendParsedFileToGrist = async (
     gristApiKey
   ).then(readJson);
 
-  const actualTableId = await getActualTableId(
-    gristConfig.instanceUrl,
+  const { tableId: actualTableId, tableRef } = await getActualTable(
+    gristConfig.apiUrl,
     docId,
     tableId,
     gristApiKey
   );
 
   await postRecordsToTable(
-    gristConfig.instanceUrl,
+    gristConfig.apiUrl,
     docId,
     actualTableId,
     {
@@ -352,5 +356,16 @@ export const sendParsedFileToGrist = async (
     gristApiKey
   ).then(readJson);
 
-  return { docId, tableId: actualTableId, rowsCount: rows.length };
+  return {
+    docId,
+    tableId: actualTableId,
+    tableRef,
+    rowsCount: rows.length,
+    url: getGristTableUrl(
+      gristConfig.instanceUrl,
+      gristConfig.orgId,
+      docId,
+      tableRef
+    ),
+  };
 };

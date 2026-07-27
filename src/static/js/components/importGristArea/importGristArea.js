@@ -9,6 +9,7 @@ import UploadFile from "../uploadFile/uploadFile.js";
 import ListGristTables from "../listGristTables/listGristTables.js";
 import Table from "../table/table.js";
 import Input from "../input/input.js";
+import OpenGristTableBtn from "../openGristTableBtn/openGristTableBtn.js";
 import verifyUploadedFile from "../../utils/grist/verifyUploadedFile.js";
 import {
   disableSelectLayersButton,
@@ -130,6 +131,7 @@ importGristArea.prototype.setSendToGristStatus = function (
  * Send the currently previewed file data to Grist.
  *
  * @param {HTMLButtonElement} button Button that triggered the upload.
+ * @returns {void}
  */
 importGristArea.prototype.sendFileToGrist = function (button) {
   const parsedData = this.fileVerification?.parsedData;
@@ -148,6 +150,9 @@ importGristArea.prototype.sendFileToGrist = function (button) {
         `${result.rowsCount} ligne(s) envoyee(s) dans Grist.`,
         "success"
       );
+      this.element
+        .querySelector("[data-open-created-grist-table]")
+        ?.replaceChildren(new OpenGristTableBtn({ url: result.url }).render());
     })
     .catch((error) => {
       this.setSendToGristStatus(
@@ -161,6 +166,11 @@ importGristArea.prototype.sendFileToGrist = function (button) {
     });
 };
 
+/**
+ * Render the file preview and the actions available for the selected file.
+ *
+ * @returns {void}
+ */
 importGristArea.prototype.updateFilePreview = function () {
   const previewContainer = this.element.querySelector("[data-upload-file-preview]");
   const parsedData = this.fileVerification?.parsedData;
@@ -196,6 +206,9 @@ importGristArea.prototype.updateFilePreview = function () {
 
   previewContainer.appendChild(sendButton);
   previewContainer.appendChild(sendStatus);
+  const openTableContainer = document.createElement("div");
+  openTableContainer.dataset.openCreatedGristTable = "";
+  previewContainer.appendChild(openTableContainer);
 };
 
 importGristArea.prototype.render = function () {

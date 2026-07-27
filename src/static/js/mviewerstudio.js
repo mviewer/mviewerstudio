@@ -743,7 +743,7 @@ document
     if (gristApiKeyContainer && GristApiKey) {
       gristApiKeyContainer.replaceChildren();
       const gristApiKey = new GristApiKey(
-        _conf.grist.instance_url,
+        _conf.grist.api_url || _conf.grist.instance_url,
         "https://grist.numerique.gouv.fr/account/developer",
         {
           onValidApiKey: showImportGristArea,

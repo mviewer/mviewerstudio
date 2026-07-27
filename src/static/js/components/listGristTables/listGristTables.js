@@ -8,10 +8,12 @@
 import { getDocTables } from "../../utils/grist/requests.js";
 import {
   getGristConfig,
+  getGristTableUrl,
   listDocs,
 } from "../../utils/grist/utils.js";
 import Table from "../table/table.js";
 import { gristTableToPreview } from "./utils.js";
+import OpenGristTableBtn from "../openGristTableBtn/openGristTableBtn.js";
 
 let listGristTablesInstanceId = 0;
 
@@ -25,6 +27,8 @@ const readJson = (response) => {
 
 const getGristId = (item) => item?.id ?? item?.name ?? item?.domain;
 const getGristName = (item) => item?.name ?? item?.title ?? item?.id;
+const getGristTableRef = (table) =>
+  table?.fields?.tableRef ?? table?.tableRef ?? getGristId(table);
 
 const ListGristTables = function (options = {}) {
   listGristTablesInstanceId += 1;
@@ -70,7 +74,7 @@ ListGristTables.prototype.getDocsTables = function () {
   return Promise.all([getGristConfig(), listDocs(this.apiKey)]).then(
     ([gristConfig, docs]) => {
       const tablesRequests = docs.map((doc) =>
-        getDocTables(gristConfig.instanceUrl, getGristId(doc), this.apiKey)
+        getDocTables(gristConfig.apiUrl, getGristId(doc), this.apiKey)
           .then(readJson)
           .then((payload) =>
             (payload.tables || []).map((table) => ({
@@ -80,6 +84,7 @@ ListGristTables.prototype.getDocsTables = function () {
               docName: getGristName(doc),
               tableId: getGristId(table),
               tableName: getGristName(table),
+              tableRef: getGristTableRef(table),
             }))
           )
       );
@@ -220,19 +225,54 @@ ListGristTables.prototype.updatePreview = function (selectedTable) {
     });
 };
 
+/**
+ * Display the button that opens the document containing the selected table.
+ *
+ * @param {Object|null} selectedTable Selected Grist table entry.
+ * @param {string|number} selectedTable.docId Grist document id.
+ * @param {string|number} selectedTable.tableRef Grist table reference.
+ * @returns {void}
+ */
+ListGristTables.prototype.updateOpenTableButton = function (selectedTable) {
+  const container = this.element.querySelector("#open-table-into-grist");
+
+  if (!container || !selectedTable) {
+    container?.replaceChildren();
+    return;
+  }
+
+  getGristConfig().then((gristConfig) => {
+    if (this.getSelectedTable() !== selectedTable) {
+      return;
+    }
+
+    container.replaceChildren(
+      new OpenGristTableBtn({
+        url: getGristTableUrl(
+          gristConfig.instanceUrl,
+          gristConfig.orgId,
+          selectedTable.docId,
+          selectedTable.tableRef
+        ),
+      }).render()
+    );
+  });
+};
+
 ListGristTables.prototype.render = function () {
   this.element.innerHTML = `
     <label class="list-grist-tables__label" for="${this.id}">
       Table Grist
     </label>
+    <p class="list-grist-tables__status text-muted" data-list-grist-tables-status></p>
     <select
       id="${this.id}"
-      class="form-control"
+      class="form-control my-3"
       data-list-grist-tables-select
       disabled
     ></select>
-    <p class="list-grist-tables__status text-muted" data-list-grist-tables-status></p>
     <div class="list-grist-tables__preview d-none" data-list-grist-tables-preview></div>
+    <div id="open-table-into-grist"></div>
   `;
 
   this.element
@@ -241,6 +281,7 @@ ListGristTables.prototype.render = function () {
       const selectedTable = this.getSelectedTable();
       this.onChange(selectedTable);
       this.updatePreview(selectedTable);
+      this.updateOpenTableButton(selectedTable);
     });
 
   this.updateOptions();

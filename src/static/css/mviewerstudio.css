@@ -1280,7 +1280,7 @@
 		}
 
 		.list-grist-tables__status {
-			margin: 8px 0 0;
+			margin: 8px 0 10px;
 			font-size: 12px;
 			line-height: 1.2;
 		}

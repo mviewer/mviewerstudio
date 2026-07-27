@@ -33,7 +33,7 @@ export const gristTableToPreview = async (selectedTable, gristApiKey) => {
 
   const gristConfig = await getGristConfig();
   const payload = await getTableRecords(
-    gristConfig.instanceUrl,
+    gristConfig.apiUrl,
     selectedTable.docId,
     selectedTable.tableId,
     gristApiKey,

@@ -17,7 +17,8 @@ let configPromise = null;
 
 /**
  * @typedef {Object} GristConfig
- * @property {string} instanceUrl Grist instance URL.
+ * @property {string} instanceUrl Grist interface URL.
+ * @property {string} apiUrl Grist REST API URL.
  * @property {string} orgId Grist organization id or domain.
  * @property {string} workspaceName Workspace name used by mviewerstudio.
  */
@@ -35,15 +36,17 @@ export const getGristConfig = async () => {
       .then((config) => {
         const gristConfig = config?.app_conf?.grist || {};
         const instanceUrl = gristConfig.instance_url;
+        const apiUrl = gristConfig.api_url || instanceUrl;
         const orgId = gristConfig.org_id;
         const workspaceName = gristConfig.workspace_name;
 
-        if (!instanceUrl || !orgId || !workspaceName) {
+        if (!instanceUrl || !apiUrl || !orgId || !workspaceName) {
           throw new Error("Missing Grist configuration");
         }
 
         return {
           instanceUrl,
+          apiUrl,
           orgId,
           workspaceName,
         };
@@ -51,6 +54,21 @@ export const getGristConfig = async () => {
   }
 
   return configPromise;
+};
+
+/**
+ * Build the Grist interface URL for a document table.
+ *
+ * @param {string} instanceUrl Base URL of the Grist instance.
+ * @param {string|number} orgId Grist organization id or domain.
+ * @param {string|number} docId Grist document id.
+ * @param {string|number} tableRef Grist table reference.
+ * @returns {string} URL that opens the table in Grist.
+ */
+export const getGristTableUrl = (instanceUrl, orgId, docId, tableRef) => {
+  const baseUrl = String(instanceUrl).replace(/\/+$/, "");
+
+  return `${baseUrl}/o/${encodeURIComponent(orgId)}/${encodeURIComponent(docId)}/data/p/${encodeURIComponent(tableRef)}`;
 };
 
 /**
@@ -140,7 +158,7 @@ const getGristName = (item) => item?.name ?? item?.title ?? item?.id;
 export const getOrCreateWorkspace = async (gristApiKey) => {
   const gristConfig = await getGristConfig();
   const orgsPayload = await getUserOrgs(
-    gristConfig.instanceUrl,
+    gristConfig.apiUrl,
     gristApiKey
   ).then(readJson);
   const org = (orgsPayload || []).find(
@@ -155,7 +173,7 @@ export const getOrCreateWorkspace = async (gristApiKey) => {
   }
 
   const workspacesPayload = await getOrgWorkspaces(
-    gristConfig.instanceUrl,
+    gristConfig.apiUrl,
     getGristId(org),
     gristApiKey
   ).then(readJson);
@@ -176,7 +194,7 @@ export const getOrCreateWorkspace = async (gristApiKey) => {
   }
 
   const createdWorkspace = await createOrgWorkspace(
-    gristConfig.instanceUrl,
+    gristConfig.apiUrl,
     getGristId(org),
     gristConfig.workspaceName,
     gristApiKey
@@ -209,7 +227,7 @@ export const listDocs = async (gristApiKey) => {
   }
 
   return getWorkspaceDocsList(
-    gristConfig.instanceUrl,
+    gristConfig.apiUrl,
     workspaceId,
     gristApiKey
   );
