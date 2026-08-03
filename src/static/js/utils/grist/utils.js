@@ -37,7 +37,8 @@ export const getGristConfig = async () => {
         const gristConfig = config?.app_conf?.grist || {};
         const instanceUrl = gristConfig.instance_url;
         const apiUrl = gristConfig.api_url || instanceUrl;
-        const orgId = gristConfig.org_id;
+        // use personal workspace as default if no org_id is provided
+        const orgId = gristConfig.org_id || "Personal";
         const workspaceName = gristConfig.workspace_name;
 
         if (!instanceUrl || !apiUrl || !orgId || !workspaceName) {
@@ -62,13 +63,20 @@ export const getGristConfig = async () => {
  * @param {string} instanceUrl Base URL of the Grist instance.
  * @param {string|number} orgId Grist organization id or domain.
  * @param {string|number} docId Grist document id.
+ * @param {string|number} tableId Grist table id.
  * @param {string|number} tableRef Grist table reference.
  * @returns {string} URL that opens the table in Grist.
  */
-export const getGristTableUrl = (instanceUrl, orgId, docId, tableRef) => {
+export const getGristTableUrl = (instanceUrl, orgId, docId, tableId, tableRef) => {
   const baseUrl = String(instanceUrl).replace(/\/+$/, "");
+  const encodedDocId = encodeURIComponent(docId);
+  const encodedTableRef = encodeURIComponent(tableRef);
 
-  return `${baseUrl}/o/${encodeURIComponent(orgId)}/${encodeURIComponent(docId)}/data/p/${encodeURIComponent(tableRef)}`;
+  if (String(orgId).toLowerCase() === "personal") {
+    return `${baseUrl}/o/docs/${encodedDocId}/${encodeURIComponent(tableId)}/p/${encodedTableRef}`;
+  }
+
+  return `${baseUrl}/o/${encodeURIComponent(orgId)}/${encodedDocId}/data/p/${encodedTableRef}`;
 };
 
 /**
