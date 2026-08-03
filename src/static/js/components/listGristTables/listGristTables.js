@@ -12,6 +12,8 @@ import {
   listDocs,
 } from "../../utils/grist/utils.js";
 import Table from "../table/table.js";
+import Select from "../select/select.js";
+import SpinnerGrow from "../spinnergrow/spinnergrow.js";
 import { gristTableToPreview } from "./utils.js";
 import OpenGristTableBtn from "../openGristTableBtn/openGristTableBtn.js";
 
@@ -47,8 +49,28 @@ const ListGristTables = function (options = {}) {
     emptyMessage: "Aucune donnee a previsualiser.",
     classes: "mb-0",
   });
+  this.select = new Select({
+    id: this.id,
+    label: "Table Grist",
+    placeholder: this.placeholder,
+    classes: "row align-items-center my-3",
+    labelClasses: "col-3 col-form-label",
+    selectClasses: "col-6",
+    disabled: true,
+    onChange: () => {
+      const selectedTable = this.getSelectedTable();
+      this.onChange(selectedTable);
+      this.updatePreview(selectedTable);
+      this.updateOpenTableButton(selectedTable);
+    },
+  });
   this.element = document.createElement("div");
   this.element.className = "list-grist-tables";
+  this.spinner = new SpinnerGrow({
+    label: "Chargement des tables Grist...",
+    classes: "d-flex justify-content-center align-items-center",
+    visible: false,
+  });
 };
 
 ListGristTables.prototype.setStatus = function (message, type = "muted") {
@@ -58,16 +80,18 @@ ListGristTables.prototype.setStatus = function (message, type = "muted") {
     return;
   }
 
-  status.className = `list-grist-tables__status text-${type}`;
+  status.className = `list-grist-tables-status text-${type}`;
   status.textContent = message;
 };
 
 ListGristTables.prototype.setLoading = function (loading) {
-  const select = this.element.querySelector("[data-list-grist-tables-select]");
+  this.select.setDisabled(loading || !this.tables.length);
+};
 
-  if (select) {
-    select.disabled = loading || !this.tables.length;
-  }
+ListGristTables.prototype.setListVisible = function (visible) {
+  this.element
+    .querySelector("[data-list-grist-tables-select]")
+    ?.classList.toggle("d-none", !visible);
 };
 
 ListGristTables.prototype.getDocsTables = function () {
@@ -97,29 +121,13 @@ ListGristTables.prototype.getDocsTables = function () {
 };
 
 ListGristTables.prototype.updateOptions = function () {
-  const select = this.element.querySelector("[data-list-grist-tables-select]");
-
-  if (!select) {
-    return;
-  }
-
-  select.innerHTML = "";
-  const placeholder = new Option(this.placeholder, "");
-  placeholder.disabled = true;
-  placeholder.selected = true;
-  select.appendChild(placeholder);
-
-  this.tables.forEach((entry) => {
-    const option = new Option(
-      `${entry.docName} / ${entry.tableName}`,
-      `${entry.docId}:${entry.tableId}`
-    );
-    option.dataset.docId = entry.docId;
-    option.dataset.tableId = entry.tableId;
-    select.appendChild(option);
-  });
-
-  select.disabled = !this.tables.length;
+  this.select.setOptions(
+    this.tables.map((entry) => ({
+      label: `${entry.docName} / ${entry.tableName}`,
+      value: `${entry.docId}:${entry.tableId}`,
+    }))
+  );
+  this.select.setDisabled(!this.tables.length);
 };
 
 ListGristTables.prototype.load = function () {
@@ -133,7 +141,9 @@ ListGristTables.prototype.load = function () {
   }
 
   this.setLoading(true);
-  this.setStatus("Chargement des tables Grist...");
+  this.setListVisible(false);
+
+  this.spinner.setVisible(true);
 
   this.loadPromise = this.getDocsTables()
     .then((tables) => {
@@ -146,6 +156,7 @@ ListGristTables.prototype.load = function () {
       }
 
       this.setStatus(`${tables.length} table(s) disponible(s).`, "success");
+      this.setListVisible(true);
       return tables;
     })
     .catch((error) => {
@@ -156,6 +167,7 @@ ListGristTables.prototype.load = function () {
       return [];
     })
     .finally(() => {
+      this.spinner.setVisible(false);
       this.setLoading(false);
       this.loadPromise = null;
     });
@@ -164,14 +176,14 @@ ListGristTables.prototype.load = function () {
 };
 
 ListGristTables.prototype.getSelectedTable = function () {
-  const select = this.element.querySelector("[data-list-grist-tables-select]");
+  const value = this.select.getValue();
 
-  if (!select?.value) {
+  if (!value) {
     return null;
   }
 
   return this.tables.find(
-    (entry) => `${entry.docId}:${entry.tableId}` === select.value
+    (entry) => `${entry.docId}:${entry.tableId}` === value
   );
 };
 
@@ -252,6 +264,7 @@ ListGristTables.prototype.updateOpenTableButton = function (selectedTable) {
           gristConfig.instanceUrl,
           gristConfig.orgId,
           selectedTable.docId,
+          selectedTable.tableId,
           selectedTable.tableRef
         ),
       }).render()
@@ -261,28 +274,19 @@ ListGristTables.prototype.updateOpenTableButton = function (selectedTable) {
 
 ListGristTables.prototype.render = function () {
   this.element.innerHTML = `
-    <label class="list-grist-tables__label" for="${this.id}">
-      Table Grist
-    </label>
-    <p class="list-grist-tables__status text-muted" data-list-grist-tables-status></p>
-    <select
-      id="${this.id}"
-      class="form-control my-3"
-      data-list-grist-tables-select
-      disabled
-    ></select>
-    <div class="list-grist-tables__preview d-none" data-list-grist-tables-preview></div>
+    <p class="list-grist-tables-status text-muted" data-list-grist-tables-status></p>
+    <div data-list-grist-tables-spinner></div>
+    <div class="d-none" data-list-grist-tables-select></div>
+    <div class="list-grist-tables-preview d-none" data-list-grist-tables-preview></div>
     <div id="open-table-into-grist"></div>
   `;
 
   this.element
     .querySelector("[data-list-grist-tables-select]")
-    ?.addEventListener("change", () => {
-      const selectedTable = this.getSelectedTable();
-      this.onChange(selectedTable);
-      this.updatePreview(selectedTable);
-      this.updateOpenTableButton(selectedTable);
-    });
+    ?.appendChild(this.select.render());
+  this.element
+    .querySelector("[data-list-grist-tables-spinner]")
+    ?.appendChild(this.spinner.render());
 
   this.updateOptions();
   if (this.autoload) {
