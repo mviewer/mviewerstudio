@@ -1076,6 +1076,10 @@
 			white-space: nowrap;
 		}
 
+		.spinner-grow-container span {
+			margin-left: 10px;
+		}
+
 		.import-type-buttons__actions {
 			display: grid;
 			grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1116,20 +1120,6 @@
 
 		.import-type-buttons__content {
 			padding-top: 4px;
-		}
-
-		.table-name-input {
-			display: flex;
-			align-items: center;
-			gap: 12px;
-		}
-
-		.table-name-input label {
-			margin-bottom: 0;
-		}
-
-		.table-name-input input {
-			width: 50%;
 		}
 
 		.table-preview {
@@ -1271,15 +1261,7 @@
 			color: #dc3545;
 		}
 
-		.list-grist-tables__label {
-			display: block;
-			margin-bottom: 6px;
-			color: #777;
-			font-size: 13px;
-			font-weight: 500;
-		}
-
-		.list-grist-tables__status {
+		.list-grist-tables-status {
 			margin: 8px 0 10px;
 			font-size: 12px;
 			line-height: 1.2;

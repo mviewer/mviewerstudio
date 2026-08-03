@@ -168,15 +168,6 @@ const getUniqueGristIds = (values, fallbackPrefix) => {
 };
 
 /**
- * Read the current map title from the application form.
- *
- * @returns {string} Current map title or fallback name.
- */
-const getCurrentMapTitle = () => {
-  return document.querySelector("#opt-title")?.value?.trim() || "Carte";
-};
-
-/**
  * Read a document id from the different shapes returned by document creation.
  *
  * @param {*} doc Created Grist document response.
@@ -188,14 +179,14 @@ const getCreatedDocId = (doc) => {
 
 /**
  * Return a document id from the configured workspace, creating the document
- * only when no existing document has the requested name.
+ * only when no existing document matches the requested identifier or name.
  *
  * @param {string} gristApiKey Grist API key.
- * @param {string} documentName Document name.
+ * @param {string|number} documentReference Existing document id or document name.
  * @returns {Promise<string|number|undefined>} Grist document id.
  * @throws {Error} When document lookup or creation fails.
  */
-const getOrCreateDocument = async (gristApiKey, documentName) => {
+const getOrCreateDocument = async (gristApiKey, documentReference) => {
   const gristConfig = await getGristConfig();
   const workspaceId = await getOrCreateWorkspace(gristApiKey);
   const docs = await getWorkspaceDocsList(
@@ -203,7 +194,11 @@ const getOrCreateDocument = async (gristApiKey, documentName) => {
     workspaceId,
     gristApiKey
   );
-  const existingDoc = docs.find((doc) => getGristName(doc) === documentName);
+  const existingDoc = docs.find(
+    (doc) =>
+      String(getGristId(doc)) === String(documentReference) ||
+      getGristName(doc) === documentReference
+  );
 
   if (existingDoc) {
     return getGristId(existingDoc);
@@ -212,7 +207,7 @@ const getOrCreateDocument = async (gristApiKey, documentName) => {
   const createdDoc = await createWorkspaceDoc(
     gristConfig.apiUrl,
     workspaceId,
-    documentName,
+    documentReference,
     gristApiKey
   ).then(readJson);
 
@@ -278,17 +273,19 @@ const getActualTable = async (instanceUrl, docId, tableId, gristApiKey) => {
 };
 
 /**
- * Reuse or create a Grist document for the current map and upload parsed file
- * data into a new table.
+ * Reuse or create the selected Grist document and upload parsed file data into
+ * a new table.
  *
  * @param {Object|Array} parsedData Parsed file data, usually a PapaParse result.
  * @param {string} tableName Grist table display name.
+ * @param {string} documentName Selected document id or name to create.
  * @param {string} gristApiKey Grist API key.
  * @returns {Promise<{docId: string|number, tableId: string|number, tableRef: string|number, rowsCount: number, url: string}>} Upload result.
  */
 export const sendParsedFileToGrist = async (
   parsedData,
   tableName,
+  documentName,
   gristApiKey
 ) => {
   const rows = getRows(parsedData);
@@ -302,8 +299,12 @@ export const sendParsedFileToGrist = async (
     throw new Error("No parsed data to send to Grist");
   }
 
+  if (!documentName?.trim()) {
+    throw new Error("Sélectionnez un document ou saisissez son nom.");
+  }
+
   const gristConfig = await getGristConfig();
-  const docId = await getOrCreateDocument(gristApiKey, getCurrentMapTitle());
+  const docId = await getOrCreateDocument(gristApiKey, documentName.trim());
 
   if (docId === undefined || docId === null || docId === "") {
     throw new Error("Grist document has no id");
@@ -365,6 +366,7 @@ export const sendParsedFileToGrist = async (
       gristConfig.instanceUrl,
       gristConfig.orgId,
       docId,
+      actualTableId,
       tableRef
     ),
   };

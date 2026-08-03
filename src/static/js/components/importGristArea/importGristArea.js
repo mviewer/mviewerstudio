@@ -9,17 +9,42 @@ import UploadFile from "../uploadFile/uploadFile.js";
 import ListGristTables from "../listGristTables/listGristTables.js";
 import Table from "../table/table.js";
 import Input from "../input/input.js";
+import Select from "../select/select.js";
 import OpenGristTableBtn from "../openGristTableBtn/openGristTableBtn.js";
 import verifyUploadedFile from "../../utils/grist/verifyUploadedFile.js";
 import {
   disableSelectLayersButton,
   updateSelectLayersButtonForImportedFile,
 } from "../../utils/grist/validation.js";
+import { listDocs } from "../../utils/grist/utils.js";
 import { sendParsedFileToGrist } from "./utils.js";
 
+/**
+ * Remove the extension from a file name.
+ *
+ * @param {string} fileName File name to normalize.
+ * @returns {string} File name without its extension.
+ */
 function getFileNameWithoutExtension(fileName) {
   return fileName ? fileName.replace(/\.[^.]+$/, "") : "";
 }
+
+/**
+ * Extract the identifier from a Grist entity.
+ *
+ * @param {Object} entity Grist document entity.
+ * @returns {string|number|undefined} Document identifier.
+ */
+const getGristEntityId = (entity) => entity?.id ?? entity?.name;
+
+/**
+ * Extract the display name from a Grist entity.
+ *
+ * @param {Object} entity Grist document entity.
+ * @returns {string|number|undefined} Document display name.
+ */
+const getGristEntityName = (entity) =>
+  entity?.name ?? entity?.title ?? getGristEntityId(entity);
 
 const importGristArea = function (activeType = "file", options = {}) {
   if (typeof activeType === "object") {
@@ -32,13 +57,43 @@ const importGristArea = function (activeType = "file", options = {}) {
   this.file = null;
   this.fileVerification = null;
   this.fileTableName = "";
+  this.fileDocumentName = "";
+  this.documentOptionsPromise = null;
   this.apiKey = options.apiKey || "";
   this.onFileChange = options.onFileChange || function () {};
   this.element = document.createElement("div");
   this.element.className = "import-type-buttons";
+
+  this.documentNameSelect = new Select({
+    label: "Document Grist",
+    placeholder: "Sélectionner ou créer un document",
+    classes: "row align-items-center my-3",
+    labelClasses: "col-3 col-form-label",
+    selectClasses: "col-6",
+    onChange: (value) => {
+      this.fileDocumentName =
+        value === "create" ? this.documentNameInput.getValue() : value;
+      this.updateFilePreview();
+    },
+    onLoad: (select) => this.loadDocumentOptions(select),
+  });
+
+  this.documentNameInput = new Input({
+    label: "Nom du document :",
+    classes: "row align-items-center my-3",
+    labelClasses: "col-3 col-form-label",
+    inputClasses: "col-6",
+    placeholder: "Nom du document...",
+    onChange: (value) => {
+      this.fileDocumentName = value;
+    },
+  });
+
   this.tableNameInput = new Input({
     label: "Nom de la table :",
-    classes: "table-name-input my-3",
+    classes: "row align-items-center my-3",
+    labelClasses: "col-3 col-form-label",
+    inputClasses: "col-6",
     placeholder: "Nom de la table...",
     onChange: (value) => {
       this.fileTableName = value;
@@ -75,6 +130,39 @@ const importGristArea = function (activeType = "file", options = {}) {
   });
 };
 
+/**
+ * Load the Grist documents once and populate the document select.
+ *
+ * @param {Select} select Document select component.
+ * @returns {Promise<Array<{label: string, value: string|number}>>} Available document options.
+ */
+importGristArea.prototype.loadDocumentOptions = function (select) {
+  if (!this.documentOptionsPromise) {
+    this.documentOptionsPromise = listDocs(this.apiKey)
+      .then((documents) => [
+        { label: "Créer un document", value: "create" },
+        ...documents
+          .map((document) => ({
+            label: getGristEntityName(document),
+            value: getGristEntityId(document),
+          }))
+          .filter((option) => option.label && option.value),
+      ])
+      .catch((error) => {
+        console.error("Error loading Grist documents:", error);
+        return [{ label: "Créer un document", value: "create" }];
+      });
+  }
+
+  return this.documentOptionsPromise.then((options) => {
+    select.setOptions(options);
+    select.setDisabled(false);
+    this.fileDocumentName = select.getValue();
+
+    return options;
+  });
+};
+
 importGristArea.prototype.setActiveType = function (type) {
   this.activeType = type;
   this.update();
@@ -105,6 +193,15 @@ importGristArea.prototype.update = function () {
 
 importGristArea.prototype.getFileTableName = function () {
   return this.tableNameInput.getValue();
+};
+
+/**
+ * Return the selected Grist document identifier or the entered document name.
+ *
+ * @returns {string} Document value used when creating the Grist table.
+ */
+importGristArea.prototype.getFileDocumentName = function () {
+  return this.fileDocumentName.trim();
 };
 
 /**
@@ -144,7 +241,12 @@ importGristArea.prototype.sendFileToGrist = function (button) {
   button.disabled = true;
   this.setSendToGristStatus("Envoi vers Grist...");
 
-  sendParsedFileToGrist(parsedData, this.getFileTableName(), this.apiKey)
+  sendParsedFileToGrist(
+    parsedData,
+    this.getFileTableName(),
+    this.getFileDocumentName(),
+    this.apiKey
+  )
     .then((result) => {
       this.setSendToGristStatus(
         `${result.rowsCount} ligne(s) envoyee(s) dans Grist.`,
@@ -187,6 +289,10 @@ importGristArea.prototype.updateFilePreview = function () {
     return;
   }
 
+  previewContainer.appendChild(this.documentNameSelect.render());
+  if (this.documentNameSelect.getValue() === "create") {
+    previewContainer.appendChild(this.documentNameInput.render());
+  }
   previewContainer.appendChild(this.tableNameInput.render());
 
   this.filePreviewTable.title = this.fileTableName || "Fichier importe";

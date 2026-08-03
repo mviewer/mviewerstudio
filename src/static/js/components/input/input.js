@@ -16,6 +16,7 @@ const Input = function (options = {}) {
   this.value = options.value || "";
   this.placeholder = options.placeholder || "";
   this.classes = options.classes || "";
+  this.labelClasses = options.labelClasses || "";
   this.inputClasses = options.inputClasses || "";
   this.onChange = options.onChange || function () {};
 
@@ -41,7 +42,11 @@ Input.prototype.setValue = function (value) {
 
 Input.prototype.render = function () {
   this.element.innerHTML = `
-    ${this.label ? `<label for="${this.id}">${this.label}</label>` : ""}
+    ${
+      this.label
+        ? `<label class="${this.labelClasses}" for="${this.id}">${this.label}</label>`
+        : ""
+    }
     <input
       id="${this.id}"
       type="${this.type}"
