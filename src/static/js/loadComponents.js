@@ -3,11 +3,11 @@
  * Ajouter ici chaque composant partagé exposé dans `js/components/`.
  */
 import StepBadge from "./components/stepBadge/stepBadge.js";
-import GristApiKey from "./components/gristApiKey/gristApiKey.js";
-import GristWizard from "./components/gristWizard/gristWizard.js";
-import importGristArea from "./components/importGristArea/importGristArea.js";
+import GristApiKey from "./components/grist/gristApiKey/gristApiKey.js";
+import GristWizard from "./components/grist/gristWizard/gristWizard.js";
+import importGristArea from "./components/grist/importGristArea/importGristArea.js";
 import UploadFile from "./components/uploadFile/uploadFile.js";
-import ListGristTables from "./components/listGristTables/listGristTables.js";
+import ListGristTables from "./components/grist/listGristTables/listGristTables.js";
 import Table from "./components/table/table.js";
 import Input from "./components/input/input.js";
 import Select from "./components/select/select.js";

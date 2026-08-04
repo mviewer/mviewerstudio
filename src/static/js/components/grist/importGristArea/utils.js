@@ -4,12 +4,12 @@ import {
   getWorkspaceDocsList,
   postRecordsToTable,
   postTablesToDoc,
-} from "../../utils/grist/requests.js";
+} from "../../../utils/grist/requests.js";
 import {
   getGristConfig,
   getGristTableUrl,
   getOrCreateWorkspace,
-} from "../../utils/grist/utils.js";
+} from "../../../utils/grist/utils.js";
 
 /**
  * Parse a successful Grist API response as JSON.

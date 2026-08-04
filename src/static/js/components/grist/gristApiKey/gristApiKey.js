@@ -9,7 +9,7 @@
  *  - https://support.getgrist.com/rest-api/
  * 
  */
-import { getUserOrgs } from "../../utils/grist/requests.js";
+import { getUserOrgs } from "../../../utils/grist/requests.js";
 
 const GRIST_API_KEY_SESSION_STORAGE_KEY = "mviewerstudio.grist.apiKey";
 

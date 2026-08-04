@@ -5,21 +5,21 @@
  * `const block = new mv.components.grist.importGristArea();`
  * `target.appendChild(block.render());`
  */
-import UploadFile from "../uploadFile/uploadFile.js";
+import UploadFile from "../../uploadFile/uploadFile.js";
 import ListGristTables from "../listGristTables/listGristTables.js";
-import Table from "../table/table.js";
-import Input from "../input/input.js";
-import Select from "../select/select.js";
+import Table from "../../table/table.js";
+import Input from "../../input/input.js";
+import Select from "../../select/select.js";
 import OpenGristTableBtn from "../openGristTableBtn/openGristTableBtn.js";
-import verifyUploadedFile from "../../utils/grist/verifyUploadedFile.js";
+import verifyUploadedFile from "../../../utils/grist/verifyUploadedFile.js";
 import {
   disableGristWizardNextButton,
   disableSelectLayersButton,
   updateGristWizardNextButtonForSelectedTable,
   updateGristWizardNextButtonForSentTable,
   updateSelectLayersButtonForImportedFile,
-} from "../../utils/grist/validation.js";
-import { listDocs } from "../../utils/grist/utils.js";
+} from "../../../utils/grist/validation.js";
+import { listDocs } from "../../../utils/grist/utils.js";
 import { sendParsedFileToGrist } from "./utils.js";
 
 /**

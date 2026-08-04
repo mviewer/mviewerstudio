@@ -5,15 +5,15 @@
  * `const list = new mv.components.grist.listGristTables({ apiKey });`
  * `target.appendChild(list.render());`
  */
-import { getDocTables } from "../../utils/grist/requests.js";
+import { getDocTables } from "../../../utils/grist/requests.js";
 import {
   getGristConfig,
   getGristTableUrl,
   listDocs,
-} from "../../utils/grist/utils.js";
-import Table from "../table/table.js";
-import Select from "../select/select.js";
-import SpinnerGrow from "../spinnergrow/spinnergrow.js";
+} from "../../../utils/grist/utils.js";
+import Table from "../../table/table.js";
+import Select from "../../select/select.js";
+import SpinnerGrow from "../../spinnergrow/spinnergrow.js";
 import { gristTableToPreview } from "./utils.js";
 import OpenGristTableBtn from "../openGristTableBtn/openGristTableBtn.js";
 

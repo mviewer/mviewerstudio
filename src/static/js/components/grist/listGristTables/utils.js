@@ -1,5 +1,5 @@
-import { getTableRecords } from "../../utils/grist/requests.js";
-import { getGristConfig } from "../../utils/grist/utils.js";
+import { getTableRecords } from "../../../utils/grist/requests.js";
+import { getGristConfig } from "../../../utils/grist/utils.js";
 
 /**
  * Parse a successful Grist API response as JSON.
