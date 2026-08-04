@@ -223,17 +223,23 @@ STYLE FOR GRIST IMPORT
 */
 
 .switch-card {
+	width: 100%;
+	min-height: 58px;
+	padding: 0;
+	border: 1px solid var(--grist-color-border-soft);
+	border-radius: 14px;
+	background: var(--grist-color-white);
+	color: var(--grist-color-text);
+	overflow: hidden;
+}
+
+.switch-card-header {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
 	gap: 16px;
 	width: 100%;
-	min-height: 58px;
 	padding: 12px 14px 12px 18px;
-	border: 1px solid var(--grist-color-border-soft);
-	border-radius: 14px;
-	background: var(--grist-color-white);
-	color: var(--grist-color-text);
 }
 
 .grist-location-options > div:not(:empty) + div:not(:empty) {
@@ -327,12 +333,44 @@ STYLE FOR GRIST IMPORT
 	box-shadow: 0 0 0 3px var(--grist-color-purple-shadow);
 }
 
+.switch-card-content {
+	border-top: 1px solid var(--grist-color-border-soft);
+	padding: 12px 18px 16px;
+}
+
 /*
 -- Location options
 */
 
 #grist-location-preview:empty {
 	display: none;
+}
+
+.grist-location-panel {
+	margin: 0;
+}
+
+.grist-coordinates-fields {
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	gap: 12px;
+	margin-top: 0;
+}
+
+.grist-coordinates-field {
+	margin-bottom: 0;
+}
+
+.grist-coordinates-label {
+	display: block;
+	margin-bottom: 6px;
+	color: var(--grist-color-text-strong);
+	font-size: 13px;
+	font-weight: 600;
+}
+
+.grist-coordinates-select {
+	width: 100%;
 }
 
 /*
