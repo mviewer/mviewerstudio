@@ -42,6 +42,7 @@ const ListGristTables = function (options = {}) {
   this.placeholder = options.placeholder || "Choisir une table Grist";
   this.autoload = options.autoload !== false;
   this.onChange = options.onChange || function () {};
+  this.onFieldsChange = options.onFieldsChange || function () {};
 
   this.tables = [];
   this.loadPromise = null;
@@ -61,6 +62,7 @@ const ListGristTables = function (options = {}) {
     onChange: () => {
       const selectedTable = this.getSelectedTable();
       this.onChange(selectedTable);
+      this.onFieldsChange([]);
       this.updatePreview(selectedTable);
       this.updateOpenTableButton(selectedTable);
     },
@@ -221,6 +223,7 @@ ListGristTables.prototype.updatePreview = function (selectedTable) {
 
       this.previewTable.title = selectedTable.tableName || "Table Grist";
       this.previewTable.subtitle = "Apercu des 5 premieres lignes";
+      this.onFieldsChange(previewData?.meta?.fields || []);
       previewContainer.replaceChildren(
         this.previewTable.setData(previewData)
       );
@@ -235,6 +238,7 @@ ListGristTables.prototype.updatePreview = function (selectedTable) {
       message.className = "text-danger mb-0";
       message.textContent = "Impossible de previsualiser cette table Grist.";
       previewContainer.appendChild(message);
+      this.onFieldsChange([]);
       console.error("Error loading Grist table preview:", error);
     });
 };

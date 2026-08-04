@@ -1,3 +1,9 @@
+import {
+  renderGristLocationArea,
+  setGristLocationFields,
+  setGristLocationSwitches,
+} from "./locationFields.js";
+
 const GRIST_TAB_TARGET = "#newlayer-grist";
 
 /**
@@ -48,6 +54,7 @@ const initGristLocationSwitches = () => {
     },
   ];
   const switches = [];
+  setGristLocationSwitches(switches);
   const selectOnly = (activeSwitch) => {
     if (!activeSwitch.getChecked()) {
       activeSwitch.setChecked(true);
@@ -56,6 +63,7 @@ const initGristLocationSwitches = () => {
     switches.forEach((switchItem) => {
       switchItem.setChecked(switchItem === activeSwitch);
     });
+    renderGristLocationArea(activeSwitch.id);
   };
 
   switchConfigs.forEach((config) => {
@@ -80,6 +88,11 @@ const initGristLocationSwitches = () => {
     switches.push(switchItem);
     target.appendChild(switchItem.render());
   });
+
+  const activeSwitch = switches.find((switchItem) => switchItem.getChecked());
+  if (activeSwitch) {
+    renderGristLocationArea(activeSwitch.id);
+  }
 };
 
 /**
@@ -166,6 +179,7 @@ const initGristImportArea = (apiKey) => {
   gristDataContainer.replaceChildren();
   const importGristArea = new ImportGristArea({
     apiKey,
+    onColumnsChange: setGristLocationFields,
   });
   gristDataContainer.appendChild(importGristArea.render());
   mv.utils?.grist?.validation?.disableGristWizardNextButton();
@@ -190,6 +204,7 @@ const hideGristImportArea = () => {
   }
 
   gristDataContainer.replaceChildren();
+  setGristLocationFields([]);
   const nextButton = document.getElementById("gristWizardNextButton");
   if (nextButton) {
     nextButton.dataset.apiKeyReady = "false";
@@ -235,6 +250,7 @@ const initGristApiKey = (config) => {
  */
 const initGristNewLayerModal = (config) => {
   initGristWizard();
+  setGristLocationFields([]);
   initGristLocationSwitches();
   hideGristImportArea();
   initGristApiKey(config);

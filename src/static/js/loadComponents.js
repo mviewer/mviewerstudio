@@ -5,6 +5,7 @@
 import StepBadge from "./components/stepBadge/stepBadge.js";
 import GristApiKey from "./components/grist/gristApiKey/gristApiKey.js";
 import GristWizard from "./components/grist/gristWizard/gristWizard.js";
+import GristCoordinatesArea from "./components/grist/gristCoordinatesArea/gristCoordinatesArea.js";
 import importGristArea from "./components/grist/importGristArea/importGristArea.js";
 import UploadFile from "./components/uploadFile/uploadFile.js";
 import ListGristTables from "./components/grist/listGristTables/listGristTables.js";
@@ -27,6 +28,7 @@ mv.components.select = Select;
 mv.components.switch = Switch;
 mv.components.grist.gristApiKey = GristApiKey;
 mv.components.grist.gristWizard = GristWizard;
+mv.components.grist.gristCoordinatesArea = GristCoordinatesArea;
 mv.components.grist.importGristArea = importGristArea;
 mv.components.grist.listGristTables = ListGristTables;
 mv.utils.grist.grist = gristUtils;

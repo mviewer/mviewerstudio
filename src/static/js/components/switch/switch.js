@@ -17,6 +17,7 @@ const Switch = function (options = {}) {
   this.checked = Boolean(options.checked);
   this.disabled = Boolean(options.disabled);
   this.classes = options.classes || "";
+  this.content = options.content || null;
   this.onChange = options.onChange || function () {};
 
   this.element = document.createElement("div");
@@ -63,27 +64,47 @@ Switch.prototype.setDisabled = function (disabled) {
   return this.element;
 };
 
+Switch.prototype.setContent = function (content) {
+  this.content = content;
+
+  const contentContainer = this.element.querySelector("[data-switch-card-content]");
+  if (!contentContainer) {
+    return this.element;
+  }
+
+  contentContainer.replaceChildren();
+  if (content instanceof HTMLElement) {
+    contentContainer.appendChild(content);
+  }
+  contentContainer.classList.toggle("d-none", !contentContainer.children.length);
+
+  return this.element;
+};
+
 Switch.prototype.render = function () {
   this.element.innerHTML = `
-    <div class="switch-card-text">
-      <label class="switch-card-title" for="${this.id}">
-        ${this.label}
-        <i class="bi bi-info-circle switch-card-info" aria-hidden="true"></i>
+    <div class="switch-card-header">
+      <div class="switch-card-text">
+        <label class="switch-card-title" for="${this.id}">
+          ${this.label}
+          <i class="bi bi-info-circle switch-card-info" aria-hidden="true"></i>
+        </label>
+        ${this.description ? `<p class="switch-card-description">${this.description}</p>` : ""}
+      </div>
+      <label class="switch-card-control" for="${this.id}">
+        <input
+          id="${this.id}"
+          class="switch-card-input"
+          type="checkbox"
+          role="switch"
+          ${this.name ? `name="${this.name}"` : ""}
+          ${this.checked ? "checked" : ""}
+          ${this.disabled ? "disabled" : ""}
+        >
+        <span class="switch-card-slider" aria-hidden="true"></span>
       </label>
-      ${this.description ? `<p class="switch-card-description">${this.description}</p>` : ""}
     </div>
-    <label class="switch-card-control" for="${this.id}">
-      <input
-        id="${this.id}"
-        class="switch-card-input"
-        type="checkbox"
-        role="switch"
-        ${this.name ? `name="${this.name}"` : ""}
-        ${this.checked ? "checked" : ""}
-        ${this.disabled ? "disabled" : ""}
-      >
-      <span class="switch-card-slider" aria-hidden="true"></span>
-    </label>
+    <div class="switch-card-content d-none" data-switch-card-content></div>
   `;
 
   const input = this.getInput();
@@ -96,6 +117,7 @@ Switch.prototype.render = function () {
 
   this.setChecked(this.checked);
   this.setDisabled(this.disabled);
+  this.setContent(this.content);
 
   return this.element;
 };

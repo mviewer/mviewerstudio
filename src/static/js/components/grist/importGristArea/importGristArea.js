@@ -64,6 +64,7 @@ const importGristArea = function (activeType = "file", options = {}) {
   this.documentOptionsPromise = null;
   this.apiKey = options.apiKey || "";
   this.onFileChange = options.onFileChange || function () {};
+  this.onColumnsChange = options.onColumnsChange || function () {};
   this.element = document.createElement("div");
   this.element.className = "import-type-buttons";
 
@@ -124,6 +125,7 @@ const importGristArea = function (activeType = "file", options = {}) {
       this.file = file;
       this.fileVerification = verification;
       this.fileTableName = getFileNameWithoutExtension(file?.name);
+      this.onColumnsChange(verification?.columns || verification?.parsedData?.meta?.fields || []);
       this.tableNameInput.setValue(this.fileTableName);
       this.updateFilePreview();
       disableGristWizardNextButton();
@@ -135,6 +137,7 @@ const importGristArea = function (activeType = "file", options = {}) {
     apiKey: this.apiKey,
     autoload: false,
     onChange: updateGristWizardNextButtonForSelectedTable,
+    onFieldsChange: this.onColumnsChange,
   });
 };
 
