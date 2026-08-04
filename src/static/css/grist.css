@@ -29,14 +29,16 @@ STYLE FOR GRIST IMPORT
 	--grist-color-purple-border: #c7a1f1;
 	--grist-color-purple-surface: #e9dbfa;
 	--grist-color-purple-shadow: rgba(147, 74, 228, 0.25);
-	--grist-color-blue: #934ae4;
-	--grist-color-blue-label: #934ae4;
+	--grist-color-blue: rgb(13, 113, 207);
+	--grist-color-blue-label: rgb(13, 113, 207);
 	--grist-color-blue-outline: rgba(147, 74, 228, 0.25);
+	--grist-color-orange: rgb(245, 174, 84);
+	--grist-color-orange-label: rgb(245, 174, 84);
 	--grist-color-step-line: #DFDFDF;
 	--grist-color-icon-muted: #929292;
 	--grist-color-link: #934ae4;
 	--grist-color-green: #2ed2c5;
-	--grist-color-green-label: #186d66;
+	--grist-color-green-label: #2ed2c5;
 	--grist-color-green-bright: #2ed2c5;
 	--grist-color-green-badge: #186d66;
 	--grist-color-green-badge-bg: rgba(46, 210, 197, 0.14);
@@ -67,7 +69,7 @@ STYLE FOR GRIST IMPORT
 	margin-left: auto;
 }
 
-.spinner-grow-container span {
+.spinner-grow-container span, .grist-geocoding-spinner span {
 	margin-left: 10px;
 }
 
@@ -156,7 +158,7 @@ STYLE FOR GRIST IMPORT
 
 .grist-wizard-step-done:not(:first-child)::before,
 .grist-wizard-step-active:not(:first-child)::before {
-	background: var(--grist-color-blue);
+	background: var(--grist-color-orange);
 }
 
 .grist-wizard-marker {
@@ -175,7 +177,7 @@ STYLE FOR GRIST IMPORT
 
 .grist-wizard-step-active .grist-wizard-marker,
 .grist-wizard-step-done .grist-wizard-marker {
-	background: var(--grist-color-blue);
+	background: var(--grist-color-orange);
 	color: var(--grist-color-white);
 }
 
@@ -205,7 +207,7 @@ STYLE FOR GRIST IMPORT
 
 .grist-wizard-step-active .grist-wizard-label,
 .grist-wizard-step-done .grist-wizard-label {
-	color: var(--grist-color-blue-label);
+	color: var(--grist-color-orange-label);
 }
 
 .grist-wizard-step-done .grist-wizard-label {
@@ -350,6 +352,54 @@ STYLE FOR GRIST IMPORT
 	margin: 0;
 }
 
+.grist-address-area {
+	margin: 0;
+}
+
+.multiselect-label {
+	display: block;
+	margin-bottom: 12px;
+	color: var(--grist-color-text);
+	font-size: 16px;
+	font-weight: 400;
+}
+
+.multiselect-control {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	min-height: 44px;
+	padding: 8px 10px;
+	border: 1px solid var(--grist-color-border-soft);
+	border-radius: 10px;
+	background: var(--grist-color-white);
+}
+
+.multiselect-tags {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 6px;
+}
+
+.multiselect-tag {
+	padding: 4px 10px;
+	border: 0;
+	border-radius: 999px;
+	background: var(--grist-color-purple);
+	color: var(--grist-color-white);
+	font-size: 13px;
+	line-height: 1.2;
+}
+
+.multiselect-select {
+	flex: 1 1 auto;
+	min-width: 140px;
+	border: 0;
+	background: transparent;
+	color: var(--grist-color-text);
+	outline: none;
+}
+
 .grist-coordinates-fields {
 	display: grid;
 	grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -371,6 +421,119 @@ STYLE FOR GRIST IMPORT
 
 .grist-coordinates-select {
 	width: 100%;
+}
+
+/*
+-- Geocoding result
+*/
+
+.grist-geocoding-result {
+	padding: 18px;
+	border: 0;
+	border-radius: 0;
+	background: var(--grist-color-white);
+	text-align: center;
+}
+
+.grist-geocoding-result-icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 38px;
+	height: 38px;
+	margin-bottom: 14px;
+	border: 4px solid currentColor;
+	border-radius: 50%;
+	font-size: 24px;
+	font-weight: 700;
+	line-height: 1;
+}
+
+.grist-geocoding-result-success .grist-geocoding-result-icon,
+.grist-geocoding-result-success .grist-geocoding-result-title {
+	color: var(--grist-color-green);
+}
+
+.grist-geocoding-result-partial .grist-geocoding-result-icon,
+.grist-geocoding-result-partial .grist-geocoding-result-title {
+	color: var(--grist-color-orange);
+}
+
+.grist-geocoding-result-failure .grist-geocoding-result-icon,
+.grist-geocoding-result-failure .grist-geocoding-result-title {
+	color: var(--grist-color-danger);
+}
+
+.grist-geocoding-result-title {
+	margin: 0 0 18px;
+	font-size: 28px;
+	font-weight: 700;
+}
+
+.grist-geocoding-result-counter {
+	margin: 0;
+	color: var(--grist-color-text);
+	font-size: 18px;
+}
+
+.grist-geocoding-result-message {
+	margin: 0;
+	color: var(--grist-color-text);
+	font-size: 18px;
+	font-style: italic;
+}
+
+.grist-geocoding-preview-title {
+	margin: 18px 0 10px;
+	color: var(--grist-color-text-strong);
+	font-size: 15px;
+	font-weight: 700;
+	text-align: left;
+}
+
+.grist-geocoding-result .table-preview {
+	margin-top: 26px;
+	text-align: left;
+}
+
+.grist-geocoding-result-actions {
+	display: flex;
+	justify-content: center;
+	gap: 20px;
+	margin-top: 18px;
+}
+
+.grist-geocoding-result-primary-button {
+	border-color: var(--grist-color-purple-button);
+	border-radius: 16px;
+	background: var(--grist-color-purple-button);
+	color: var(--grist-color-white);
+}
+
+.grist-geocoding-result-primary-button:hover,
+.grist-geocoding-result-primary-button:focus {
+	border-color: var(--grist-color-purple-button-hover);
+	background: var(--grist-color-purple-button-hover);
+	color: var(--grist-color-white);
+}
+
+.grist-geocoding-result-secondary-button {
+	border-color: var(--grist-color-purple);
+	border-radius: 16px;
+	background: var(--grist-color-white);
+	color: var(--grist-color-purple);
+}
+
+.grist-geocoding-result-secondary-button:hover,
+.grist-geocoding-result-secondary-button:focus {
+	background: var(--grist-color-purple-surface);
+	color: var(--grist-color-purple);
+}
+
+.grist-geocoding-loading-label {
+	margin-left: 10px;
+	color: var(--grist-color-text);
+	font-size: 14px;
 }
 
 /*
@@ -806,4 +969,41 @@ STYLE FOR GRIST IMPORT
 	font-weight: 600;
 	vertical-align: middle;
 	white-space: nowrap;
+}
+
+.table-preview__pagination {
+	display: flex;
+	gap: 8px;
+	margin-top: 14px;
+}
+
+.table-preview__pagination .page-item .page-link {
+	min-width: 30px;
+	padding: 6px 11px;
+	border: 1px solid var(--grist-color-border-soft);
+	border-radius: 6px;
+	background: var(--grist-color-white);
+	color: var(--grist-color-purple);
+	font-size: 13px;
+	line-height: 1.2;
+	box-shadow: none;
+}
+
+.table-preview__pagination .page-item.active .page-link {
+	border-color: var(--grist-color-purple-button);
+	background: var(--grist-color-purple-button);
+	color: var(--grist-color-white);
+}
+
+.table-preview__pagination .page-item:not(.active) .page-link:hover,
+.table-preview__pagination .page-item:not(.active) .page-link:focus {
+	border-color: var(--grist-color-purple-border);
+	background: var(--grist-color-purple-surface);
+	color: var(--grist-color-purple);
+}
+
+.table-preview__pagination .page-item.disabled .page-link {
+	color: var(--grist-color-text-muted);
+	pointer-events: none;
+	opacity: 0.6;
 }

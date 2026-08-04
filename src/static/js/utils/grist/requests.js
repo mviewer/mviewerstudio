@@ -252,6 +252,62 @@ export const postRecordsToTable = (
 };
 
 /**
+ * Add columns to a Grist table.
+ *
+ * @param {string} instanceUrl Base URL of the Grist instance or nginx proxy.
+ * @param {string|number} docId Grist document id.
+ * @param {string|number} tableId Grist table id.
+ * @param {Object} columnsData Columns payload expected by the Grist API.
+ * @param {string} apiKey Grist API key.
+ * @returns {Promise<Response>} Fetch response from the Grist API.
+ */
+export const postColumnsToTable = (
+  instanceUrl,
+  docId,
+  tableId,
+  columnsData,
+  apiKey
+) => {
+  return fetch(
+    `${instanceUrl}/api/docs/${docId}/tables/${encodeURIComponent(tableId)}/columns`,
+    {
+      method: "POST",
+      credentials: "omit",
+      headers: getJsonHeaders(apiKey),
+      body: JSON.stringify(columnsData),
+    }
+  );
+};
+
+/**
+ * Update existing records in a Grist table.
+ *
+ * @param {string} instanceUrl Base URL of the Grist instance or nginx proxy.
+ * @param {string|number} docId Grist document id.
+ * @param {string|number} tableId Grist table id.
+ * @param {Object} recordsData Records payload expected by the Grist API.
+ * @param {string} apiKey Grist API key.
+ * @returns {Promise<Response>} Fetch response from the Grist API.
+ */
+export const patchRecordsToTable = (
+  instanceUrl,
+  docId,
+  tableId,
+  recordsData,
+  apiKey
+) => {
+  return fetch(
+    `${instanceUrl}/api/docs/${docId}/tables/${encodeURIComponent(tableId)}/records`,
+    {
+      method: "PATCH",
+      credentials: "omit",
+      headers: getJsonHeaders(apiKey),
+      body: JSON.stringify(recordsData),
+    }
+  );
+};
+
+/**
  * List tables from a Grist document.
  *
  * @param {string} instanceUrl Base URL of the Grist instance or nginx proxy.
@@ -289,5 +345,25 @@ export const getTableRecords = (
     method: "GET",
     credentials: "omit",
     headers: getAuthHeaders(apiKey),
+  });
+};
+
+/**
+ * Send CSV data to the BAN geocoding API.
+ *
+ * @param {string} csvData CSV content to geocode.
+ * @returns {Promise<Response>} Fetch response from the BAN API.
+ */
+export const postCsvToBanGeocoding = (csvData) => {
+  const payload = new FormData();
+  payload.append(
+    "data",
+    new Blob([csvData], { type: "text/csv;charset=utf-8" }),
+    "data.csv"
+  );
+
+  return fetch("https://data.geopf.fr/geocodage/search/csv/", {
+    method: "POST",
+    body: payload,
   });
 };

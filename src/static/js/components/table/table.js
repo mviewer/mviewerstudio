@@ -195,7 +195,7 @@ Table.prototype.renderPagination = function (pageCount) {
   const nav = document.createElement("nav");
   const list = document.createElement("ul");
   nav.setAttribute("aria-label", "Pagination du tableau");
-  list.className = "pagination pagination-sm mb-0";
+  list.className = "pagination pagination-sm table-preview__pagination mb-0";
 
   const addItem = (label, page, disabled, active) => {
     const item = document.createElement("li");
@@ -215,13 +215,13 @@ Table.prototype.renderPagination = function (pageCount) {
     list.appendChild(item);
   };
 
-  addItem("Precedent", this.currentPage - 1, this.currentPage === 1, false);
+  addItem("‹ Précédent", this.currentPage - 1, this.currentPage === 1, false);
 
   for (let page = 1; page <= pageCount; page += 1) {
     addItem(String(page), page, false, page === this.currentPage);
   }
 
-  addItem("Suivant", this.currentPage + 1, this.currentPage === pageCount, false);
+  addItem("Suivant ›", this.currentPage + 1, this.currentPage === pageCount, false);
   nav.appendChild(list);
   this.element.appendChild(nav);
 };

@@ -1,4 +1,5 @@
 const gristLocationState = {
+  activeArea: null,
   fields: [],
   switches: [],
 };
@@ -12,6 +13,16 @@ const getActiveGristLocationSwitchId = () =>
   document.querySelector('input[name="grist-location-mode"]:checked')?.id || "";
 
 /**
+ * Return selected address fields.
+ *
+ * @returns {string[]} Field names selected for address geocoding.
+ */
+const getGristAddressFields = () =>
+  typeof gristLocationState.activeArea?.getFields === "function"
+    ? gristLocationState.activeArea.getFields()
+    : [];
+
+/**
  * Store available field names for Grist location controls.
  *
  * @param {string[]} fields Field names from the selected/imported table.
@@ -20,8 +31,9 @@ const getActiveGristLocationSwitchId = () =>
 const setGristLocationFields = (fields = []) => {
   gristLocationState.fields = fields.filter(Boolean);
 
-  if (getActiveGristLocationSwitchId() === "xySwitch") {
-    renderGristLocationArea("xySwitch");
+  const activeSwitchId = getActiveGristLocationSwitchId();
+  if (activeSwitchId) {
+    renderGristLocationArea(activeSwitchId);
   }
 };
 
@@ -35,33 +47,47 @@ const renderGristLocationArea = (selectedSwitchId) => {
   gristLocationState.switches.forEach((switchItem) => {
     switchItem.setContent(null);
   });
+  gristLocationState.activeArea = null;
 
-  if (selectedSwitchId !== "xySwitch") {
-    return;
-  }
-
-  const GristCoordinatesArea =
-    mv.components && mv.components.grist && mv.components.grist.gristCoordinatesArea;
-  if (!GristCoordinatesArea) {
-    return;
-  }
-
-  const coordinatesArea = new GristCoordinatesArea({
-    columns: gristLocationState.fields,
-  });
-  const xySwitch = gristLocationState.switches.find(
-    (switchItem) => switchItem.id === "xySwitch"
+  const selectedSwitch = gristLocationState.switches.find(
+    (switchItem) => switchItem.id === selectedSwitchId
   );
 
-  if (!xySwitch) {
+  if (!selectedSwitch) {
     return;
   }
 
-  xySwitch.setContent(
-    typeof coordinatesArea.render === "function"
-      ? coordinatesArea.render()
-      : coordinatesArea.element
-  );
+  if (selectedSwitchId === "adresseSwitch") {
+    const GristAddressArea =
+      mv.components && mv.components.grist && mv.components.grist.gristAddressArea;
+    if (!GristAddressArea) {
+      return;
+    }
+
+    const addressArea = new GristAddressArea({
+      fields: gristLocationState.fields,
+    });
+    gristLocationState.activeArea = addressArea;
+    selectedSwitch.setContent(addressArea.render());
+  }
+
+  if (selectedSwitchId === "xySwitch") {
+    const GristCoordinatesArea =
+      mv.components && mv.components.grist && mv.components.grist.gristCoordinatesArea;
+    if (!GristCoordinatesArea) {
+      return;
+    }
+
+    const coordinatesArea = new GristCoordinatesArea({
+      columns: gristLocationState.fields,
+    });
+    gristLocationState.activeArea = coordinatesArea;
+    selectedSwitch.setContent(
+      typeof coordinatesArea.render === "function"
+        ? coordinatesArea.render()
+        : coordinatesArea.element
+    );
+  }
 };
 
 /**
@@ -75,6 +101,7 @@ const setGristLocationSwitches = (switches = []) => {
 };
 
 export {
+  getGristAddressFields,
   getActiveGristLocationSwitchId,
   renderGristLocationArea,
   setGristLocationFields,
@@ -82,6 +109,7 @@ export {
 };
 
 export default {
+  getGristAddressFields,
   getActiveGristLocationSwitchId,
   renderGristLocationArea,
   setGristLocationFields,

@@ -12,6 +12,7 @@ import Input from "../../input/input.js";
 import Select from "../../select/select.js";
 import OpenGristTableBtn from "../openGristTableBtn/openGristTableBtn.js";
 import verifyUploadedFile from "../../../utils/grist/verifyUploadedFile.js";
+import { getTableRecords } from "../../../utils/grist/requests.js";
 import {
   disableGristWizardNextButton,
   disableSelectLayersButton,
@@ -19,7 +20,11 @@ import {
   updateGristWizardNextButtonForSentTable,
   updateSelectLayersButtonForImportedFile,
 } from "../../../utils/grist/validation.js";
-import { listDocs } from "../../../utils/grist/utils.js";
+import {
+  getGristConfig,
+  getGristTableUrl,
+  listDocs,
+} from "../../../utils/grist/utils.js";
 import { sendParsedFileToGrist } from "./utils.js";
 
 /**
@@ -49,6 +54,42 @@ const getGristEntityId = (entity) => entity?.id ?? entity?.name;
 const getGristEntityName = (entity) =>
   entity?.name ?? entity?.title ?? getGristEntityId(entity);
 
+const getRows = (data) => {
+  if (Array.isArray(data)) {
+    return data;
+  }
+
+  if (Array.isArray(data?.data)) {
+    return data.data;
+  }
+
+  return [];
+};
+
+const getHeaders = (rows, data) => {
+  if (Array.isArray(data?.meta?.fields) && data.meta.fields.length) {
+    return data.meta.fields;
+  }
+
+  const firstRow = rows.find((row) => row && typeof row === "object");
+
+  if (!firstRow) {
+    return [];
+  }
+
+  return Array.isArray(firstRow)
+    ? firstRow.map((_, index) => `column_${index + 1}`)
+    : Object.keys(firstRow);
+};
+
+const readJson = async (response) => {
+  if (!response.ok) {
+    throw new Error(`Grist request failed with status ${response.status}`);
+  }
+
+  return response.json();
+};
+
 const importGristArea = function (activeType = "file", options = {}) {
   if (typeof activeType === "object") {
     options = activeType;
@@ -61,6 +102,7 @@ const importGristArea = function (activeType = "file", options = {}) {
   this.fileVerification = null;
   this.fileTableName = "";
   this.fileDocumentName = "";
+  this.sentTable = null;
   this.documentOptionsPromise = null;
   this.apiKey = options.apiKey || "";
   this.onFileChange = options.onFileChange || function () {};
@@ -124,6 +166,7 @@ const importGristArea = function (activeType = "file", options = {}) {
     onChange: (file, verification) => {
       this.file = file;
       this.fileVerification = verification;
+      this.sentTable = null;
       this.fileTableName = getFileNameWithoutExtension(file?.name);
       this.onColumnsChange(verification?.columns || verification?.parsedData?.meta?.fields || []);
       this.tableNameInput.setValue(this.fileTableName);
@@ -217,6 +260,102 @@ importGristArea.prototype.getFileDocumentName = function () {
   return this.fileDocumentName.trim();
 };
 
+importGristArea.prototype.getTargetTable = function () {
+  if (this.activeType === "grist") {
+    const selectedTable = this.listGristTables.getSelectedTable();
+
+    return selectedTable
+      ? {
+          docId: selectedTable.docId,
+          tableId: selectedTable.tableId,
+          tableRef: selectedTable.tableRef,
+          url: selectedTable.url,
+        }
+      : null;
+  }
+
+  return this.sentTable
+    ? {
+        docId: this.sentTable.docId,
+        tableId: this.sentTable.tableId,
+        tableRef: this.sentTable.tableRef,
+        url: this.sentTable.url,
+      }
+    : null;
+};
+
+/**
+ * Return the Grist interface URL for the selected or imported target table.
+ *
+ * @returns {Promise<string|null>} URL that opens the target table in Grist.
+ */
+importGristArea.prototype.getTargetTableUrl = async function () {
+  const targetTable = this.getTargetTable();
+
+  if (!targetTable) {
+    return null;
+  }
+
+  if (targetTable.url) {
+    return targetTable.url;
+  }
+
+  if (!targetTable.tableRef) {
+    return null;
+  }
+
+  const gristConfig = await getGristConfig();
+
+  return getGristTableUrl(
+    gristConfig.instanceUrl,
+    gristConfig.orgId,
+    targetTable.docId,
+    targetTable.tableId,
+    targetTable.tableRef
+  );
+};
+
+importGristArea.prototype.getSourceData = async function () {
+  const targetTable = this.getTargetTable();
+  if (targetTable) {
+    const gristConfig = await getGristConfig();
+    const payload = await getTableRecords(
+      gristConfig.apiUrl,
+      targetTable.docId,
+      targetTable.tableId,
+      this.apiKey
+    ).then(readJson);
+    const records = payload.records || [];
+    const rows = records.map((record) => ({
+      ...(record?.fields || record),
+    }));
+
+    return {
+      docId: targetTable.docId,
+      tableId: targetTable.tableId,
+      fields: getHeaders(rows, { data: rows }),
+      records,
+      rows,
+    };
+  }
+
+  if (this.activeType === "file") {
+    const parsedData = this.fileVerification?.parsedData;
+    const rows = getRows(parsedData);
+
+    return {
+      fields: getHeaders(rows, parsedData),
+      rows,
+    };
+  }
+
+  return {
+    fields: [],
+    records: [],
+    rows: [],
+  };
+};
+
 /**
  * Display the status of the "Envoyer dans Grist" action.
  *
@@ -261,6 +400,7 @@ importGristArea.prototype.sendFileToGrist = function (button) {
     this.apiKey
   )
     .then((result) => {
+      this.sentTable = result;
       this.setSendToGristStatus(
         `${result.rowsCount} ligne(s) envoyee(s) dans Grist.`,
         "success"
