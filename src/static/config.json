@@ -5,7 +5,7 @@
         "mviewerstudio_version":  "4.3.1",
         "api": "api/app",
         "store_style_service": "api/style",
-        "mviewer_instance": "http://localhost:5051/mviewer/",
+        "mviewer_instance": "http://localhost:5051/",
         "publish_url": "http://localhost:5051/?config=apps/public/{{config}}.xml",
         "conf_path_from_mviewer": "apps/store/",
         "qgis": {
@@ -25,8 +25,9 @@
         "user_info": "api/user",
         "proxy": "",
         "grist": {
-            "instance_url": "/grist",
-            "org_id": "santegraphie",
+            "api_url": "http://localhost:90/grist",
+            "instance_url": "https://grist.numerique.gouv.fr/",
+            "org_idold": "santegraphie",
             "workspace_name": "mviewerstudio"
         },
         "user_info_visible": true,

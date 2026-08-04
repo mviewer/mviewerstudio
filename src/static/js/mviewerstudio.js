@@ -692,6 +692,44 @@ $("#themes-list").on("change", ".custom-control-input", function () {
   }
 });
 
+const getGristWizardContentSteps = () =>
+  Array.from(document.querySelectorAll("#newLayerByGrist > div:not(#grist-footer)"));
+
+const setGristWizardStep = (step) => {
+  const steps = getGristWizardContentSteps();
+  const importGristAreaContainer = document.getElementById("newLayerByGrist");
+  const gristWizardContainer = document.getElementById("newlayer-grist-wizard");
+  const backButton = document.getElementById("gristWizardBackButton");
+  const nextButton = document.getElementById("gristWizardNextButton");
+  const maxStep = steps.length || 1;
+  const activeStep = Math.min(Math.max(Number(step) || 1, 1), maxStep);
+
+  gristWizardContainer?._gristWizard?.changeStep(activeStep);
+  steps.forEach((contentStep, index) => {
+    contentStep.classList.toggle("d-none", index + 1 !== activeStep);
+  });
+
+  [backButton, nextButton].forEach((button) => {
+    if (button) {
+      button.dataset.step = activeStep;
+    }
+  });
+
+  backButton?.classList.toggle(
+    "d-none",
+    activeStep <= 1 || !importGristAreaContainer
+  );
+  nextButton?.classList.toggle(
+    "d-none",
+    activeStep >= maxStep || !importGristAreaContainer
+  );
+  if (nextButton) {
+    nextButton.disabled =
+      (activeStep === 1 && nextButton.dataset.apiKeyReady !== "true") ||
+      (activeStep === 2 && nextButton.dataset.ready !== "true");
+  }
+};
+
 document
   .getElementById("mod-layerNew")
   .addEventListener("show.bs.modal", function (event) {
@@ -700,48 +738,57 @@ document
     const themeId = button.getAttribute("data-themeid");
     const selectLayersButton = document.getElementById("selectLayersButton");
     selectLayersButton.setAttribute("data-themeid", themeId);
-    // init step badge
-    const stepBadgeContainer = document.getElementById("newlayer-grist-step-badge");
-    const StepBadge = mv.components && mv.components.stepBadge;
-    if (stepBadgeContainer && StepBadge) {
-      stepBadgeContainer.replaceChildren();
-      const stepBadge = new StepBadge({
+    // init Grist wizard
+    const gristWizardContainer = document.getElementById("newlayer-grist-wizard");
+    const GristWizard = mv.components && mv.components.grist && mv.components.grist.gristWizard;
+    if (gristWizardContainer && GristWizard) {
+      gristWizardContainer.replaceChildren();
+      const gristWizard = new GristWizard({
         step: 1,
-        maxSteps: 2,
-        classes: "step-badge--grist",
       });
-      stepBadge.appendTo(stepBadgeContainer);
-      stepBadgeContainer._stepBadge = stepBadge;
+      gristWizard.appendTo(gristWizardContainer);
+      gristWizardContainer._gristWizard = gristWizard;
     }
     // init import grist area - target id newLayerByGrist
     const importGristAreaContainer = document.getElementById("newLayerByGrist");
+    const gristAuthContainer = document.getElementById("grist-auth");
+    const gristDataContainer = document.getElementById("grist-data");
     const ImportGristArea = mv.components && mv.components.grist && mv.components.grist.importGristArea;
     const hideImportGristArea = () => {
-      if (!importGristAreaContainer) {
+      if (!importGristAreaContainer || !gristDataContainer) {
         return;
       }
-      importGristAreaContainer.replaceChildren();
-      importGristAreaContainer.classList.add("d-none");
+      gristDataContainer.replaceChildren();
+      const nextButton = document.getElementById("gristWizardNextButton");
+      if (nextButton) {
+        nextButton.dataset.apiKeyReady = "false";
+      }
+      mv.utils?.grist?.validation?.disableGristWizardNextButton();
+      setGristWizardStep(1);
     };
     const showImportGristArea = (apiKey) => {
-      if (!importGristAreaContainer || !ImportGristArea) {
+      if (!importGristAreaContainer || !gristDataContainer || !ImportGristArea) {
         return;
       }
-      importGristAreaContainer.replaceChildren();
+      gristDataContainer.replaceChildren();
       const importGristArea = new ImportGristArea({
         apiKey,
       });
-      importGristAreaContainer.appendChild(importGristArea.render());
-      importGristAreaContainer.classList.remove("d-none");
+      gristDataContainer.appendChild(importGristArea.render());
+      mv.utils?.grist?.validation?.disableGristWizardNextButton();
+      const nextButton = document.getElementById("gristWizardNextButton");
+      if (nextButton) {
+        nextButton.dataset.apiKeyReady = "true";
+      }
+      setGristWizardStep(1);
     };
 
     hideImportGristArea();
 
-    // init api key UI - target id grist-api-key-area
-    const gristApiKeyContainer = document.getElementById("grist-api-key-area");
+    // init api key UI - target id grist-auth
     const GristApiKey = mv.components && mv.components.grist && mv.components.grist.gristApiKey;
-    if (gristApiKeyContainer && GristApiKey) {
-      gristApiKeyContainer.replaceChildren();
+    if (gristAuthContainer && GristApiKey) {
+      gristAuthContainer.replaceChildren();
       const gristApiKey = new GristApiKey(
         _conf.grist.api_url || _conf.grist.instance_url,
         "https://grist.numerique.gouv.fr/account/developer",
@@ -750,9 +797,29 @@ document
           onInvalidApiKey: hideImportGristArea,
         }
       );
-      gristApiKeyContainer.appendChild(gristApiKey.render());
+      gristAuthContainer.appendChild(gristApiKey.render());
     }
   });
+
+$("#mod-layerNew").on("click", '[data-bs-toggle="pill"]', function () {
+  if (this.getAttribute("data-bs-target") !== "#newlayer-grist") {
+    document.getElementById("gristWizardBackButton")?.classList.add("d-none");
+    document.getElementById("gristWizardNextButton")?.classList.add("d-none");
+    return;
+  }
+
+  const currentStep =
+    Number(document.getElementById("gristWizardNextButton")?.dataset.step) || 1;
+  setGristWizardStep(currentStep);
+});
+
+$("#mod-layerNew").on("click", "#gristWizardBackButton", function () {
+  setGristWizardStep((Number(this.dataset.step) || 1) - 1);
+});
+
+$("#mod-layerNew").on("click", "#gristWizardNextButton", function () {
+  setGristWizardStep((Number(this.dataset.step) || 1) + 1);
+});
 
 // Update layers counter
 $("#mod-layerNew").on("click", "#selectLayersButton", function () {
@@ -760,11 +827,7 @@ $("#mod-layerNew").on("click", "#selectLayersButton", function () {
   const th = $(`div[data-themeid="${themeId}"]`);
   var nb_layers = $(`#${themeId} .theme-layer-list`).children(".list-group-item").length;
   th.find(".theme-infos-layer").text(nb_layers);
-  const stepBadgeContainer = document.getElementById("newlayer-grist-step-badge");
-  if (stepBadgeContainer && mv.components && mv.components.stepBadge) {
-    const stepBadge = stepBadgeContainer._stepBadge;
-    stepBadge.changeStep(2);
-  }
+  setGristWizardStep(getGristWizardContentSteps().length);
 });
 
 // New save function to override old one to edit and save all the themes at the same time now.

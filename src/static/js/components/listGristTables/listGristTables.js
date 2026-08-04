@@ -31,6 +31,8 @@ const getGristId = (item) => item?.id ?? item?.name ?? item?.domain;
 const getGristName = (item) => item?.name ?? item?.title ?? item?.id;
 const getGristTableRef = (table) =>
   table?.fields?.tableRef ?? table?.tableRef ?? getGristId(table);
+const getTablesCountLabel = (count) =>
+  `${count} table${count > 1 ? "s" : ""} disponible${count > 1 ? "s" : ""}`;
 
 const ListGristTables = function (options = {}) {
   listGristTablesInstanceId += 1;
@@ -51,11 +53,10 @@ const ListGristTables = function (options = {}) {
   });
   this.select = new Select({
     id: this.id,
-    label: "Table Grist",
+    label: "",
     placeholder: this.placeholder,
-    classes: "row align-items-center my-3",
-    labelClasses: "col-3 col-form-label",
-    selectClasses: "col-6",
+    classes: "list-grist-tables-select-wrapper",
+    selectClasses: "list-grist-tables-select",
     disabled: true,
     onChange: () => {
       const selectedTable = this.getSelectedTable();
@@ -80,8 +81,9 @@ ListGristTables.prototype.setStatus = function (message, type = "muted") {
     return;
   }
 
-  status.className = `list-grist-tables-status text-${type}`;
+  status.className = `list-grist-tables-status list-grist-tables-status-${type}`;
   status.textContent = message;
+  status.classList.toggle("d-none", !message);
 };
 
 ListGristTables.prototype.setLoading = function (loading) {
@@ -155,7 +157,7 @@ ListGristTables.prototype.load = function () {
         return tables;
       }
 
-      this.setStatus(`${tables.length} table(s) disponible(s).`, "success");
+      this.setStatus(getTablesCountLabel(tables.length), "success");
       this.setListVisible(true);
       return tables;
     })
@@ -274,15 +276,31 @@ ListGristTables.prototype.updateOpenTableButton = function (selectedTable) {
 
 ListGristTables.prototype.render = function () {
   this.element.innerHTML = `
-    <p class="list-grist-tables-status text-muted" data-list-grist-tables-status></p>
-    <div data-list-grist-tables-spinner></div>
-    <div class="d-none" data-list-grist-tables-select></div>
+    <div class="list-grist-tables-card">
+      <div class="list-grist-tables-header">
+        <div>
+          <label class="list-grist-tables-label" for="${this.id}">Table Grist</label>
+          <p class="list-grist-tables-help">Choisissez la table source contenant les adresses à géocoder.</p>
+        </div>
+        <span class="list-grist-tables-status list-grist-tables-status-muted d-none" data-list-grist-tables-status></span>
+      </div>
+      <div data-list-grist-tables-spinner></div>
+      <div class="d-none" data-list-grist-tables-select>
+        <div class="list-grist-tables-select-field">
+          <i class="ri-table-line list-grist-tables-select-icon" aria-hidden="true"></i>
+        </div>
+        <p class="list-grist-tables-format">
+          <i class="ri-information-line" aria-hidden="true"></i>
+          Format : <code>document / table</code>
+        </p>
+      </div>
+    </div>
     <div class="list-grist-tables-preview d-none" data-list-grist-tables-preview></div>
     <div id="open-table-into-grist"></div>
   `;
 
   this.element
-    .querySelector("[data-list-grist-tables-select]")
+    .querySelector(".list-grist-tables-select-field")
     ?.appendChild(this.select.render());
   this.element
     .querySelector("[data-list-grist-tables-spinner]")

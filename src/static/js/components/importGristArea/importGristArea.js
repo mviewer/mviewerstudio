@@ -13,7 +13,10 @@ import Select from "../select/select.js";
 import OpenGristTableBtn from "../openGristTableBtn/openGristTableBtn.js";
 import verifyUploadedFile from "../../utils/grist/verifyUploadedFile.js";
 import {
+  disableGristWizardNextButton,
   disableSelectLayersButton,
+  updateGristWizardNextButtonForSelectedTable,
+  updateGristWizardNextButtonForSentTable,
   updateSelectLayersButtonForImportedFile,
 } from "../../utils/grist/validation.js";
 import { listDocs } from "../../utils/grist/utils.js";
@@ -73,6 +76,7 @@ const importGristArea = function (activeType = "file", options = {}) {
     onChange: (value) => {
       this.fileDocumentName =
         value === "create" ? this.documentNameInput.getValue() : value;
+      disableGristWizardNextButton();
       this.updateFilePreview();
     },
     onLoad: (select) => this.loadDocumentOptions(select),
@@ -86,6 +90,7 @@ const importGristArea = function (activeType = "file", options = {}) {
     placeholder: "Nom du document...",
     onChange: (value) => {
       this.fileDocumentName = value;
+      disableGristWizardNextButton();
     },
   });
 
@@ -97,6 +102,7 @@ const importGristArea = function (activeType = "file", options = {}) {
     placeholder: "Nom de la table...",
     onChange: (value) => {
       this.fileTableName = value;
+      disableGristWizardNextButton();
       this.filePreviewTable.setTitle(
         this.fileTableName || "Fichier importe",
         "Apercu des 5 premieres lignes"
@@ -120,6 +126,7 @@ const importGristArea = function (activeType = "file", options = {}) {
       this.fileTableName = getFileNameWithoutExtension(file?.name);
       this.tableNameInput.setValue(this.fileTableName);
       this.updateFilePreview();
+      disableGristWizardNextButton();
       updateSelectLayersButtonForImportedFile(verification);
       this.onFileChange(file, verification, this.fileTableName);
     },
@@ -127,6 +134,7 @@ const importGristArea = function (activeType = "file", options = {}) {
   this.listGristTables = new ListGristTables({
     apiKey: this.apiKey,
     autoload: false,
+    onChange: updateGristWizardNextButtonForSelectedTable,
   });
 };
 
@@ -168,11 +176,13 @@ importGristArea.prototype.setActiveType = function (type) {
   this.update();
 
   if (type === "grist") {
+    updateGristWizardNextButtonForSelectedTable(this.listGristTables.getSelectedTable());
     disableSelectLayersButton();
     this.listGristTables.load();
     return;
   }
 
+  disableGristWizardNextButton();
   updateSelectLayersButtonForImportedFile(this.fileVerification);
 };
 
@@ -255,6 +265,7 @@ importGristArea.prototype.sendFileToGrist = function (button) {
       this.element
         .querySelector("[data-open-created-grist-table]")
         ?.replaceChildren(new OpenGristTableBtn({ url: result.url }).render());
+      updateGristWizardNextButtonForSentTable(result);
     })
     .catch((error) => {
       this.setSendToGristStatus(
