@@ -5,55 +5,56 @@ STYLE FOR GRIST IMPORT
 */
 
 :root {
-	--grist-color-text: #555;
-	--grist-color-text-strong: #333;
-	--grist-color-text-muted: #777;
-	--grist-color-text-soft: #888;
-	--grist-color-text-step-muted: #8a8f98;
-	--grist-color-text-disabled: #999;
+	--grist-color-text: #4e4e4e;
+	--grist-color-text-strong: #2c2c52;
+	--grist-color-text-muted: #929292;
+	--grist-color-text-soft: #929292;
+	--grist-color-text-step-muted: #929292;
+	--grist-color-text-disabled: #929292;
 	--grist-color-white: #fff;
-	--grist-color-border: #e2e2e2;
-	--grist-color-border-soft: #d8d8d8;
-	--grist-color-border-dashed: #dedede;
+	--grist-color-border: #D1D1D1;
+	--grist-color-border-soft: #DFDFDF;
+	--grist-color-border-dashed: #D1D1D1;
 	--grist-color-surface: #fff;
-	--grist-color-surface-muted: #f2f2f2;
-	--grist-color-surface-hover: #f5f4f0;
-	--grist-color-surface-active: #ebeae5;
-	--grist-color-control-hover: #f4f4f4;
+	--grist-color-surface-muted: #f5f5f5;
+	--grist-color-surface-hover: #f5f5f5;
+	--grist-color-surface-active: #eaeaea;
+	--grist-color-control-hover: #f5f5f5;
 	--grist-color-primary-dark: #2c2c52;
-	--grist-color-primary-dark-hover: #20203d;
-	--grist-color-purple: #8c3dff;
-	--grist-color-purple-button: #8170db;
-	--grist-color-purple-button-hover: #6f5ccf;
-	--grist-color-purple-button-disabled: #c8c1ee;
-	--grist-color-purple-border: #b57aff;
-	--grist-color-purple-surface: #f7f0ff;
-	--grist-color-purple-shadow: rgba(181, 122, 255, 0.16);
-	--grist-color-blue: #4fc3e8;
-	--grist-color-blue-label: #39b9e0;
-	--grist-color-blue-outline: rgba(79, 195, 232, 0.25);
-	--grist-color-step-line: #e9ecef;
-	--grist-color-icon-muted: #7c7c7c;
-	--grist-color-link: #2f80ed;
-	--grist-color-green: #2e7d32;
-	--grist-color-green-label: #85b81e;
-	--grist-color-green-bright: #a8d92d;
-	--grist-color-green-badge: #008000;
-	--grist-color-green-badge-bg: rgba(0, 128, 0, 0.12);
-	--grist-color-success: #198754;
-	--grist-color-warning: #9a6700;
-	--grist-color-danger: #dc3545;
-	--grist-color-danger-bg: rgba(220, 53, 69, 0.12);
-	--grist-color-upload-valid: #4caf50;
-	--grist-color-upload-button: #9b4de3;
-	--grist-color-code: #c93f3f;
+	--grist-color-primary-dark-hover: #1a1a31;
+	--grist-color-purple: #934ae4;
+	--grist-color-purple-button: #934ae4;
+	--grist-color-purple-button-hover: #7921da;
+	--grist-color-purple-button-disabled: #d4b6f4;
+	--grist-color-purple-border: #c7a1f1;
+	--grist-color-purple-surface: #e9dbfa;
+	--grist-color-purple-shadow: rgba(147, 74, 228, 0.25);
+	--grist-color-blue: #934ae4;
+	--grist-color-blue-label: #934ae4;
+	--grist-color-blue-outline: rgba(147, 74, 228, 0.25);
+	--grist-color-step-line: #DFDFDF;
+	--grist-color-icon-muted: #929292;
+	--grist-color-link: #934ae4;
+	--grist-color-green: #2ed2c5;
+	--grist-color-green-label: #186d66;
+	--grist-color-green-bright: #2ed2c5;
+	--grist-color-green-badge: #186d66;
+	--grist-color-green-badge-bg: rgba(46, 210, 197, 0.14);
+	--grist-color-success: #186d66;
+	--grist-color-warning: #7f5a2c;
+	--grist-color-danger: #854b45;
+	--grist-color-danger-bg: rgba(255, 144, 133, 0.18);
+	--grist-color-upload-valid: #2ed2c5;
+	--grist-color-upload-button: #934ae4;
+	--grist-color-code: #854b45;
 	--grist-color-code-bg: #f5f5f5;
-	--grist-color-table-border: #edf0f5;
-	--grist-color-table-head: #96a0b0;
-	--grist-color-table-cell: #6b7585;
-	--grist-color-preview-border: #d6d6d6;
-	--grist-color-preview-title: #626262;
-	--grist-color-preview-subtitle: #6c6c6c;
+	--grist-color-table-border: #DFDFDF;
+	--grist-color-table-head: #929292;
+	--grist-color-table-cell: #4e4e4e;
+	--grist-color-preview-border: #D1D1D1;
+	--grist-color-preview-title: #4e4e4e;
+	--grist-color-preview-subtitle: #929292;
+	--grist-color-switch-knob-shadow: rgba(0, 0, 0, 0.25);
 }
 
 /*
@@ -215,6 +216,123 @@ STYLE FOR GRIST IMPORT
 	color: var(--grist-color-text);
 	font-size: 9px;
 	line-height: 1.2;
+}
+
+/*
+-- Switch component
+*/
+
+.switch-card {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 16px;
+	width: 100%;
+	min-height: 58px;
+	padding: 12px 14px 12px 18px;
+	border: 1px solid var(--grist-color-border-soft);
+	border-radius: 14px;
+	background: var(--grist-color-white);
+	color: var(--grist-color-text);
+}
+
+.grist-location-options > div:not(:empty) + div:not(:empty) {
+	margin-top: 12px;
+}
+
+.switch-card-active {
+	border-color: var(--grist-color-purple-border);
+	box-shadow: 0 0 0 3px var(--grist-color-purple-shadow);
+}
+
+.switch-card-disabled {
+	opacity: 0.65;
+}
+
+.switch-card-text {
+	min-width: 0;
+}
+
+.switch-card-title {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	margin: 0;
+	color: var(--grist-color-text-strong);
+	font-size: 16px;
+	font-weight: 700;
+	line-height: 1.1;
+}
+
+.switch-card-info {
+	color: var(--grist-color-text-muted);
+	font-size: 12px;
+}
+
+.switch-card-description {
+	margin: 3px 0 0;
+	color: var(--grist-color-text-muted);
+	font-size: 13px;
+	line-height: 1.2;
+}
+
+.switch-card-control {
+	position: relative;
+	flex: 0 0 auto;
+	width: 34px;
+	height: 20px;
+	margin: 0;
+	cursor: pointer;
+}
+
+.switch-card-input {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	opacity: 0;
+}
+
+.switch-card-slider {
+	position: absolute;
+	inset: 0;
+	border: 1px solid var(--grist-color-border-soft);
+	border-radius: 999px;
+	background: var(--grist-color-surface-active);
+	transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.switch-card-slider::before {
+	content: "";
+	position: absolute;
+	top: 2px;
+	left: 2px;
+	width: 14px;
+	height: 14px;
+	border-radius: 50%;
+	background: var(--grist-color-white);
+	box-shadow: 0 1px 3px var(--grist-color-switch-knob-shadow);
+	transition: transform 0.15s ease;
+}
+
+.switch-card-input:checked + .switch-card-slider {
+	border-color: var(--grist-color-purple);
+	background: var(--grist-color-purple);
+}
+
+.switch-card-input:checked + .switch-card-slider::before {
+	transform: translateX(14px);
+}
+
+.switch-card-input:focus-visible + .switch-card-slider {
+	box-shadow: 0 0 0 3px var(--grist-color-purple-shadow);
+}
+
+/*
+-- Location options
+*/
+
+#grist-location-preview:empty {
+	display: none;
 }
 
 /*
