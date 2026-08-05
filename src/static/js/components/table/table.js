@@ -4,8 +4,8 @@
  * Display a limited number of rows (5 by default). Can display all paginated rows if paginate props is true and maxRow is null.
  * Display data header to get columns name.
  * Compliant with Bootstrap style.
- * 
- * use case : 
+ *
+ * use case :
  *  - user import csv data from file or grist table
  *  - user can check data before import from this table
  */
@@ -145,7 +145,9 @@ Table.prototype.setTitle = function (title, subtitle) {
  * @returns {number|null} Page size.
  */
 Table.prototype.getPageSize = function () {
-  return this.maxRows === null ? null : Math.max(Number(this.maxRows) || DEFAULT_MAX_ROWS, 1);
+  return this.maxRows === null
+    ? null
+    : Math.max(Number(this.maxRows) || DEFAULT_MAX_ROWS, 1);
 };
 
 /**

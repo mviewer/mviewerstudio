@@ -27,7 +27,7 @@ const readJson = async (response) => {
  * @returns {Promise<{data: Object[], meta: {fields: string[]}}>} Preview data.
  */
 export const gristTableToPreview = async (selectedTable, gristApiKey) => {
-  if (!selectedTable?.docId || !selectedTable?.tableId || !gristApiKey) {
+  if (!selectedTable || !selectedTable.docId || !selectedTable.tableId || !gristApiKey) {
     return { data: [], meta: { fields: [] } };
   }
 
@@ -40,7 +40,7 @@ export const gristTableToPreview = async (selectedTable, gristApiKey) => {
     { limit: 5 }
   ).then(readJson);
   const rows = (payload.records || []).map((record) => ({
-    ...(record?.fields || record),
+    ...(record.fields || record),
   }));
   const fields = rows.reduce((headers, row) => {
     Object.keys(row || {}).forEach((key) => {

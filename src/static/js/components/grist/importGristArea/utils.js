@@ -37,11 +37,32 @@ const getGristId = (item) => {
     return item;
   }
 
-  return item?.id ?? item?.data?.id ?? item?.name ?? item?.domain;
+  if (!item) {
+    return undefined;
+  }
+
+  if (item.id) {
+    return item.id;
+  }
+
+  if (item.data && item.data.id) {
+    return item.data.id;
+  }
+
+  return item.name || item.domain;
 };
 
-const getGristTableRef = (table) =>
-  table?.fields?.tableRef ?? table?.tableRef ?? getGristId(table);
+const getGristTableRef = (table) => {
+  if (!table) {
+    return undefined;
+  }
+
+  if (table.fields && table.fields.tableRef) {
+    return table.fields.tableRef;
+  }
+
+  return table.tableRef || getGristId(table);
+};
 
 /**
  * Read the display name exposed by a Grist entity.
@@ -49,7 +70,13 @@ const getGristTableRef = (table) =>
  * @param {*} item Grist entity.
  * @returns {string|number|undefined} Entity display name.
  */
-const getGristName = (item) => item?.name ?? item?.title ?? item?.id;
+const getGristName = (item) => {
+  if (!item) {
+    return undefined;
+  }
+
+  return item.name || item.title || item.id;
+};
 
 /**
  * Normalize parsed file data to an array of rows.
@@ -62,7 +89,7 @@ const getRows = (data) => {
     return data;
   }
 
-  if (Array.isArray(data?.data)) {
+  if (data && Array.isArray(data.data)) {
     return data.data;
   }
 
@@ -77,7 +104,7 @@ const getRows = (data) => {
  * @returns {string[]} Column headers.
  */
 const getHeaders = (rows, data) => {
-  if (Array.isArray(data?.meta?.fields) && data.meta.fields.length) {
+  if (data && data.meta && Array.isArray(data.meta.fields) && data.meta.fields.length) {
     return data.meta.fields;
   }
 
@@ -102,14 +129,14 @@ const getHeaders = (rows, data) => {
  */
 const getCellValue = (row, header, index) => {
   if (Array.isArray(row)) {
-    return row[index] ?? "";
+    return row[index] || "";
   }
 
   if (row && typeof row === "object") {
-    return row[header] ?? "";
+    return row[header] || "";
   }
 
-  return row ?? "";
+  return row || "";
 };
 
 /**
@@ -120,13 +147,17 @@ const getCellValue = (row, header, index) => {
  * @returns {string} Grist-compatible identifier.
  */
 const normalizeGristId = (value, fallback) => {
-  const normalized = String(value || fallback || "")
+  const normalized = `${value || fallback || ""}`
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g, "")
     .replace(/[^A-Za-z0-9_]+/g, "_")
     .replace(/^_+|_+$/g, "");
 
-  return /^[A-Za-z]/.test(normalized) ? normalized : `Table_${normalized || "1"}`;
+  if (/^[A-Za-z]/.test(normalized)) {
+    return normalized;
+  }
+
+  return `Table_${normalized || "1"}`;
 };
 
 /**
@@ -174,7 +205,21 @@ const getUniqueGristIds = (values, fallbackPrefix) => {
  * @returns {string|number|undefined} Document identifier.
  */
 const getCreatedDocId = (doc) => {
-  return getGristId(doc) ?? doc?.data ?? doc?.doc?.id;
+  const docId = getGristId(doc);
+
+  if (docId) {
+    return docId;
+  }
+
+  if (doc && doc.data) {
+    return doc.data;
+  }
+
+  if (doc && doc.doc) {
+    return doc.doc.id;
+  }
+
+  return undefined;
 };
 
 /**
@@ -189,14 +234,10 @@ const getCreatedDocId = (doc) => {
 const getOrCreateDocument = async (gristApiKey, documentReference) => {
   const gristConfig = await getGristConfig();
   const workspaceId = await getOrCreateWorkspace(gristApiKey);
-  const docs = await getWorkspaceDocsList(
-    gristConfig.apiUrl,
-    workspaceId,
-    gristApiKey
-  );
+  const docs = await getWorkspaceDocsList(gristConfig.apiUrl, workspaceId, gristApiKey);
   const existingDoc = docs.find(
     (doc) =>
-      String(getGristId(doc)) === String(documentReference) ||
+      `${getGristId(doc)}` === `${documentReference}` ||
       getGristName(doc) === documentReference
   );
 
@@ -224,22 +265,13 @@ const getOrCreateDocument = async (gristApiKey, documentReference) => {
  * @returns {Promise<string>} Checked table id.
  * @throws {Error} When the table already exists.
  */
-const ensureTableDoesNotExist = async (
-  instanceUrl,
-  docId,
-  tableId,
-  gristApiKey
-) => {
-  const payload = await getDocTables(instanceUrl, docId, gristApiKey).then(
-    readJson
-  );
+const ensureTableDoesNotExist = async (instanceUrl, docId, tableId, gristApiKey) => {
+  const payload = await getDocTables(instanceUrl, docId, gristApiKey).then(readJson);
   const usedTableIds = new Set(
-    (payload.tables || []).map((table) =>
-      String(getGristId(table)).toLowerCase()
-    )
+    (payload.tables || []).map((table) => `${getGristId(table)}`.toLowerCase())
   );
 
-  if (usedTableIds.has(String(tableId).toLowerCase())) {
+  if (usedTableIds.has(`${tableId}`.toLowerCase())) {
     throw new Error(`La table Grist "${tableId}" existe deja.`);
   }
 
@@ -257,11 +289,9 @@ const ensureTableDoesNotExist = async (
  * @throws {Error} When the table cannot be found after creation.
  */
 const getActualTable = async (instanceUrl, docId, tableId, gristApiKey) => {
-  const payload = await getDocTables(instanceUrl, docId, gristApiKey).then(
-    readJson
-  );
+  const payload = await getDocTables(instanceUrl, docId, gristApiKey).then(readJson);
   const table = (payload.tables || []).find(
-    (item) => String(getGristId(item)).toLowerCase() === tableId.toLowerCase()
+    (item) => `${getGristId(item)}`.toLowerCase() === tableId.toLowerCase()
   );
   const actualTableId = getGristId(table);
 
@@ -299,14 +329,14 @@ export const sendParsedFileToGrist = async (
     throw new Error("No parsed data to send to Grist");
   }
 
-  if (!documentName?.trim()) {
+  if (!documentName || !documentName.trim()) {
     throw new Error("Sélectionnez un document ou saisissez son nom.");
   }
 
   const gristConfig = await getGristConfig();
   const docId = await getOrCreateDocument(gristApiKey, documentName.trim());
 
-  if (docId === undefined || docId === null || docId === "") {
+  if (!docId) {
     throw new Error("Grist document has no id");
   }
 

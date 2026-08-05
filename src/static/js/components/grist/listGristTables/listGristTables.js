@@ -27,12 +27,40 @@ const readJson = (response) => {
   return response.json();
 };
 
-const getGristId = (item) => item?.id ?? item?.name ?? item?.domain;
-const getGristName = (item) => item?.name ?? item?.title ?? item?.id;
-const getGristTableRef = (table) =>
-  table?.fields?.tableRef ?? table?.tableRef ?? getGristId(table);
-const getTablesCountLabel = (count) =>
-  `${count} table${count > 1 ? "s" : ""} disponible${count > 1 ? "s" : ""}`;
+const getGristId = (item) => {
+  if (!item) {
+    return undefined;
+  }
+
+  return item.id || item.name || item.domain;
+};
+
+const getGristName = (item) => {
+  if (!item) {
+    return undefined;
+  }
+
+  return item.name || item.title || item.id;
+};
+
+const getGristTableRef = (table) => {
+  if (!table) {
+    return undefined;
+  }
+
+  if (table && table.fields && table.fields.tableRef) {
+    return table.fields.tableRef;
+  }
+
+  return table.tableRef || getGristId(table);
+};
+const getTablesCountLabel = (count) => {
+  if (count > 1) {
+    return `${count} tables disponibles`;
+  }
+
+  return `${count} table disponible`;
+};
 
 const ListGristTables = function (options = {}) {
   listGristTablesInstanceId += 1;
@@ -93,9 +121,11 @@ ListGristTables.prototype.setLoading = function (loading) {
 };
 
 ListGristTables.prototype.setListVisible = function (visible) {
-  this.element
-    .querySelector("[data-list-grist-tables-select]")
-    ?.classList.toggle("d-none", !visible);
+  const container = this.element.querySelector("[data-list-grist-tables-select]");
+
+  if (container) {
+    container.classList.toggle("d-none", !visible);
+  }
 };
 
 ListGristTables.prototype.getDocsTables = function () {
@@ -118,9 +148,7 @@ ListGristTables.prototype.getDocsTables = function () {
           )
       );
 
-      return Promise.all(tablesRequests).then((tablesByDoc) =>
-        tablesByDoc.flat()
-      );
+      return Promise.all(tablesRequests).then((tablesByDoc) => tablesByDoc.flat());
     }
   );
 };
@@ -187,15 +215,11 @@ ListGristTables.prototype.getSelectedTable = function () {
     return null;
   }
 
-  return this.tables.find(
-    (entry) => `${entry.docId}:${entry.tableId}` === value
-  );
+  return this.tables.find((entry) => `${entry.docId}:${entry.tableId}` === value);
 };
 
 ListGristTables.prototype.updatePreview = function (selectedTable) {
-  const previewContainer = this.element.querySelector(
-    "[data-list-grist-tables-preview]"
-  );
+  const previewContainer = this.element.querySelector("[data-list-grist-tables-preview]");
   const requestId = this.previewRequestId + 1;
 
   this.previewRequestId = requestId;
@@ -224,10 +248,8 @@ ListGristTables.prototype.updatePreview = function (selectedTable) {
 
       this.previewTable.title = selectedTable.tableName || "Table Grist";
       this.previewTable.subtitle = "Apercu des 5 premieres lignes";
-      this.onFieldsChange(previewData?.meta?.fields || []);
-      previewContainer.replaceChildren(
-        this.previewTable.setData(previewData)
-      );
+      this.onFieldsChange(previewData.meta.fields);
+      previewContainer.replaceChildren(this.previewTable.setData(previewData));
     })
     .catch((error) => {
       if (requestId !== this.previewRequestId) {
@@ -256,7 +278,9 @@ ListGristTables.prototype.updateOpenTableButton = function (selectedTable) {
   const container = this.element.querySelector("#open-table-into-grist");
 
   if (!container || !selectedTable) {
-    container?.replaceChildren();
+    if (container) {
+      container.replaceChildren();
+    }
     return;
   }
 
@@ -304,12 +328,16 @@ ListGristTables.prototype.render = function () {
     <div id="open-table-into-grist"></div>
   `;
 
-  this.element
-    .querySelector(".list-grist-tables-select-field")
-    ?.appendChild(this.select.render());
-  this.element
-    .querySelector("[data-list-grist-tables-spinner]")
-    ?.appendChild(this.spinner.render());
+  const selectContainer = this.element.querySelector(".list-grist-tables-select-field");
+  const spinnerContainer = this.element.querySelector("[data-list-grist-tables-spinner]");
+
+  if (selectContainer) {
+    selectContainer.appendChild(this.select.render());
+  }
+
+  if (spinnerContainer) {
+    spinnerContainer.appendChild(this.spinner.render());
+  }
 
   this.updateOptions();
   if (this.autoload) {

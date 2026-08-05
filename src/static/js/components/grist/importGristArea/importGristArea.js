@@ -34,7 +34,11 @@ import { sendParsedFileToGrist } from "./utils.js";
  * @returns {string} File name without its extension.
  */
 function getFileNameWithoutExtension(fileName) {
-  return fileName ? fileName.replace(/\.[^.]+$/, "") : "";
+  if (!fileName) {
+    return "";
+  }
+
+  return fileName.replace(/\.[^.]+$/, "");
 }
 
 /**
@@ -43,7 +47,13 @@ function getFileNameWithoutExtension(fileName) {
  * @param {Object} entity Grist document entity.
  * @returns {string|number|undefined} Document identifier.
  */
-const getGristEntityId = (entity) => entity?.id ?? entity?.name;
+const getGristEntityId = (entity) => {
+  if (!entity) {
+    return undefined;
+  }
+
+  return entity.id || entity.name;
+};
 
 /**
  * Extract the display name from a Grist entity.
@@ -51,15 +61,20 @@ const getGristEntityId = (entity) => entity?.id ?? entity?.name;
  * @param {Object} entity Grist document entity.
  * @returns {string|number|undefined} Document display name.
  */
-const getGristEntityName = (entity) =>
-  entity?.name ?? entity?.title ?? getGristEntityId(entity);
+const getGristEntityName = (entity) => {
+  if (!entity) {
+    return undefined;
+  }
+
+  return entity.name || entity.title || getGristEntityId(entity);
+};
 
 const getRows = (data) => {
   if (Array.isArray(data)) {
     return data;
   }
 
-  if (Array.isArray(data?.data)) {
+  if (data && Array.isArray(data.data)) {
     return data.data;
   }
 
@@ -67,7 +82,7 @@ const getRows = (data) => {
 };
 
 const getHeaders = (rows, data) => {
-  if (Array.isArray(data?.meta?.fields) && data.meta.fields.length) {
+  if (data && data.meta && Array.isArray(data.meta.fields) && data.meta.fields.length) {
     return data.meta.fields;
   }
 
@@ -77,9 +92,11 @@ const getHeaders = (rows, data) => {
     return [];
   }
 
-  return Array.isArray(firstRow)
-    ? firstRow.map((_, index) => `column_${index + 1}`)
-    : Object.keys(firstRow);
+  if (Array.isArray(firstRow)) {
+    return firstRow.map((_, index) => `column_${index + 1}`);
+  }
+
+  return Object.keys(firstRow);
 };
 
 const readJson = async (response) => {
@@ -117,8 +134,11 @@ const importGristArea = function (activeType = "file", options = {}) {
     labelClasses: "col-3 col-form-label",
     selectClasses: "col-6",
     onChange: (value) => {
-      this.fileDocumentName =
-        value === "create" ? this.documentNameInput.getValue() : value;
+      this.fileDocumentName = value;
+
+      if (value === "create") {
+        this.fileDocumentName = this.documentNameInput.getValue();
+      }
       disableGristWizardNextButton();
       this.updateFilePreview();
     },
@@ -164,11 +184,20 @@ const importGristArea = function (activeType = "file", options = {}) {
     buttonLabel: "Choisir un fichier",
     verifyFile: verifyUploadedFile,
     onChange: (file, verification) => {
+      const parsedData = verification && verification.parsedData;
+      let columns = [];
+
+      if (verification && verification.columns) {
+        columns = verification.columns;
+      } else if (parsedData && parsedData.meta) {
+        columns = parsedData.meta.fields;
+      }
+
       this.file = file;
       this.fileVerification = verification;
       this.sentTable = null;
-      this.fileTableName = getFileNameWithoutExtension(file?.name);
-      this.onColumnsChange(verification?.columns || verification?.parsedData?.meta?.fields || []);
+      this.fileTableName = getFileNameWithoutExtension(file && file.name);
+      this.onColumnsChange(columns);
       this.tableNameInput.setValue(this.fileTableName);
       this.updateFilePreview();
       disableGristWizardNextButton();
@@ -240,10 +269,21 @@ importGristArea.prototype.update = function () {
 
   const isFileActive = this.activeType === "file";
 
-  fileButton?.classList.toggle("active", isFileActive);
-  gristButton?.classList.toggle("active", !isFileActive);
-  fileContent?.classList.toggle("d-none", !isFileActive);
-  gristContent?.classList.toggle("d-none", isFileActive);
+  if (fileButton) {
+    fileButton.classList.toggle("active", isFileActive);
+  }
+
+  if (gristButton) {
+    gristButton.classList.toggle("active", !isFileActive);
+  }
+
+  if (fileContent) {
+    fileContent.classList.toggle("d-none", !isFileActive);
+  }
+
+  if (gristContent) {
+    gristContent.classList.toggle("d-none", isFileActive);
+  }
   this.updateFilePreview();
 };
 
@@ -264,24 +304,28 @@ importGristArea.prototype.getTargetTable = function () {
   if (this.activeType === "grist") {
     const selectedTable = this.listGristTables.getSelectedTable();
 
-    return selectedTable
-      ? {
-          docId: selectedTable.docId,
-          tableId: selectedTable.tableId,
-          tableRef: selectedTable.tableRef,
-          url: selectedTable.url,
-        }
-      : null;
+    if (!selectedTable) {
+      return null;
+    }
+
+    return {
+      docId: selectedTable.docId,
+      tableId: selectedTable.tableId,
+      tableRef: selectedTable.tableRef,
+      url: selectedTable.url,
+    };
   }
 
-  return this.sentTable
-    ? {
-        docId: this.sentTable.docId,
-        tableId: this.sentTable.tableId,
-        tableRef: this.sentTable.tableRef,
-        url: this.sentTable.url,
-      }
-    : null;
+  if (!this.sentTable) {
+    return null;
+  }
+
+  return {
+    docId: this.sentTable.docId,
+    tableId: this.sentTable.tableId,
+    tableRef: this.sentTable.tableRef,
+    url: this.sentTable.url,
+  };
 };
 
 /**
@@ -327,7 +371,7 @@ importGristArea.prototype.getSourceData = async function () {
     ).then(readJson);
     const records = payload.records || [];
     const rows = records.map((record) => ({
-      ...(record?.fields || record),
+      ...(record.fields || record),
     }));
 
     return {
@@ -340,7 +384,12 @@ importGristArea.prototype.getSourceData = async function () {
   }
 
   if (this.activeType === "file") {
-    const parsedData = this.fileVerification?.parsedData;
+    let parsedData = null;
+
+    if (this.fileVerification) {
+      parsedData = this.fileVerification.parsedData;
+    }
+
     const rows = getRows(parsedData);
 
     return {
@@ -362,10 +411,7 @@ importGristArea.prototype.getSourceData = async function () {
  * @param {string} message Status message.
  * @param {string} [type="muted"] Bootstrap text color suffix.
  */
-importGristArea.prototype.setSendToGristStatus = function (
-  message,
-  type = "muted"
-) {
+importGristArea.prototype.setSendToGristStatus = function (message, type = "muted") {
   const status = this.element.querySelector("[data-send-to-grist-status]");
 
   if (!status) {
@@ -383,9 +429,13 @@ importGristArea.prototype.setSendToGristStatus = function (
  * @returns {void}
  */
 importGristArea.prototype.sendFileToGrist = function (button) {
-  const parsedData = this.fileVerification?.parsedData;
+  let parsedData = null;
 
-  if (!this.fileVerification?.valid || !parsedData) {
+  if (this.fileVerification) {
+    parsedData = this.fileVerification.parsedData;
+  }
+
+  if (!this.fileVerification || !this.fileVerification.valid || !parsedData) {
     this.setSendToGristStatus("Aucun fichier valide a envoyer.", "danger");
     return;
   }
@@ -405,14 +455,20 @@ importGristArea.prototype.sendFileToGrist = function (button) {
         `${result.rowsCount} ligne(s) envoyee(s) dans Grist.`,
         "success"
       );
-      this.element
-        .querySelector("[data-open-created-grist-table]")
-        ?.replaceChildren(new OpenGristTableBtn({ url: result.url }).render());
+      const openTableContainer = this.element.querySelector(
+        "[data-open-created-grist-table]"
+      );
+
+      if (openTableContainer) {
+        openTableContainer.replaceChildren(
+          new OpenGristTableBtn({ url: result.url }).render()
+        );
+      }
       updateGristWizardNextButtonForSentTable(result);
     })
     .catch((error) => {
       this.setSendToGristStatus(
-        error?.message || "Impossible d'envoyer le fichier dans Grist.",
+        error.message || "Impossible d'envoyer le fichier dans Grist.",
         "danger"
       );
       console.error("Error sending file to Grist:", error);
@@ -429,8 +485,17 @@ importGristArea.prototype.sendFileToGrist = function (button) {
  */
 importGristArea.prototype.updateFilePreview = function () {
   const previewContainer = this.element.querySelector("[data-upload-file-preview]");
-  const parsedData = this.fileVerification?.parsedData;
-  const canPreview = this.activeType === "file" && this.fileVerification?.valid && parsedData;
+  let parsedData = null;
+
+  if (this.fileVerification) {
+    parsedData = this.fileVerification.parsedData;
+  }
+
+  const canPreview =
+    this.activeType === "file" &&
+    this.fileVerification &&
+    this.fileVerification.valid &&
+    parsedData;
 
   if (!previewContainer) {
     return;
@@ -500,21 +565,26 @@ importGristArea.prototype.render = function () {
     </div>
   `;
 
-  this.element
-    .querySelector('[data-import-type="file"]')
-    ?.addEventListener("click", () => this.setActiveType("file"));
+  const fileButton = this.element.querySelector('[data-import-type="file"]');
+  const gristButton = this.element.querySelector('[data-import-type="grist"]');
+  const uploadFileArea = this.element.querySelector("[data-upload-file-area]");
+  const listGristTablesArea = this.element.querySelector("[data-list-grist-tables-area]");
 
-  this.element
-    .querySelector('[data-import-type="grist"]')
-    ?.addEventListener("click", () => this.setActiveType("grist"));
+  if (fileButton) {
+    fileButton.addEventListener("click", () => this.setActiveType("file"));
+  }
 
-  this.element
-    .querySelector("[data-upload-file-area]")
-    ?.appendChild(this.uploadFile.render());
+  if (gristButton) {
+    gristButton.addEventListener("click", () => this.setActiveType("grist"));
+  }
 
-  this.element
-    .querySelector("[data-list-grist-tables-area]")
-    ?.appendChild(this.listGristTables.render());
+  if (uploadFileArea) {
+    uploadFileArea.appendChild(this.uploadFile.render());
+  }
+
+  if (listGristTablesArea) {
+    listGristTablesArea.appendChild(this.listGristTables.render());
+  }
 
   this.update();
 

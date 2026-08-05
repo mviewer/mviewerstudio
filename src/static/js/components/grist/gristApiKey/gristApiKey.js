@@ -4,10 +4,10 @@
  * Usage:
  * `const block = new mv.components.grist.gristApiKey();`
  * `target.appendChild(block.render());`
- * 
+ *
  * This component use :
  *  - https://support.getgrist.com/rest-api/
- * 
+ *
  */
 import { getUserOrgs } from "../../../utils/grist/requests.js";
 
@@ -38,7 +38,7 @@ const clearStoredGristApiKey = () => {
   }
 };
 
-const GristApiKey = function(
+const GristApiKey = function (
   gristInstanceUrl = "/grist",
   gristApiKeyHelpUrl = "https://grist.numerique.gouv.fr/account/developer",
   options = {}
@@ -52,14 +52,14 @@ const GristApiKey = function(
 
   this.element = document.createElement("div");
   this.element.className = "grist-api-key";
-}
+};
 
 /**
  * Fetch grist api KEY from Grist rest API :
  * https://grist.numerique.gouv.fr/api/profile/apikey
- * 
- * 
- * 
+ *
+ *
+ *
  * Only if user is logged in and has a valid session (via ProConnect)
  */
 GristApiKey.prototype.fetchKeyFromGristAPI = function () {
@@ -133,32 +133,49 @@ GristApiKey.prototype.showAlert = function (type, message, autoHide = false) {
 GristApiKey.prototype.toggleApiKeyVisibility = function () {
   const input = this.element.querySelector("#grist-api-key-input");
   const button = this.element.querySelector("[data-grist-api-key-toggle]");
-  const icon = button?.querySelector("i");
 
-  if (!input || !button || !icon) {
+  if (!input || !button) {
+    return;
+  }
+
+  const icon = button.querySelector("i");
+  if (!icon) {
     return;
   }
 
   const isHidden = input.type === "password";
-  input.type = isHidden ? "text" : "password";
-  button.setAttribute("aria-pressed", String(isHidden));
-  button.setAttribute(
-    "aria-label",
-    isHidden ? "Masquer la clé API GRIST" : "Afficher la clé API GRIST"
-  );
-  icon.className = isHidden ? "ri-eye-off-line" : "ri-eye-line";
+
+  if (isHidden) {
+    input.type = "text";
+    button.setAttribute("aria-pressed", "true");
+    button.setAttribute("aria-label", "Masquer la clé API GRIST");
+    icon.className = "ri-eye-off-line";
+    return;
+  }
+
+  input.type = "password";
+  button.setAttribute("aria-pressed", "false");
+  button.setAttribute("aria-label", "Afficher la clé API GRIST");
+  icon.className = "ri-eye-line";
 };
 
 GristApiKey.prototype.validateApiKey = function () {
   const input = this.element.querySelector("#grist-api-key-input");
   const button = this.element.querySelector("#grist-valid-key-btn");
-  const apiKey = input ? input.value.trim() : "";
+
+  if (!input) {
+    return;
+  }
+
+  const apiKey = input.value.trim();
 
   if (!apiKey) {
     clearStoredGristApiKey();
     this.showAlert("warning", "Veuillez saisir une cle API GRIST.");
     this.onInvalidApiKey();
-    input?.focus();
+    if (input) {
+      input.focus();
+    }
     return;
   }
 
@@ -195,8 +212,12 @@ GristApiKey.prototype.validateApiKey = function () {
  */
 const getGristApiKey = () => {
   const input = document.getElementById("grist-api-key-input");
-  return input ? input.value : readStoredGristApiKey();
-}
+  if (!input) {
+    return readStoredGristApiKey();
+  }
+
+  return input.value;
+};
 
 GristApiKey.prototype.render = function () {
   this.element.innerHTML = `
@@ -248,21 +269,25 @@ GristApiKey.prototype.render = function () {
 
   this.loadApiKey();
 
-  this.element
-    .querySelector("#grist-valid-key-btn")
-    ?.addEventListener("click", () => this.validateApiKey());
+  const validateButton = this.element.querySelector("#grist-valid-key-btn");
+  const input = this.element.querySelector("#grist-api-key-input");
+  const toggleButton = this.element.querySelector("[data-grist-api-key-toggle]");
 
-  this.element
-    .querySelector("#grist-api-key-input")
-    ?.addEventListener("input", () => {
+  if (validateButton) {
+    validateButton.addEventListener("click", () => this.validateApiKey());
+  }
+
+  if (input) {
+    input.addEventListener("input", () => {
       clearStoredGristApiKey();
       this.showAlert("muted", "La clé n'est pas encore vérifiée.");
       this.onInvalidApiKey();
     });
+  }
 
-  this.element
-    .querySelector("[data-grist-api-key-toggle]")
-    ?.addEventListener("click", () => this.toggleApiKeyVisibility());
+  if (toggleButton) {
+    toggleButton.addEventListener("click", () => this.toggleApiKeyVisibility());
+  }
 
   return this.element;
 };

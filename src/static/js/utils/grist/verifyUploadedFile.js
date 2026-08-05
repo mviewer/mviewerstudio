@@ -29,7 +29,7 @@ const LATITUDE_COLUMNS = ["lat", "latitude", "y"];
 const LONGITUDE_COLUMNS = ["lon", "lng", "long", "longitude", "x"];
 
 const normalizeColumnName = (columnName) =>
-  String(columnName || "")
+  `${columnName || ""}`
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g, "")
     .toLowerCase()
@@ -42,10 +42,19 @@ const getMatchedColumns = (columns, candidates) =>
   columns.filter((column) => candidates.includes(column));
 
 const getFileExtension = (file) => {
-  const fileName = file?.name || "";
+  let fileName = "";
+
+  if (file && file.name) {
+    fileName = file.name;
+  }
+
   const extension = fileName.split(".").pop();
 
-  return extension ? extension.toLowerCase() : "";
+  if (!extension) {
+    return "";
+  }
+
+  return extension.toLowerCase();
 };
 
 const readFileAsText = (file) =>
@@ -95,8 +104,9 @@ const verifyColumns = (rawColumns) => {
     return {
       valid: true,
       reason: "coordinates",
-      matchedColumns: columns.filter((column) =>
-        LATITUDE_COLUMNS.includes(column) || LONGITUDE_COLUMNS.includes(column)
+      matchedColumns: columns.filter(
+        (column) =>
+          LATITUDE_COLUMNS.includes(column) || LONGITUDE_COLUMNS.includes(column)
       ),
       message: "Fichier valide : colonnes de coordonnées détéctées.",
     };
@@ -152,7 +162,11 @@ const verifyUploadedFile = async (file) => {
 
   const content = await readFileAsText(file);
   const parsedData = await readCsvData(content);
-  const columns = parsedData.meta?.fields || [];
+  let columns = [];
+
+  if (parsedData.meta) {
+    columns = parsedData.meta.fields;
+  }
   const result = verifyColumns(columns);
 
   return {

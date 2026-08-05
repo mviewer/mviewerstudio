@@ -8,7 +8,7 @@
  */
 export function OpenGristTableBtn(options = {}) {
   this.url = options.url;
-  this.classes = options.classes || [];
+  this.classes = options.classes || [];
   this.element = document.createElement("button");
 
   this.element.type = "button";

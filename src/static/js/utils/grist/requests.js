@@ -46,10 +46,20 @@ const getTablesUrl = (instanceUrl, docId) => {
 const getTableRecordsUrl = (instanceUrl, docId, tableId, limit) => {
   const url = `${instanceUrl}/api/docs/${docId}/tables/${encodeURIComponent(tableId)}/records`;
 
-  return limit ? `${url}?limit=${encodeURIComponent(limit)}` : url;
+  if (!limit) {
+    return url;
+  }
+
+  return `${url}?limit=${encodeURIComponent(limit)}`;
 };
 
-const hasGristId = (id) => id !== undefined && id !== null && id !== "";
+const hasGristId = (id) => {
+  if (!id) {
+    return false;
+  }
+
+  return true;
+};
 
 /**
  * List organizations available to the current Grist API key.
@@ -139,12 +149,7 @@ export const getOrgWorkspaces = (instanceUrl, orgId, apiKey) => {
  * @param {string} apiKey Grist API key.
  * @returns {Promise<Response>} Fetch response from the Grist API.
  */
-export const createOrgWorkspace = (
-  instanceUrl,
-  orgId,
-  workspaceName,
-  apiKey
-) => {
+export const createOrgWorkspace = (instanceUrl, orgId, workspaceName, apiKey) => {
   const body = {
     name: workspaceName,
   };
@@ -166,12 +171,7 @@ export const createOrgWorkspace = (
  * @param {string} apiKey Grist API key.
  * @returns {Promise<Response>} Fetch response from the Grist API.
  */
-export const createWorkspaceDoc = (
-  instanceUrl,
-  workspaceId,
-  documentName,
-  apiKey
-) => {
+export const createWorkspaceDoc = (instanceUrl, workspaceId, documentName, apiKey) => {
   const body = {
     name: documentName,
     isPinned: false,
@@ -233,13 +233,7 @@ export const postTablesToDoc = (instanceUrl, docId, tablesData, apiKey) => {
  * @param {string} apiKey Grist API key.
  * @returns {Promise<Response>} Fetch response from the Grist API.
  */
-export const postRecordsToTable = (
-  instanceUrl,
-  docId,
-  tableId,
-  recordsData,
-  apiKey
-) => {
+export const postRecordsToTable = (instanceUrl, docId, tableId, recordsData, apiKey) => {
   return fetch(
     `${instanceUrl}/api/docs/${docId}/tables/${encodeURIComponent(tableId)}/records`,
     {
@@ -261,13 +255,7 @@ export const postRecordsToTable = (
  * @param {string} apiKey Grist API key.
  * @returns {Promise<Response>} Fetch response from the Grist API.
  */
-export const postColumnsToTable = (
-  instanceUrl,
-  docId,
-  tableId,
-  columnsData,
-  apiKey
-) => {
+export const postColumnsToTable = (instanceUrl, docId, tableId, columnsData, apiKey) => {
   return fetch(
     `${instanceUrl}/api/docs/${docId}/tables/${encodeURIComponent(tableId)}/columns`,
     {
@@ -289,13 +277,7 @@ export const postColumnsToTable = (
  * @param {string} apiKey Grist API key.
  * @returns {Promise<Response>} Fetch response from the Grist API.
  */
-export const patchRecordsToTable = (
-  instanceUrl,
-  docId,
-  tableId,
-  recordsData,
-  apiKey
-) => {
+export const patchRecordsToTable = (instanceUrl, docId, tableId, recordsData, apiKey) => {
   return fetch(
     `${instanceUrl}/api/docs/${docId}/tables/${encodeURIComponent(tableId)}/records`,
     {
@@ -334,13 +316,7 @@ export const getDocTables = (instanceUrl, docId, apiKey) => {
  * @param {number} [options.limit] Maximum number of records to fetch.
  * @returns {Promise<Response>} Fetch response from the Grist API.
  */
-export const getTableRecords = (
-  instanceUrl,
-  docId,
-  tableId,
-  apiKey,
-  options = {}
-) => {
+export const getTableRecords = (instanceUrl, docId, tableId, apiKey, options = {}) => {
   return fetch(getTableRecordsUrl(instanceUrl, docId, tableId, options.limit), {
     method: "GET",
     credentials: "omit",

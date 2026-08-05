@@ -70,14 +70,8 @@ GristCoordinatesArea.prototype.getProjection = function () {
 
 GristCoordinatesArea.prototype.getColumnOptions = function (columns = []) {
   return columns
-    .map((column) => {
-      if (typeof column === "string") {
-        return { label: column, value: column };
-      }
-
-      return column;
-    })
-    .filter((column) => column?.label && column?.value);
+    .filter((column) => column)
+    .map((column) => ({ label: column, value: column }));
 };
 
 GristCoordinatesArea.prototype.setColumnOptions = function (columns = []) {

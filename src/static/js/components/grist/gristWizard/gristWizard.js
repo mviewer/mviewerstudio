@@ -30,17 +30,27 @@ const defaultSteps = [
   },
 ];
 
-const normalizeStep = (step, fallbackStep) => ({
-  label: step?.label || fallbackStep.label,
-  description: step?.description || fallbackStep.description,
-  icon: step?.icon || fallbackStep.icon,
-});
+const normalizeStep = (step, fallbackStep) => {
+  const source = step || {};
+
+  return {
+    label: source.label || fallbackStep.label,
+    description: source.description || fallbackStep.description,
+    icon: source.icon || fallbackStep.icon,
+  };
+};
 
 const GristWizard = function (options = {}) {
-  this.steps = (options.steps?.length ? options.steps : defaultSteps).map(
-    (step, index) => normalizeStep(step, defaultSteps[index] || defaultSteps[0])
+  let steps = defaultSteps;
+
+  if (options.steps && options.steps.length) {
+    steps = options.steps;
+  }
+
+  this.steps = steps.map((step, index) =>
+    normalizeStep(step, defaultSteps[index] || defaultSteps[0])
   );
-  this.step = Number(options.step) || 1;
+  this.step = options.step || 1;
   this.element = document.createElement("div");
   this.element.className = `grist-wizard ${options.classes || ""}`.trim();
 };
@@ -87,11 +97,7 @@ GristWizard.prototype.render = function () {
 };
 
 GristWizard.prototype.changeStep = function (step) {
-  const nextStep = Number(step);
-
-  if (Number.isFinite(nextStep)) {
-    this.step = Math.min(Math.max(nextStep, 1), this.steps.length);
-  }
+  this.step = Math.min(Math.max(step, 1), this.steps.length);
 
   return this.render();
 };

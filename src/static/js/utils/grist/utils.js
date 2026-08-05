@@ -34,11 +34,12 @@ export const getGristConfig = async () => {
     configPromise = fetch("config.json")
       .then(readJson)
       .then((config) => {
-        const gristConfig = config?.app_conf?.grist || {};
+        const gristConfig =
+          config.app_conf && config.app_conf.grist ? config.app_conf.grist : {};
         const instanceUrl = gristConfig.instance_url;
         const apiUrl = gristConfig.api_url || instanceUrl;
         // use personal workspace as default if no org_id is provided
-        const orgId = gristConfig.org_id || "Personal";
+        const orgId = gristConfig.org_id || "Personal";
         const workspaceName = gristConfig.workspace_name;
 
         if (!instanceUrl || !apiUrl || !orgId || !workspaceName) {
@@ -68,11 +69,11 @@ export const getGristConfig = async () => {
  * @returns {string} URL that opens the table in Grist.
  */
 export const getGristTableUrl = (instanceUrl, orgId, docId, tableId, tableRef) => {
-  const baseUrl = String(instanceUrl).replace(/\/+$/, "");
+  const baseUrl = `${instanceUrl}`.replace(/\/+$/, "");
   const encodedDocId = encodeURIComponent(docId);
   const encodedTableRef = encodeURIComponent(tableRef);
 
-  if (String(orgId).toLowerCase() === "personal") {
+  if (`${orgId}`.toLowerCase() === "personal") {
     return `${baseUrl}/o/docs/${encodedDocId}/${encodeURIComponent(tableId)}/p/${encodedTableRef}`;
   }
 
@@ -100,7 +101,13 @@ const readJson = async (response) => {
  * @param {*} id Candidate identifier.
  * @returns {boolean} True when the identifier is present.
  */
-const hasGristId = (id) => id !== undefined && id !== null && id !== "";
+const hasGristId = (id) => {
+  if (!id) {
+    return false;
+  }
+
+  return true;
+};
 
 /**
  * Read the most stable identifier exposed by a Grist entity.
@@ -113,13 +120,23 @@ const getGristId = (item) => {
     return item;
   }
 
-  return (
-    item?.id ??
-    item?.data?.id ??
-    item?.workspace?.id ??
-    item?.name ??
-    item?.domain
-  );
+  if (!item) {
+    return undefined;
+  }
+
+  if (item.id) {
+    return item.id;
+  }
+
+  if (item.data && item.data.id) {
+    return item.data.id;
+  }
+
+  if (item.workspace && item.workspace.id) {
+    return item.workspace.id;
+  }
+
+  return item.name || item.domain;
 };
 
 /**
@@ -133,18 +150,31 @@ const getWorkspaceId = (item) => {
     return item;
   }
 
-  if (typeof item?.data === "string" || typeof item?.data === "number") {
+  if (!item) {
+    return undefined;
+  }
+
+  if (typeof item.data === "string" || typeof item.data === "number") {
     return item.data;
   }
 
-  if (
-    typeof item?.workspace === "string" ||
-    typeof item?.workspace === "number"
-  ) {
+  if (typeof item.workspace === "string" || typeof item.workspace === "number") {
     return item.workspace;
   }
 
-  return item?.id ?? item?.data?.id ?? item?.workspace?.id;
+  if (item.id) {
+    return item.id;
+  }
+
+  if (item.data && item.data.id) {
+    return item.data.id;
+  }
+
+  if (item.workspace && item.workspace.id) {
+    return item.workspace.id;
+  }
+
+  return undefined;
 };
 
 /**
@@ -153,7 +183,13 @@ const getWorkspaceId = (item) => {
  * @param {GristEntity|null|undefined} item Grist entity.
  * @returns {string|number|undefined} Entity display name.
  */
-const getGristName = (item) => item?.name ?? item?.title ?? item?.id;
+const getGristName = (item) => {
+  if (!item) {
+    return undefined;
+  }
+
+  return item.name || item.title || item.id;
+};
 
 /**
  * Return the configured Grist workspace id, creating the workspace when it does
@@ -165,15 +201,12 @@ const getGristName = (item) => item?.name ?? item?.title ?? item?.id;
  */
 export const getOrCreateWorkspace = async (gristApiKey) => {
   const gristConfig = await getGristConfig();
-  const orgsPayload = await getUserOrgs(
-    gristConfig.apiUrl,
-    gristApiKey
-  ).then(readJson);
+  const orgsPayload = await getUserOrgs(gristConfig.apiUrl, gristApiKey).then(readJson);
   const org = (orgsPayload || []).find(
     (item) =>
       getGristId(item) === gristConfig.orgId ||
       getGristName(item) === gristConfig.orgId ||
-      item?.domain === gristConfig.orgId
+      (item && item.domain === gristConfig.orgId)
   );
 
   if (!org) {
@@ -193,9 +226,7 @@ export const getOrCreateWorkspace = async (gristApiKey) => {
     const workspaceId = getWorkspaceId(workspace);
 
     if (!hasGristId(workspaceId)) {
-      throw new Error(
-        `Grist workspace "${gristConfig.workspaceName}" has no id`
-      );
+      throw new Error(`Grist workspace "${gristConfig.workspaceName}" has no id`);
     }
 
     return workspaceId;
@@ -211,9 +242,7 @@ export const getOrCreateWorkspace = async (gristApiKey) => {
   const createdWorkspaceId = getWorkspaceId(createdWorkspace);
 
   if (!hasGristId(createdWorkspaceId)) {
-    throw new Error(
-      `Created Grist workspace "${gristConfig.workspaceName}" has no id`
-    );
+    throw new Error(`Created Grist workspace "${gristConfig.workspaceName}" has no id`);
   }
 
   return createdWorkspaceId;
@@ -234,9 +263,5 @@ export const listDocs = async (gristApiKey) => {
     throw new Error("Unable to list Grist documents without a workspace id");
   }
 
-  return getWorkspaceDocsList(
-    gristConfig.apiUrl,
-    workspaceId,
-    gristApiKey
-  );
+  return getWorkspaceDocsList(gristConfig.apiUrl, workspaceId, gristApiKey);
 };
