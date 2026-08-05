@@ -127,7 +127,7 @@ ListGristTables.prototype.getDocsTables = function () {
 ListGristTables.prototype.updateOptions = function () {
   this.select.setOptions(
     this.tables.map((entry) => ({
-      label: `${entry.docName} / ${entry.tableName}`,
+      label: `${entry.docName}/${entry.tableName}`,
       value: `${entry.docId}:${entry.tableId}`,
     }))
   );
