@@ -108,6 +108,7 @@ ListGristTables.prototype.getDocsTables = function () {
             (payload.tables || []).map((table) => ({
               doc,
               table,
+              workspaceName: gristConfig.workspaceName,
               docId: getGristId(doc),
               docName: getGristName(doc),
               tableId: getGristId(table),
@@ -127,7 +128,7 @@ ListGristTables.prototype.getDocsTables = function () {
 ListGristTables.prototype.updateOptions = function () {
   this.select.setOptions(
     this.tables.map((entry) => ({
-      label: `${entry.docName}/${entry.tableName}`,
+      label: `${entry.workspaceName}/${entry.docName}/${entry.tableName}`,
       value: `${entry.docId}:${entry.tableId}`,
     }))
   );
