@@ -232,7 +232,7 @@ const getCreatedDocId = (doc) => {
  * @throws {Error} When document lookup or creation fails.
  */
 const getOrCreateDocument = async (gristApiKey, documentReference) => {
-  const gristConfig = await getGristConfig();
+  const gristConfig = getGristConfig();
   const workspaceId = await getOrCreateWorkspace(gristApiKey);
   const docs = await getWorkspaceDocsList(gristConfig.apiUrl, workspaceId, gristApiKey);
   const existingDoc = docs.find(
@@ -333,7 +333,7 @@ export const sendParsedFileToGrist = async (
     throw new Error("Sélectionnez un document ou saisissez son nom.");
   }
 
-  const gristConfig = await getGristConfig();
+  const gristConfig = getGristConfig();
   const docId = await getOrCreateDocument(gristApiKey, documentName.trim());
 
   if (!docId) {

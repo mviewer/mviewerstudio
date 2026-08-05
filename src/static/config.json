@@ -28,7 +28,11 @@
             "api_url": "http://localhost:90/grist",
             "instance_url": "https://grist.numerique.gouv.fr/",
             "org_idold": "santegraphie",
-            "workspace_name": "mviewerstudio"
+            "workspace_name": "mviewerstudio",
+            "geocoding_ban_control_type": "type",
+            "geocoding_score_threshold": 0.8,
+            "geocoding_ban_type_order": ["housenumber", "street", "locality", "municipality", "district", "region", "country"],
+            "geocoding_ban_minimal_type": "street"
         },
         "user_info_visible": true,
         "app_form_placeholders": {

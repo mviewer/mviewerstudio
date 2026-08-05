@@ -112,6 +112,31 @@ const getGeocodedValue = (row, field) => {
   return row[field];
 };
 
+const isUngeocodedRow = (row, gristConfig) => {
+  if (gristConfig.geocodingBanControlType === "type") {
+    const minimalTypeIndex = gristConfig.geocodingBanTypeOrder.indexOf(
+      gristConfig.geocodingBanMinimalType
+    );
+    const typeIndex = gristConfig.geocodingBanTypeOrder.indexOf(row.result_type);
+
+    return !row.result_type || typeIndex < 0 || typeIndex > minimalTypeIndex;
+  }
+
+  if (!row.result_score) {
+    return true;
+  }
+
+  const score = row.result_score.replace(",", ".");
+
+  return !score || score < gristConfig.geocodingScoreThreshold;
+};
+
+const filterUngeocodedRows = (rows) => {
+  const gristConfig = getGristConfig();
+
+  return rows.filter((row) => isUngeocodedRow(row, gristConfig));
+};
+
 /**
  * Build the display status from BAN geocoding results.
  *
@@ -119,11 +144,7 @@ const getGeocodedValue = (row, field) => {
  * @returns {{type: string, label: string, message: string, localizedRows: number, totalRows: number, ungeocodedRows: Object[]}} Result status.
  */
 const getBanGeocodingStatus = (rows) => {
-  const ungeocodedRows = rows.filter((row) => {
-    const score = row.result_score.replace(",", ".");
-
-    return !score || score < 0.8;
-  });
+  const ungeocodedRows = filterUngeocodedRows(rows);
   const localizedRows = rows.length - ungeocodedRows.length;
 
   if (localizedRows === 0) {
@@ -141,7 +162,7 @@ const getBanGeocodingStatus = (rows) => {
     return {
       type: "partial",
       label: "Import partiellement réussi",
-      message: "Les lignes suivantes n'ont pas pu être localisées",
+      message: "Les lignes suivantes n'ont pas pu être localisées et nécessitent d'être corrigées dans Grist",
       localizedRows,
       totalRows: rows.length,
       ungeocodedRows,
@@ -230,12 +251,16 @@ const updateGristTableWithGeocoding = async (sourceData, geocodedRows, apiKey) =
     throw new Error("Aucune table Grist cible à mettre à jour.");
   }
 
-  const gristConfig = await getGristConfig();
+  const gristConfig = getGristConfig();
   await ensureGristGeocodingColumns(gristConfig, sourceData, apiKey);
 
   const records = sourceData.records
     .map((record, index) => {
       const geocodedRow = geocodedRows[index] || {};
+
+      if (isUngeocodedRow(geocodedRow, gristConfig)) {
+        return null;
+      }
 
       return {
         id: record.id,
@@ -245,10 +270,10 @@ const updateGristTableWithGeocoding = async (sourceData, geocodedRows, apiKey) =
         },
       };
     })
-    .filter((record) => record.id);
+    .filter((record) => record && record.id);
 
   if (!records.length) {
-    throw new Error("Aucun identifiant de ligne Grist disponible pour la mise à jour.");
+    return;
   }
 
   await patchRecordsToTable(
@@ -368,14 +393,10 @@ const renderGristGeocodingResult = (status, options) => {
     if (mv.components) {
       Table = mv.components.table;
     }
-    const tableTitle = document.createElement("h6");
-
-    tableTitle.className = "grist-geocoding-preview-title";
-    tableTitle.textContent = "Lignes non géocodées";
-    wrapper.appendChild(tableTitle);
 
     if (Table) {
       const table = new Table({
+        title: "Lignes non géocodées",
         data: {
           data: status.ungeocodedRows,
           meta: { fields: Object.keys(status.ungeocodedRows[0] || {}) },

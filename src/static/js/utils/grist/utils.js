@@ -5,8 +5,6 @@ import {
   getWorkspaceDocsList,
 } from "./requests.js";
 
-let configPromise = null;
-
 /**
  * @typedef {Object} GristEntity
  * @property {string|number} [id] Entity identifier.
@@ -21,41 +19,50 @@ let configPromise = null;
  * @property {string} apiUrl Grist REST API URL.
  * @property {string} orgId Grist organization id or domain.
  * @property {string} workspaceName Workspace name used by mviewerstudio.
+ * @property {string} geocodingBanControlType BAN result control mode.
+ * @property {number} geocodingScoreThreshold Minimum accepted BAN score.
+ * @property {string[]} geocodingBanTypeOrder BAN result type quality order.
+ * @property {string} geocodingBanMinimalType Minimum accepted BAN result type.
  */
 
 /**
  * Read Grist settings from the static application config.
  *
- * @returns {Promise<GristConfig>} Grist settings.
+ * @returns {GristConfig} Grist settings.
  * @throws {Error} When the Grist config is missing or incomplete.
  */
-export const getGristConfig = async () => {
-  if (!configPromise) {
-    configPromise = fetch("config.json")
-      .then(readJson)
-      .then((config) => {
-        const gristConfig =
-          config.app_conf && config.app_conf.grist ? config.app_conf.grist : {};
-        const instanceUrl = gristConfig.instance_url;
-        const apiUrl = gristConfig.api_url || instanceUrl;
-        // use personal workspace as default if no org_id is provided
-        const orgId = gristConfig.org_id || "Personal";
-        const workspaceName = gristConfig.workspace_name;
+export const getGristConfig = () => {
+  const appConfig = window._conf;
 
-        if (!instanceUrl || !apiUrl || !orgId || !workspaceName) {
-          throw new Error("Missing Grist configuration");
-        }
-
-        return {
-          instanceUrl,
-          apiUrl,
-          orgId,
-          workspaceName,
-        };
-      });
+  if (!appConfig) {
+    throw new Error("MviewerStudio configuration is not loaded");
   }
 
-  return configPromise;
+  const gristConfig = appConfig.grist || {};
+  const instanceUrl = gristConfig.instance_url;
+  const apiUrl = gristConfig.api_url || instanceUrl;
+  const orgId = gristConfig.org_id || "Personal";
+  const workspaceName = gristConfig.workspace_name;
+  const geocodingBanControlType = gristConfig.geocoding_ban_control_type || "score";
+  const geocodingScoreThreshold = gristConfig.geocoding_score_threshold || 0.8;
+  const geocodingBanTypeOrder = gristConfig.geocoding_ban_type_order || [];
+  const geocodingBanMinimalType =
+    gristConfig.geocoding_ban_minimal_type || "street";
+
+  if (!instanceUrl || !apiUrl || !orgId || !workspaceName) {
+    throw new Error("Missing Grist configuration");
+  }
+
+  return {
+    instanceUrl,
+    apiUrl,
+    orgId,
+    workspaceName,
+    geocodingBanControlType,
+    geocodingScoreThreshold,
+    geocodingBanTypeOrder,
+    geocodingBanMinimalType,
+  };
 };
 
 /**
@@ -200,7 +207,7 @@ const getGristName = (item) => {
  * @throws {Error} When the configured organization is not available or a Grist request fails.
  */
 export const getOrCreateWorkspace = async (gristApiKey) => {
-  const gristConfig = await getGristConfig();
+  const gristConfig = getGristConfig();
   const orgsPayload = await getUserOrgs(gristConfig.apiUrl, gristApiKey).then(readJson);
   const org = (orgsPayload || []).find(
     (item) =>
@@ -256,7 +263,7 @@ export const getOrCreateWorkspace = async (gristApiKey) => {
  * @throws {Error} When workspace lookup or document listing fails.
  */
 export const listDocs = async (gristApiKey) => {
-  const gristConfig = await getGristConfig();
+  const gristConfig = getGristConfig();
   const workspaceId = await getOrCreateWorkspace(gristApiKey);
 
   if (!hasGristId(workspaceId)) {

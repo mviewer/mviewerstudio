@@ -478,6 +478,7 @@ STYLE FOR GRIST IMPORT
 
 .grist-geocoding-result-message {
 	margin: 0;
+	margin-top: 6px;
 	color: var(--grist-color-text);
 	font-size: 18px;
 	font-style: italic;

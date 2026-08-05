@@ -348,7 +348,7 @@ importGristArea.prototype.getTargetTableUrl = async function () {
     return null;
   }
 
-  const gristConfig = await getGristConfig();
+  const gristConfig = getGristConfig();
 
   return getGristTableUrl(
     gristConfig.instanceUrl,
@@ -362,7 +362,7 @@ importGristArea.prototype.getTargetTableUrl = async function () {
 importGristArea.prototype.getSourceData = async function () {
   const targetTable = this.getTargetTable();
   if (targetTable) {
-    const gristConfig = await getGristConfig();
+    const gristConfig = getGristConfig();
     const payload = await getTableRecords(
       gristConfig.apiUrl,
       targetTable.docId,

@@ -129,28 +129,28 @@ ListGristTables.prototype.setListVisible = function (visible) {
 };
 
 ListGristTables.prototype.getDocsTables = function () {
-  return Promise.all([getGristConfig(), listDocs(this.apiKey)]).then(
-    ([gristConfig, docs]) => {
-      const tablesRequests = docs.map((doc) =>
-        getDocTables(gristConfig.apiUrl, getGristId(doc), this.apiKey)
-          .then(readJson)
-          .then((payload) =>
-            (payload.tables || []).map((table) => ({
-              doc,
-              table,
-              workspaceName: gristConfig.workspaceName,
-              docId: getGristId(doc),
-              docName: getGristName(doc),
-              tableId: getGristId(table),
-              tableName: getGristName(table),
-              tableRef: getGristTableRef(table),
-            }))
-          )
-      );
+  const gristConfig = getGristConfig();
 
-      return Promise.all(tablesRequests).then((tablesByDoc) => tablesByDoc.flat());
-    }
-  );
+  return listDocs(this.apiKey).then((docs) => {
+    const tablesRequests = docs.map((doc) =>
+      getDocTables(gristConfig.apiUrl, getGristId(doc), this.apiKey)
+        .then(readJson)
+        .then((payload) =>
+          (payload.tables || []).map((table) => ({
+            doc,
+            table,
+            workspaceName: gristConfig.workspaceName,
+            docId: getGristId(doc),
+            docName: getGristName(doc),
+            tableId: getGristId(table),
+            tableName: getGristName(table),
+            tableRef: getGristTableRef(table),
+          }))
+        )
+    );
+
+    return Promise.all(tablesRequests).then((tablesByDoc) => tablesByDoc.flat());
+  });
 };
 
 ListGristTables.prototype.updateOptions = function () {
@@ -284,23 +284,23 @@ ListGristTables.prototype.updateOpenTableButton = function (selectedTable) {
     return;
   }
 
-  getGristConfig().then((gristConfig) => {
-    if (this.getSelectedTable() !== selectedTable) {
-      return;
-    }
+  const gristConfig = getGristConfig();
 
-    container.replaceChildren(
-      new OpenGristTableBtn({
-        url: getGristTableUrl(
-          gristConfig.instanceUrl,
-          gristConfig.orgId,
-          selectedTable.docId,
-          selectedTable.tableId,
-          selectedTable.tableRef
-        ),
-      }).render()
-    );
-  });
+  if (this.getSelectedTable() !== selectedTable) {
+    return;
+  }
+
+  container.replaceChildren(
+    new OpenGristTableBtn({
+      url: getGristTableUrl(
+        gristConfig.instanceUrl,
+        gristConfig.orgId,
+        selectedTable.docId,
+        selectedTable.tableId,
+        selectedTable.tableRef
+      ),
+    }).render()
+  );
 };
 
 ListGristTables.prototype.render = function () {
