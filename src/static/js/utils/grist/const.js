@@ -9,6 +9,9 @@ const GRIST_FOOTER_ID = "grist-footer";
 const GRIST_RESULT_CONTAINER_ID = "grist-result";
 const GRIST_WIZARD_CONTAINER_ID = "newlayer-grist-wizard";
 const NEW_LAYER_BY_GRIST_ID = "newLayerByGrist";
+const GRIST_REF_GEO_MATCHING_FIELD_ID = "grist-refgeo-matching-field";
+const GRIST_REF_GEO_REFERENTIAL_ID = "grist-refgeo-referential";
+const GRIST_REF_GEO_OUTPUT_FORMAT_ID = "grist-refgeo-output-format";
 
 const GRIST_LOCATION_SWITCH_IDS = {
   address: "adresseSwitch",
@@ -52,6 +55,9 @@ export {
   GRIST_LOCATION_SWITCH_IDS,
   GRIST_LOCATION_TARGET_IDS,
   GRIST_MODAL_ID,
+  GRIST_REF_GEO_MATCHING_FIELD_ID,
+  GRIST_REF_GEO_REFERENTIAL_ID,
+  GRIST_REF_GEO_OUTPUT_FORMAT_ID,
   GRIST_RESULT_CONTAINER_ID,
   GRIST_TAB_TARGET,
   GRIST_WIZARD_BACK_BUTTON_ID,

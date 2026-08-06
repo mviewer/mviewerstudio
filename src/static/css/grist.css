@@ -423,6 +423,29 @@ STYLE FOR GRIST IMPORT
 	width: 100%;
 }
 
+.grist-refgeo-fields {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 12px;
+	margin-top: 0;
+}
+
+.grist-refgeo-field {
+	margin-bottom: 0;
+}
+
+.grist-refgeo-label {
+	display: block;
+	margin-bottom: 6px;
+	color: var(--grist-color-text-strong);
+	font-size: 13px;
+	font-weight: 600;
+}
+
+.grist-refgeo-select {
+	width: 100%;
+}
+
 /*
 -- Geocoding result
 */

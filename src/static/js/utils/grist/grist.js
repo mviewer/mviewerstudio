@@ -4,13 +4,14 @@ import {
   renderGristLocationArea,
   setGristLocationFields,
   setGristLocationSwitches,
-} from "./locationFields.js";
+} from "./locationModeManagement.js";
 import { runGristAddressGeocoding } from "./geocoding.js";
 import {
   getGristWizardContentSteps,
   initGristWizard,
   setGristWizardStep,
 } from "./wizard.js";
+import { runGristRefGeoJoin } from "./refGeo.js";
 import {
   GRIST_AUTH_CONTAINER_ID,
   GRIST_DATA_CONTAINER_ID,
@@ -298,6 +299,18 @@ const bindNewLayerModalGrist = (
         runGristAddressGeocoding({
           importGristArea: activeImportGristArea,
           getAddressFields: getGristAddressFields,
+          setWizardStep: setGristWizardStep,
+          triggerButton: nextButton,
+        });
+        return;
+      }
+
+      if (
+        currentStep === "3" &&
+        getActiveGristLocationSwitchId() === GRIST_LOCATION_SWITCH_IDS.ref
+      ) {
+        runGristRefGeoJoin({
+          importGristArea: activeImportGristArea,
           setWizardStep: setGristWizardStep,
           triggerButton: nextButton,
         });

@@ -92,6 +92,19 @@ const renderGristLocationArea = (selectedSwitchId) => {
     selectedSwitch.setContent(addressArea.render());
   }
 
+  if (selectedSwitchId === GRIST_LOCATION_SWITCH_IDS.ref) {
+    const GristRefGeoArea = getGristComponent("gristRefGeoArea");
+    if (!GristRefGeoArea) {
+      return;
+    }
+
+    const refGeoArea = new GristRefGeoArea({
+      fields: gristLocationState.fields,
+    });
+    gristLocationState.activeArea = refGeoArea;
+    selectedSwitch.setContent(refGeoArea.render());
+  }
+
   if (selectedSwitchId === GRIST_LOCATION_SWITCH_IDS.xy) {
     const GristCoordinatesArea = getGristComponent("gristCoordinatesArea");
     if (!GristCoordinatesArea) {

@@ -5,6 +5,9 @@ import {
   postCsvToBanGeocoding,
 } from "./requests.js";
 import { getGristConfig } from "./utils.js";
+import GristResult, {
+  createGristResultButton,
+} from "../../components/grist/results/results.js";
 
 let activeGeocodingTotalRows = 0;
 
@@ -324,29 +327,6 @@ const openCurrentGristTable = async (importGristArea) => {
   }
 };
 
-const getStatusIcon = (statusType) => {
-  if (statusType === "success") {
-    return "✓";
-  }
-
-  if (statusType === "partial") {
-    return "!";
-  }
-
-  return "×";
-};
-
-const createResultButton = (label, className, onClick) => {
-  const button = document.createElement("button");
-
-  button.type = "button";
-  button.className = className;
-  button.textContent = label;
-  button.addEventListener("click", onClick);
-
-  return button;
-};
-
 /**
  * Display the final geocoding status in the Grist result step.
  *
@@ -363,75 +343,42 @@ const renderGristGeocodingResult = (status, options) => {
     return;
   }
 
-  const wrapper = document.createElement("div");
-  const icon = document.createElement("div");
-  const title = document.createElement("h6");
-  const counter = document.createElement("p");
-  const message = document.createElement("p");
-  const actions = document.createElement("div");
-
-  wrapper.className = `grist-geocoding-result grist-geocoding-result-${status.type}`;
-  icon.className = "grist-geocoding-result-icon";
-  icon.textContent = getStatusIcon(status.type);
-  title.className = "grist-geocoding-result-title";
-  title.textContent = status.label;
-  counter.className = "grist-geocoding-result-counter";
-  counter.innerHTML = `<strong>${status.localizedRows || 0}/${status.totalRows || 0}</strong> lignes localisées`;
-  message.className = "grist-geocoding-result-message";
-  message.textContent = status.message;
-
-  wrapper.append(icon, title, counter);
-  if (status.message) {
-    wrapper.appendChild(message);
-  }
-
-  actions.className = "grist-geocoding-result-actions";
+  const resultActions = [];
 
   if (status.ungeocodedRows && status.ungeocodedRows.length) {
-    let Table = null;
-
-    if (mv.components) {
-      Table = mv.components.table;
-    }
-
-    if (Table) {
-      const table = new Table({
-        title: "Lignes non géocodées",
-        data: {
-          data: status.ungeocodedRows,
-          meta: { fields: Object.keys(status.ungeocodedRows[0] || {}) },
-        },
-        maxRows: 5,
-        paginate: true,
-        emptyMessage: "Aucune ligne non géocodée.",
-      });
-      wrapper.appendChild(table.render());
-    }
-
-    const editButton = createResultButton(
+    const editButton = createGristResultButton(
       "Corriger dans Grist",
       "btn grist-geocoding-result-secondary-button",
       () => openCurrentGristTable(options.importGristArea)
     );
-    const retryButton = createResultButton(
-      "Relancer le géocodage",
+    const retryButton = createGristResultButton(
+      "Relancer",
       "btn grist-geocoding-result-primary-button",
       () => runGristAddressGeocoding({ ...options, triggerButton: retryButton })
     );
 
-    actions.append(editButton, retryButton);
-    wrapper.appendChild(actions);
+    resultActions.push(editButton, retryButton);
   } else if (status.type === "success") {
-    const openButton = createResultButton(
+    const openButton = createGristResultButton(
       "Voir dans Grist",
       "btn grist-geocoding-result-primary-button",
       () => openCurrentGristTable(options.importGristArea)
     );
 
-    actions.appendChild(openButton);
-    wrapper.appendChild(actions);
+    resultActions.push(openButton);
   }
-  resultContainer.replaceChildren(wrapper);
+
+  resultContainer.replaceChildren(
+    new GristResult({
+      type: status.type,
+      label: status.label,
+      message: status.message,
+      localizedRows: status.localizedRows,
+      totalRows: status.totalRows,
+      ungeocodedRows: status.ungeocodedRows,
+      actions: resultActions,
+    }).render()
+  );
 };
 
 /**
