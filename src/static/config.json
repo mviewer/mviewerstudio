@@ -51,6 +51,21 @@
                 "layer_name": "GCS:CONTOURS_DEPARTEMENT_IDF",
                 "join_field": "CODE_INSEE",
                 "centroide_layer_name": "GCS:CENTROIDES_DEPARTEMENT_IDF"
+            },{
+                "layer_url": "https://santegraphie.fr/geoserver/GCS",
+                "label": "Départements centroïdes",
+                "layer_name": "GCS:CENTROIDES_DEPARTEMENT_IDF",
+                "join_field": "CODE_INSEE"
+            },{
+                "layer_url": "https://santegraphie.fr/geoserver/GCS",
+                "label": "FINESS",
+                "layer_name": "GCS:REPSIF_STRUCTURES",
+                "join_field": "CODE_INSEE"
+            },{
+                "layer_url": "https://santegraphie.fr/geoserver/",
+                "label": "PMSI",
+                "layer_name": "PMSI:PMSI",
+                "join_field": "CODE_PMSI"
             }]
         },
         "user_info_visible": true,
