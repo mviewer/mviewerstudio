@@ -18,6 +18,7 @@ import {
   GRIST_LOCATION_SWITCH_IDS,
   GRIST_LOCATION_TARGET_IDS,
   GRIST_MODAL_ID,
+  GRIST_RESULT_CONTAINER_ID,
   GRIST_TAB_TARGET,
   GRIST_WIZARD_BACK_BUTTON_ID,
   GRIST_WIZARD_NEXT_BUTTON_ID,
@@ -49,6 +50,23 @@ const getCurrentWizardStep = () => {
   }
 
   return nextButton.dataset.step || 1;
+};
+
+/**
+ * Clear the current result content before returning to localization.
+ *
+ * @param {string} currentStep Active wizard step.
+ * @returns {void}
+ */
+const clearGristCurrentStep = (currentStep) => {
+  if (currentStep !== "4") {
+    return;
+  }
+
+  const resultContainer = document.getElementById(GRIST_RESULT_CONTAINER_ID);
+  if (resultContainer) {
+    resultContainer.replaceChildren();
+  }
 };
 
 /**
@@ -286,6 +304,7 @@ const bindNewLayerModalGrist = (
 
     if (backButton) {
       let previousStep = backButton.dataset.step || 1;
+      clearGristCurrentStep(previousStep);
       previousStep--;
       setGristWizardStep(previousStep);
     }
