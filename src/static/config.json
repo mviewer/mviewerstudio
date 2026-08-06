@@ -66,6 +66,11 @@
                 "label": "PMSI",
                 "layer_name": "PMSI:PMSI",
                 "join_field": "CODE_PMSI"
+            },{
+                "layer_url": "https://santegraphie.fr/geoserver/",
+                "label": "Territoire de vie santé",
+                "layer_name": "ARS:contours_tvs_idf",
+                "join_field": "NUM_TVS"
             }]
         },
         "user_info_visible": true,

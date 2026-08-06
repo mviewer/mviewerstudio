@@ -7,6 +7,7 @@ const GRIST_AUTH_CONTAINER_ID = "grist-auth";
 const GRIST_DATA_CONTAINER_ID = "grist-data";
 const GRIST_FOOTER_ID = "grist-footer";
 const GRIST_RESULT_CONTAINER_ID = "grist-result";
+const GRIST_GEOMETRY_FIELD = "geometry";
 const GRIST_WIZARD_CONTAINER_ID = "newlayer-grist-wizard";
 const NEW_LAYER_BY_GRIST_ID = "newLayerByGrist";
 const GRIST_REF_GEO_MATCHING_FIELD_ID = "grist-refgeo-matching-field";
@@ -52,6 +53,7 @@ export {
   GRIST_AUTH_CONTAINER_ID,
   GRIST_DATA_CONTAINER_ID,
   GRIST_FOOTER_ID,
+  GRIST_GEOMETRY_FIELD,
   GRIST_LOCATION_SWITCH_IDS,
   GRIST_LOCATION_TARGET_IDS,
   GRIST_MODAL_ID,

@@ -15,6 +15,7 @@ import { runGristRefGeoJoin } from "./refGeo.js";
 import {
   GRIST_AUTH_CONTAINER_ID,
   GRIST_DATA_CONTAINER_ID,
+  GRIST_GEOMETRY_FIELD,
   GRIST_LOCATION_SWITCH_IDS,
   GRIST_LOCATION_TARGET_IDS,
   GRIST_MODAL_ID,
@@ -50,6 +51,65 @@ const getCurrentWizardStep = () => {
   }
 
   return nextButton.dataset.step || 1;
+};
+
+/**
+ * Return whether the selected Grist table already contains the geometry field.
+ *
+ * @returns {Promise<boolean>} True when the field exists.
+ */
+const hasGristGeometryField = async () => {
+  if (!activeImportGristArea) {
+    return false;
+  }
+
+  try {
+    const sourceData = await activeImportGristArea.getSourceData();
+
+    return sourceData.fields.includes(GRIST_GEOMETRY_FIELD);
+  } catch (error) {
+    return false;
+  }
+};
+
+/**
+ * Ask permission to overwrite the geometry field before the referential join.
+ *
+ * @param {HTMLButtonElement} nextButton Wizard next button.
+ * @returns {void}
+ */
+const confirmGristGeometryOverwrite = (nextButton) => {
+  const resultContainer = document.getElementById(GRIST_RESULT_CONTAINER_ID);
+  const ConfirmAction = getGristComponent("confirmAction");
+
+  if (!resultContainer || !ConfirmAction) {
+    runGristRefGeoJoin({
+      importGristArea: activeImportGristArea,
+      setWizardStep: setGristWizardStep,
+      triggerButton: nextButton,
+    });
+    return;
+  }
+
+  setGristWizardStep(4);
+  resultContainer.replaceChildren(
+    new ConfirmAction({
+      message:
+        'Voulez-vous écraser le contenu de la colonne existante "geometry" ?',
+      color: "warning",
+      onYes: () =>
+        runGristRefGeoJoin({
+          importGristArea: activeImportGristArea,
+          setWizardStep: setGristWizardStep,
+          triggerButton: nextButton,
+        }),
+      onNo: () => {
+        resultContainer.replaceChildren();
+        setGristWizardStep(3);
+        nextButton.disabled = false;
+      },
+    }).render()
+  );
 };
 
 /**
@@ -328,10 +388,18 @@ const bindNewLayerModalGrist = (
         currentStep === "3" &&
         getActiveGristLocationSwitchId() === GRIST_LOCATION_SWITCH_IDS.ref
       ) {
-        runGristRefGeoJoin({
-          importGristArea: activeImportGristArea,
-          setWizardStep: setGristWizardStep,
-          triggerButton: nextButton,
+        nextButton.disabled = true;
+        hasGristGeometryField().then((hasGeometryField) => {
+          if (hasGeometryField) {
+            confirmGristGeometryOverwrite(nextButton);
+            return;
+          }
+
+          runGristRefGeoJoin({
+            importGristArea: activeImportGristArea,
+            setWizardStep: setGristWizardStep,
+            triggerButton: nextButton,
+          });
         });
         return;
       }

@@ -163,23 +163,51 @@ def get_grist_records(api_url, doc_id, table_id, api_key):
 
 def ensure_grist_columns(api_url, doc_id, table_id, column_ids, api_key):
     """
-    Create the requested columns in Grist when they are missing.
+    Return the requested Grist column identifiers, creating missing columns.
 
-    A 400 response is ignored because Grist returns an error when the column
-    already exists.
+    An existing column can have a generated identifier such as ``geometry2``
+    while retaining the ``geometry`` label. In that case, return its actual
+    identifier so the existing column is updated instead of creating another
+    duplicate.
 
     :param str api_url: Grist API URL.
     :param str doc_id: Grist document id.
     :param str table_id: Grist table id.
     :param list column_ids: Grist column identifiers to create.
     :param str api_key: Grist API key.
-    :raises requests.RequestException: If Grist rejects column creation.
+    :return: Mapping from requested column identifiers to Grist identifiers.
+    :rtype: dict
+    :raises requests.RequestException: If Grist rejects a request.
     """
     columns_url = (
         f"{api_url}/api/docs/{quote(str(doc_id))}"
         f"/tables/{quote(str(table_id))}/columns"
     )
+    response = requests.get(
+        columns_url,
+        headers=get_grist_headers(api_key),
+        timeout=30,
+    )
+    response.raise_for_status()
+    columns = response.json().get("columns", [])
+    resolved_column_ids = {}
+
     for column_id in column_ids:
+        existing_column = next(
+            (
+                column
+                for column in columns
+                if column.get("id") == column_id
+                or column.get("fields", {}).get("label", "").lower()
+                == column_id.lower()
+            ),
+            None,
+        )
+
+        if existing_column:
+            resolved_column_ids[column_id] = existing_column["id"]
+            continue
+
         response = requests.post(
             columns_url,
             headers=get_grist_json_headers(api_key),
@@ -194,8 +222,12 @@ def ensure_grist_columns(api_url, doc_id, table_id, column_ids, api_key):
             timeout=30,
         )
 
-        if not response.ok and response.status_code != 400:
+        if not response.ok:
             response.raise_for_status()
+
+        resolved_column_ids[column_id] = column_id
+
+    return resolved_column_ids
 
 
 def patch_grist_geometry_records(api_url, doc_id, table_id, records, api_key):
@@ -632,7 +664,14 @@ def join_rows_with_referential(payload, authorization_header):
             for column_id in record["fields"]:
                 if column_id not in column_ids:
                     column_ids.append(column_id)
-        ensure_grist_columns(api_url, doc_id, table_id, column_ids, api_key)
+        resolved_column_ids = ensure_grist_columns(
+            api_url, doc_id, table_id, column_ids, api_key
+        )
+        for record in records_to_patch:
+            record["fields"] = {
+                resolved_column_ids[column_id]: value
+                for column_id, value in record["fields"].items()
+            }
         patch_grist_geometry_records(
             api_url, doc_id, table_id, records_to_patch, api_key
         )

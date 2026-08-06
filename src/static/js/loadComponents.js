@@ -9,6 +9,7 @@ import GristAddressArea from "./components/grist/gristAddressArea/gristAddressAr
 import GristCoordinatesArea from "./components/grist/gristCoordinatesArea/gristCoordinatesArea.js";
 import GristRefGeoArea from "./components/grist/gristRefGeoArea/gristRefGeoArea.js";
 import GristResult from "./components/grist/results/results.js";
+import ConfirmAction from "./components/grist/confirmAction/configmAction.js";
 import importGristArea from "./components/grist/importGristArea/importGristArea.js";
 import UploadFile from "./components/uploadFile/uploadFile.js";
 import ListGristTables from "./components/grist/listGristTables/listGristTables.js";
@@ -37,6 +38,7 @@ mv.components.grist.gristAddressArea = GristAddressArea;
 mv.components.grist.gristCoordinatesArea = GristCoordinatesArea;
 mv.components.grist.gristRefGeoArea = GristRefGeoArea;
 mv.components.grist.results = GristResult;
+mv.components.grist.confirmAction = ConfirmAction;
 mv.components.grist.importGristArea = importGristArea;
 mv.components.grist.listGristTables = ListGristTables;
 mv.utils.grist.grist = gristUtils;
