@@ -6,6 +6,7 @@ import {
   setGristLocationSwitches,
 } from "./locationModeManagement.js";
 import { runGristAddressGeocoding } from "./geocoding.js";
+import { runGristCoordinatesCheck } from "./coordinates.js";
 import {
   getGristWizardContentSteps,
   initGristWizard,
@@ -25,6 +26,8 @@ import {
   GRIST_WIZARD_NEXT_BUTTON_ID,
 } from "./const.js";
 
+// Instance kept for the lifetime of the modal. It stores the selected table or
+// the file to send during the next wizard steps.
 let activeImportGristArea = null;
 
 const getGristComponent = (componentName) => {
@@ -130,6 +133,39 @@ const clearGristCurrentStep = (currentStep) => {
 };
 
 /**
+ * Refresh the location fields from the current Grist table.
+ *
+ * @returns {Promise<void>}
+ */
+const refreshGristLocationFields = async () => {
+  if (!activeImportGristArea) {
+    throw new Error("Aucune table Grist sélectionnée.");
+  }
+
+  const sourceData = await activeImportGristArea.getSourceData();
+
+  setGristLocationFields(sourceData.fields);
+};
+
+/**
+ * Render the Grist table refresh action in the localization step.
+ *
+ * @returns {void}
+ */
+const initGristLocationRefreshButton = () => {
+  const container = document.getElementById("grist-location-preview");
+  const RefreshGristDataBtn = getGristComponent("refreshGristDataBtn");
+
+  if (!container || !RefreshGristDataBtn) {
+    return;
+  }
+
+  container.replaceChildren(
+    new RefreshGristDataBtn({ onRefresh: refreshGristLocationFields }).render()
+  );
+};
+
+/**
  * Render the Grist localization mode switches.
  *
  * Only one switch can be active at a time. If the current active switch is
@@ -172,6 +208,10 @@ const initGristLocationSwitches = () => {
   ];
   const switches = [];
   setGristLocationSwitches(switches);
+  initGristLocationRefreshButton();
+
+  // Only one localization mode can be active. Re-enabling the last selected
+  // switch prevents the localization form from disappearing entirely.
   const selectOnly = (activeSwitch) => {
     if (!activeSwitch.getChecked()) {
       activeSwitch.setChecked(true);
@@ -344,6 +384,7 @@ const bindNewLayerModalGrist = (
   modal.dataset.gristBound = "true";
 
   modal.addEventListener("show.bs.modal", () => {
+    // Each opening starts with a clean wizard and no previous selection.
     initGristNewLayerModal(getConfig());
   });
 
@@ -371,10 +412,31 @@ const bindNewLayerModalGrist = (
 
     if (nextButton) {
       let currentStep = nextButton.dataset.step || 1;
+
+      if (currentStep === "2") {
+        // The Data step can only be left after sending the file, when needed,
+        // and reading back the created or selected table.
+        nextButton.disabled = true;
+
+        activeImportGristArea
+          .prepareForLocationStep()
+          .then(() => {
+            alertCustom("La table Grist a été importée avec succès.", "success");
+            setGristWizardStep(3);
+          })
+          .catch((error) => {
+            alertCustom(error.message || "Impossible de préparer la table Grist.", "danger");
+            console.error("Error preparing Grist table:", error);
+            nextButton.disabled = false;
+          });
+        return;
+      }
+
       if (
         currentStep === "3" &&
         getActiveGristLocationSwitchId() === GRIST_LOCATION_SWITCH_IDS.address
       ) {
+        // Geocoding processes addresses directly and displays its result.
         runGristAddressGeocoding({
           importGristArea: activeImportGristArea,
           getAddressFields: getGristAddressFields,
@@ -388,6 +450,7 @@ const bindNewLayerModalGrist = (
         currentStep === "3" &&
         getActiveGristLocationSwitchId() === GRIST_LOCATION_SWITCH_IDS.ref
       ) {
+        // An existing geometry column must be confirmed before it is overwritten.
         nextButton.disabled = true;
         hasGristGeometryField().then((hasGeometryField) => {
           if (hasGeometryField) {
@@ -400,6 +463,18 @@ const bindNewLayerModalGrist = (
             setWizardStep: setGristWizardStep,
             triggerButton: nextButton,
           });
+        });
+        return;
+      }
+
+      if (
+        currentStep === "3" &&
+        getActiveGristLocationSwitchId() === GRIST_LOCATION_SWITCH_IDS.xy
+      ) {
+        // Coordinates are checked before the result step is displayed.
+        runGristCoordinatesCheck({
+          importGristArea: activeImportGristArea,
+          setWizardStep: setGristWizardStep,
         });
         return;
       }
