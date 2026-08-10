@@ -16,6 +16,7 @@ import { getTableRecords } from "../../../utils/grist/requests.js";
 import {
   disableGristWizardNextButton,
   disableSelectLayersButton,
+  setGristWizardNextButtonReady,
   updateGristWizardNextButtonForSelectedTable,
   updateGristWizardNextButtonForSentTable,
   updateSelectLayersButtonForImportedFile,
@@ -135,11 +136,12 @@ const importGristArea = function (activeType = "file", options = {}) {
     selectClasses: "col-6",
     onChange: (value) => {
       this.fileDocumentName = value;
+      this.sentTable = null;
 
       if (value === "create") {
         this.fileDocumentName = this.documentNameInput.getValue();
       }
-      disableGristWizardNextButton();
+      this.updateGristWizardNextButtonForFile();
       this.updateFilePreview();
     },
     onLoad: (select) => this.loadDocumentOptions(select),
@@ -153,7 +155,8 @@ const importGristArea = function (activeType = "file", options = {}) {
     placeholder: "Nom du document...",
     onChange: (value) => {
       this.fileDocumentName = value;
-      disableGristWizardNextButton();
+      this.sentTable = null;
+      this.updateGristWizardNextButtonForFile();
     },
   });
 
@@ -165,7 +168,8 @@ const importGristArea = function (activeType = "file", options = {}) {
     placeholder: "Nom de la table...",
     onChange: (value) => {
       this.fileTableName = value;
-      disableGristWizardNextButton();
+      this.sentTable = null;
+      this.updateGristWizardNextButtonForFile();
       this.filePreviewTable.setTitle(
         this.fileTableName || "Fichier importe",
         "Apercu des 5 premieres lignes"
@@ -200,7 +204,7 @@ const importGristArea = function (activeType = "file", options = {}) {
       this.onColumnsChange(columns);
       this.tableNameInput.setValue(this.fileTableName);
       this.updateFilePreview();
-      disableGristWizardNextButton();
+      this.updateGristWizardNextButtonForFile();
       updateSelectLayersButtonForImportedFile(verification);
       this.onFileChange(file, verification, this.fileTableName);
     },
@@ -241,6 +245,7 @@ importGristArea.prototype.loadDocumentOptions = function (select) {
     select.setOptions(options);
     select.setDisabled(false);
     this.fileDocumentName = select.getValue();
+    this.updateGristWizardNextButtonForFile();
 
     return options;
   });
@@ -257,7 +262,7 @@ importGristArea.prototype.setActiveType = function (type) {
     return;
   }
 
-  disableGristWizardNextButton();
+  this.updateGristWizardNextButtonForFile();
   updateSelectLayersButtonForImportedFile(this.fileVerification);
 };
 
@@ -268,13 +273,14 @@ importGristArea.prototype.update = function () {
   const gristContent = this.element.querySelector('[data-import-content="grist"]');
 
   const isFileActive = this.activeType === "file";
+  const isGristActive = this.activeType === "grist";
 
   if (fileButton) {
     fileButton.classList.toggle("active", isFileActive);
   }
 
   if (gristButton) {
-    gristButton.classList.toggle("active", !isFileActive);
+    gristButton.classList.toggle("active", isGristActive);
   }
 
   if (fileContent) {
@@ -297,7 +303,36 @@ importGristArea.prototype.getFileTableName = function () {
  * @returns {string} Document value used when creating the Grist table.
  */
 importGristArea.prototype.getFileDocumentName = function () {
-  return this.fileDocumentName.trim();
+  if (this.documentNameSelect.getValue() === "create") {
+    return this.documentNameInput.getValue().trim();
+  }
+
+  return this.documentNameSelect.getValue().trim();
+};
+
+/**
+ * Enable the wizard navigation only when the imported file and its Grist
+ * destination have both been provided.
+ *
+ * @returns {void}
+ */
+importGristArea.prototype.updateGristWizardNextButtonForFile = function () {
+  if (this.activeType !== "file") {
+    return;
+  }
+
+  const parsedData = this.fileVerification && this.fileVerification.parsedData;
+  const rows = getRows(parsedData);
+  const headers = getHeaders(rows, parsedData);
+  const ready =
+    this.fileVerification &&
+    this.fileVerification.valid &&
+    rows.length > 0 &&
+    headers.length > 0 &&
+    this.getFileTableName().trim() &&
+    this.getFileDocumentName();
+
+  setGristWizardNextButtonReady(ready);
 };
 
 importGristArea.prototype.getTargetTable = function () {
@@ -406,29 +441,11 @@ importGristArea.prototype.getSourceData = async function () {
 };
 
 /**
- * Display the status of the "Envoyer dans Grist" action.
- *
- * @param {string} message Status message.
- * @param {string} [type="muted"] Bootstrap text color suffix.
- */
-importGristArea.prototype.setSendToGristStatus = function (message, type = "muted") {
-  const status = this.element.querySelector("[data-send-to-grist-status]");
-
-  if (!status) {
-    return;
-  }
-
-  status.className = `send-to-grist__status text-${type}`;
-  status.textContent = message;
-};
-
-/**
  * Send the currently previewed file data to Grist.
  *
- * @param {HTMLButtonElement} button Button that triggered the upload.
- * @returns {void}
+ * @returns {Promise<Object>} Created Grist table information.
  */
-importGristArea.prototype.sendFileToGrist = function (button) {
+importGristArea.prototype.sendFileToGrist = async function () {
   let parsedData = null;
 
   if (this.fileVerification) {
@@ -436,46 +453,53 @@ importGristArea.prototype.sendFileToGrist = function (button) {
   }
 
   if (!this.fileVerification || !this.fileVerification.valid || !parsedData) {
-    this.setSendToGristStatus("Aucun fichier valide a envoyer.", "danger");
-    return;
+    throw new Error("Le fichier n'a pas pu être lu correctement.");
   }
 
-  button.disabled = true;
-  this.setSendToGristStatus("Envoi vers Grist...");
-
-  sendParsedFileToGrist(
+  const result = await sendParsedFileToGrist(
     parsedData,
     this.getFileTableName(),
     this.getFileDocumentName(),
     this.apiKey
-  )
-    .then((result) => {
-      this.sentTable = result;
-      this.setSendToGristStatus(
-        `${result.rowsCount} ligne(s) envoyee(s) dans Grist.`,
-        "success"
-      );
-      const openTableContainer = this.element.querySelector(
-        "[data-open-created-grist-table]"
-      );
+  );
 
-      if (openTableContainer) {
-        openTableContainer.replaceChildren(
-          new OpenGristTableBtn({ url: result.url }).render()
-        );
-      }
-      updateGristWizardNextButtonForSentTable(result);
-    })
-    .catch((error) => {
-      this.setSendToGristStatus(
-        error.message || "Impossible d'envoyer le fichier dans Grist.",
-        "danger"
-      );
-      console.error("Error sending file to Grist:", error);
-    })
-    .finally(() => {
-      button.disabled = false;
-    });
+  this.sentTable = result;
+  updateGristWizardNextButtonForSentTable(result);
+
+  const openTableContainer = this.element.querySelector(
+    "[data-open-created-grist-table]"
+  );
+
+  if (openTableContainer) {
+    openTableContainer.replaceChildren(
+      new OpenGristTableBtn({ url: result.url }).render()
+    );
+  }
+
+  return result;
+};
+
+/**
+ * Send the imported file when needed, then verify that the target Grist table
+ * can be read and contains usable data.
+ *
+ * @returns {Promise<Object>} Validated Grist source data.
+ * @throws {Error} When the source cannot be imported or read.
+ */
+importGristArea.prototype.prepareForLocationStep = async function () {
+  if (this.activeType === "file" && !this.sentTable) {
+    await this.sendFileToGrist();
+  }
+
+  const sourceData = await this.getSourceData();
+
+  if (!sourceData.rows.length || !sourceData.fields.length) {
+    throw new Error("La table Grist ne contient aucune donnée exploitable.");
+  }
+
+  this.onColumnsChange(sourceData.fields);
+
+  return sourceData;
 };
 
 /**
@@ -518,19 +542,6 @@ importGristArea.prototype.updateFilePreview = function () {
   this.filePreviewTable.subtitle = "Apercu des 5 premieres lignes";
   previewContainer.appendChild(this.filePreviewTable.setData(parsedData));
 
-  const sendButton = document.createElement("button");
-  const sendStatus = document.createElement("p");
-
-  sendButton.type = "button";
-  sendButton.className = "btn btn-primary mt-3";
-  sendButton.textContent = "Envoyer dans Grist";
-  sendButton.addEventListener("click", () => this.sendFileToGrist(sendButton));
-
-  sendStatus.className = "send-to-grist__status text-muted";
-  sendStatus.dataset.sendToGristStatus = "";
-
-  previewContainer.appendChild(sendButton);
-  previewContainer.appendChild(sendStatus);
   const openTableContainer = document.createElement("div");
   openTableContainer.dataset.openCreatedGristTable = "";
   previewContainer.appendChild(openTableContainer);
@@ -541,7 +552,7 @@ importGristArea.prototype.render = function () {
     <div class="import-type-buttons__actions">
       <button
         type="button"
-        class="import-type-buttons__button"
+        class="import-type-buttons__button${this.activeType === "file" ? " active" : ""}"
         data-import-type="file"
       >
         <span class="import-type-buttons__title">Importer un fichier</span>
@@ -549,7 +560,7 @@ importGristArea.prototype.render = function () {
       </button>
       <button
         type="button"
-        class="import-type-buttons__button"
+        class="import-type-buttons__button${this.activeType === "grist" ? " active" : ""}"
         data-import-type="grist"
       >
         <span class="import-type-buttons__title">Choisir une table Grist</span>
