@@ -1,7 +1,29 @@
 import Select from "../../select/select.js";
 
+/**
+ * Find the field that most likely contains a coordinate.
+ *
+ * @param {string[]} columns Available field names.
+ * @param {string} coordinate Coordinate name: x or y.
+ * @returns {string} Matching field name, or an empty string.
+ */
+const getMatchingCoordinateField = (columns, coordinate) => {
+  const exactNames = coordinate === "x" ? ["x", "X"] : ["y", "Y"];
+  const keyword = coordinate === "x" ? "lon" : "lat";
+  const exactField = columns.find((column) => exactNames.includes(column));
+
+  if (exactField) {
+    return exactField;
+  }
+
+  return columns.find((column) => column.toLowerCase().includes(keyword)) || "";
+};
+
 const GristCoordinatesArea = function (options = {}) {
-  this.columnOptions = this.getColumnOptions(options.columns || []);
+  this.columns = options.columns || [];
+  this.columnOptions = this.getColumnOptions(this.columns);
+  this.xField = getMatchingCoordinateField(this.columns, "x");
+  this.yField = getMatchingCoordinateField(this.columns, "y");
   this.element = document.createElement("div");
   this.element.className = "grist-coordinates-area";
 
@@ -9,6 +31,7 @@ const GristCoordinatesArea = function (options = {}) {
     id: "grist-coordinate-x",
     label: "X (longitude)",
     placeholder: "Sélectionner la colonne X",
+    value: this.xField,
     options: this.columnOptions,
     classes: "grist-coordinates-field",
     labelClasses: "grist-coordinates-label",
@@ -19,6 +42,7 @@ const GristCoordinatesArea = function (options = {}) {
     id: "grist-coordinate-y",
     label: "Y (latitude)",
     placeholder: "Sélectionner la colonne Y",
+    value: this.yField,
     options: this.columnOptions,
     classes: "grist-coordinates-field",
     labelClasses: "grist-coordinates-label",
@@ -75,10 +99,15 @@ GristCoordinatesArea.prototype.getColumnOptions = function (columns = []) {
 };
 
 GristCoordinatesArea.prototype.setColumnOptions = function (columns = []) {
+  this.columns = columns;
   this.columnOptions = this.getColumnOptions(columns);
+  this.xField = getMatchingCoordinateField(columns, "x");
+  this.yField = getMatchingCoordinateField(columns, "y");
 
   this.xSelect.setOptions(this.columnOptions);
   this.ySelect.setOptions(this.columnOptions);
+  this.xSelect.setValue(this.xField);
+  this.ySelect.setValue(this.yField);
 
   return this.element;
 };
