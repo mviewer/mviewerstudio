@@ -30,6 +30,19 @@ import {
 // the file to send during the next wizard steps.
 let activeImportGristArea = null;
 
+/**
+ * Return the table currently localized in the Grist wizard.
+ *
+ * @returns {Object|null} Selected or imported Grist table.
+ */
+const getActiveGristTargetTable = () => {
+  if (!activeImportGristArea) {
+    return null;
+  }
+
+  return activeImportGristArea.getTargetTable();
+};
+
 const getGristComponent = (componentName) => {
   if (!mv.components || !mv.components.grist) {
     return null;
@@ -293,6 +306,8 @@ const initGristImportArea = (apiKey) => {
 const hideGristImportArea = () => {
   const gristDataContainer = document.getElementById(GRIST_DATA_CONTAINER_ID);
 
+  mv.utils.grist.validation.disableSelectLayersButton();
+
   if (!gristDataContainer) {
     return;
   }
@@ -491,6 +506,7 @@ const bindNewLayerModalGrist = (
 
 export {
   bindNewLayerModalGrist,
+  getActiveGristTargetTable,
   getGristWizardContentSteps,
   hideGristImportArea,
   initGristApiKey,

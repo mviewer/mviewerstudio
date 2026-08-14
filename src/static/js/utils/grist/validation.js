@@ -10,6 +10,8 @@ const getSelectLayersButton = () => document.getElementById(SELECT_LAYERS_BUTTON
 const getGristWizardNextButton = () =>
   document.getElementById(GRIST_WIZARD_NEXT_BUTTON_ID);
 
+let hasLocalizedGristRows = false;
+
 const getParsedRows = (verification) => {
   if (!verification || !verification.parsedData) {
     return [];
@@ -36,6 +38,12 @@ const enableSelectLayersButton = () => {
 };
 
 const disableSelectLayersButton = () => {
+  hasLocalizedGristRows = false;
+  const button = getSelectLayersButton();
+
+  if (button) {
+    delete button.dataset.gristLocationMode;
+  }
   setSelectLayersButtonDisabled(true);
 };
 
@@ -47,8 +55,32 @@ const hasImportedFileTable = (verification) => {
   return getParsedRows(verification).length > 0;
 };
 
-const updateSelectLayersButtonForImportedFile = (verification) => {
-  setSelectLayersButtonDisabled(!hasImportedFileTable(verification));
+const updateSelectLayersButtonForImportedFile = () => {
+  // A valid import still needs a successful localization before it can become
+  // a layer.
+  disableSelectLayersButton();
+};
+
+/**
+ * Update the layer selection button from the latest Grist localization result.
+ *
+ * @param {number} localizedRows Number of successfully localized rows.
+ * @param {string} locationMode Grist localization mode used for the result.
+ * @returns {void}
+ */
+const updateSelectLayersButtonForLocalizedRows = (localizedRows, locationMode) => {
+  hasLocalizedGristRows = localizedRows > 0;
+  const button = getSelectLayersButton();
+
+  if (button && hasLocalizedGristRows) {
+    button.dataset.gristLocationMode = locationMode;
+  }
+
+  if (button && !hasLocalizedGristRows) {
+    delete button.dataset.gristLocationMode;
+  }
+
+  setSelectLayersButtonDisabled(!hasLocalizedGristRows);
 };
 
 const setGristWizardNextButtonReady = (ready) => {
@@ -109,7 +141,7 @@ const bindNewLayerModalValidation = (modal = document.getElementById(GRIST_MODAL
 
     if (tab) {
       if (isGristTab(tab)) {
-        disableSelectLayersButton();
+        setSelectLayersButtonDisabled(!hasLocalizedGristRows);
         return;
       }
 
@@ -125,7 +157,7 @@ const bindNewLayerModalValidation = (modal = document.getElementById(GRIST_MODAL
     const activeTab = modal.querySelector('[data-bs-toggle="pill"].active');
 
     if (isGristTab(activeTab)) {
-      disableSelectLayersButton();
+      setSelectLayersButtonDisabled(!hasLocalizedGristRows);
       return;
     }
 
@@ -146,4 +178,5 @@ export {
   updateGristWizardNextButtonForSelectedTable,
   updateGristWizardNextButtonForSentTable,
   updateSelectLayersButtonForImportedFile,
+  updateSelectLayersButtonForLocalizedRows,
 };

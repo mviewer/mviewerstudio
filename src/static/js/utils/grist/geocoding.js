@@ -1,4 +1,9 @@
-import { BAN_GEOCODING_FIELDS, GRIST_RESULT_CONTAINER_ID } from "./const.js";
+import {
+  BAN_GEOCODING_FIELDS,
+  GRIST_LOCATION_SWITCH_IDS,
+  GRIST_RESULT_CONTAINER_ID,
+} from "./const.js";
+import { updateSelectLayersButtonForLocalizedRows } from "./validation.js";
 import {
   patchRecordsToTable,
   postColumnsToTable,
@@ -342,6 +347,11 @@ const renderGristGeocodingResult = (status, options) => {
   if (!resultContainer) {
     return;
   }
+
+  updateSelectLayersButtonForLocalizedRows(
+    status.localizedRows,
+    GRIST_LOCATION_SWITCH_IDS.address
+  );
 
   const resultActions = [];
 

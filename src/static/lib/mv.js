@@ -65,6 +65,11 @@ var mv = (function () {
       styletitle: $(layerInfos).attr("styletitle"),
       index: $(layerInfos).attr("index"),
       jsonfields: $(layerInfos).attr("jsonfields"),
+      xfield: $(layerInfos).attr("xfield"),
+      yfield: $(layerInfos).attr("yfield"),
+      srs: $(layerInfos).attr("srs"),
+      geojsonField: $(layerInfos).attr("geojsonField"),
+      tooltipcontent: $(layerInfos).attr("tooltipcontent"),
     };
     return layerObject;
   };
@@ -592,6 +597,48 @@ var mv = (function () {
 
     getConfLayers: function (button) {
       var themeid = button.getAttribute("data-themeid");
+      var gristTargetTable = mv.utils.grist.grist.getActiveGristTargetTable();
+      var gristLocationMode = button.dataset.gristLocationMode;
+
+      if (gristTargetTable && gristLocationMode) {
+        var gristLayerId = gristTargetTable.tableId + "-" + mv.uuid();
+        var gristLayerName = gristTargetTable.name || gristTargetTable.tableId;
+        var gristApiUrl = _conf.grist.api_url || _conf.grist.instance_url;
+        var gristLayer = {
+          id: gristLayerId,
+          title: gristLayerName,
+          name: gristLayerName,
+          type: "csv",
+          url:
+            gristApiUrl +
+            "/api/docs/" +
+            encodeURIComponent(gristTargetTable.docId) +
+            "/download/csv?tableId=" +
+            encodeURIComponent(gristTargetTable.tableId),
+          srs: "EPSG:4326",
+          sld: "demo/sld/default_point.sld",
+          tooltipcontent: "{{adresse}}",
+          attribution: "Dans cet exemple, le fichier csv provient de Grist",
+          visible: true,
+          queryable: true,
+          secure: "apikey",
+          useproxy: $("#frm-useproxy").prop("checked") === true,
+          showintoc: true,
+        };
+
+        if (gristLocationMode === "refSwitch") {
+          gristLayer.geojsonField = "geometry";
+        } else {
+          gristLayer.xfield = "longitude";
+          gristLayer.yfield = "latitude";
+        }
+
+        config.themes[themeid].layers.push(gristLayer);
+        addLayer(gristLayer.title, gristLayer.id, themeid);
+        $("#mod-layerNew").modal("hide");
+        return;
+      }
+
       // CAS 2 : Ajout d'une couche via ces paramètres
       if (document.getElementById("newlayer-type").value != "") {
         // Récupère les valeurs des paramètres communs saisis
@@ -969,7 +1016,9 @@ var mv = (function () {
               .layers.find(getLayerbyId);
 
       // Commons params
-      layer.type = $("#frm-type").val();
+      layer.type =
+        $("#frm-type").val() ||
+        (layer.url.includes("/download/csv?") ? "csv" : layer.type);
       layer.title = $("#frm-layer-title").val();
       layer.name = $("#frm-layer-title").val();
       layer.id = $("#frm-layerid").val();
@@ -1152,6 +1201,11 @@ var mv = (function () {
         "showintoc",
         "index",
         "jsonfields",
+        "xfield",
+        "yfield",
+        "srs",
+        "geojsonField",
+        "tooltipcontent",
       ];
       optional_parameters.forEach((param) => {
         if (l[param] == undefined) return;

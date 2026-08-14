@@ -2,8 +2,10 @@ import {
   GRIST_REF_GEO_MATCHING_FIELD_ID,
   GRIST_REF_GEO_REFERENTIAL_ID,
   GRIST_REF_GEO_OUTPUT_FORMAT_ID,
+  GRIST_LOCATION_SWITCH_IDS,
   GRIST_RESULT_CONTAINER_ID,
 } from "./const.js";
+import { updateSelectLayersButtonForLocalizedRows } from "./validation.js";
 import GristResult, {
   createGristResultButton,
 } from "../../components/grist/results/results.js";
@@ -178,6 +180,10 @@ const renderGristRefGeoResult = (result, importGristArea, setWizardStep) => {
   }
 
   const status = getGristRefGeoStatus(result);
+  updateSelectLayersButtonForLocalizedRows(
+    status.localizedRows,
+    GRIST_LOCATION_SWITCH_IDS.ref
+  );
   const actions = getGristRefGeoActions(
     result,
     status,
@@ -274,6 +280,7 @@ const renderGristRefGeoError = (error, importGristArea, setWizardStep) => {
     totalRows: 0,
     ungeocodedRows: [],
   };
+  updateSelectLayersButtonForLocalizedRows(status.localizedRows);
   const actions = getGristRefGeoActions(
     {},
     status,

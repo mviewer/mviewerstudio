@@ -1,4 +1,5 @@
-import { GRIST_RESULT_CONTAINER_ID } from "./const.js";
+import { GRIST_LOCATION_SWITCH_IDS, GRIST_RESULT_CONTAINER_ID } from "./const.js";
+import { updateSelectLayersButtonForLocalizedRows } from "./validation.js";
 import GristResult, {
   createGristResultButton,
 } from "../../components/grist/results/results.js";
@@ -86,6 +87,11 @@ const renderGristCoordinatesResult = (
       message: "Les lignes suivantes ne disposent pas de coordonnées X ou Y.",
     };
   }
+
+  updateSelectLayersButtonForLocalizedRows(
+    localizedRows,
+    GRIST_LOCATION_SWITCH_IDS.xy
+  );
 
   const actions = [];
   if (status.type === "success" && importGristArea) {

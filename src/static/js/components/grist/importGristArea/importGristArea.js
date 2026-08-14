@@ -346,6 +346,7 @@ importGristArea.prototype.getTargetTable = function () {
     return {
       docId: selectedTable.docId,
       tableId: selectedTable.tableId,
+      name: selectedTable.tableName,
       tableRef: selectedTable.tableRef,
       url: selectedTable.url,
     };
@@ -358,6 +359,7 @@ importGristArea.prototype.getTargetTable = function () {
   return {
     docId: this.sentTable.docId,
     tableId: this.sentTable.tableId,
+    name: this.fileTableName,
     tableRef: this.sentTable.tableRef,
     url: this.sentTable.url,
   };
