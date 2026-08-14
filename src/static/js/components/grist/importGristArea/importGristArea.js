@@ -129,7 +129,7 @@ const importGristArea = function (activeType = "file", options = {}) {
   this.element.className = "import-type-buttons";
 
   this.documentNameSelect = new Select({
-    label: "Document Grist",
+    label: "Document Grist :",
     placeholder: "Sélectionner ou créer un document",
     classes: "row align-items-center my-3",
     labelClasses: "col-3 col-form-label",

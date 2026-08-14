@@ -189,6 +189,7 @@ const initGristLocationSwitches = () => {
       id: GRIST_LOCATION_SWITCH_IDS.address,
       label: "À partir d’une adresse",
       description: "Géocodez vos données (adresse, ville...)",
+      tooltip: "Calculer la localisation à partir des colonnes de la table (adresse, code postal...))",
       checked: true,
     },
     {
@@ -196,6 +197,7 @@ const initGristLocationSwitches = () => {
       id: GRIST_LOCATION_SWITCH_IDS.ref,
       label: "À partir d’un référentiel",
       description: "Associez vos données à un référentiel géographique",
+      tooltip: "Récupérer la géométrie à partir d'une donnée de références et d'un champ de la table",
       checked: false,
     },
     {
@@ -203,6 +205,7 @@ const initGristLocationSwitches = () => {
       id: GRIST_LOCATION_SWITCH_IDS.xy,
       label: "À partir de coordonnées X/Y",
       description: "Utilisez des colonnes de coordonnées existantes",
+      tooltip: "Utiliser des colonnes contenant déjà des coordonnées X et Y pour localiser les points",
       checked: false,
     },
   ];
@@ -235,6 +238,7 @@ const initGristLocationSwitches = () => {
       name: "grist-location-mode",
       label: config.label,
       description: config.description,
+      tooltip: config.tooltip,
       checked: config.checked,
       onChange: (checked, currentSwitch) => {
         if (checked || switches.every((item) => !item.getChecked())) {

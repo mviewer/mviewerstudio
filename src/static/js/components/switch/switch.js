@@ -14,6 +14,7 @@ const Switch = function (options = {}) {
   this.name = options.name || "";
   this.label = options.label || "";
   this.description = options.description || "";
+  this.tooltip = options.tooltip || "";
   this.checked = Boolean(options.checked);
   this.disabled = Boolean(options.disabled);
   this.classes = options.classes || "";
@@ -87,7 +88,6 @@ Switch.prototype.render = function () {
       <div class="switch-card-text">
         <label class="switch-card-title" for="${this.id}">
           ${this.label}
-          <i class="bi bi-info-circle switch-card-info" aria-hidden="true"></i>
         </label>
         ${this.description ? `<p class="switch-card-description">${this.description}</p>` : ""}
       </div>
@@ -108,6 +108,19 @@ Switch.prototype.render = function () {
   `;
 
   const input = this.getInput();
+  const title = this.element.querySelector(".switch-card-title");
+  const Tooltip = mv.components && mv.components.tooltip;
+
+  if (title && this.tooltip && Tooltip) {
+    title.appendChild(
+      new Tooltip({
+        message: this.tooltip,
+        color: "info",
+        classes: "switch-card-info",
+      }).render()
+    );
+  }
+
   if (input) {
     input.addEventListener("change", () => {
       this.setChecked(input.checked);

@@ -19,6 +19,7 @@ import Input from "./components/input/input.js";
 import Select from "./components/select/select.js";
 import Switch from "./components/switch/switch.js";
 import Multiselect from "./components/multiselect/multiselect.js";
+import Tooltip from "./components/tooltip/tooltip.js";
 import * as gristUtils from "./utils/grist/grist.js";
 import * as gristValidation from "./utils/grist/validation.js";
 
@@ -33,6 +34,7 @@ mv.components.input = Input;
 mv.components.select = Select;
 mv.components.switch = Switch;
 mv.components.multiselect = Multiselect;
+mv.components.tooltip = Tooltip;
 mv.components.grist.gristApiKey = GristApiKey;
 mv.components.grist.gristWizard = GristWizard;
 mv.components.grist.gristAddressArea = GristAddressArea;
