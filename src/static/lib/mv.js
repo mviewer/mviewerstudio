@@ -799,6 +799,9 @@ var mv = (function () {
       [...document.querySelectorAll("#mod-layerOptions .layerOption-tms")].forEach((e) =>
         e.classList.add("d-none")
       );
+      [...document.querySelectorAll("#mod-layerOptions .layerOption-csv")].forEach((e) =>
+        e.classList.add("d-none")
+      );
       document.getElementById("layerTypeLabel").innerHTML = "";
       //clear forms
       $("#layer_conf1 form").trigger("reset");
@@ -809,6 +812,7 @@ var mv = (function () {
       $("#layer_conf4 form").trigger("reset");
       $("#layer_conf5 form").trigger("reset");
       $("#layer_conf6 form").trigger("reset");
+      $("#layer-grist-data-preview").empty();
       $("input[data-role='tagsinput']").tagsinput("removeAll");
       $("#layer_sections>.tab-pane").removeClass("active").first().addClass("active");
       $("#layer_sections_menu li").removeClass("active").first().addClass("active");
@@ -922,6 +926,50 @@ var mv = (function () {
         $("#frm-layertms-styleurl").val(layer.styleurl);
         $("#frm-layertms-stylename").val(layer.style);
         $("#frm-layertms-filterstyle").val(layer.filterstyle);
+      }
+
+      if (layer.type === "csv") {
+        [...document.querySelectorAll("#mod-layerOptions .layerOption-csv")].forEach(
+          (e) => e.classList.remove("d-none")
+        );
+        const previewContainer = document.getElementById("layer-grist-data-preview");
+        const apiKey = window.sessionStorage.getItem("mviewerstudio.grist.apiKey");
+
+        if (!apiKey) {
+          previewContainer.innerHTML =
+            '<div class="alert alert-warning">Clé API Grist absente de la session.</div>';
+          return;
+        }
+
+        previewContainer.innerHTML =
+          '<div class="text-muted">Chargement de l’aperçu des données Grist...</div>';
+        fetch(layer.url, {
+          headers: { Authorization: `Bearer ${apiKey}` },
+        })
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error(`Grist request failed with status ${response.status}`);
+            }
+
+            return response.text();
+          })
+          .then((csv) => {
+            const data = Papa.parse(csv, { header: true, skipEmptyLines: true });
+            const Table = mv.components.table;
+            const preview = new Table({
+              data,
+              title: layer?.name ? `Aperçu de la table ${layer.name}` : "Aperçu des données",
+              subtitle: "5 premières lignes",
+              emptyMessage: "Aucune donnée à afficher.",
+            });
+
+            previewContainer.replaceChildren(preview.render());
+          })
+          .catch((error) => {
+            previewContainer.innerHTML =
+              '<div class="alert alert-danger">Impossible de charger l’aperçu des données Grist.</div>';
+            console.error("Error loading Grist layer preview:", error);
+          });
       }
     },
 
