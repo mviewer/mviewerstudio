@@ -929,6 +929,7 @@ var mv = (function () {
       }
 
       if (layer.type === "csv") {
+        // Grist layers are stored as authenticated CSV endpoints.
         [...document.querySelectorAll("#mod-layerOptions .layerOption-csv")].forEach(
           (e) => e.classList.remove("d-none")
         );
@@ -937,12 +938,14 @@ var mv = (function () {
 
         if (!apiKey) {
           previewContainer.innerHTML =
-            '<div class="alert alert-warning">Clé API Grist absente de la session.</div>';
+            `<div class="alert alert-warning">${mviewer.tr("modal.layer.grist.api_key_missing")}</div>`;
           return;
         }
 
+        // Keep the modal responsive while the authenticated CSV request is running.
         previewContainer.innerHTML =
-          '<div class="text-muted">Chargement de l’aperçu des données Grist...</div>';
+          `<div class="text-muted">${mviewer.tr("modal.layer.grist.preview.loading")}</div>`;
+        // The CSV endpoint is protected by the same API key used by the Grist import flow.
         fetch(layer.url, {
           headers: { Authorization: `Bearer ${apiKey}` },
         })
@@ -954,20 +957,65 @@ var mv = (function () {
             return response.text();
           })
           .then((csv) => {
+            // PapaParse preserves the table headers used by the preview component.
             const data = Papa.parse(csv, { header: true, skipEmptyLines: true });
             const Table = mv.components.table;
             const preview = new Table({
               data,
-              title: layer?.name ? `Aperçu de la table ${layer.name}` : "Aperçu des données",
-              subtitle: "5 premières lignes",
-              emptyMessage: "Aucune donnée à afficher.",
+              title: layer?.name
+                ? `${mviewer.tr("modal.layer.grist.preview.title")} ${layer.name}`
+                : mviewer.tr("modal.layer.grist.data"),
+              subtitle: mviewer.tr("modal.layer.grist.preview.subtitle"),
+              emptyMessage: mviewer.tr("modal.layer.grist.preview.empty"),
             });
 
             previewContainer.replaceChildren(preview.render());
+            // The layer URL contains the Grist document and table identifiers.
+            const gristUrl = new URL(layer.url, window.location.origin);
+            const documentMatch = gristUrl.pathname.match(/\/api\/docs\/([^/]+)\/download\/csv$/);
+            const tableId = gristUrl.searchParams.get("tableId");
+            const gristConfig = _conf.grist || {};
+            const instanceUrl = gristConfig.instance_url || gristConfig.api_url;
+
+            if (!documentMatch || !tableId || !instanceUrl) {
+              return;
+            }
+
+            // Reuse the Grist switch-card visual language without adding a switch.
+            const editCard = document.createElement("div");
+            const header = document.createElement("div");
+            const content = document.createElement("div");
+            const title = document.createElement("p");
+            const description = document.createElement("p");
+
+            editCard.className = "switch-card mt-3";
+            header.className = "switch-card-header";
+            content.className = "switch-card-text";
+            title.className = "switch-card-title";
+            title.textContent = mviewer.tr("modal.layer.grist.edit.title");
+            description.className = "switch-card-description";
+            description.textContent = mviewer.tr("modal.layer.grist.edit.description");
+            const OpenGristTableBtn = mv.components.grist.openGristTableBtn;
+            // The shared component resolves tableRef before opening Grist.
+            const openTableButton = new OpenGristTableBtn({
+              apiUrl: gristConfig.api_url || instanceUrl,
+              apiKey,
+              instanceUrl,
+              orgId: gristConfig.org_id || "Personal",
+              docId: documentMatch[1],
+              tableId,
+              label: mviewer.tr("modal.layer.grist.edit.open"),
+              classes: ["grist-geocoding-result-primary-button"],
+            });
+
+            content.append(title, description);
+            header.append(content, openTableButton.render());
+            editCard.appendChild(header);
+            previewContainer.appendChild(editCard);
           })
           .catch((error) => {
             previewContainer.innerHTML =
-              '<div class="alert alert-danger">Impossible de charger l’aperçu des données Grist.</div>';
+              `<div class="alert alert-danger">${mviewer.tr("modal.layer.grist.preview.error")}</div>`;
             console.error("Error loading Grist layer preview:", error);
           });
       }
