@@ -609,6 +609,8 @@ var mv = (function () {
           title: gristLayerName,
           name: gristLayerName,
           type: "csv",
+          // Internal Studio marker. It deliberately is not exported to the XML layer.
+          isGrist: true,
           url:
             gristApiUrl +
             "/api/docs/" +
@@ -628,9 +630,15 @@ var mv = (function () {
 
         if (gristLocationMode === "refSwitch") {
           gristLayer.geojsonField = "geometry";
+          gristLayer.geolocType = "referential";
+        } else if (gristLocationMode === "xySwitch") {
+          gristLayer.xfield = "longitude";
+          gristLayer.yfield = "latitude";
+          gristLayer.geolocType = "coordinates";
         } else {
           gristLayer.xfield = "longitude";
           gristLayer.yfield = "latitude";
+          gristLayer.geolocType = "address";
         }
 
         config.themes[themeid].layers.push(gristLayer);
@@ -928,7 +936,20 @@ var mv = (function () {
         $("#frm-layertms-filterstyle").val(layer.filterstyle);
       }
 
-      if (layer.type === "csv") {
+      const isGristCsvLayer =
+        layer.isGrist === true ||
+        (layer.type === "csv" && /\/api\/docs\/[^/]+\/download\/csv/.test(layer.url));
+
+      // Migrate Grist layers created before the Studio-only isGrist marker.
+      if (isGristCsvLayer) {
+        layer.isGrist = true;
+        // Legacy Grist layers did not persist their localization mode in Studio.
+        if (!layer.geolocType) {
+          layer.geolocType = layer.geojsonField ? "referential" : "coordinates";
+        }
+      }
+
+      if (isGristCsvLayer) {
         // Grist layers are stored as authenticated CSV endpoints.
         [...document.querySelectorAll("#mod-layerOptions .layerOption-csv")].forEach(
           (e) => e.classList.remove("d-none")
@@ -981,20 +1002,6 @@ var mv = (function () {
               return;
             }
 
-            // Reuse the Grist switch-card visual language without adding a switch.
-            const editCard = document.createElement("div");
-            const header = document.createElement("div");
-            const content = document.createElement("div");
-            const title = document.createElement("p");
-            const description = document.createElement("p");
-
-            editCard.className = "switch-card mt-3";
-            header.className = "switch-card-header";
-            content.className = "switch-card-text";
-            title.className = "switch-card-title";
-            title.textContent = mviewer.tr("modal.layer.grist.edit.title");
-            description.className = "switch-card-description";
-            description.textContent = mviewer.tr("modal.layer.grist.edit.description");
             const OpenGristTableBtn = mv.components.grist.openGristTableBtn;
             // The shared component resolves tableRef before opening Grist.
             const openTableButton = new OpenGristTableBtn({
@@ -1007,11 +1014,36 @@ var mv = (function () {
               label: mviewer.tr("modal.layer.grist.edit.open"),
               classes: ["grist-geocoding-result-primary-button"],
             });
+            const ButtonCard = mv.components.buttonCard;
+            const editCard = new ButtonCard({
+              title: mviewer.tr("modal.layer.grist.edit.title"),
+              description: mviewer.tr("modal.layer.grist.edit.description"),
+              tooltip: mviewer.tr("modal.layer.grist.edit.tooltip"),
+              button: openTableButton.render(),
+              classes: "mt-3",
+            });
 
-            content.append(title, description);
-            header.append(content, openTableButton.render());
-            editCard.appendChild(header);
-            previewContainer.appendChild(editCard);
+            previewContainer.appendChild(editCard.render());
+            // The geolocation editor will be connected in a later iteration.
+            const geolocationButton = document.createElement("button");
+
+            geolocationButton.type = "button";
+            geolocationButton.className = "btn grist-geocoding-result-primary-button";
+            geolocationButton.textContent = mviewer.tr(
+              "modal.layer.grist.geolocation.edit"
+            );
+
+            const geolocationCard = new ButtonCard({
+              title: mviewer.tr("modal.layer.grist.geolocation.title"),
+              description: mviewer.tr(
+                `modal.layer.grist.geolocation.description.${layer.geolocType}`
+              ),
+              tooltip: mviewer.tr("modal.layer.grist.geolocation.tooltip"),
+              button: geolocationButton,
+              classes: "mt-3",
+            });
+
+            previewContainer.appendChild(geolocationCard.render());
           })
           .catch((error) => {
             previewContainer.innerHTML =
@@ -1258,7 +1290,7 @@ var mv = (function () {
         }
         layer_parameters[p] = [p, '="', value, '"'].join("");
       });
-      //optional parameters
+      // Optional XML parameters. isGrist and geolocType remain Studio-only properties.
       var optional_parameters = [
         "tiled",
         "visible",

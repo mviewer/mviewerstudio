@@ -11,6 +11,7 @@ import Select from "./components/select/select.js";
 import Switch from "./components/switch/switch.js";
 import Multiselect from "./components/multiselect/multiselect.js";
 import Tooltip from "./components/tooltip/tooltip.js";
+import ButtonCard from "./components/buttonCard/buttonCard.js";
 
 // Grist components
 import GristApiKey from "./components/grist/gristApiKey/gristApiKey.js";
@@ -43,6 +44,7 @@ mv.components.select = Select;
 mv.components.switch = Switch;
 mv.components.multiselect = Multiselect;
 mv.components.tooltip = Tooltip;
+mv.components.buttonCard = ButtonCard;
 
 // Grist components
 mv.components.grist.gristApiKey = GristApiKey;
