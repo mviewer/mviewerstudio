@@ -595,6 +595,18 @@ var mv = (function () {
       }
     },
 
+    /**
+     * Create and register a layer from the currently selected add-data source.
+     *
+     * A completed Grist workflow takes precedence over the generic form and
+     * catalogue paths below. Its table is exposed as an authenticated CSV
+     * layer, while `isGrist` and `geolocType` remain Studio-only metadata:
+     * they restore the Grist data tab and selected geolocation mode but are
+     * intentionally omitted from the generated mviewer XML.
+     *
+     * @param {HTMLButtonElement} button Button that confirms layer selection.
+     * @returns {void}
+     */
     getConfLayers: function (button) {
       var themeid = button.getAttribute("data-themeid");
       var gristTargetTable = mv.utils.grist.grist.getActiveGristTargetTable();
@@ -628,6 +640,8 @@ var mv = (function () {
           showintoc: true,
         };
 
+        // Persist the processing output expected by mviewer, and separately
+        // preserve the chosen mode so it can be edited again in Studio.
         if (gristLocationMode === "refSwitch") {
           gristLayer.geojsonField = "geometry";
           gristLayer.geolocType = "referential";
@@ -799,7 +813,12 @@ var mv = (function () {
       }
     },
 
-    showLayerOptions: function (el, themeid, layerid) {
+    showLayerOptions: function (
+      el,
+      themeid,
+      layerid,
+      preserveActiveTab = false
+    ) {
       // Init params display
       [...document.querySelectorAll("#mod-layerOptions .layerOption-wms")].forEach((e) =>
         e.classList.add("d-none")
@@ -821,9 +840,13 @@ var mv = (function () {
       $("#layer_conf5 form").trigger("reset");
       $("#layer_conf6 form").trigger("reset");
       $("#layer-grist-data-preview").empty();
+      $("#layer_conf7").removeClass("d-none");
+      $("#layer-grist-geolocation-content").empty().addClass("d-none");
       $("input[data-role='tagsinput']").tagsinput("removeAll");
-      $("#layer_sections>.tab-pane").removeClass("active").first().addClass("active");
-      $("#layer_sections_menu li").removeClass("active").first().addClass("active");
+      if (!preserveActiveTab) {
+        $("#layer_sections>.tab-pane").removeClass("active").first().addClass("active");
+        $("#layer_sections_menu li").removeClass("active").first().addClass("active");
+      }
 
       function getLayerbyId(l) {
         return l.id === layerid;
@@ -836,6 +859,9 @@ var mv = (function () {
               .find((group) => group.id === groupid)
               .layers.find(getLayerbyId);
 
+      if (layer.isGrist || layer.url.includes("/download/csv")) {
+        layer.type = "csv";
+      }
       document.getElementById("layerTypeLabel").append(layer.type);
 
       $("#frm-type").val(layer.type).trigger("change");
@@ -958,8 +984,35 @@ var mv = (function () {
         const apiKey = window.sessionStorage.getItem("mviewerstudio.grist.apiKey");
 
         if (!apiKey) {
-          previewContainer.innerHTML =
-            `<div class="alert alert-warning">${mviewer.tr("modal.layer.grist.api_key_missing")}</div>`;
+          const GristContent = mv.components.grist.gristContent;
+          const GristApiKey = mv.components.grist.gristApiKey;
+          const gristConfig = _conf.grist || {};
+          const authContent = document.createElement("div");
+          const gristContent = new GristContent({
+            idPrefix: "layer-grist-data-api",
+            hideData: true,
+            managedNavigation: true,
+            state: { step: 1, apiKeyReady: false },
+          });
+          const gristApiKey = new GristApiKey(
+            gristConfig.api_url || gristConfig.instance_url,
+            "https://grist.numerique.gouv.fr/account/developer",
+            {
+              idPrefix: "layer-grist-data-api-key",
+              // Once the key is checked and stored in the session, restart
+              // only its content to load the authenticated table preview.
+              onValidApiKey: () => {
+                mv.showLayerOptions(el, themeid, layerid, true);
+              },
+            }
+          );
+
+          authContent.innerHTML = `<div class="alert alert-warning">${mviewer.tr(
+            "modal.layer.grist.api_key_missing"
+          )}</div>`;
+          authContent.appendChild(gristApiKey.render());
+          gristContent.state.auth = authContent;
+          previewContainer.replaceChildren(gristContent.render());
           return;
         }
 
@@ -980,6 +1033,7 @@ var mv = (function () {
           .then((csv) => {
             // PapaParse preserves the table headers used by the preview component.
             const data = Papa.parse(csv, { header: true, skipEmptyLines: true });
+            previewContainer._gristLayerData = data;
             const Table = mv.components.table;
             const preview = new Table({
               data,
@@ -1032,6 +1086,9 @@ var mv = (function () {
             geolocationButton.textContent = mviewer.tr(
               "modal.layer.grist.geolocation.edit"
             );
+            geolocationButton.addEventListener("click", () =>
+              mv.openGristLayerGeolocation(layer)
+            );
 
             const geolocationCard = new ButtonCard({
               title: mviewer.tr("modal.layer.grist.geolocation.title"),
@@ -1051,6 +1108,232 @@ var mv = (function () {
             console.error("Error loading Grist layer preview:", error);
           });
       }
+    },
+
+    /**
+     * Replace a Grist layer preview with its reusable geolocation workflow.
+     *
+     * @param {Object} layer Grist layer being edited.
+     * @returns {void}
+     */
+    openGristLayerGeolocation: function (layer) {
+      if (!layer.isGrist) {
+        return;
+      }
+
+      const previewContainer = document.getElementById("layer-grist-data-preview");
+      const layerDataContainer = document.getElementById("layer_conf7");
+      const workflowContainer = document.getElementById(
+        "layer-grist-geolocation-content"
+      );
+      const GristContent = mv.components.grist.gristContent;
+      const hasApiKey = window.sessionStorage.getItem("mviewerstudio.grist.apiKey");
+      const gristFields = previewContainer._gristLayerData.meta.fields || [];
+      const gristUrl = new URL(layer.url, window.location.origin);
+      const documentMatch = gristUrl.pathname.match(/\/api\/docs\/([^/]+)\/download\/csv$/);
+      const tableId = gristUrl.searchParams.get("tableId");
+      const gristConfig = _conf.grist || {};
+
+      if (!documentMatch || !tableId) {
+        return;
+      }
+
+      // Existing tables use the same source interface as a freshly imported
+      // table. Shared Grist checks therefore run against live records.
+      const gristSource = new mv.components.grist.gristLayerSource({
+        apiUrl: gristConfig.api_url || gristConfig.instance_url,
+        instanceUrl: gristConfig.instance_url || gristConfig.api_url,
+        orgId: gristConfig.org_id || "Personal",
+        docId: documentMatch[1],
+        tableId,
+        apiKey: hasApiKey,
+        data: previewContainer._gristLayerData,
+      });
+      let addressArea;
+      const coordinatesArea = new mv.components.grist.gristCoordinatesArea({
+        idPrefix: "layer-grist-geolocation-coordinate",
+        columns: gristFields,
+        xField: layer.xfield,
+        yField: layer.yfield,
+        projection: layer.srs,
+        displayProjection: false,
+        onProjectionChange: (projection) => {
+          layer.srs = projection;
+        },
+      });
+      const projectionListCard = new mv.components.listCard({
+        title: mviewer.tr("modal.layer.grist.mode.coordinates.projection"),
+        items: [coordinatesArea.renderProjection()],
+      });
+      /**
+       * Keep the editable layer configuration aligned with its selected Grist
+       * localisation mode. `form2xml` later serializes this same object, so
+       * no separate XML mutation is needed here.
+       *
+       * @param {string} geolocType Selected localisation mode.
+       * @returns {void}
+       */
+      const updateGristLayerGeolocation = (geolocType) => {
+        layer.geolocType = geolocType;
+
+        if (geolocType === "referential") {
+          layer.geojsonField = "geometry";
+          delete layer.xfield;
+          delete layer.yfield;
+          return;
+        }
+
+        delete layer.geojsonField;
+        layer.xfield = "longitude";
+        layer.yfield = "latitude";
+        if (geolocType === "coordinates") {
+          layer.srs = coordinatesArea.getProjection();
+          return;
+        }
+        layer.srs = "EPSG:4326";
+      };
+      // The saved-layer workflow has no data-selection step. Shared runners
+      // still use their four-step numbering, so map their result step to 3.
+      const setWorkflowStep = (step) => gristContent.setStep(step === 4 ? 3 : step);
+      const gristContent = new GristContent({
+        idPrefix: "layer-grist-geolocation",
+        hideData: true,
+        managedNavigation: true,
+        state: {
+          step: hasApiKey ? 2 : 1,
+          apiKeyReady: Boolean(hasApiKey),
+          fields: gristFields,
+          geolocType: layer.geolocType,
+          locationListCard: true,
+          locationCards: [projectionListCard.render()],
+          locationModes: [
+            {
+              value: "address",
+              label: mviewer.tr("modal.layer.grist.mode.address.title"),
+              description: mviewer.tr("modal.layer.grist.mode.address.description"),
+              createContent: () => {
+                addressArea = new mv.components.grist.gristAddressArea({
+                  id: "layer-grist-geolocation-address-fields",
+                  fields: gristFields,
+                });
+                return addressArea.render();
+              },
+            },
+            {
+              value: "referential",
+              label: mviewer.tr("modal.layer.grist.mode.referential.title"),
+              description: mviewer.tr("modal.layer.grist.mode.referential.description"),
+              createContent: () => {
+                return new mv.components.grist.gristRefGeoArea({
+                  idPrefix: "layer-grist-geolocation-ref",
+                  fields: gristFields,
+                  matchingField: layer.geojsonField,
+                }).render();
+              },
+            },
+            {
+              value: "coordinates",
+              label: mviewer.tr("modal.layer.grist.mode.coordinates.title"),
+              description: mviewer.tr("modal.layer.grist.mode.coordinates.description"),
+              createContent: () => {
+                return coordinatesArea.render();
+              },
+            },
+          ],
+          onLocationChange: (geolocType) => {
+            updateGristLayerGeolocation(geolocType);
+          },
+        },
+        onNext: ({ gristContent: content, currentStep, nextButton }) => {
+          if (currentStep === 1) {
+            // The API key form controls validation and only unlocks this step
+            // through its onValidApiKey callback.
+            return;
+          }
+
+          const resultContainerId = content.ids.result;
+          if (content.state.geolocType === "address") {
+            mv.utils.grist.geocoding.runGristAddressGeocoding({
+              importGristArea: gristSource,
+              getAddressFields: () => (addressArea ? addressArea.getFields() : []),
+              setWizardStep: setWorkflowStep,
+              triggerButton: nextButton,
+              resultContainerId,
+              updateLayerSelection: false,
+            });
+            return;
+          }
+
+          if (content.state.geolocType === "coordinates") {
+            const xField = document.getElementById(
+              "layer-grist-geolocation-coordinate-x"
+            );
+            const yField = document.getElementById(
+              "layer-grist-geolocation-coordinate-y"
+            );
+            const projection = document.getElementById(
+              "layer-grist-geolocation-coordinate-projection"
+            );
+
+            // Use the fields actually confirmed in the form, rather than the
+            // default longitude/latitude values used by address geocoding.
+            layer.xfield = xField ? xField.value : "";
+            layer.yfield = yField ? yField.value : "";
+            layer.srs = projection ? projection.value : "EPSG:4326";
+            mv.utils.grist.coordinates.runGristCoordinatesCheck({
+              importGristArea: gristSource,
+              setWizardStep: setWorkflowStep,
+              xFieldId: "layer-grist-geolocation-coordinate-x",
+              yFieldId: "layer-grist-geolocation-coordinate-y",
+              resultContainerId,
+              updateLayerSelection: false,
+            });
+            return;
+          }
+
+          if (content.state.geolocType === "referential") {
+            mv.utils.grist.refGeo.runGristRefGeoJoin({
+              importGristArea: gristSource,
+              setWizardStep: setWorkflowStep,
+              triggerButton: nextButton,
+              resultContainerId,
+              matchingFieldId: "layer-grist-geolocation-ref-matching-field",
+              referentialId: "layer-grist-geolocation-ref-referential",
+              outputFormatId: "layer-grist-geolocation-ref-output-format",
+              updateLayerSelection: false,
+            });
+          }
+        },
+      });
+      const GristApiKey = mv.components.grist.gristApiKey;
+      const authContent = new GristApiKey(
+        gristConfig.api_url || gristConfig.instance_url,
+        "https://grist.numerique.gouv.fr/account/developer",
+        {
+          idPrefix: "layer-grist-geolocation-api-key",
+          onValidApiKey: (apiKey) => {
+            gristSource.apiKey = apiKey;
+            gristContent.state.apiKeyReady = true;
+            gristContent.setStep(2);
+          },
+        }
+      ).render();
+
+      gristContent.state.auth = authContent;
+      const backButton = document.createElement("button");
+
+      backButton.type = "button";
+      backButton.className = "btn btn-link mb-3";
+      backButton.innerHTML = '<i class="ri-arrow-left-line"></i> Annuler et revenir aux données';
+      backButton.addEventListener("click", () => {
+        workflowContainer.replaceChildren();
+        workflowContainer.classList.add("d-none");
+        layerDataContainer.classList.remove("d-none");
+      });
+
+      layerDataContainer.classList.add("d-none");
+      workflowContainer.replaceChildren(backButton, gristContent.render());
+      workflowContainer.classList.remove("d-none");
     },
 
     /**
@@ -1144,9 +1427,11 @@ var mv = (function () {
               .layers.find(getLayerbyId);
 
       // Commons params
-      layer.type =
-        $("#frm-type").val() ||
-        (layer.url.includes("/download/csv?") ? "csv" : layer.type);
+      if (layer.isGrist || layer.url.includes("/download/csv")) {
+        layer.type = "csv";
+      } else {
+        layer.type = $("#frm-type").val() || layer.type;
+      }
       layer.title = $("#frm-layer-title").val();
       layer.name = $("#frm-layer-title").val();
       layer.id = $("#frm-layerid").val();

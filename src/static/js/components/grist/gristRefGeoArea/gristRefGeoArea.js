@@ -1,10 +1,4 @@
 import Select from "../../select/select.js";
-import {
-  GRIST_REF_GEO_MATCHING_FIELD_ID,
-  GRIST_REF_GEO_REFERENTIAL_ID,
-  GRIST_REF_GEO_OUTPUT_FORMAT_ID,
-} from "../../../utils/grist/const.js";
-
 const DEFAULT_REFERENTIALS = [{ label: "Communes" }];
 
 /**
@@ -12,19 +6,24 @@ const DEFAULT_REFERENTIALS = [{ label: "Communes" }];
  *
  * @param {Object} [options={}] Component options.
  * @param {string[]} [options.fields=[]] Available table fields.
+ * @param {string} [options.idPrefix] Prefix for select identifiers.
+ * @param {string} [options.matchingField] Selected matching field.
  */
 const GristRefGeoArea = function (options = {}) {
   this.fieldOptions = this.getFieldOptions(options.fields || []);
-  this.referentialSelectId = GRIST_REF_GEO_REFERENTIAL_ID;
-  this.outputFormatSelectId = GRIST_REF_GEO_OUTPUT_FORMAT_ID;
+  const idPrefix = options.idPrefix || "grist-refgeo";
+
+  this.referentialSelectId = `${idPrefix}-referential`;
+  this.outputFormatSelectId = `${idPrefix}-output-format`;
   this.element = document.createElement("div");
   this.element.className = "grist-refgeo-area";
 
   this.matchingFieldSelect = new Select({
-    id: GRIST_REF_GEO_MATCHING_FIELD_ID,
+    id: `${idPrefix}-matching-field`,
     label: "Sélectionnez le champ de correspondance",
     placeholder: "Sélectionner un champ",
     options: this.fieldOptions,
+    value: options.matchingField || "",
     classes: "grist-refgeo-field",
     labelClasses: "grist-refgeo-label",
     selectClasses: "grist-refgeo-select",

@@ -44,8 +44,8 @@ const getGristReferentials = () => {
  *
  * @returns {string} Selected table field.
  */
-const getSelectedMatchingField = () => {
-  return getSelectValue(GRIST_REF_GEO_MATCHING_FIELD_ID);
+const getSelectedMatchingField = (controls = {}) => {
+  return getSelectValue(controls.matchingFieldId || GRIST_REF_GEO_MATCHING_FIELD_ID);
 };
 
 /**
@@ -53,8 +53,8 @@ const getSelectedMatchingField = () => {
  *
  * @returns {string} Selected referential label.
  */
-const getSelectedReferentialLabel = () => {
-  return getSelectValue(GRIST_REF_GEO_REFERENTIAL_ID);
+const getSelectedReferentialLabel = (controls = {}) => {
+  return getSelectValue(controls.referentialId || GRIST_REF_GEO_REFERENTIAL_ID);
 };
 
 /**
@@ -62,8 +62,8 @@ const getSelectedReferentialLabel = () => {
  *
  * @returns {string} Selected output format.
  */
-const getSelectedOutputFormat = () => {
-  return getSelectValue(GRIST_REF_GEO_OUTPUT_FORMAT_ID);
+const getSelectedOutputFormat = (controls = {}) => {
+  return getSelectValue(controls.outputFormatId || GRIST_REF_GEO_OUTPUT_FORMAT_ID);
 };
 
 /**
@@ -87,8 +87,10 @@ const getSelectedReferentialConfig = () => {
  *
  * @returns {void}
  */
-const renderGristRefGeoSpinner = () => {
-  const resultContainer = document.getElementById(GRIST_RESULT_CONTAINER_ID);
+const renderGristRefGeoSpinner = (resultContainerId) => {
+  const resultContainer = document.getElementById(
+    resultContainerId || GRIST_RESULT_CONTAINER_ID
+  );
   if (!resultContainer) {
     return;
   }
@@ -173,22 +175,27 @@ const getGristRefGeoStatus = (result) => {
  * @param {Function} setWizardStep Function changing the Grist wizard step.
  * @returns {void}
  */
-const renderGristRefGeoResult = (result, importGristArea, setWizardStep) => {
-  const resultContainer = document.getElementById(GRIST_RESULT_CONTAINER_ID);
+const renderGristRefGeoResult = (result, importGristArea, setWizardStep, options = {}) => {
+  const resultContainer = document.getElementById(
+    options.resultContainerId || GRIST_RESULT_CONTAINER_ID
+  );
   if (!resultContainer) {
     return;
   }
 
   const status = getGristRefGeoStatus(result);
-  updateSelectLayersButtonForLocalizedRows(
-    status.localizedRows,
-    GRIST_LOCATION_SWITCH_IDS.ref
-  );
+  if (options.updateLayerSelection !== false) {
+    updateSelectLayersButtonForLocalizedRows(
+      status.localizedRows,
+      GRIST_LOCATION_SWITCH_IDS.ref
+    );
+  }
   const actions = getGristRefGeoActions(
     result,
     status,
     importGristArea,
-    setWizardStep
+    setWizardStep,
+    options
   );
 
   resultContainer.replaceChildren(new GristResult({ ...status, actions }).render());
@@ -223,7 +230,8 @@ const getGristRefGeoActions = (
   result,
   status,
   importGristArea,
-  setWizardStep
+  setWizardStep,
+  options = {}
 ) => {
   if (!importGristArea) {
     return [];
@@ -243,6 +251,7 @@ const getGristRefGeoActions = (
           importGristArea,
           setWizardStep,
           triggerButton: retryButton,
+          ...options,
         })
     );
 
@@ -266,8 +275,10 @@ const getGristRefGeoActions = (
  * @param {Function} setWizardStep Function changing the Grist wizard step.
  * @returns {void}
  */
-const renderGristRefGeoError = (error, importGristArea, setWizardStep) => {
-  const resultContainer = document.getElementById(GRIST_RESULT_CONTAINER_ID);
+const renderGristRefGeoError = (error, importGristArea, setWizardStep, options = {}) => {
+  const resultContainer = document.getElementById(
+    options.resultContainerId || GRIST_RESULT_CONTAINER_ID
+  );
   if (!resultContainer) {
     return;
   }
@@ -280,12 +291,15 @@ const renderGristRefGeoError = (error, importGristArea, setWizardStep) => {
     totalRows: 0,
     ungeocodedRows: [],
   };
-  updateSelectLayersButtonForLocalizedRows(status.localizedRows);
+  if (options.updateLayerSelection !== false) {
+    updateSelectLayersButtonForLocalizedRows(status.localizedRows);
+  }
   const actions = getGristRefGeoActions(
     {},
     status,
     importGristArea,
-    setWizardStep
+    setWizardStep,
+    options
   );
 
   resultContainer.replaceChildren(new GristResult({ ...status, actions }).render());
@@ -298,10 +312,10 @@ const renderGristRefGeoError = (error, importGristArea, setWizardStep) => {
  * @param {string} apiKey Grist API key.
  * @returns {Promise<Object>} Backend join result.
  */
-const joinSourceDataWithReferential = async (targetTable, apiKey) => {
-  const matchingField = getSelectedMatchingField();
-  const referentialLabel = getSelectedReferentialLabel();
-  const outputFormat = getSelectedOutputFormat();
+const joinSourceDataWithReferential = async (targetTable, apiKey, controls = {}) => {
+  const matchingField = getSelectedMatchingField(controls);
+  const referentialLabel = getSelectedReferentialLabel(controls);
+  const outputFormat = getSelectedOutputFormat(controls);
 
   if (!matchingField) {
     throw new Error("Aucun champ de correspondance sélectionné.");
@@ -352,30 +366,48 @@ const joinSourceDataWithReferential = async (targetTable, apiKey) => {
  * @param {Object} options.importGristArea Active Grist import area component.
  * @param {Function} options.setWizardStep Function changing the Grist wizard step.
  * @param {HTMLButtonElement|null} [options.triggerButton] Button that started the flow.
+ * @param {string} [options.resultContainerId] Target result container identifier.
+ * @param {string} [options.matchingFieldId] Matching field selector identifier.
+ * @param {string} [options.referentialId] Referential selector identifier.
+ * @param {string} [options.outputFormatId] Output format selector identifier.
+ * @param {boolean} [options.updateLayerSelection=true] Whether to update layer creation state.
  * @returns {Promise<void>}
  */
 const runGristRefGeoJoin = async ({
   importGristArea,
   setWizardStep,
   triggerButton = null,
+  resultContainerId,
+  matchingFieldId,
+  referentialId,
+  outputFormatId,
+  updateLayerSelection,
 } = {}) => {
   if (triggerButton) {
     triggerButton.disabled = true;
   }
 
   setWizardStep(4);
-  renderGristRefGeoSpinner();
+  const options = {
+    resultContainerId,
+    matchingFieldId,
+    referentialId,
+    outputFormatId,
+    updateLayerSelection,
+  };
+  renderGristRefGeoSpinner(resultContainerId);
 
   try {
     const targetTable = importGristArea.getTargetTable();
     const result = await joinSourceDataWithReferential(
       targetTable,
-      importGristArea.apiKey
+      importGristArea.apiKey,
+      options
     );
-    renderGristRefGeoResult(result, importGristArea, setWizardStep);
+    renderGristRefGeoResult(result, importGristArea, setWizardStep, options);
   } catch (error) {
     console.error("Error joining with referential:", error);
-    renderGristRefGeoError(error, importGristArea, setWizardStep);
+    renderGristRefGeoError(error, importGristArea, setWizardStep, options);
   } finally {
     if (triggerButton) {
       triggerButton.disabled = false;

@@ -19,16 +19,46 @@ const getMatchingCoordinateField = (columns, coordinate) => {
   return columns.find((column) => column.toLowerCase().includes(keyword)) || "";
 };
 
+/**
+ * Return the localized label for the projection selector.
+ *
+ * @returns {string} Projection selector label.
+ */
+const getProjectionLabel = () => {
+  if (typeof mviewer !== "undefined" && mviewer.tr) {
+    return mviewer.tr("modal.layer.grist.mode.coordinates.projection");
+  }
+
+  return "Projection (SRS)";
+};
+
+/**
+ * Grist coordinate field selector.
+ *
+ * @param {Object} [options={}] Component configuration.
+ * @param {string[]} [options.columns=[]] Available table columns.
+ * @param {string} [options.idPrefix] Prefix for select identifiers.
+ * @param {string} [options.xField] Selected X field.
+ * @param {string} [options.yField] Selected Y field.
+ * @param {string} [options.projection] Selected projection.
+ * @param {boolean} [options.displayProjection=true] Whether the projection selector is displayed with the coordinate fields.
+ * @param {Function} [options.onProjectionChange] Called when the selected projection changes.
+ * @returns {void}
+ */
 const GristCoordinatesArea = function (options = {}) {
   this.columns = options.columns || [];
   this.columnOptions = this.getColumnOptions(this.columns);
-  this.xField = getMatchingCoordinateField(this.columns, "x");
-  this.yField = getMatchingCoordinateField(this.columns, "y");
+  this.xField = options.xField || getMatchingCoordinateField(this.columns, "x");
+  this.yField = options.yField || getMatchingCoordinateField(this.columns, "y");
+  this.projection = options.projection || "EPSG:4326";
+  this.displayProjection = options.displayProjection !== false;
+  this.onProjectionChange = options.onProjectionChange || function () {};
+  const idPrefix = options.idPrefix || "grist-coordinate";
   this.element = document.createElement("div");
   this.element.className = "grist-coordinates-area";
 
   this.xSelect = new Select({
-    id: "grist-coordinate-x",
+    id: `${idPrefix}-x`,
     label: "X (longitude)",
     placeholder: "Sélectionner la colonne X",
     value: this.xField,
@@ -39,7 +69,7 @@ const GristCoordinatesArea = function (options = {}) {
   });
 
   this.ySelect = new Select({
-    id: "grist-coordinate-y",
+    id: `${idPrefix}-y`,
     label: "Y (latitude)",
     placeholder: "Sélectionner la colonne Y",
     value: this.yField,
@@ -50,9 +80,9 @@ const GristCoordinatesArea = function (options = {}) {
   });
 
   this.projectionSelect = new Select({
-    id: "grist-coordinate-projection",
-    label: "Projection (SRS)",
-    value: "EPSG:4326",
+    id: `${idPrefix}-projection`,
+    label: getProjectionLabel(),
+    value: this.projection,
     options: [
       { label: "EPSG:4326", value: "EPSG:4326" },
       { label: "EPSG:2154", value: "EPSG:2154" },
@@ -61,6 +91,10 @@ const GristCoordinatesArea = function (options = {}) {
     classes: "grist-coordinates-field",
     labelClasses: "grist-coordinates-label",
     selectClasses: "grist-coordinates-select",
+    onChange: (projection) => {
+      this.projection = projection;
+      this.onProjectionChange(projection);
+    },
   });
 };
 
@@ -71,11 +105,10 @@ GristCoordinatesArea.prototype.render = function () {
     </div>
   `;
   const fieldsContainer = this.element.querySelector(".grist-coordinates-fields");
-  fieldsContainer.append(
-    this.xSelect.render(),
-    this.ySelect.render(),
-    this.projectionSelect.render()
-  );
+  fieldsContainer.append(this.xSelect.render(), this.ySelect.render());
+  if (this.displayProjection) {
+    fieldsContainer.appendChild(this.projectionSelect.render());
+  }
 
   return this.element;
 };
@@ -90,6 +123,15 @@ GristCoordinatesArea.prototype.getXField = function () {
 
 GristCoordinatesArea.prototype.getProjection = function () {
   return this.projectionSelect.getValue();
+};
+
+/**
+ * Render the projection selector outside the coordinate fields card.
+ *
+ * @returns {HTMLElement} Projection selector element.
+ */
+GristCoordinatesArea.prototype.renderProjection = function () {
+  return this.projectionSelect.render();
 };
 
 GristCoordinatesArea.prototype.getColumnOptions = function (columns = []) {

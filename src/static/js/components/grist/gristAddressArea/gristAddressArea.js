@@ -4,6 +4,7 @@
  * @param {Object} [options={}] Component options.
  * @param {string[]} [options.fields=[]] Available table fields.
  * @param {string[]} [options.values=[]] Initially selected fields.
+ * @param {string} [options.id] Multiselect identifier.
  * @returns {void}
  */
 const GristAddressArea = function (options = {}) {
@@ -11,7 +12,7 @@ const GristAddressArea = function (options = {}) {
   this.element = document.createElement("div");
   this.element.className = "grist-address-area";
   this.multiselect = new mv.components.multiselect({
-    id: "grist-address-fields",
+    id: options.id || "grist-address-fields",
     label: "Sélectionnez les champs à utiliser pour le géocodage",
     placeholder: "Ajouter un champ",
     options: this.fields,

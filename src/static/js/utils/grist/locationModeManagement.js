@@ -21,7 +21,7 @@ const getGristComponent = (componentName) => {
  */
 const getActiveGristLocationSwitchId = () => {
   const activeSwitch = document.querySelector(
-    'input[name="grist-location-mode"]:checked'
+    'input[name="newlayer-grist-location-mode"]:checked'
   );
 
   if (!activeSwitch) {
@@ -87,6 +87,7 @@ const renderGristLocationArea = (selectedSwitchId) => {
 
     const addressArea = new GristAddressArea({
       fields: gristLocationState.fields,
+      id: "newlayer-grist-address-fields",
     });
     gristLocationState.activeArea = addressArea;
     selectedSwitch.setContent(addressArea.render());
@@ -100,6 +101,7 @@ const renderGristLocationArea = (selectedSwitchId) => {
 
     const refGeoArea = new GristRefGeoArea({
       fields: gristLocationState.fields,
+      idPrefix: "newlayer-grist-refgeo",
     });
     gristLocationState.activeArea = refGeoArea;
     selectedSwitch.setContent(refGeoArea.render());
@@ -113,6 +115,7 @@ const renderGristLocationArea = (selectedSwitchId) => {
 
     const coordinatesArea = new GristCoordinatesArea({
       columns: gristLocationState.fields,
+      idPrefix: "newlayer-grist-coordinate",
     });
     gristLocationState.activeArea = coordinatesArea;
     selectedSwitch.setContent(coordinatesArea.render());

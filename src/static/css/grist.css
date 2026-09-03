@@ -340,6 +340,27 @@ STYLE FOR GRIST IMPORT
 }
 
 /*
+-- List card component
+*/
+
+.list-card-list {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	margin: 0;
+	padding: 0 14px 14px;
+	list-style: none;
+}
+
+.list-card-item {
+	margin: 0;
+}
+
+.list-card-item .switch-card {
+	border-radius: 10px;
+}
+
+/*
 -- Location options
 */
 

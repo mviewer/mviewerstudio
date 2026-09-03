@@ -430,11 +430,9 @@ var editLayer = function (item, themeid, layerid) {
   if (!layerid) {
     layerid = element.attr("data-layerid");
   }
-  var groupid = mv.getCurrentGroupId();
-
   if (layerid != "undefined") {
     $("#mod-layerOptions").modal("show");
-    mv.showLayerOptions(element, themeid, layerid, groupid);
+    mv.showLayerOptions(element, themeid, layerid);
   } else {
     $("#input-ogc-filter").val("");
     $("#csw-results .csw-result").remove();

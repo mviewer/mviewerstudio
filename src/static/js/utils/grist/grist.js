@@ -166,7 +166,7 @@ const refreshGristLocationFields = async () => {
  * @returns {void}
  */
 const initGristLocationRefreshButton = () => {
-  const container = document.getElementById("grist-location-preview");
+  const container = document.getElementById("newlayer-grist-location-preview");
   const RefreshGristDataBtn = getGristComponent("refreshGristDataBtn");
 
   if (!container || !RefreshGristDataBtn) {
@@ -248,7 +248,7 @@ const initGristLocationSwitches = () => {
     target.replaceChildren();
     const switchItem = new Switch({
       id: config.id,
-      name: "grist-location-mode",
+      name: "newlayer-grist-location-mode",
       label: config.label,
       description: config.description,
       tooltip: config.tooltip,

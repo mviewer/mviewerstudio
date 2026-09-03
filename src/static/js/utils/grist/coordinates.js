@@ -50,9 +50,12 @@ const renderGristCoordinatesResult = (
   xField,
   yField,
   importGristArea,
-  onTriggerProcess
+  onTriggerProcess,
+  options = {}
 ) => {
-  const resultContainer = document.getElementById(GRIST_RESULT_CONTAINER_ID);
+  const resultContainer = document.getElementById(
+    options.resultContainerId || GRIST_RESULT_CONTAINER_ID
+  );
 
   if (!resultContainer) {
     return;
@@ -88,10 +91,12 @@ const renderGristCoordinatesResult = (
     };
   }
 
-  updateSelectLayersButtonForLocalizedRows(
-    localizedRows,
-    GRIST_LOCATION_SWITCH_IDS.xy
-  );
+  if (options.updateLayerSelection !== false) {
+    updateSelectLayersButtonForLocalizedRows(
+      localizedRows,
+      GRIST_LOCATION_SWITCH_IDS.xy
+    );
+  }
 
   const actions = [];
   if (status.type === "success" && importGristArea) {
@@ -140,11 +145,22 @@ const renderGristCoordinatesResult = (
  * @param {Object} options Coordinate check options.
  * @param {Object} options.importGristArea Active Grist import component.
  * @param {Function} options.setWizardStep Function changing the Grist wizard step.
+ * @param {string} [options.xFieldId] X field selector identifier.
+ * @param {string} [options.yFieldId] Y field selector identifier.
+ * @param {string} [options.resultContainerId] Target result container identifier.
+ * @param {boolean} [options.updateLayerSelection=true] Whether to update layer creation state.
  * @returns {Promise<void>}
  */
-const runGristCoordinatesCheck = async ({ importGristArea, setWizardStep } = {}) => {
-  const xSelect = document.getElementById("grist-coordinate-x");
-  const ySelect = document.getElementById("grist-coordinate-y");
+const runGristCoordinatesCheck = async ({
+  importGristArea,
+  setWizardStep,
+  xFieldId = "newlayer-grist-coordinate-x",
+  yFieldId = "newlayer-grist-coordinate-y",
+  resultContainerId,
+  updateLayerSelection,
+} = {}) => {
+  const xSelect = document.getElementById(xFieldId);
+  const ySelect = document.getElementById(yFieldId);
   const xField = xSelect ? xSelect.value : "";
   const yField = ySelect ? ySelect.value : "";
 
@@ -158,7 +174,16 @@ const runGristCoordinatesCheck = async ({ importGristArea, setWizardStep } = {})
       xField,
       yField,
       importGristArea,
-      () => runGristCoordinatesCheck({ importGristArea, setWizardStep })
+      () =>
+        runGristCoordinatesCheck({
+          importGristArea,
+          setWizardStep,
+          xFieldId,
+          yFieldId,
+          resultContainerId,
+          updateLayerSelection,
+        }),
+      { resultContainerId, updateLayerSelection }
     );
   } catch (error) {
     renderGristCoordinatesResult(
@@ -166,7 +191,16 @@ const runGristCoordinatesCheck = async ({ importGristArea, setWizardStep } = {})
       xField,
       yField,
       importGristArea,
-      () => runGristCoordinatesCheck({ importGristArea, setWizardStep })
+      () =>
+        runGristCoordinatesCheck({
+          importGristArea,
+          setWizardStep,
+          xFieldId,
+          yFieldId,
+          resultContainerId,
+          updateLayerSelection,
+        }),
+      { resultContainerId, updateLayerSelection }
     );
   }
 };

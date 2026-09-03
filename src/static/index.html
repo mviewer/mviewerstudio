@@ -1436,7 +1436,7 @@
                                                             onchange="mv.changeLayerType(this.value);">
                                                         <option value="wms" i18n="modal.layer.type.wms">WMS</option>
                                                         <option value="vector-tms">Vector-TMS</option>
-                                                        <option value="csv" i18n="modal.layer.type.custom" disabled>CSV</option>
+                                                        <option value="csv" i18n="modal.layer.type.csv">CSV</option>
                                                         <option value="geojson" i18n="modal.layer.type.geojson" disabled>GeoJSON</option>
                                                         <option value="kml" i18n="modal.layer.type.kml" disabled>KML</option>
                                                         <option value="customlayer" i18n="modal.layer.type.custom" disabled>Customlayer</option>
@@ -1665,6 +1665,7 @@
                         <div role="tabpanel" class="tab-pane fade" id="layer_conf7">
                             <div id="layer-grist-data-preview"></div>
                         </div>
+                        <div id="layer-grist-geolocation-content" class="d-none"></div>
                     </div>
                 </div>
                 <div class="modal-footer">                    
@@ -1883,23 +1884,7 @@
                             <div id="grist-title-import" class="d-flex align-items-center justify-content-between gap-3">
                                 <!-- <h6 class="mb-0" i18n="modal.layer.new.grist.title"></h6> -->
                             </div>
-                            <div id="newlayer-grist-wizard"></div>
-                            <div class="mt-3" id="newLayerByGrist">
-                                <div id="grist-auth"></div>
-                                <div id="grist-data"></div>
-                                <div id="grist-location" class="grist-location-options">
-                                    <div id="grist-location-preview"></div>
-                                    <div id="grist-location-address"></div>
-                                    <div id="grist-location-ref"></div>
-                                    <div id="grist-location-xy"></div>
-                                </div>
-                                <div id="grist-result">
-                                </div>
-                                <div id="grist-footer" class="my-3 pt-2">
-                                    <button type="button" id="gristWizardBackButton" class="btn btn-link d-none"><i class="ri-arrow-left-line"></i> Retour</button>
-                                    <button type="button" id="gristWizardNextButton" class="btn grist-wizard-next-button d-none">Suivant <i class="ri-arrow-right-line"></i></button>
-                                </div>
-                            </div>
+                            <div id="newlayer-grist-content"></div>
                         </div>
                     </div>                         
                 </div>

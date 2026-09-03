@@ -1,18 +1,18 @@
 const SELECT_LAYERS_BUTTON_ID = "selectLayersButton";
-const GRIST_WIZARD_NEXT_BUTTON_ID = "gristWizardNextButton";
-const GRIST_WIZARD_BACK_BUTTON_ID = "gristWizardBackButton";
+const GRIST_WIZARD_NEXT_BUTTON_ID = "newlayer-grist-next";
+const GRIST_WIZARD_BACK_BUTTON_ID = "newlayer-grist-back";
 const GRIST_TAB_TARGET = "#newlayer-grist";
 const GRIST_MODAL_ID = "mod-layerNew";
-const GRIST_AUTH_CONTAINER_ID = "grist-auth";
-const GRIST_DATA_CONTAINER_ID = "grist-data";
-const GRIST_FOOTER_ID = "grist-footer";
-const GRIST_RESULT_CONTAINER_ID = "grist-result";
+const GRIST_AUTH_CONTAINER_ID = "newlayer-grist-auth";
+const GRIST_DATA_CONTAINER_ID = "newlayer-grist-data";
+const GRIST_FOOTER_ID = "newlayer-grist-footer";
+const GRIST_RESULT_CONTAINER_ID = "newlayer-grist-result";
 const GRIST_GEOMETRY_FIELD = "geometry";
 const GRIST_WIZARD_CONTAINER_ID = "newlayer-grist-wizard";
-const NEW_LAYER_BY_GRIST_ID = "newLayerByGrist";
-const GRIST_REF_GEO_MATCHING_FIELD_ID = "grist-refgeo-matching-field";
-const GRIST_REF_GEO_REFERENTIAL_ID = "grist-refgeo-referential";
-const GRIST_REF_GEO_OUTPUT_FORMAT_ID = "grist-refgeo-output-format";
+const NEW_LAYER_BY_GRIST_ID = "newlayer-grist-workflow";
+const GRIST_REF_GEO_MATCHING_FIELD_ID = "newlayer-grist-refgeo-matching-field";
+const GRIST_REF_GEO_REFERENTIAL_ID = "newlayer-grist-refgeo-referential";
+const GRIST_REF_GEO_OUTPUT_FORMAT_ID = "newlayer-grist-refgeo-output-format";
 
 const GRIST_LOCATION_SWITCH_IDS = {
   address: "adresseSwitch",
@@ -21,9 +21,9 @@ const GRIST_LOCATION_SWITCH_IDS = {
 };
 
 const GRIST_LOCATION_TARGET_IDS = {
-  address: "grist-location-address",
-  ref: "grist-location-ref",
-  xy: "grist-location-xy",
+  address: "newlayer-grist-location-address",
+  ref: "newlayer-grist-location-ref",
+  xy: "newlayer-grist-location-xy",
 };
 
 const BAN_GEOCODING_FIELDS = [

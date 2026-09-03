@@ -4,6 +4,8 @@
  * Usage:
  * `const block = new mv.components.grist.gristApiKey();`
  * `target.appendChild(block.render());`
+ * Pass `idPrefix` in the third constructor argument when several instances
+ * are rendered on the same page.
  *
  * This component use :
  *  - https://support.getgrist.com/rest-api/
@@ -49,6 +51,7 @@ const GristApiKey = function (
   this.alertTimeout = null;
   this.onValidApiKey = options.onValidApiKey || function () {};
   this.onInvalidApiKey = options.onInvalidApiKey || function () {};
+  this.idPrefix = options.idPrefix || "grist-api-key";
 
   this.element = document.createElement("div");
   this.element.className = "grist-api-key";
@@ -78,7 +81,7 @@ GristApiKey.prototype.fetchKeyFromGristAPI = function () {
 };
 
 GristApiKey.prototype.loadApiKey = function () {
-  const input = this.element.querySelector("#grist-api-key-input");
+  const input = this.element.querySelector(`#${this.idPrefix}-input`);
 
   if (!input) {
     return;
@@ -113,7 +116,7 @@ GristApiKey.prototype.loadApiKey = function () {
 };
 
 GristApiKey.prototype.showAlert = function (type, message, autoHide = false) {
-  const alert = this.element.querySelector("#grist-api-key-alert");
+  const alert = this.element.querySelector(`#${this.idPrefix}-alert`);
 
   if (!alert) {
     return;
@@ -131,7 +134,7 @@ GristApiKey.prototype.showAlert = function (type, message, autoHide = false) {
 };
 
 GristApiKey.prototype.toggleApiKeyVisibility = function () {
-  const input = this.element.querySelector("#grist-api-key-input");
+  const input = this.element.querySelector(`#${this.idPrefix}-input`);
   const button = this.element.querySelector("[data-grist-api-key-toggle]");
 
   if (!input || !button) {
@@ -160,8 +163,8 @@ GristApiKey.prototype.toggleApiKeyVisibility = function () {
 };
 
 GristApiKey.prototype.validateApiKey = function () {
-  const input = this.element.querySelector("#grist-api-key-input");
-  const button = this.element.querySelector("#grist-valid-key-btn");
+  const input = this.element.querySelector(`#${this.idPrefix}-input`);
+  const button = this.element.querySelector(`#${this.idPrefix}-validate`);
 
   if (!input) {
     return;
@@ -222,7 +225,7 @@ const getGristApiKey = () => {
 GristApiKey.prototype.render = function () {
   this.element.innerHTML = `
     <div class="grist-api-key-header">
-      <label class="grist-api-key-label" for="grist-api-key-input">
+      <label class="grist-api-key-label" for="${this.idPrefix}-input">
         Clé API Grist <span aria-hidden="true">ⓘ</span>
       </label>
       <a href="${this.gristApiKeyHelpUrl}" target="_blank" rel="noopener noreferrer" class="grist-api-key-help">Récupérer ma clé API Grist <i class="ri-external-link-line" aria-hidden="true"></i></a>
@@ -231,7 +234,7 @@ GristApiKey.prototype.render = function () {
       <div class="grist-api-key-field">
         <i class="ri-key-2-line grist-api-key-field-icon" aria-hidden="true"></i>
         <input
-          id="grist-api-key-input"
+          id="${this.idPrefix}-input"
           type="password"
           class="form-control grist-api-key-input"
           placeholder="Entrez votre clé API GRIST"
@@ -252,14 +255,14 @@ GristApiKey.prototype.render = function () {
       </div>
       <button
         type="button"
-        id="grist-valid-key-btn"
+        id="${this.idPrefix}-validate"
         class="btn grist-api-key-validate-btn"
       >
         Valider
       </button>
     </div>
     <p
-      id="grist-api-key-alert"
+      id="${this.idPrefix}-alert"
       class="grist-api-key-status grist-api-key-status-muted"
       role="status"
     >
@@ -269,8 +272,8 @@ GristApiKey.prototype.render = function () {
 
   this.loadApiKey();
 
-  const validateButton = this.element.querySelector("#grist-valid-key-btn");
-  const input = this.element.querySelector("#grist-api-key-input");
+  const validateButton = this.element.querySelector(`#${this.idPrefix}-validate`);
+  const input = this.element.querySelector(`#${this.idPrefix}-input`);
   const toggleButton = this.element.querySelector("[data-grist-api-key-toggle]");
 
   if (validateButton) {

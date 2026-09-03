@@ -298,8 +298,10 @@ const updateGristTableWithGeocoding = async (sourceData, geocodedRows, apiKey) =
  *
  * @returns {void}
  */
-const renderGristResultSpinner = () => {
-  const resultContainer = document.getElementById(GRIST_RESULT_CONTAINER_ID);
+const renderGristResultSpinner = (resultContainerId) => {
+  const resultContainer = document.getElementById(
+    resultContainerId || GRIST_RESULT_CONTAINER_ID
+  );
   if (!resultContainer) {
     return;
   }
@@ -343,15 +345,19 @@ const openCurrentGristTable = async (importGristArea) => {
  * @returns {void}
  */
 const renderGristGeocodingResult = (status, options) => {
-  const resultContainer = document.getElementById(GRIST_RESULT_CONTAINER_ID);
+  const resultContainer = document.getElementById(
+    options.resultContainerId || GRIST_RESULT_CONTAINER_ID
+  );
   if (!resultContainer) {
     return;
   }
 
-  updateSelectLayersButtonForLocalizedRows(
-    status.localizedRows,
-    GRIST_LOCATION_SWITCH_IDS.address
-  );
+  if (options.updateLayerSelection !== false) {
+    updateSelectLayersButtonForLocalizedRows(
+      status.localizedRows,
+      GRIST_LOCATION_SWITCH_IDS.address
+    );
+  }
 
   const resultActions = [];
 
@@ -446,6 +452,8 @@ const geocodeAddressFieldsWithBan = async (importGristArea, getAddressFields) =>
  * @param {Function} options.getAddressFields Function returning selected address fields.
  * @param {Function} options.setWizardStep Function changing the Grist wizard step.
  * @param {HTMLButtonElement|null} [options.triggerButton] Button that started the flow.
+ * @param {string} [options.resultContainerId] Target result container identifier.
+ * @param {boolean} [options.updateLayerSelection=true] Whether to update layer creation state.
  * @returns {Promise<void>}
  */
 const runGristAddressGeocoding = async ({
@@ -453,11 +461,15 @@ const runGristAddressGeocoding = async ({
   getAddressFields,
   setWizardStep,
   triggerButton = null,
+  resultContainerId,
+  updateLayerSelection,
 } = {}) => {
   const renderOptions = {
     importGristArea,
     getAddressFields,
     setWizardStep,
+    resultContainerId,
+    updateLayerSelection,
   };
 
   if (triggerButton) {
@@ -465,7 +477,7 @@ const runGristAddressGeocoding = async ({
   }
 
   setWizardStep(4);
-  renderGristResultSpinner();
+  renderGristResultSpinner(resultContainerId);
 
   try {
     const status = await geocodeAddressFieldsWithBan(importGristArea, getAddressFields);

@@ -12,6 +12,7 @@ import Switch from "./components/switch/switch.js";
 import Multiselect from "./components/multiselect/multiselect.js";
 import Tooltip from "./components/tooltip/tooltip.js";
 import ButtonCard from "./components/buttonCard/buttonCard.js";
+import ListCard from "./components/listCard/listCard.js";
 
 // Grist components
 import GristApiKey from "./components/grist/gristApiKey/gristApiKey.js";
@@ -25,10 +26,15 @@ import RefreshGristDataBtn from "./components/grist/refreshGristDataBtn/refreshG
 import importGristArea from "./components/grist/importGristArea/importGristArea.js";
 import ListGristTables from "./components/grist/listGristTables/listGristTables.js";
 import OpenGristTableBtn from "./components/grist/openGristTableBtn/openGristTableBtn.js";
+import GristContent from "./components/grist/gristContent/gristContent.js";
+import GristLayerSource from "./components/grist/gristLayerSource/gristLayerSource.js";
 
 // Grist utilities
 import * as gristUtils from "./utils/grist/grist.js";
 import * as gristValidation from "./utils/grist/validation.js";
+import * as gristGeocoding from "./utils/grist/geocoding.js";
+import * as gristCoordinates from "./utils/grist/coordinates.js";
+import * as gristRefGeo from "./utils/grist/refGeo.js";
 
 mv.components = mv.components || {};
 mv.components.grist = mv.components.grist || {};
@@ -45,6 +51,7 @@ mv.components.switch = Switch;
 mv.components.multiselect = Multiselect;
 mv.components.tooltip = Tooltip;
 mv.components.buttonCard = ButtonCard;
+mv.components.listCard = ListCard;
 
 // Grist components
 mv.components.grist.gristApiKey = GristApiKey;
@@ -58,10 +65,20 @@ mv.components.grist.refreshGristDataBtn = RefreshGristDataBtn;
 mv.components.grist.importGristArea = importGristArea;
 mv.components.grist.listGristTables = ListGristTables;
 mv.components.grist.openGristTableBtn = OpenGristTableBtn;
+mv.components.grist.gristContent = GristContent;
+mv.components.grist.gristLayerSource = GristLayerSource;
 
 // Grist utilities
 mv.utils.grist.grist = gristUtils;
 mv.utils.grist.validation = gristValidation;
+mv.utils.grist.geocoding = gristGeocoding;
+mv.utils.grist.coordinates = gristCoordinates;
+mv.utils.grist.refGeo = gristRefGeo;
+
+const gristContentTarget = document.getElementById("newlayer-grist-content");
+if (gristContentTarget) {
+  new GristContent().appendTo(gristContentTarget);
+}
 
 gristUtils.bindNewLayerModalGrist();
 gristValidation.bindNewLayerModalValidation();
