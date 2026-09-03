@@ -88,6 +88,27 @@ export const getGristTableUrl = (instanceUrl, orgId, docId, tableId, tableRef) =
 };
 
 /**
+ * Extract the Grist document and table identifiers from a CSV download URL.
+ *
+ * @param {string} url Grist CSV download URL.
+ * @returns {{docId: string, tableId: string}|null} Identifiers, or null when the URL is not a Grist CSV URL.
+ */
+export const getGristCsvTableInfo = (url) => {
+  const gristUrl = new URL(url, window.location.origin);
+  const documentMatch = gristUrl.pathname.match(/\/api\/docs\/([^/]+)\/download\/csv$/);
+  const tableId = gristUrl.searchParams.get("tableId");
+
+  if (!documentMatch || !tableId) {
+    return null;
+  }
+
+  return {
+    docId: documentMatch[1],
+    tableId,
+  };
+};
+
+/**
  * Parse a successful Grist API response as JSON.
  *
  * @param {Response} response Fetch response.

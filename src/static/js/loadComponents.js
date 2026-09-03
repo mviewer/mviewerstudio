@@ -28,6 +28,7 @@ import ListGristTables from "./components/grist/listGristTables/listGristTables.
 import OpenGristTableBtn from "./components/grist/openGristTableBtn/openGristTableBtn.js";
 import GristContent from "./components/grist/gristContent/gristContent.js";
 import GristLayerSource from "./components/grist/gristLayerSource/gristLayerSource.js";
+import { openGristLayerGeolocation } from "./components/grist/gristLayerGeolocation/gristLayerGeolocation.js";
 
 // Grist utilities
 import * as gristUtils from "./utils/grist/grist.js";
@@ -67,6 +68,7 @@ mv.components.grist.listGristTables = ListGristTables;
 mv.components.grist.openGristTableBtn = OpenGristTableBtn;
 mv.components.grist.gristContent = GristContent;
 mv.components.grist.gristLayerSource = GristLayerSource;
+mv.components.grist.openGristLayerGeolocation = openGristLayerGeolocation;
 
 // Grist utilities
 mv.utils.grist.grist = gristUtils;
