@@ -20,7 +20,7 @@ import {
  */
 const readJson = async (response) => {
   if (!response.ok) {
-    throw new Error(`Grist request failed with status ${response.status}`);
+    throw new Error(mviewer.tr("grist.import.request_failed").replace("{status}", () => response.status));
   }
 
   return response.json();
@@ -223,26 +223,37 @@ const getCreatedDocId = (doc) => {
 };
 
 /**
- * Return a document id from the configured workspace, creating the document
- * only when no existing document matches the requested identifier or name.
+ * Resolve a selected document by id or create a document with a unique name
+ * in the configured workspace.
  *
  * @param {string} gristApiKey Grist API key.
  * @param {string|number} documentReference Existing document id or document name.
+ * @param {boolean} createDocument Whether a new document was requested.
  * @returns {Promise<string|number|undefined>} Grist document id.
  * @throws {Error} When document lookup or creation fails.
  */
-const getOrCreateDocument = async (gristApiKey, documentReference) => {
+const getOrCreateDocument = async (gristApiKey, documentReference, createDocument) => {
   const gristConfig = getGristConfig();
   const workspaceId = await getOrCreateWorkspace(gristApiKey);
   const docs = await getWorkspaceDocsList(gristConfig.apiUrl, workspaceId, gristApiKey);
-  const existingDoc = docs.find(
-    (doc) =>
-      `${getGristId(doc)}` === `${documentReference}` ||
-      getGristName(doc) === documentReference
-  );
-
-  if (existingDoc) {
+  if (!createDocument) {
+    const existingDoc = docs.find(
+      (doc) => `${getGristId(doc)}` === `${documentReference}`
+    );
+    if (!existingDoc) {
+      throw new Error(mviewer.tr("grist.import.document_not_found"));
+    }
     return getGristId(existingDoc);
+  }
+
+  const normalizedName = documentReference.trim().toLowerCase();
+  const duplicateDocument = docs.some(
+    (doc) => `${getGristName(doc) || ""}`.trim().toLowerCase() === normalizedName
+  );
+  if (duplicateDocument) {
+    throw new Error(
+      mviewer.tr("grist.import.document_exists").replace("{name}", () => documentReference)
+    );
   }
 
   const createdDoc = await createWorkspaceDoc(
@@ -256,7 +267,8 @@ const getOrCreateDocument = async (gristApiKey, documentReference) => {
 };
 
 /**
- * Ensure that a table id does not already exist in a Grist document.
+ * Ensure that a table id does not already exist in the target Grist document.
+ * Tables in other documents do not prevent creation.
  *
  * @param {string} instanceUrl Base URL of the Grist instance or nginx proxy.
  * @param {string|number} docId Grist document id.
@@ -272,7 +284,7 @@ const ensureTableDoesNotExist = async (instanceUrl, docId, tableId, gristApiKey)
   );
 
   if (usedTableIds.has(`${tableId}`.toLowerCase())) {
-    throw new Error(`La table Grist "${tableId}" existe deja.`);
+    throw new Error(mviewer.tr("grist.import.table_exists").replace("{name}", () => tableId));
   }
 
   return tableId;
@@ -296,48 +308,54 @@ const getActualTable = async (instanceUrl, docId, tableId, gristApiKey) => {
   const actualTableId = getGristId(table);
 
   if (!actualTableId) {
-    throw new Error(`La table Grist "${tableId}" est introuvable apres creation.`);
+    throw new Error(mviewer.tr("grist.import.table_not_found").replace("{name}", () => tableId));
   }
 
   return { tableId: actualTableId, tableRef: getGristTableRef(table) };
 };
 
 /**
- * Reuse or create the selected Grist document and upload parsed file data into
+ * Select an existing Grist document or create one with a unique name and upload parsed file data into
  * a new table.
  *
  * @param {Object|Array} parsedData Parsed file data, usually a PapaParse result.
  * @param {string} tableName Grist table display name.
  * @param {string} documentName Selected document id or name to create.
  * @param {string} gristApiKey Grist API key.
+ * @param {boolean} [createDocument=false] Whether to create a new document.
  * @returns {Promise<{docId: string|number, tableId: string|number, tableRef: string|number, rowsCount: number, url: string}>} Upload result.
  */
 export const sendParsedFileToGrist = async (
   parsedData,
   tableName,
   documentName,
-  gristApiKey
+  gristApiKey,
+  createDocument = false
 ) => {
   const rows = getRows(parsedData);
   const headers = getHeaders(rows, parsedData);
 
   if (!gristApiKey) {
-    throw new Error("Missing Grist API key");
+    throw new Error(mviewer.tr("grist.import.api_key_missing"));
   }
 
   if (!rows.length || !headers.length) {
-    throw new Error("No parsed data to send to Grist");
+    throw new Error(mviewer.tr("grist.import.data_missing"));
   }
 
   if (!documentName || !documentName.trim()) {
-    throw new Error("Sélectionnez un document ou saisissez son nom.");
+    throw new Error(mviewer.tr("grist.import.document_required"));
   }
 
   const gristConfig = getGristConfig();
-  const docId = await getOrCreateDocument(gristApiKey, documentName.trim());
+  const docId = await getOrCreateDocument(
+    gristApiKey,
+    documentName.trim(),
+    createDocument
+  );
 
   if (!docId) {
-    throw new Error("Grist document has no id");
+    throw new Error(mviewer.tr("grist.import.document_id_missing"));
   }
 
   const tableId = await ensureTableDoesNotExist(

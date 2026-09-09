@@ -462,7 +462,8 @@ importGristArea.prototype.sendFileToGrist = async function () {
     parsedData,
     this.getFileTableName(),
     this.getFileDocumentName(),
-    this.apiKey
+    this.apiKey,
+    this.documentNameSelect.getValue() === "create"
   );
 
   this.sentTable = result;

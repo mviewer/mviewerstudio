@@ -1,5 +1,14 @@
 {
   "fr": {
+    "grist.import.request_failed": "La requête Grist a échoué avec le statut {status}.",
+    "grist.import.document_not_found": "Le document Grist sélectionné est introuvable.",
+    "grist.import.document_exists": "Le document Grist \"{name}\" existe déjà. Veuillez le sélectionner ou modifier votre saisie.",
+    "grist.import.table_exists": "La table Grist \"{name}\" existe déjà dans le document sélectionné.",
+    "grist.import.table_not_found": "La table Grist \"{name}\" est introuvable après création.",
+    "grist.import.api_key_missing": "La clé API Grist est manquante.",
+    "grist.import.data_missing": "Aucune donnée à envoyer à Grist.",
+    "grist.import.document_required": "Sélectionnez un document ou saisissez son nom.",
+    "grist.import.document_id_missing": "Le document Grist n’a pas d’identifiant.",
     "auth.group.type": "Type de groupe",
     "auth.group.role": "Rôle pour ce groupe",
     "auth.contrib": "Contributeur",
@@ -531,6 +540,15 @@
     "xmleditor.btn.text": "Editeur XML"
   },
   "en": {
+    "grist.import.request_failed": "Grist request failed with status {status}.",
+    "grist.import.document_not_found": "The selected Grist document could not be found.",
+    "grist.import.document_exists": "The Grist document \"{name}\" already exists. Please select it or enter a different name.",
+    "grist.import.table_exists": "The Grist table \"{name}\" already exists in the selected document.",
+    "grist.import.table_not_found": "The Grist table \"{name}\" could not be found after creation.",
+    "grist.import.api_key_missing": "Missing Grist API key.",
+    "grist.import.data_missing": "No parsed data to send to Grist.",
+    "grist.import.document_required": "Select a document or enter its name.",
+    "grist.import.document_id_missing": "The Grist document has no identifier.",
     "auth.group.type": "User group type",
     "auth.group.role": "User group role",
     "auth.contrib": "Contributor",
