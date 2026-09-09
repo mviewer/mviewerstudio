@@ -91,6 +91,7 @@ GristApiKey.prototype.loadApiKey = function () {
   if (storedApiKey) {
     input.value = storedApiKey;
     input.readOnly = false;
+    this.validateApiKey();
     return;
   }
 
@@ -102,6 +103,7 @@ GristApiKey.prototype.loadApiKey = function () {
       }
       input.value = apiKey;
       input.readOnly = true;
+      this.validateApiKey();
     })
     .catch((error) => {
       this.onInvalidApiKey();
@@ -195,6 +197,7 @@ GristApiKey.prototype.validateApiKey = function () {
       this.showAlert("success", "Clé API GRIST valide.");
       storeGristApiKey(apiKey);
       this.onValidApiKey(apiKey);
+      alertCustom("La clé API Grist a été validée avec succès.", "success");
     })
     .catch((error) => {
       clearStoredGristApiKey();

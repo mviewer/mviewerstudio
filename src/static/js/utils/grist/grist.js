@@ -270,7 +270,7 @@ const initGristLocationSwitches = () => {
 };
 
 /**
- * Render the Grist data import area after API key validation.
+ * Render the Grist data import area and show step 2 after API key validation.
  *
  * @param {string} apiKey Valid Grist API key used by import components.
  * @returns {void}
@@ -295,7 +295,7 @@ const initGristImportArea = (apiKey) => {
   if (nextButton) {
     nextButton.dataset.apiKeyReady = "true";
   }
-  setGristWizardStep(1);
+  setGristWizardStep(2);
 };
 
 /**
