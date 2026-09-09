@@ -66,43 +66,40 @@ const renderGristCoordinatesResult = (
   let localizedRows = rows.length - rowsWithoutCoordinates.length;
   let status = {
     type: "success",
-    label: "Import réussi",
-    message: "Toutes les lignes disposent de coordonnées X et Y.",
+    label: mviewer.tr("grist.result.success"),
+    message: mviewer.tr("grist.coordinates.complete"),
   };
 
   if (!xField || !yField) {
     localizedRows = 0;
     status = {
       type: "failure",
-      label: "Import échoué",
-      message: "Sélectionnez les colonnes X et Y.",
+      label: mviewer.tr("grist.result.failure"),
+      message: mviewer.tr("grist.coordinates.select_fields"),
     };
   } else if (localizedRows === 0) {
     status = {
       type: "failure",
-      label: "Import échoué",
-      message: "Aucune ligne ne dispose de coordonnées X et Y.",
+      label: mviewer.tr("grist.result.failure"),
+      message: mviewer.tr("grist.coordinates.empty"),
     };
   } else if (rowsWithoutCoordinates.length) {
     status = {
       type: "partial",
-      label: "Import partiellement réussi",
-      message: "Les lignes suivantes ne disposent pas de coordonnées X ou Y.",
+      label: mviewer.tr("grist.result.partial"),
+      message: mviewer.tr("grist.coordinates.incomplete"),
     };
   }
 
   if (options.updateLayerSelection !== false) {
-    updateSelectLayersButtonForLocalizedRows(
-      localizedRows,
-      GRIST_LOCATION_SWITCH_IDS.xy
-    );
+    updateSelectLayersButtonForLocalizedRows(localizedRows, GRIST_LOCATION_SWITCH_IDS.xy);
   }
 
   const actions = [];
   if (status.type === "success" && importGristArea) {
     actions.push(
       createGristResultButton(
-        "Voir dans Grist",
+        mviewer.tr("grist.result.open"),
         "btn grist-geocoding-result-primary-button",
         async () => {
           const tableUrl = await importGristArea.getTargetTableUrl();
@@ -119,7 +116,7 @@ const renderGristCoordinatesResult = (
     new GristResult({
       title: status.label,
       message: status.message,
-      tableTitle: "Lignes à vérifier",
+      tableTitle: mviewer.tr("grist.result.check_rows"),
       localizedRows,
       totalRows: rows.length,
       ungeocodedRows: rowsWithoutCoordinates,

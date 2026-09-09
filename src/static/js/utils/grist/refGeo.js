@@ -98,8 +98,8 @@ const renderGristRefGeoSpinner = (resultContainerId) => {
   resultContainer.innerHTML = `
     <div class="grist-geocoding-result grist-geocoding-result-loading">
       <div class="d-flex justify-content-center align-items-center">
-        <div id="grist-refgeo-spinner" class="spinner-grow text-primary spinner-grow-sm" role="status" aria-label="Jointure en cours"></div>
-        <span class="grist-geocoding-loading-label">Jointure en cours...</span>
+        <div id="grist-refgeo-spinner" class="spinner-grow text-primary spinner-grow-sm" role="status" aria-label="${mviewer.tr("grist.refgeo.loading")}"></div>
+        <span class="grist-geocoding-loading-label">${mviewer.tr("grist.refgeo.loading")}</span>
       </div>
     </div>
   `;
@@ -128,18 +128,25 @@ const getPreviewRows = (rows = []) => {
  * Convert backend join result to the common result status.
  *
  * @param {Object} result Backend join result.
+ * @param {string} [referentialLabel=""] Name of the referential used for the join.
  * @returns {Object} Common Grist result status.
  */
-const getGristRefGeoStatus = (result) => {
+const getGristRefGeoStatus = (result, referentialLabel = "") => {
   const totalRows = result.total_rows || 0;
   const localizedRows = result.matched_rows || 0;
   const ungeocodedRows = getPreviewRows(result.unmatched || []);
 
   if (localizedRows === 0) {
+    let label = mviewer.tr("grist.result.failure");
+    if (referentialLabel) {
+      label = mviewer
+        .tr("grist.refgeo.failure_with_referential")
+        .replace("{name}", () => referentialLabel);
+    }
     return {
       type: "failure",
-      label: "Import échoué",
-      message: "Échec complet du géocodage",
+      label,
+      message: mviewer.tr("grist.refgeo.failure"),
       localizedRows,
       totalRows,
       ungeocodedRows,
@@ -147,10 +154,16 @@ const getGristRefGeoStatus = (result) => {
   }
 
   if (localizedRows < totalRows) {
+    let label = mviewer.tr("grist.result.partial");
+    if (referentialLabel) {
+      label = mviewer
+        .tr("grist.refgeo.partial_with_referential")
+        .replace("{name}", () => referentialLabel);
+    }
     return {
       type: "partial",
-      label: "Import partiellement réussi",
-      message: "Les lignes suivantes n'ont pas pu être localisées",
+      label,
+      message: mviewer.tr("grist.refgeo.unmatched_rows"),
       localizedRows,
       totalRows,
       ungeocodedRows,
@@ -159,7 +172,7 @@ const getGristRefGeoStatus = (result) => {
 
   return {
     type: "success",
-    label: "Import réussi",
+    label: mviewer.tr("grist.result.success"),
     message: "",
     localizedRows,
     totalRows,
@@ -175,7 +188,12 @@ const getGristRefGeoStatus = (result) => {
  * @param {Function} setWizardStep Function changing the Grist wizard step.
  * @returns {void}
  */
-const renderGristRefGeoResult = (result, importGristArea, setWizardStep, options = {}) => {
+const renderGristRefGeoResult = (
+  result,
+  importGristArea,
+  setWizardStep,
+  options = {}
+) => {
   const resultContainer = document.getElementById(
     options.resultContainerId || GRIST_RESULT_CONTAINER_ID
   );
@@ -183,7 +201,7 @@ const renderGristRefGeoResult = (result, importGristArea, setWizardStep, options
     return;
   }
 
-  const status = getGristRefGeoStatus(result);
+  const status = getGristRefGeoStatus(result, options.referentialLabel);
   if (options.updateLayerSelection !== false) {
     updateSelectLayersButtonForLocalizedRows(
       status.localizedRows,
@@ -239,12 +257,12 @@ const getGristRefGeoActions = (
 
   if (status.type !== "success") {
     const editButton = createGristResultButton(
-      "Corriger dans Grist",
+      mviewer.tr("grist.result.edit"),
       "btn grist-geocoding-result-secondary-button",
       () => openCurrentGristTable(importGristArea)
     );
     const retryButton = createGristResultButton(
-      "Relancer",
+      mviewer.tr("grist.result.retry"),
       "btn grist-geocoding-result-primary-button",
       () =>
         runGristRefGeoJoin({
@@ -260,7 +278,7 @@ const getGristRefGeoActions = (
 
   return [
     createGristResultButton(
-      "Voir dans Grist",
+      mviewer.tr("grist.result.open"),
       "btn grist-geocoding-result-primary-button",
       () => openCurrentGristTable(importGristArea)
     ),
@@ -285,8 +303,8 @@ const renderGristRefGeoError = (error, importGristArea, setWizardStep, options =
 
   const status = {
     type: "failure",
-    label: "Import échoué",
-    message: error.message || "Échec complet du géocodage",
+    label: getGristRefGeoStatus({}, options.referentialLabel).label,
+    message: error.message || mviewer.tr("grist.refgeo.failure"),
     localizedRows: 0,
     totalRows: 0,
     ungeocodedRows: [],
@@ -318,23 +336,23 @@ const joinSourceDataWithReferential = async (targetTable, apiKey, controls = {})
   const outputFormat = getSelectedOutputFormat(controls);
 
   if (!matchingField) {
-    throw new Error("Aucun champ de correspondance sélectionné.");
+    throw new Error(mviewer.tr("grist.refgeo.matching_field_required"));
   }
 
   if (!referentialLabel) {
-    throw new Error("Aucun référentiel sélectionné.");
+    throw new Error(mviewer.tr("grist.refgeo.referential_required"));
   }
 
   if (!outputFormat) {
-    throw new Error("Aucun format de sortie sélectionné.");
+    throw new Error(mviewer.tr("grist.refgeo.output_required"));
   }
 
   if (!targetTable || !targetTable.docId || !targetTable.tableId) {
-    throw new Error("Aucune table Grist cible à mettre à jour.");
+    throw new Error(mviewer.tr("grist.location.target_missing"));
   }
 
   if (!apiKey) {
-    throw new Error("Clé API Grist manquante.");
+    throw new Error(mviewer.tr("grist.import.api_key_missing"));
   }
 
   const response = await fetch("api/grist/refgeo/join", {
@@ -353,7 +371,9 @@ const joinSourceDataWithReferential = async (targetTable, apiKey, controls = {})
   });
 
   if (!response.ok) {
-    throw new Error(`Erreur jointure référentiel (${response.status}).`);
+    throw new Error(
+      mviewer.tr("grist.refgeo.request_failed").replace("{status}", () => response.status)
+    );
   }
 
   return response.json();
@@ -392,6 +412,7 @@ const runGristRefGeoJoin = async ({
     resultContainerId,
     matchingFieldId,
     referentialId,
+    referentialLabel: getSelectedReferentialLabel({ referentialId }),
     outputFormatId,
     updateLayerSelection,
   };

@@ -158,8 +158,8 @@ const getBanGeocodingStatus = (rows) => {
   if (localizedRows === 0) {
     return {
       type: "failure",
-      label: "Import échoué",
-      message: "Échec complet du géocodage",
+      label: mviewer.tr("grist.result.failure"),
+      message: mviewer.tr("grist.geocoding.failure"),
       localizedRows: 0,
       totalRows: rows.length,
       ungeocodedRows,
@@ -169,8 +169,8 @@ const getBanGeocodingStatus = (rows) => {
   if (ungeocodedRows.length > 0) {
     return {
       type: "partial",
-      label: "Import partiellement réussi",
-      message: "Les lignes suivantes n'ont pas pu être localisées et nécessitent d'être corrigées dans Grist",
+      label: mviewer.tr("grist.result.partial"),
+      message: mviewer.tr("grist.geocoding.correct_rows"),
       localizedRows,
       totalRows: rows.length,
       ungeocodedRows,
@@ -179,7 +179,7 @@ const getBanGeocodingStatus = (rows) => {
 
   return {
     type: "success",
-    label: "Import réussi",
+    label: mviewer.tr("grist.result.success"),
     message: "",
     localizedRows: rows.length,
     totalRows: rows.length,
@@ -196,7 +196,9 @@ const getBanGeocodingStatus = (rows) => {
  */
 const readGristJson = async (response) => {
   if (!response.ok) {
-    throw new Error(`Grist request failed with status ${response.status}`);
+    throw new Error(
+      mviewer.tr("grist.import.request_failed").replace("{status}", () => response.status)
+    );
   }
 
   return response.json();
@@ -236,7 +238,12 @@ const ensureGristGeocodingColumns = async (gristConfig, sourceData, apiKey) => {
     );
 
     if (!response.ok && response.status !== 400) {
-      throw new Error(`Impossible de créer la colonne ${column} (${response.status}).`);
+      throw new Error(
+        mviewer
+          .tr("grist.geocoding.column_failed")
+          .replace("{column}", () => column)
+          .replace("{status}", () => response.status)
+      );
     }
   }
 };
@@ -256,7 +263,7 @@ const updateGristTableWithGeocoding = async (sourceData, geocodedRows, apiKey) =
     !sourceData.records ||
     !sourceData.records.length
   ) {
-    throw new Error("Aucune table Grist cible à mettre à jour.");
+    throw new Error(mviewer.tr("grist.location.target_missing"));
   }
 
   const gristConfig = getGristConfig();
@@ -309,8 +316,8 @@ const renderGristResultSpinner = (resultContainerId) => {
   resultContainer.innerHTML = `
     <div class="grist-geocoding-result grist-geocoding-result-loading">
       <div class="d-flex justify-content-center align-items-center">
-        <div id="grist-geocoding-spinner" class="spinner-grow text-primary spinner-grow-sm" role="status" aria-label="Géocodage en cours"></div>
-        <span class="grist-geocoding-loading-label">Géocodage en cours...</span>
+        <div id="grist-geocoding-spinner" class="spinner-grow text-primary spinner-grow-sm" role="status" aria-label="${mviewer.tr("grist.geocoding.loading")}"></div>
+        <span class="grist-geocoding-loading-label">${mviewer.tr("grist.geocoding.loading")}</span>
       </div>
     </div>
   `;
@@ -363,12 +370,12 @@ const renderGristGeocodingResult = (status, options) => {
 
   if (status.ungeocodedRows && status.ungeocodedRows.length) {
     const editButton = createGristResultButton(
-      "Corriger dans Grist",
+      mviewer.tr("grist.result.edit"),
       "btn grist-geocoding-result-secondary-button",
       () => openCurrentGristTable(options.importGristArea)
     );
     const retryButton = createGristResultButton(
-      "Relancer",
+      mviewer.tr("grist.result.retry"),
       "btn grist-geocoding-result-primary-button",
       () => runGristAddressGeocoding({ ...options, triggerButton: retryButton })
     );
@@ -376,7 +383,7 @@ const renderGristGeocodingResult = (status, options) => {
     resultActions.push(editButton, retryButton);
   } else if (status.type === "success") {
     const openButton = createGristResultButton(
-      "Voir dans Grist",
+      mviewer.tr("grist.result.open"),
       "btn grist-geocoding-result-primary-button",
       () => openCurrentGristTable(options.importGristArea)
     );
@@ -407,7 +414,7 @@ const renderGristGeocodingResult = (status, options) => {
  */
 const geocodeAddressFieldsWithBan = async (importGristArea, getAddressFields) => {
   if (!importGristArea) {
-    throw new Error("Aucune source de données Grist disponible.");
+    throw new Error(mviewer.tr("grist.geocoding.source_missing"));
   }
 
   const sourceData = await importGristArea.getSourceData();
@@ -419,18 +426,20 @@ const geocodeAddressFieldsWithBan = async (importGristArea, getAddressFields) =>
   }
 
   if (!sourceData.rows.length || !fields.length) {
-    throw new Error("Aucune donnée à géocoder.");
+    throw new Error(mviewer.tr("grist.geocoding.data_missing"));
   }
   activeGeocodingTotalRows = sourceData.rows.length;
 
   if (!sourceData.docId || !sourceData.tableId) {
-    throw new Error("Envoyez d'abord la donnée dans Grist avant le géocodage.");
+    throw new Error(mviewer.tr("grist.geocoding.upload_required"));
   }
 
   const response = await postCsvToBanGeocoding(rowsToCsv(sourceData.rows, fields));
 
   if (!response.ok) {
-    throw new Error(`Erreur BAN ${response.status}`);
+    throw new Error(
+      mviewer.tr("grist.geocoding.ban_failed").replace("{status}", () => response.status)
+    );
   }
 
   const geocodedRows = parseCsvRows(await response.text());
@@ -487,8 +496,8 @@ const runGristAddressGeocoding = async ({
     renderGristGeocodingResult(
       {
         type: "failure",
-        label: "Import échoué",
-        message: error.message || "Aucune donnée n’a pu être localisée",
+        label: mviewer.tr("grist.result.failure"),
+        message: error.message || mviewer.tr("grist.geocoding.no_located_rows"),
         localizedRows: 0,
         totalRows: activeGeocodingTotalRows,
         ungeocodedRows: [],
