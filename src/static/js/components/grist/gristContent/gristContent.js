@@ -20,6 +20,7 @@
  * @param {boolean} [options.managedNavigation=false] Whether the instance handles next/back steps.
  * @param {Function} [options.onNext] Callback run before moving to the next step.
  * @param {Function} [options.onBack] Callback run before returning to the previous step.
+ * @param {Function} [options.onStepClick] Callback receiving the clicked wizard step.
  * @returns {void}
  */
 const GristContent = function (options = {}) {
@@ -29,6 +30,7 @@ const GristContent = function (options = {}) {
   this.managedNavigation = options.managedNavigation || false;
   this.onNext = options.onNext || null;
   this.onBack = options.onBack || null;
+  this.onStepClick = options.onStepClick || null;
   this.element = document.createElement("div");
   this.element.className = "grist-content";
   this.ids = this.getIds();
@@ -263,6 +265,7 @@ GristContent.prototype.render = function () {
   if (mv.components.grist.gristWizard) {
     const wizard = new mv.components.grist.gristWizard({
       step: this.state.step || 1,
+      onStepClick: this.onStepClick,
       steps: this.hideData
         ? [
             {

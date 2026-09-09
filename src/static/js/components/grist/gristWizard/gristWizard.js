@@ -51,6 +51,7 @@ const GristWizard = function (options = {}) {
     normalizeStep(step, defaultSteps[index] || defaultSteps[0])
   );
   this.step = options.step || 1;
+  this.onStepClick = options.onStepClick || null;
   this.element = document.createElement("div");
   this.element.className = `grist-wizard ${options.classes || ""}`.trim();
 };
@@ -90,6 +91,14 @@ GristWizard.prototype.render = function () {
     text.className = "grist-wizard-text";
     text.append(label, description);
     item.append(marker, text);
+    if (this.onStepClick && stepNumber < this.step) {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "grist-wizard-step-button";
+      button.append(marker, text);
+      button.addEventListener("click", () => this.onStepClick(stepNumber));
+      item.appendChild(button);
+    }
     this.element.appendChild(item);
   });
 
