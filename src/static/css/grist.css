@@ -276,6 +276,7 @@ STYLE FOR GRIST IMPORT
 }
 
 .switch-card-text {
+	width: 100%;
 	min-width: 0;
 }
 

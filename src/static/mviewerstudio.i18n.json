@@ -1,6 +1,7 @@
 {
   "fr": {
-    "grist.import.url.label": "Ou importer un fichier depuis une URL",
+    "grist.import.column_not_found": "La colonne {name} est introuvable dans la table Grist créée.",
+    "grist.import.url.label": "URL du fichier...",
     "grist.import.url.button": "Importer",
     "grist.import.url.invalid": "Veuillez saisir une URL HTTP ou HTTPS valide.",
     "grist.import.url.loading": "Téléchargement du fichier…",
@@ -580,6 +581,7 @@
     "xmleditor.btn.text": "Editeur XML"
   },
   "en": {
+    "grist.import.column_not_found": "Column {name} was not found in the newly created Grist table.",
     "grist.import.url.label": "Or import a file from a URL",
     "grist.import.url.button": "Import",
     "grist.import.url.invalid": "Please enter a valid HTTP or HTTPS URL.",

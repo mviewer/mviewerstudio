@@ -1,6 +1,7 @@
 import {
   createWorkspaceDoc,
   getDocTables,
+  getTableColumns,
   getWorkspaceDocsList,
   postRecordsToTable,
   postTablesToDoc,
@@ -316,7 +317,8 @@ const getActualTable = async (instanceUrl, docId, tableId, gristApiKey) => {
 
 /**
  * Select an existing Grist document or create one with a unique name and upload parsed file data into
- * a new table.
+ * a new table. Read back the created column identifiers before uploading rows,
+ * since Grist may rename the requested identifiers during table creation.
  *
  * @param {Object|Array} parsedData Parsed file data, usually a PapaParse result.
  * @param {string} tableName Grist table display name.
@@ -324,6 +326,7 @@ const getActualTable = async (instanceUrl, docId, tableId, gristApiKey) => {
  * @param {string} gristApiKey Grist API key.
  * @param {boolean} [createDocument=false] Whether to create a new document.
  * @returns {Promise<{docId: string|number, tableId: string|number, tableRef: string|number, rowsCount: number, url: string}>} Upload result.
+ * @throws {Error} When validation, document/table creation, column matching, or row upload fails.
  */
 export const sendParsedFileToGrist = async (
   parsedData,
@@ -390,13 +393,31 @@ export const sendParsedFileToGrist = async (
     gristApiKey
   );
 
+  const { columns } = await getTableColumns(
+    gristConfig.apiUrl,
+    docId,
+    actualTableId,
+    gristApiKey
+  ).then(readJson);
+  // Labels retain the original headers. Match them case-sensitively so ID and id
+  // keep their own values even when Grist renames or reorders the columns.
+  const actualColumnIds = headers.map((header) => {
+    const column = columns.find((item) => item.fields.label === header);
+    if (!column) {
+      throw new Error(
+        mviewer.tr("grist.import.column_not_found").replace("{name}", () => header)
+      );
+    }
+    return column.id;
+  });
+
   await postRecordsToTable(
     gristConfig.apiUrl,
     docId,
     actualTableId,
     {
       records: rows.map((row) => ({
-        fields: columnIds.reduce((record, columnId, index) => {
+        fields: actualColumnIds.reduce((record, columnId, index) => {
           record[columnId] = getCellValue(row, headers[index], index);
           return record;
         }, {}),

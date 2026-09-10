@@ -6,6 +6,7 @@
  * `target.appendChild(block.render());`
  */
 import UploadFile from "../../uploadFile/uploadFile.js";
+import UrlCard from "../../common/url-card/url-card.js";
 import ListGristTables from "../listGristTables/listGristTables.js";
 import Table from "../../table/table.js";
 import Input from "../../input/input.js";
@@ -180,6 +181,11 @@ const importGristArea = function (activeType = "file", options = {}) {
     maxRows: 5,
     emptyMessage: "Aucune donnee a previsualiser.",
     classes: "mb-0",
+  });
+  this.fileUrlCard = new UrlCard({
+    buttonLabel: mviewer.tr("grist.import.url.button"),
+    placeholder: mviewer.tr("grist.import.url.label"),
+    onClick: (url) => this.importFileFromUrl(url),
   });
   this.uploadFile = new UploadFile({
     accept: [".csv", ".xls", ".xlsx"],
@@ -550,6 +556,52 @@ importGristArea.prototype.updateFilePreview = function () {
   previewContainer.appendChild(openTableContainer);
 };
 
+/**
+ * Download a file from an HTTP URL and pass it to the existing upload validation.
+ * A newer local file selection takes precedence over the download.
+ *
+ * @param {string} fileUrl URL entered in the URL card.
+ * @returns {Promise<void>} Resolves once the download has finished.
+ */
+importGristArea.prototype.importFileFromUrl = async function (fileUrl) {
+  const status = this.element.querySelector("[data-upload-file-url-status]");
+  let url;
+
+  try {
+    url = new URL(fileUrl);
+    if (url.protocol !== "https:" && url.protocol !== "http:") {
+      throw new Error("Unsupported URL protocol");
+    }
+  } catch (error) {
+    status.textContent = mviewer.tr("grist.import.url.invalid");
+    return;
+  }
+
+  const verificationToken = this.uploadFile.verificationToken;
+  status.textContent = mviewer.tr("grist.import.url.loading");
+
+  try {
+    const response = await fetch(url.href, { credentials: "omit" });
+    if (!response.ok) {
+      throw new Error(`File download failed (${response.status})`);
+    }
+    const blob = await response.blob();
+    let fileName = decodeURIComponent(url.pathname.split("/").pop()) || "import";
+    const contentType = blob.type.split(";")[0].trim().toLowerCase();
+    if (contentType === "text/csv" && !fileName.toLowerCase().endsWith(".csv")) {
+      fileName += ".csv";
+    }
+    const file = new File([blob], fileName, { type: blob.type });
+
+    if (this.uploadFile.verificationToken === verificationToken) {
+      this.uploadFile.setFiles([file]);
+    }
+    status.textContent = "";
+  } catch (error) {
+    status.textContent = mviewer.tr("grist.import.url.error");
+  }
+};
+
 importGristArea.prototype.render = function () {
   this.element.innerHTML = `
     <div class="import-type-buttons__actions">
@@ -572,6 +624,10 @@ importGristArea.prototype.render = function () {
     </div>
     <div class="import-type-buttons__content" data-import-content="file">
       <div data-upload-file-area></div>
+      <div class="my-2">...ou utiliser une URL :</div>
+      <div class="mt-3" data-upload-file-url-area>
+        <p class="small mt-2 mb-0" role="status" data-upload-file-url-status></p>
+      </div>
       <div class="d-none" data-upload-file-preview></div>
     </div>
     <div class="import-type-buttons__content d-none" data-import-content="grist">
@@ -582,7 +638,10 @@ importGristArea.prototype.render = function () {
   const fileButton = this.element.querySelector('[data-import-type="file"]');
   const gristButton = this.element.querySelector('[data-import-type="grist"]');
   const uploadFileArea = this.element.querySelector("[data-upload-file-area]");
+  const urlArea = this.element.querySelector("[data-upload-file-url-area]");
   const listGristTablesArea = this.element.querySelector("[data-list-grist-tables-area]");
+
+  urlArea.prepend(this.fileUrlCard.render());
 
   if (fileButton) {
     fileButton.addEventListener("click", () => this.setActiveType("file"));

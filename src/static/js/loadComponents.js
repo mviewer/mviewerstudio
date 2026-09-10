@@ -12,6 +12,7 @@ import Switch from "./components/switch/switch.js";
 import Multiselect from "./components/multiselect/multiselect.js";
 import Tooltip from "./components/tooltip/tooltip.js";
 import ButtonCard from "./components/buttonCard/buttonCard.js";
+import UrlCard from "./components/common/url-card/url-card.js";
 import ListCard from "./components/listCard/listCard.js";
 
 // Grist components
@@ -52,6 +53,7 @@ mv.components.switch = Switch;
 mv.components.multiselect = Multiselect;
 mv.components.tooltip = Tooltip;
 mv.components.buttonCard = ButtonCard;
+mv.components.urlCard = UrlCard;
 mv.components.listCard = ListCard;
 
 // Grist components

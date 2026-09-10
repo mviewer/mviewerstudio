@@ -246,6 +246,23 @@ export const postRecordsToTable = (instanceUrl, docId, tableId, recordsData, api
 };
 
 /**
+ * Fetch the actual column identifiers and metadata stored by Grist.
+ * The response includes column labels used to match imported file headers.
+ *
+ * @param {string} instanceUrl Grist API base URL.
+ * @param {string|number} docId Document identifier.
+ * @param {string|number} tableId Table identifier.
+ * @param {string} apiKey Grist API key.
+ * @returns {Promise<Response>} Unparsed API response containing a columns array.
+ */
+export const getTableColumns = (instanceUrl, docId, tableId, apiKey) => {
+  return fetch(
+    `${instanceUrl}/api/docs/${docId}/tables/${encodeURIComponent(tableId)}/columns`,
+    { credentials: "omit", headers: getJsonHeaders(apiKey) }
+  );
+};
+
+/**
  * Add columns to a Grist table.
  *
  * @param {string} instanceUrl Base URL of the Grist instance or nginx proxy.
