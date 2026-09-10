@@ -12,6 +12,7 @@
  *
  */
 import { getUserOrgs } from "../../../utils/grist/requests.js";
+import Tooltip from "../../tooltip/tooltip.js";
 
 const GRIST_API_KEY_SESSION_STORAGE_KEY = "mviewerstudio.grist.apiKey";
 
@@ -228,9 +229,11 @@ const getGristApiKey = () => {
 GristApiKey.prototype.render = function () {
   this.element.innerHTML = `
     <div class="grist-api-key-header">
-      <label class="grist-api-key-label" for="${this.idPrefix}-input">
-        Clé API Grist <span aria-hidden="true">ⓘ</span>
-      </label>
+      <div class="d-flex align-items-center gap-1" data-grist-api-key-title>
+        <label class="grist-api-key-label" for="${this.idPrefix}-input">
+          Clé API Grist
+        </label>
+      </div>
       <a href="${this.gristApiKeyHelpUrl}" target="_blank" rel="noopener noreferrer" class="grist-api-key-help">Récupérer ma clé API Grist <i class="ri-external-link-line" aria-hidden="true"></i></a>
     </div>
     <div class="grist-api-key-row">
@@ -272,6 +275,10 @@ GristApiKey.prototype.render = function () {
       La clé n'est pas encore vérifiée.
     </p>
   `;
+
+  new Tooltip({
+    message: mviewer.tr("grist.api_key.tooltip"),
+  }).appendTo(this.element.querySelector("[data-grist-api-key-title]"));
 
   this.loadApiKey();
 

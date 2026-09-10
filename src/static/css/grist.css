@@ -146,6 +146,24 @@ STYLE FOR GRIST IMPORT
 	text-align: center;
 }
 
+.grist-wizard-step-button {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	width: 100%;
+	padding: 0;
+	border: 0;
+	background: transparent;
+	color: inherit;
+	font: inherit;
+	cursor: pointer;
+}
+
+.grist-wizard-step-button:focus-visible {
+	outline: 2px solid var(--grist-color-orange);
+	outline-offset: 4px;
+}
+
 .grist-wizard-step:not(:first-child)::before {
 	content: "";
 	position: absolute;

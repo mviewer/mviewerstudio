@@ -104,6 +104,7 @@ export const openGristLayerGeolocation = ({
       locationModes: [
         {
           value: "address",
+          tooltip: translator.tr("modal.layer.grist.mode.address.tooltip"),
           label: translator.tr("modal.layer.grist.mode.address.title"),
           description: translator.tr("modal.layer.grist.mode.address.description"),
           createContent: () => {
@@ -116,6 +117,7 @@ export const openGristLayerGeolocation = ({
         },
         {
           value: "referential",
+          tooltip: translator.tr("modal.layer.grist.mode.referential.tooltip"),
           label: translator.tr("modal.layer.grist.mode.referential.title"),
           description: translator.tr("modal.layer.grist.mode.referential.description"),
           createContent: () =>
@@ -127,6 +129,7 @@ export const openGristLayerGeolocation = ({
         },
         {
           value: "coordinates",
+          tooltip: translator.tr("modal.layer.grist.mode.coordinates.tooltip"),
           label: translator.tr("modal.layer.grist.mode.coordinates.title"),
           description: translator.tr("modal.layer.grist.mode.coordinates.description"),
           createContent: () => coordinatesArea.render(),
@@ -209,7 +212,8 @@ export const openGristLayerGeolocation = ({
   backButton.type = "button";
   backButton.className = "btn btn-link mb-3";
   backButton.innerHTML =
-    '<i class="ri-arrow-left-line"></i> Annuler et revenir aux données';
+    '<i class="ri-arrow-left-line"></i> ' +
+    translator.tr("modal.layer.grist.workflow.cancel_back_to_data");
   backButton.addEventListener("click", () => {
     workflowContainer.replaceChildren();
     workflowContainer.classList.add("d-none");
