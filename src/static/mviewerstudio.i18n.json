@@ -1,5 +1,10 @@
 {
   "fr": {
+    "grist.import.url.label": "Ou importer un fichier depuis une URL",
+    "grist.import.url.button": "Importer",
+    "grist.import.url.invalid": "Veuillez saisir une URL HTTP ou HTTPS valide.",
+    "grist.import.url.loading": "Téléchargement du fichier…",
+    "grist.import.url.error": "Impossible de télécharger le fichier. Vérifiez l’URL et que le serveur autorise son accès depuis cette application.",
     "grist.api_key.tooltip": "La clé vous permet d'accéder aux données de votre espace Grist",
     "grist.result.success": "Import réussi",
     "grist.result.failure": "Import échoué",
@@ -575,6 +580,11 @@
     "xmleditor.btn.text": "Editeur XML"
   },
   "en": {
+    "grist.import.url.label": "Or import a file from a URL",
+    "grist.import.url.button": "Import",
+    "grist.import.url.invalid": "Please enter a valid HTTP or HTTPS URL.",
+    "grist.import.url.loading": "Downloading file…",
+    "grist.import.url.error": "Unable to download the file. Check the URL and that the server allows access from this application.",
     "grist.api_key.tooltip": "The key lets you access the data in your Grist workspace",
     "grist.result.success": "Import successful",
     "grist.result.failure": "Import failed",
