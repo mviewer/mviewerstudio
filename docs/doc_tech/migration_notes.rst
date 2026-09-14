@@ -11,6 +11,11 @@ Notes de migration
 Passer de v4.3.x à v4.4.0
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
+Cette version ajoute un contrôle dans mviewerstudio pour vérifier les droits d'édition de la configuration à partir des informations de connexion de l'utilisateur (headers).
+Les requêtes passent donc par le backend Python mviewerstudio, qui se charge d'appeler le fichier de configuraton XML. 
+
+Les points 1 et 2 sont donc liés à cette modification de sécurité et aux appels réalisés par python.
+
 1. **Gestion d'un certificat local**
 
 Si vous utilisez un certificat sur votre poste/serveur, il est possible que vous deviez faire la manipulation suivante, sinon l'édition des projets précédents ne sera pas possible.
@@ -26,6 +31,18 @@ Une fois la .venv lancée, modification du fichier /.venv/lib/python3.9/site-pac
        XXX
        -----END CERTIFICATE-----
 
+2. **Proxy serveur**
+
+Si vous utilisez un proxy, il est nécessaire de le renseigner dans les variables d'environnement gunicorn (python). 
+Par exemple avec un déploiement sans docker, vous dvez modifier le fichier de service gunicorn dans /etc/systemd/system/.
+
+Rajoutez ensuite les variables selon vos besoins : 
+
+.. code-block:: sh
+
+       Environment="HTTP_PROXY=http://proxy.exemple.fr:3128"
+       Environment="HTTPS_PROXY=http://proxy.exemple.fr:3128"
+       Environment="NO_PROXY=localhost,127.0.0.1"
 
 
 Passer de v4.2.x à v4.3.0
