@@ -99,8 +99,33 @@ Ces variables doivent être définies dans l'environnement soit via la console (
 - ``CONF_PUBLISH_PATH_FROM_MVIEWER``: répertoire de publication à partir de l'instance mviewer.
 - ``EXPORT_CONF_FOLDER``: répertoire d'accès à partir de l'instance mviewer.
 - ``LOG_LEVEL``: Niveau logs (voir https://docs.python.org/3/library/logging.html)
+- ``HTTP_PROXY``: URL du proxy sortant pour les requêtes HTTP (exemple : ``http://proxy.example.org:3128``).
+- ``HTTPS_PROXY``: URL du proxy sortant pour les requêtes HTTPS (exemple : ``http://proxy.example.org:3128``).
+- ``NO_PROXY``: Hôtes ou domaines à contacter sans proxy, séparés par des virgules (exemple : ``localhost,127.0.0.1,.example.org``).
 - ``MVIEWERSTUDIO_PUBLISH_PATH``: Répertoire de publication lors du passage du mode brouillon au mode publié.
 - ``DEFAULT_ORG``: Nom de l'organisation par défaut à utiliser pour un usage non sécurisé (e.g en dehors d'un georchestra, ANONYMOUS).
+
+Les appels ``requests`` du backend, notamment dans ``src/route.py``, utilisent automatiquement ces variables.
+Définissez-les dans l'environnement du processus Python, puis redémarrez le service.
+Les variantes minuscules (``http_proxy``, ``https_proxy``, ``no_proxy``) sont également reconnues et prioritaires.
+Les valeurs exposées dans ``src/settings.py`` reflètent cet environnement : modifier uniquement la configuration Flask ne modifie pas le proxy utilisé.
+
+Proxy API Grist
+~~~~~~~~~~~~~~~
+
+Le frontend utilise ``app_conf.grist.api_url: "grist"`` pour appeler la route
+``/<préfixe>/grist/api/<chemin>`` du backend sur la même origine, sans CORS.
+``instance_url`` reste l'adresse publique utilisée pour ouvrir Grist.
+
+- ``GRIST_API_URL`` : instance distante appelée par Python (défaut : ``https://grist.numerique.gouv.fr``), sans suffixe ``/api``.
+- ``GRIST_PROXY_TIMEOUT`` : délai d'attente réseau en secondes (défaut : ``20``).
+
+Le proxy transmet la méthode, les paramètres, le corps et le jeton ``Authorization``.
+Il utilise également ``HTTP_PROXY``, ``HTTPS_PROXY`` et ``NO_PROXY``.
+Les cookies de session ne sont pas transmis : saisissez votre clé API manuellement
+à la première utilisation. Les redirections distantes sont refusées.
+La jointure géographique Python utilise aussi ``GRIST_API_URL`` directement.
+Avec Docker Compose, passez ces variables dans ``services.mviewerstudio.environment``.
 
 Autres Variables
 ----------------

@@ -1,3 +1,4 @@
+// Preserve the gateway session when calling the same-origin Grist proxy.
 /**
  * Build the authorization headers used by Grist API requests.
  *
@@ -71,7 +72,7 @@ const hasGristId = (id) => {
 export const getUserOrgs = (instanceUrl, apiKey) => {
   return fetch(`${instanceUrl}/api/orgs`, {
     method: "GET",
-    credentials: "omit",
+    credentials: "same-origin",
     headers: getAuthHeaders(apiKey),
   });
 };
@@ -95,7 +96,7 @@ export const getDescribeWorkspace = (instanceUrl, workspaceId, apiKey) => {
 
   return fetch(`${instanceUrl}/api/workspaces/${workspaceId}`, {
     method: "GET",
-    credentials: "omit",
+    credentials: "same-origin",
     headers: getAuthHeaders(apiKey),
   });
 };
@@ -135,7 +136,7 @@ export const getWorkspaceDocsList = (instanceUrl, workspaceId, apiKey) => {
 export const getOrgWorkspaces = (instanceUrl, orgId, apiKey) => {
   return fetch(`${instanceUrl}/api/orgs/${orgId}/workspaces`, {
     method: "GET",
-    credentials: "omit",
+    credentials: "same-origin",
     headers: getAuthHeaders(apiKey),
   });
 };
@@ -156,7 +157,7 @@ export const createOrgWorkspace = (instanceUrl, orgId, workspaceName, apiKey) =>
 
   return fetch(`${instanceUrl}/api/orgs/${orgId}/workspaces`, {
     method: "POST",
-    credentials: "omit",
+    credentials: "same-origin",
     headers: getJsonHeaders(apiKey),
     body: JSON.stringify(body),
   });
@@ -179,7 +180,7 @@ export const createWorkspaceDoc = (instanceUrl, workspaceId, documentName, apiKe
 
   return fetch(`${instanceUrl}/api/workspaces/${workspaceId}/docs`, {
     method: "POST",
-    credentials: "omit",
+    credentials: "same-origin",
     headers: getJsonHeaders(apiKey),
     body: JSON.stringify(body),
   });
@@ -217,7 +218,7 @@ export const getUserInfo = (instanceUrl) => {
 export const postTablesToDoc = (instanceUrl, docId, tablesData, apiKey) => {
   return fetch(getTablesUrl(instanceUrl, docId), {
     method: "POST",
-    credentials: "omit",
+    credentials: "same-origin",
     headers: getJsonHeaders(apiKey),
     body: JSON.stringify(tablesData),
   });
@@ -238,7 +239,7 @@ export const postRecordsToTable = (instanceUrl, docId, tableId, recordsData, api
     `${instanceUrl}/api/docs/${docId}/tables/${encodeURIComponent(tableId)}/records`,
     {
       method: "POST",
-      credentials: "omit",
+      credentials: "same-origin",
       headers: getJsonHeaders(apiKey),
       body: JSON.stringify(recordsData),
     }
@@ -258,7 +259,7 @@ export const postRecordsToTable = (instanceUrl, docId, tableId, recordsData, api
 export const getTableColumns = (instanceUrl, docId, tableId, apiKey) => {
   return fetch(
     `${instanceUrl}/api/docs/${docId}/tables/${encodeURIComponent(tableId)}/columns`,
-    { credentials: "omit", headers: getJsonHeaders(apiKey) }
+    { credentials: "same-origin", headers: getJsonHeaders(apiKey) }
   );
 };
 
@@ -277,7 +278,7 @@ export const postColumnsToTable = (instanceUrl, docId, tableId, columnsData, api
     `${instanceUrl}/api/docs/${docId}/tables/${encodeURIComponent(tableId)}/columns`,
     {
       method: "POST",
-      credentials: "omit",
+      credentials: "same-origin",
       headers: getJsonHeaders(apiKey),
       body: JSON.stringify(columnsData),
     }
@@ -299,7 +300,7 @@ export const patchRecordsToTable = (instanceUrl, docId, tableId, recordsData, ap
     `${instanceUrl}/api/docs/${docId}/tables/${encodeURIComponent(tableId)}/records`,
     {
       method: "PATCH",
-      credentials: "omit",
+      credentials: "same-origin",
       headers: getJsonHeaders(apiKey),
       body: JSON.stringify(recordsData),
     }
@@ -317,7 +318,7 @@ export const patchRecordsToTable = (instanceUrl, docId, tableId, recordsData, ap
 export const getDocTables = (instanceUrl, docId, apiKey) => {
   return fetch(getTablesUrl(instanceUrl, docId), {
     method: "GET",
-    credentials: "omit",
+    credentials: "same-origin",
     headers: getAuthHeaders(apiKey),
   });
 };
@@ -336,7 +337,7 @@ export const getDocTables = (instanceUrl, docId, apiKey) => {
 export const getTableRecords = (instanceUrl, docId, tableId, apiKey, options = {}) => {
   return fetch(getTableRecordsUrl(instanceUrl, docId, tableId, options.limit), {
     method: "GET",
-    credentials: "omit",
+    credentials: "same-origin",
     headers: getAuthHeaders(apiKey),
   });
 };
