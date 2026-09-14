@@ -25,7 +25,7 @@
         "user_info": "api/user",
         "proxy": "",
         "grist": {
-            "api_url": "http://localhost:90/grist",
+            "api_url": "grist",
             "instance_url": "https://grist.numerique.gouv.fr/",
             "workspace_name": "mviewerstudio",
             "geocoding_ban_control_type": "type",

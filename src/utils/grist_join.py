@@ -9,6 +9,7 @@ GeoJSON geometries, WKT and point coordinates.
 import json
 import os
 import requests
+from flask import current_app
 from urllib.parse import quote
 from .commons import geojson_to_wkt
 
@@ -49,14 +50,12 @@ def get_static_grist_config():
 
 def get_grist_api_url():
     """
-    Return the configured Grist API URL.
+    Read ``GRIST_API_URL`` from the Flask configuration.
 
-    :return: Grist API URL.
-    :rtype: str
-    :raises ValueError: If the Grist API URL is missing.
+    :return: Grist base URL without trailing slashes.
+    :raises ValueError: If the configured URL is empty.
     """
-    grist_config = get_static_grist_config()
-    api_url = grist_config.get("api_url") or grist_config.get("instance_url")
+    api_url = current_app.config["GRIST_API_URL"]
 
     if not api_url:
         raise ValueError("URL API Grist manquante.")
