@@ -30,14 +30,20 @@
             "zoom": 7
         },
         "baselayers": {
-            "positron": {
-                "id": "positron",
-                "thumbgallery": "img/basemap/positron.png",
-                "title": "CartoDb",
-                "label": "Positron",
-                "type": "OSM",
-                "url": "https://{a-c}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png",
-                "attribution": "Map tiles by  <a href=\"https://cartodb.com/attributions\">CartoDb</a>, under  <a href=\"https://creativecommons.org/licenses/by/3.0/\">CC BY 3.0 </a>"
+            "osm_grey": {
+                "id": "osm_grey",
+                "thumbgallery": "img/basemap/osm_grey.png",
+                "title": "GéoBretagne - DataGrandEst",
+                "label": "OpenStreetMap style noir et blanc",
+                "type": "WMTS",
+                "url": "https://tile.geobretagne.fr/osm/service",
+                "layers": "osm:grey",
+                "format": "image/png",
+                "fromcapacity": "false",
+                "attribution": "GéoBretagne - DataGrandEst. Données : les contributeurs d'<a href=\"https://www.openstreetmap.org/\" target=\"_blank\">OpenStreetMap </a>,  <a href=\"https://www.openstreetmap.org/copyright\" target=\"_blank\">ODbL </a>",
+                "style": "normal",
+                "matrixset": "PM",
+                "maxzoom": "22"
             },
             "ortho_ign": {
                 "id": "ortho_ign",
@@ -68,16 +74,6 @@
                 "style": "normal",
                 "matrixset": "PM",
                 "maxzoom": "22"
-            },
-            "darkmatter": {
-                "id": "darkmatter",
-                "thumbgallery": "img/basemap/darkmatter.png",
-                "title": "CartoDb",
-                "label": "Dark Matter",
-                "type": "OSM",
-                "url": "https://{a-c}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png",
-                "maxzoom": "20",
-                "attribution": "Map tiles by  <a href=\"https://cartodb.com/attributions\" target='_blank'>CartoDb</a>, under  <a href=\"https://creativecommons.org/licenses/by/3.0/\">CC BY 3.0 </a>"
             },
             "esriworldimagery": {
                 "id": "esriworldimagery",
@@ -129,21 +125,6 @@
                 "format": "image/png",
                 "fromcapacity": "false",
                 "attribution": "GéoBretagne. Données : les contributeurs d'<a href=\"https://www.openstreetmap.org/\" target=\"_blank\">OpenStreetMap </a>,  <a href=\"https://www.openstreetmap.org/copyright\" target=\"_blank\">ODbL </a>",
-                "style": "normal",
-                "matrixset": "PM",
-                "maxzoom": "22"
-            },
-            "osm_grey": {
-                "id": "osm_grey",
-                "thumbgallery": "img/basemap/osm_grey.png",
-                "title": "GéoBretagne - DataGrandEst",
-                "label": "OpenStreetMap style noir et blanc",
-                "type": "WMTS",
-                "url": "https://tile.geobretagne.fr/osm/service",
-                "layers": "osm:grey",
-                "format": "image/png",
-                "fromcapacity": "false",
-                "attribution": "GéoBretagne - DataGrandEst. Données : les contributeurs d'<a href=\"https://www.openstreetmap.org/\" target=\"_blank\">OpenStreetMap </a>,  <a href=\"https://www.openstreetmap.org/copyright\" target=\"_blank\">ODbL </a>",
                 "style": "normal",
                 "matrixset": "PM",
                 "maxzoom": "22"
