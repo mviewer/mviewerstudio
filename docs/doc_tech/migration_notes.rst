@@ -45,6 +45,30 @@ Rajoutez ensuite les variables selon vos besoins :
        Environment="NO_PROXY=localhost,127.0.0.1"
 
 
+3. **Docker : utilisateur et permissions des volumes**
+
+Les UID/GID valent par défaut ``1000:1000`` et sont personnalisables à la
+construction de l'image ou au lancement du conteneur. Avec Docker Compose,
+``MVIEWERSTUDIO_UID`` et ``MVIEWERSTUDIO_GID`` permettent notamment de conserver
+les identifiants d'une installation existante en ``999:999``, y compris avec
+une image téléchargée sans reconstruction.
+
+Les permissions des volumes doivent être préparées manuellement avant le
+démarrage : le conteneur ne modifie pas leurs propriétaires ni leurs droits.
+Les commandes de préparation et le cas SFTP sont documentés dans les guides Docker :
+
+- `Français — configuration et permissions
+  <https://github.com/mviewer/mviewerstudio/blob/master/docker/README.fr.md#permissions-docker-à-préparer-manuellement>`_
+- `English — configuration and permissions
+  <https://github.com/mviewer/mviewerstudio/blob/master/docker/README.en.md#manual-docker-permissions>`_
+
+4. **Organisation des README**
+
+Les fichiers ``README.md`` à la racine du dépôt et dans ``docker/`` orientent
+désormais vers les versions ``README.fr.md`` et ``README.en.md``.
+Les instructions détaillées propres à Docker sont regroupées dans ``docker/``.
+
+
 Passer de v4.2.x à v4.3.0
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
