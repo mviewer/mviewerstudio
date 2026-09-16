@@ -364,7 +364,11 @@ const initGristApiKey = (config) => {
  * @returns {void}
  */
 const initGristNewLayerModal = (config) => {
-  initGristWizard();
+  initGristWizard((step) => {
+    const backButton = document.getElementById(GRIST_WIZARD_BACK_BUTTON_ID);
+    clearGristCurrentStep(backButton.dataset.step);
+    setGristWizardStep(step);
+  });
   setGristLocationFields([]);
   initGristLocationSwitches();
   hideGristImportArea();

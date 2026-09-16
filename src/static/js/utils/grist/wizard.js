@@ -84,9 +84,10 @@ const setGristWizardStep = (step) => {
 /**
  * Initialize the horizontal Grist wizard component at step 1.
  *
+ * @param {Function} [onStepClick=setGristWizardStep] Callback for a previous step.
  * @returns {void}
  */
-const initGristWizard = () => {
+const initGristWizard = (onStepClick = setGristWizardStep) => {
   /** @type {GristWizardContainer|null} */
   const gristWizardContainer = document.getElementById(GRIST_WIZARD_CONTAINER_ID);
 
@@ -103,6 +104,7 @@ const initGristWizard = () => {
   gristWizardContainer.replaceChildren();
   const gristWizard = new GristWizard({
     step: 1,
+    onStepClick,
   });
   gristWizard.appendTo(gristWizardContainer);
   gristWizardContainer._gristWizard = gristWizard;
