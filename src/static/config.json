@@ -25,6 +25,7 @@
         "user_info": "api/user",
         "proxy": "",
         "grist": {
+            "srs": ["EPSG:4326", "EPSG:2154", "EPSG:3857"],
             "api_url": "grist",
             "instance_url": "https://grist.numerique.gouv.fr/",
             "workspace_name": "mviewerstudio",

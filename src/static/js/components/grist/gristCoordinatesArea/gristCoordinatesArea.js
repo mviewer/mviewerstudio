@@ -33,6 +33,20 @@ const getProjectionLabel = () => {
 };
 
 /**
+ * Read the available coordinate projections from the loaded Grist config.
+ *
+ * @returns {Array<{label: string, value: string}>} Configured SRS options.
+ */
+const getProjectionOptions = () => {
+  if (!window._conf || !window._conf.grist) {
+    return [];
+  }
+
+  const projections = window._conf.grist.srs || [];
+  return projections.map((projection) => ({ label: projection, value: projection }));
+};
+
+/**
  * Grist coordinate field selector.
  *
  * @param {Object} [options={}] Component configuration.
@@ -50,7 +64,14 @@ const GristCoordinatesArea = function (options = {}) {
   this.columnOptions = this.getColumnOptions(this.columns);
   this.xField = options.xField || getMatchingCoordinateField(this.columns, "x");
   this.yField = options.yField || getMatchingCoordinateField(this.columns, "y");
+  const projectionOptions = getProjectionOptions();
   this.projection = options.projection || "EPSG:4326";
+  if (!projectionOptions.some((projection) => projection.value === this.projection)) {
+    this.projection = "";
+    if (projectionOptions.length) {
+      this.projection = projectionOptions[0].value;
+    }
+  }
   this.displayProjection = options.displayProjection !== false;
   this.onProjectionChange = options.onProjectionChange || function () {};
   const idPrefix = options.idPrefix || "grist-coordinate";
@@ -83,11 +104,7 @@ const GristCoordinatesArea = function (options = {}) {
     id: `${idPrefix}-projection`,
     label: getProjectionLabel(),
     value: this.projection,
-    options: [
-      { label: "EPSG:4326", value: "EPSG:4326" },
-      { label: "EPSG:2154", value: "EPSG:2154" },
-      { label: "EPSG:3857", value: "EPSG:3857" },
-    ],
+    options: projectionOptions,
     classes: "grist-coordinates-field",
     labelClasses: "grist-coordinates-label",
     selectClasses: "grist-coordinates-select",
