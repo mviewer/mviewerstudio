@@ -9,6 +9,7 @@ RUN apt-get update && \
         libxml2-dev \
         libxslt1-dev \
         git \
+        curl \
     && rm -rf /var/lib/apt/lists/*
 
 RUN groupadd -g ${GID} mvuser && useradd -m -u ${UID} -g ${GID} mvuser
