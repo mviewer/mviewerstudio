@@ -1,7 +1,7 @@
 FROM python:3.11-slim
 
-ARG UID=1000
-ARG GID=1000
+ARG UID=999
+ARG GID=999
 
 #install git & studio dependencies
 RUN apt-get update && \
@@ -40,4 +40,4 @@ ENV EXPORT_CONF_FOLDER=/home/mvuser/apps/store \
     DEFAULT_ORG=public \
     MVIEWERSTUDIO_URL_PATH_PREFIX=mviewerstudio
 
-CMD ["gunicorn", "-w 1", "-b 0.0.0.0:8000", "src.app:app"]
+CMD ["gunicorn", "--no-control-socket", "-w 1", "-b 0.0.0.0:8000", "src.app:app"]
