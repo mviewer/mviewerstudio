@@ -5,10 +5,14 @@ services:
     build:
       context: .
       dockerfile: docker/Dockerfile
+      args:
+        UID: "${MVIEWERSTUDIO_UID:-1000}"
+        GID: "${MVIEWERSTUDIO_GID:-1000}"
     pull_policy: build
     image: mviewer/mviewerstudio:latest
 #    ports:
 #      - "8000:8000"
+    user: "${MVIEWERSTUDIO_UID:-1000}:${MVIEWERSTUDIO_GID:-1000}"
     environment:
       - CONF_PATH_FROM_MVIEWER=apps/store
       - CONF_PUBLISH_PATH_FROM_MVIEWER=apps/public

@@ -1,0 +1,38 @@
+<?xml version='1.0' encoding='utf-8'?>
+<mxfile host="app.diagrams.net" type="device">
+  <diagram id="docker-volumes" name="Applications et volumes Docker">
+    <mxGraphModel dx="1100" dy="800" grid="1" gridSize="10" page="1" pageScale="1" pageWidth="1100" pageHeight="850">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="host" value="HÔTE — ordinateur ou serveur exécutant Docker" style="rounded=1;whiteSpace=wrap;html=0;fillColor=#f8fafc;strokeColor=#64748b;fontSize=16;verticalAlign=top;spacingTop=15;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="30" y="30" width="1020" height="740" as="geometry" />
+        </mxCell>
+        <mxCell id="studio" value="Conteneur mviewerstudio&#10;Création et modification des cartes&#10;&#10;Montage : /home/mvuser/apps" style="rounded=1;whiteSpace=wrap;html=0;fillColor=#dae8fc;strokeColor=#64748b;fontSize=16;" vertex="1" parent="host">
+          <mxGeometry x="50" y="90" width="390" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="viewer" value="Conteneur mviewer&#10;Affichage des cartes&#10;&#10;Montage : /usr/share/nginx/html/apps" style="rounded=1;whiteSpace=wrap;html=0;fillColor=#d5e8d4;strokeColor=#64748b;fontSize=16;" vertex="1" parent="host">
+          <mxGeometry x="580" y="90" width="390" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="apps" value="./apps — répertoire persistant sur l’hôte" style="rounded=1;whiteSpace=wrap;html=0;fillColor=#fff2cc;strokeColor=#64748b;fontSize=16;verticalAlign=top;spacingTop=15;fontStyle=1;" vertex="1" parent="host">
+          <mxGeometry x="230" y="360" width="560" height="230" as="geometry" />
+        </mxCell>
+        <mxCell id="store" value="store/&#10;Brouillons et configurations&#10;en cours de modification" style="rounded=1;whiteSpace=wrap;html=0;fillColor=#ffffff;strokeColor=#64748b;fontSize=16;" vertex="1" parent="apps">
+          <mxGeometry x="30" y="80" width="235" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="public" value="public/&#10;Configurations publiées" style="rounded=1;whiteSpace=wrap;html=0;fillColor=#ffffff;strokeColor=#64748b;fontSize=16;" vertex="1" parent="apps">
+          <mxGeometry x="295" y="80" width="235" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="studio-apps" value="Lecture et écriture" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;endArrow=block;strokeColor=#2563eb;fontColor=#2563eb;fontSize=14;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;entryX=0.15;entryY=0;startArrow=block;" edge="1" parent="host" source="studio" target="apps">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="apps-viewer" value="Lecture seule (:ro)" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;endArrow=block;strokeColor=#15803d;fontColor=#15803d;fontSize=14;labelBackgroundColor=#ffffff;exitX=0.85;exitY=0;entryX=0.5;entryY=1;" edge="1" parent="host" source="apps" target="viewer">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="note" value="Un seul répertoire apps sur l’hôte, partagé par les conteneurs.&#10;Les données restent sur l’hôte lors de la recréation des conteneurs.&#10;Le service www (Nginx) monte également apps en lecture seule." style="rounded=1;whiteSpace=wrap;html=0;fillColor=#f8fafc;strokeColor=#64748b;fontSize=16;strokeColor=none;fontSize=14;" vertex="1" parent="host">
+          <mxGeometry x="100" y="630" width="820" height="75" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

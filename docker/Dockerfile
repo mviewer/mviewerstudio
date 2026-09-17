@@ -1,7 +1,7 @@
 FROM python:3.11-slim
 
-ARG UID=1000
-ARG GID=1000
+ARG UID=999
+ARG GID=999
 
 #install git & studio dependencies
 RUN apt-get update && \
@@ -29,6 +29,9 @@ COPY --chown=mvuser:mvuser install ./install
 # app-factory.py, calling app.config.from_object requires the package to be installed
 RUN pip install --user -r install/requirements.txt && pip install --user ./src
 
+# Allow a runtime UID selected with Docker --user to read the application.
+RUN chmod a+rx /home/mvuser && chmod -R a+rX src .local
+
 VOLUME [ "/home/mvuser/apps" ]
 
 ENV EXPORT_CONF_FOLDER=/home/mvuser/apps/store \
@@ -38,4 +41,4 @@ ENV EXPORT_CONF_FOLDER=/home/mvuser/apps/store \
     DEFAULT_ORG=public \
     MVIEWERSTUDIO_URL_PATH_PREFIX=mviewerstudio
 
-CMD ["gunicorn", "-w 1", "-b 0.0.0.0:8000", "src.app:app"]
+CMD ["gunicorn", "--no-control-socket", "-w 1", "-b 0.0.0.0:8000", "src.app:app"]
