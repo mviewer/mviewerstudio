@@ -8,7 +8,7 @@
 Notes de migration
 ==================================
 
-Passer de v4.3.x à v4.4.0
+Passer de v4.3.4 à v4.4.0
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Cette version ajoute un contrôle dans mviewerstudio pour vérifier les droits d'édition de la configuration à partir des informations de connexion de l'utilisateur (headers).
@@ -47,15 +47,23 @@ Rajoutez ensuite les variables selon vos besoins :
 
 3. **Docker : utilisateur et permissions des volumes**
 
-Les UID/GID valent par défaut ``1000:1000`` et sont personnalisables à la
-construction de l'image ou au lancement du conteneur. Avec Docker Compose,
-``MVIEWERSTUDIO_UID`` et ``MVIEWERSTUDIO_GID`` permettent notamment de conserver
-les identifiants d'une installation existante en ``999:999``, y compris avec
-une image téléchargée sans reconstruction.
+Dans ``docker/Dockerfile``, les arguments ``UID`` et ``GID`` valent par défaut ``999``.
 
-Les permissions des volumes doivent être préparées manuellement avant le
-démarrage : le conteneur ne modifie pas leurs propriétaires ni leurs droits.
-Les commandes de préparation et le cas SFTP sont documentés dans les guides Docker :
+Ll'utilisateur du conteneur utilise donc les identifiants ``999:999``. Ils sont à présent personnalisables au build de l'image via ``--build-arg UID=...`` et ``--build-arg GID=...``.
+Docker Compose utilisera maintenant ``1000:1000`` par défaut, au build ou runtime (lancement du conteneur).
+
+Comment faire lors passage de v4.3.4 à v4.4.0 si vous souhaitez conserver les identifiants ``999:999`` ?
+
+Pour conserver les identifiants ``999:999`` ajoutez ces valeurs dans le fichier ``.env``, y compris avec une image téléchargée sans reconstruction :
+
+.. code-block:: sh
+
+       MVIEWERSTUDIO_UID=999
+       MVIEWERSTUDIO_GID=999
+
+Les permissions des volumes doivent être préparées manuellement avant le démarrage : le conteneur ne modifie pas leurs propriétaires ni leurs droits.
+
+Les commandes de préparation et le cas d'utilisation avec un SFTP sont documentés dans les guides Docker de la documentation :
 
 - `Français — configuration et permissions
   <https://github.com/mviewer/mviewerstudio/blob/master/docker/README.fr.md#permissions-docker-à-préparer-manuellement>`_
