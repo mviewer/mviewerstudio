@@ -85,14 +85,11 @@ export const openGristLayerGeolocation = ({
     hideData: true,
     managedNavigation: true,
     onStepClick: (step) => {
-      const nextButton = gristContent.element.querySelector(`#${gristContent.ids.next}`);
-      if (nextButton.disabled && gristContent.element.dataset.step !== "1") {
-        return;
+      const backButton = gristContent.element.querySelector(`#${gristContent.ids.back}`);
+      const currentStep = parseInt(gristContent.element.dataset.step, 10);
+      for (let previousStep = currentStep; previousStep > step; previousStep--) {
+        backButton.click();
       }
-      if (step >= gristContent.element.dataset.step) {
-        return;
-      }
-      gristContent.setStep(step);
     },
     state: {
       step: hasApiKey ? 2 : 1,

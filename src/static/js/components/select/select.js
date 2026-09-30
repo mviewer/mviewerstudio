@@ -47,7 +47,7 @@ const Select = function (options = {}) {
   this.element = document.createElement("div");
   this.element.className = `form-group ${this.classes}`.trim();
 
-  this.visible = options.visible || true;
+  this.visible = options.visible !== false;
 };
 
 /**
@@ -138,14 +138,24 @@ Select.prototype.setDisabled = function (disabled) {
   return this.element;
 };
 
+/**
+ * Show or hide the field and its label without changing its options.
+ *
+ * @param {boolean} visible Whether the field is displayed.
+ * @returns {void}
+ */
 Select.prototype.setVisible = function (visible) {
-  const select = this.getSelect();
-  visible ? select.remove("d-none") : select.add("d-none");
+  this.visible = visible;
+  this.element.classList.toggle("d-none", !visible);
 };
 
+/**
+ * Return the field visibility state.
+ *
+ * @returns {boolean} Whether the field is displayed.
+ */
 Select.prototype.getVisible = function () {
-  const select = this.getSelect();
-  return select ? select.visible : this.visible;
+  return this.visible;
 };
 
 /**

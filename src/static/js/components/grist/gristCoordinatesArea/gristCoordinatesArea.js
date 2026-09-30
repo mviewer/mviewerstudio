@@ -143,6 +143,18 @@ GristCoordinatesArea.prototype.getProjection = function () {
 };
 
 /**
+ * Update the selected projection and notify the caller.
+ *
+ * @param {string} projection Projection identifier.
+ * @returns {void}
+ */
+GristCoordinatesArea.prototype.setProjection = function (projection) {
+  this.projection = projection;
+  this.projectionSelect.setValue(projection);
+  this.onProjectionChange(projection);
+};
+
+/**
  * Render the projection selector outside the coordinate fields card.
  *
  * @returns {HTMLElement} Projection selector element.

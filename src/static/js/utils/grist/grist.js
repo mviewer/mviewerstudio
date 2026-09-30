@@ -1,6 +1,7 @@
 import {
   getActiveGristLocationSwitchId,
   getGristAddressFields,
+  initGristLocationProjection,
   renderGristLocationArea,
   setGristLocationFields,
   setGristLocationSwitches,
@@ -224,6 +225,7 @@ const initGristLocationSwitches = () => {
   ];
   const switches = [];
   setGristLocationSwitches(switches);
+  initGristLocationProjection();
   initGristLocationRefreshButton();
 
   // Only one localization mode can be active. Re-enabling the last selected
@@ -366,8 +368,10 @@ const initGristApiKey = (config) => {
 const initGristNewLayerModal = (config) => {
   initGristWizard((step) => {
     const backButton = document.getElementById(GRIST_WIZARD_BACK_BUTTON_ID);
-    clearGristCurrentStep(backButton.dataset.step);
-    setGristWizardStep(step);
+    const currentStep = parseInt(backButton.dataset.step, 10);
+    for (let previousStep = currentStep; previousStep > step; previousStep--) {
+      backButton.click();
+    }
   });
   setGristLocationFields([]);
   initGristLocationSwitches();

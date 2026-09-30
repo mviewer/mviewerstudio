@@ -1,7 +1,13 @@
-import { GRIST_LOCATION_SWITCH_IDS } from "./const.js";
+import {
+  GRIST_ADDRESS_PROJECTION,
+  GRIST_LOCATION_PROJECTION_CARD_ID,
+  GRIST_LOCATION_SWITCH_IDS,
+  GRIST_LOCATION_TARGET_IDS,
+} from "./const.js";
 
 const gristLocationState = {
   activeArea: null,
+  coordinatesArea: null,
   fields: [],
   switches: [],
 };
@@ -12,6 +18,38 @@ const getGristComponent = (componentName) => {
   }
 
   return mv.components.grist[componentName];
+};
+
+/**
+ * Initialize coordinate controls and place their projection selector in the
+ * last card of the new-layer localization step.
+ *
+ * @returns {void}
+ */
+const initGristLocationProjection = () => {
+  const coordinatesTarget = document.getElementById(GRIST_LOCATION_TARGET_IDS.xy);
+  const GristCoordinatesArea = getGristComponent("gristCoordinatesArea");
+  if (!coordinatesTarget || !GristCoordinatesArea || !mv.components.listCard) {
+    return;
+  }
+
+  const previousCard = document.getElementById(GRIST_LOCATION_PROJECTION_CARD_ID);
+  if (previousCard) {
+    previousCard.remove();
+  }
+
+  const coordinatesArea = new GristCoordinatesArea({
+    columns: gristLocationState.fields,
+    idPrefix: "newlayer-grist-coordinate",
+    displayProjection: false,
+  });
+  gristLocationState.coordinatesArea = coordinatesArea;
+  const projectionCard = new mv.components.listCard({
+    title: mviewer.tr("modal.layer.grist.mode.coordinates.projection"),
+    items: [coordinatesArea.renderProjection()],
+  }).render();
+  projectionCard.id = GRIST_LOCATION_PROJECTION_CARD_ID;
+  coordinatesTarget.parentElement.appendChild(projectionCard);
 };
 
 /**
@@ -52,6 +90,9 @@ const getGristAddressFields = () => {
  */
 const setGristLocationFields = (fields = []) => {
   gristLocationState.fields = fields.filter(Boolean);
+  if (gristLocationState.coordinatesArea) {
+    gristLocationState.coordinatesArea.setColumnOptions(gristLocationState.fields);
+  }
 
   const activeSwitchId = getActiveGristLocationSwitchId();
   if (activeSwitchId) {
@@ -80,6 +121,9 @@ const renderGristLocationArea = (selectedSwitchId) => {
   }
 
   if (selectedSwitchId === GRIST_LOCATION_SWITCH_IDS.address) {
+    if (gristLocationState.coordinatesArea) {
+      gristLocationState.coordinatesArea.setProjection(GRIST_ADDRESS_PROJECTION);
+    }
     const GristAddressArea = getGristComponent("gristAddressArea");
     if (!GristAddressArea) {
       return;
@@ -108,15 +152,10 @@ const renderGristLocationArea = (selectedSwitchId) => {
   }
 
   if (selectedSwitchId === GRIST_LOCATION_SWITCH_IDS.xy) {
-    const GristCoordinatesArea = getGristComponent("gristCoordinatesArea");
-    if (!GristCoordinatesArea) {
+    const coordinatesArea = gristLocationState.coordinatesArea;
+    if (!coordinatesArea) {
       return;
     }
-
-    const coordinatesArea = new GristCoordinatesArea({
-      columns: gristLocationState.fields,
-      idPrefix: "newlayer-grist-coordinate",
-    });
     gristLocationState.activeArea = coordinatesArea;
     selectedSwitch.setContent(coordinatesArea.render());
   }
@@ -133,6 +172,7 @@ const setGristLocationSwitches = (switches = []) => {
 };
 
 export {
+  initGristLocationProjection,
   getGristAddressFields,
   getActiveGristLocationSwitchId,
   renderGristLocationArea,
