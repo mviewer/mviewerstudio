@@ -20,6 +20,7 @@ class GristProxyTests(unittest.TestCase):
         self.app.config.update(
             EXPORT_CONF_FOLDER=directory.name,
             GRIST_API_URL="https://grist.example.org",
+            GRIST_CORS_ORIGINS=["http://localhost:5051"],
             TESTING=True,
             MVIEWERSTUDIO_URL_PATH_PREFIX="/studio/",
         )
@@ -74,6 +75,53 @@ class GristProxyTests(unittest.TestCase):
             self.assertEqual(self.client.get("/studio/grist/api/profile/apikey").status_code, 401)
             self.assertEqual(self.client.get("/studio/grist/api/%2e%2e/admin").status_code, 400)
             send.assert_not_called()
+
+    def test_cors_preflight_does_not_call_upstream(self):
+        with patch("src.proxy_grist.requests.request") as send:
+            response = self.client.options(
+                "/studio/grist/api/docs/doc/download/csv?tableId=Table",
+                headers={
+                    "Origin": "http://localhost:5051",
+                    "Access-Control-Request-Method": "GET",
+                    "Access-Control-Request-Headers": "authorization",
+                },
+            )
+            self.assertEqual(response.status_code, 200)
+            self.assertEqual(response.headers["Access-Control-Allow-Origin"], "http://localhost:5051")
+            self.assertIn("Authorization", response.headers["Access-Control-Allow-Headers"])
+            self.assertEqual(response.headers["Access-Control-Allow-Methods"], "GET, HEAD, OPTIONS")
+            self.assertNotIn("Access-Control-Allow-Credentials", response.headers)
+            send.assert_not_called()
+
+    def test_cors_on_data_and_errors(self):
+        with patch("src.proxy_grist.requests.request") as send:
+            for status in (200, 401, 403):
+                with self.subTest(status=status):
+                    upstream = requests.Response()
+                    upstream.status_code = status
+                    upstream._content = b"result"
+                    upstream._content_consumed = True
+                    send.return_value = upstream
+                    response = self.client.get(
+                        "/studio/grist/api/docs/doc/download/csv?tableId=Table",
+                        headers={"Origin": "http://localhost:5051", "Authorization": "Bearer test-token"},
+                    )
+                    self.assertEqual(response.status_code, status)
+                    self.assertEqual(response.headers["Access-Control-Allow-Origin"], "http://localhost:5051")
+                    self.assertIn("Origin", response.vary)
+
+    def test_cors_is_limited_to_configured_origins_and_proxy(self):
+        response = self.client.options(
+            "/studio/grist/api/orgs", headers={"Origin": "https://other.example.org"}
+        )
+        self.assertNotIn("Access-Control-Allow-Origin", response.headers)
+        response = self.client.get("/studio/", headers={"Origin": "http://localhost:5051"})
+        self.assertNotIn("Access-Control-Allow-Origin", response.headers)
+        self.app.config["GRIST_CORS_ORIGINS"] = []
+        response = self.client.options(
+            "/studio/grist/api/orgs", headers={"Origin": "http://localhost:5051"}
+        )
+        self.assertNotIn("Access-Control-Allow-Origin", response.headers)
 
     def test_join_uses_backend_url(self):
         with self.app.app_context():

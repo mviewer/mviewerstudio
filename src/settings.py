@@ -20,6 +20,11 @@ class Config:
     NO_PROXY = os.getenv("no_proxy", os.getenv("NO_PROXY"))
     GRIST_API_URL = os.getenv("GRIST_API_URL", "https://grist.numerique.gouv.fr")
     GRIST_PROXY_TIMEOUT = float(os.getenv("GRIST_PROXY_TIMEOUT", "20"))
+    GRIST_CORS_ORIGINS = [
+        origin.strip()
+        for origin in os.getenv("GRIST_CORS_ORIGINS", "").split(",")
+        if origin.strip()
+    ]
 
     PROXY_WHITE_LIST = os.getenv(
         "MVIEWERSTUDIO_PROXY_WHITE_LIST",

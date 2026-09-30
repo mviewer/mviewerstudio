@@ -9,6 +9,26 @@ from werkzeug.exceptions import BadRequest
 grist_proxy_blueprint = Blueprint("grist-proxy", __name__)
 
 
+@grist_proxy_blueprint.after_request
+def add_grist_cors_headers(response: Response) -> Response:
+    """Allow configured mviewer origins to read Grist using an API token.
+
+    Applies to automatic OPTIONS responses and proxy errors as well as data.
+    Session cookies and cross-origin write methods are not enabled.
+    """
+    response.vary.add("Origin")
+    origin = request.headers.get("Origin")
+    if origin not in current_app.config.get("GRIST_CORS_ORIGINS", []):
+        return response
+    if request.method not in ("GET", "HEAD", "OPTIONS"):
+        return response
+
+    response.headers["Access-Control-Allow-Origin"] = origin
+    response.headers["Access-Control-Allow-Methods"] = "GET, HEAD, OPTIONS"
+    response.headers["Access-Control-Allow-Headers"] = "Authorization, Content-Type, Accept"
+    return response
+
+
 @grist_proxy_blueprint.route(
     "/grist/api/<path:api_path>", methods=["GET", "POST", "PUT", "PATCH", "DELETE"]
 )
