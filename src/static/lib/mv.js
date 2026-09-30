@@ -615,7 +615,16 @@ var mv = (function () {
       if (gristTargetTable && gristLocationMode) {
         var gristLayerId = gristTargetTable.tableId + "-" + mv.uuid();
         var gristLayerName = gristTargetTable.name || gristTargetTable.tableId;
-        var gristApiUrl = _conf.grist.api_url || _conf.grist.instance_url;
+        // calculate the Grist API URL, using the Studio proxy if configured
+        // will fall back to the Grist instance URL if not
+        var gristApiUrl = _conf.grist.proxy;
+        if (!gristApiUrl) {
+          gristApiUrl = new URL(
+            _conf.grist.api_url || _conf.grist.instance_url,
+            window.location.href
+          ).href.replace(/\/+$/, "") + "/api";
+        }
+        gristApiUrl = gristApiUrl.replace(/\/+$/, "");
         var gristLayer = {
           id: gristLayerId,
           title: gristLayerName,
@@ -625,7 +634,7 @@ var mv = (function () {
           isGrist: true,
           url:
             gristApiUrl +
-            "/api/docs/" +
+            "/docs/" +
             encodeURIComponent(gristTargetTable.docId) +
             "/download/csv?tableId=" +
             encodeURIComponent(gristTargetTable.tableId),
