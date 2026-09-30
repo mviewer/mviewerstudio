@@ -120,14 +120,16 @@ const getGeocodedValue = (row, field) => {
   return row[field];
 };
 
+/**
+ * Check whether a BAN result has insufficient geocoding quality.
+ *
+ * @param {Object} row BAN result row.
+ * @param {Object} gristConfig Geocoding control mode, accepted types and score threshold.
+ * @returns {boolean} True when the type is not accepted or the score is insufficient.
+ */
 const isUngeocodedRow = (row, gristConfig) => {
-  if (gristConfig.geocodingBanControlType === "type") {
-    const minimalTypeIndex = gristConfig.geocodingBanTypeOrder.indexOf(
-      gristConfig.geocodingBanMinimalType
-    );
-    const typeIndex = gristConfig.geocodingBanTypeOrder.indexOf(row.result_type);
-
-    return !row.result_type || typeIndex < 0 || typeIndex > minimalTypeIndex;
+  if (gristConfig.geocodingBanControlMode === "type") {
+    return !gristConfig.geocodingBanControlType.includes(row.result_type);
   }
 
   if (!row.result_score) {

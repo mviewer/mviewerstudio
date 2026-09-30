@@ -19,10 +19,9 @@ import {
  * @property {string} apiUrl Grist REST API URL.
  * @property {string} orgId Grist organization id or domain.
  * @property {string} workspaceName Workspace name used by mviewerstudio.
- * @property {string} geocodingBanControlType BAN result control mode.
+ * @property {string} geocodingBanControlMode BAN result control mode: type or score.
+ * @property {string[]} geocodingBanControlType Accepted BAN result types.
  * @property {number} geocodingScoreThreshold Minimum accepted BAN score.
- * @property {string[]} geocodingBanTypeOrder BAN result type quality order.
- * @property {string} geocodingBanMinimalType Minimum accepted BAN result type.
  */
 
 /**
@@ -43,11 +42,9 @@ export const getGristConfig = () => {
   const apiUrl = gristConfig.api_url || instanceUrl;
   const orgId = gristConfig.org_id || "Personal";
   const workspaceName = gristConfig.workspace_name;
-  const geocodingBanControlType = gristConfig.geocoding_ban_control_type || "score";
+  const geocodingBanControlMode = gristConfig.geocoding_ban_control_type || "score";
+  const geocodingBanControlType = gristConfig.geocoding_ban_type_order || [];
   const geocodingScoreThreshold = gristConfig.geocoding_score_threshold || 0.8;
-  const geocodingBanTypeOrder = gristConfig.geocoding_ban_type_order || [];
-  const geocodingBanMinimalType =
-    gristConfig.geocoding_ban_minimal_type || "street";
 
   if (!instanceUrl || !apiUrl || !orgId || !workspaceName) {
     throw new Error("Missing Grist configuration");
@@ -58,10 +55,9 @@ export const getGristConfig = () => {
     apiUrl,
     orgId,
     workspaceName,
+    geocodingBanControlMode,
     geocodingBanControlType,
     geocodingScoreThreshold,
-    geocodingBanTypeOrder,
-    geocodingBanMinimalType,
   };
 };
 
