@@ -58,3 +58,12 @@ Ces paramètres sont obligatoires.
 - ``store_style_service`` : URL vers le service (API) à utiliser pour sauvegarder un style. Valeur par défaut ``api/style``.
 - ``publish_url`` : URL de publication à utiliser (par exemple https//public-map/). Si besoin, Apache devra avoir une règle pour orienter cette URL vers le répertoire de publication (voir settings.py - MVIEWERSTUDIO_PUBLISH_PATH).
 - ``public_folder`` : voir détail plus bas.
+
+
+Configuration des proxys
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+Le paramètre ``app_conf.proxy`` configure le proxy général des services distants.
+Dans ``app_conf.grist``, ``api_url`` définit la base des appels de Studio, ``proxy`` l'URL absolue de l'API du proxy utilisée dans les couches exportées et ``instance_url`` l'adresse publique de Grist.
+
+Consultez :doc:`proxy` pour les valeurs à renseigner, les exemples de déploiement et la configuration CORS côté backend.

@@ -46,6 +46,7 @@ Cette partie est dédiée aux personnes qui ont vocation à déployer et configu
    doc_tech/install_python
    doc_tech/install_docker
    doc_tech/config_front
+   doc_tech/proxy
    doc_tech/migration_notes
    doc_tech/move_to_python
    doc_tech/dev_corner

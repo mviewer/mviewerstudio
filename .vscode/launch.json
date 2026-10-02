@@ -12,6 +12,7 @@
                         "env": {
                                 "FLASK_APP": "/home/gaetan/projects/santegraphie/mviewerstudio/src/app.py",
                                 "FLASK_DEBUG": "1",
+                                "GRIST_CORS_ORIGINS": "http://localhost:5051",
                                 "CONF_PATH_FROM_MVIEWER":"apps/store",
                                 "EXPORT_CONF_FOLDER":"/home/gaetan/projects/santegraphie/mviewer/apps/store/",
                                 "MVIEWERSTUDIO_PUBLISH_PATH":"/home/gaetan/projects/santegraphie/mviewer/apps/public",
