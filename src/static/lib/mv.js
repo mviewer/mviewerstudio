@@ -37,6 +37,7 @@ var mv = (function () {
       "metadata-csw": $(layerInfos).attr("metadata-csw"),
       attribution: $(layerInfos).attr("attribution"),
       filter: $(layerInfos).attr("filter"),
+      servertype: $(layerInfos).attr("servertype") || "geoserver",
       visible: $(layerInfos).attr("visible") === "true",
       opacity: $(layerInfos).attr("opacity"),
       template: $(layerInfos).find("template").text(),
@@ -661,6 +662,7 @@ var mv = (function () {
             "metadata-csw": conf.metadataCsw,
             visible: true,
             showintoc: true,
+            servertype: document.getElementById("catalog-servertype").value,
           };
           config.themes[themeid].layers.push(layer);
           addLayer(layer.title, layer.id, themeid);
@@ -691,6 +693,7 @@ var mv = (function () {
     resetConfLayer: function () {
       // Reset input
       document.getElementById("newlayer-type").value = "";
+      document.getElementById("catalog-servertype").value = "geoserver";
       [...document.querySelectorAll(".param-type")].forEach((e) =>
         e.classList.add("d-none")
       );
@@ -812,6 +815,8 @@ var mv = (function () {
         $("#frm-scalemin").val(layer.scalemin);
         $("#frm-scalemax").val(layer.scalemax);
         $("#frm-filter").val(layer.filter);
+        $("#frm-servertype").val(layer.servertype || "geoserver");
+        mv.updateFilterPlaceholder($("#frm-servertype").val());
         $("#frm-layer-styletitle").val(layer.styletitle || "");
         $("#frm-layer-dynamiclegend").prop("checked", layer.dynamiclegend);
         if (layer.attributefilter) {
@@ -993,6 +998,7 @@ var mv = (function () {
           delete layer.scalemax;
         }
         layer.filter = $("#frm-filter").val();
+        layer.servertype = $("#frm-servertype").val();
         //Controle FilterAttributes
         var fld = $("#opt-attributefield").val();
         var values = $("#control_fields_tags").val();
@@ -1078,7 +1084,7 @@ var mv = (function () {
       var require_parameters = ["id", "name", "type", "url"];
       require_parameters.forEach(function (p, i) {
         var value = l[p];
-        if (p == "url") {
+        if (["url", "name"].includes(p)) {
           value = mv.escapeXml(value);
         }
         layer_parameters[p] = [p, '="', value, '"'].join("");
@@ -1105,6 +1111,7 @@ var mv = (function () {
         "secure",
         "useproxy",
         "filter",
+        "servertype",
         "sld",
         "legendurl",
         "scalemin",
@@ -1124,9 +1131,10 @@ var mv = (function () {
       ];
       optional_parameters.forEach((param) => {
         if (l[param] == undefined) return;
+        if (param === "servertype" && l[param] === "geoserver") return;
         let value = l[param];
 
-        if (["metadata", "metadata-csw", "legendurl"].includes(param)) {
+        if (["metadata", "metadata-csw", "legendurl", "filter"].includes(param)) {
           value = mv.escapeXml(value);
         }
         layer_parameters[param] = `${param}="${value}"`;
@@ -1286,6 +1294,12 @@ var mv = (function () {
             .val("link")
             .trigger("change");
         });
+    },
+
+    updateFilterPlaceholder: function (servertype) {
+      const types = { ogc: "ogc", qgis: "qgis", geoserver: "cql" };
+      const key = `modal.layer.filter.${ types[servertype] || "cql" }.ph`;
+      $("#frm-filter").attr("placeholder", mviewer.tr(key));
     },
 
     showHideQueryParameters: function (value) {

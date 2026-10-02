@@ -1184,6 +1184,14 @@
                                         <label for="frm-layer-styletitle" ><span i18n="modal.layer.style.title">Libellé de la liste déroulante des styles</span><span class="tooltip-info" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="tooltip.analyse"><i class="ri-information-line"></i></label>
                                         <input type="text" class="form-control" id="frm-layer-styletitle" placeholder="Libellé de la liste des styles" i18n="modal.layer.style.placeholder">
                                     </div>  
+                                    <div class="form-group mt-4 layerOption-wms advanced d-none" style="display: none;">
+                                        <label class="control-label" for="frm-servertype" i18n="modal.layer.servertype">Type de serveur</label>
+                                        <select id="frm-servertype" class="form-control" onchange="mv.updateFilterPlaceholder(this.value);">
+                                            <option value="geoserver" i18n="modal.layer.servertype.geoserver">GeoServer</option>
+                                            <option value="ogc" i18n="modal.layer.servertype.ogc">OGC (Filter Encoding)</option>
+                                            <option value="qgis" i18n="modal.layer.servertype.qgis">QGIS Server</option>
+                                        </select>
+                                    </div>
                                     <div class="mt-4 layerOption-tms d-none">                                        
                                         <h6>Style de la donnée</h6>  
                                         <div class="form-group">
@@ -1517,7 +1525,7 @@
                                 <div class="row">
                                     <div class="col-md-12">
                                         <div class="input-group mb-3">
-                                            <input type="text" type="textarea" class="form-control" id="frm-filter" placeholder="Expression CQL"  i18n="modal.layer.filter.cql.ph">
+                                            <input type="text" type="textarea" class="form-control" id="frm-filter" placeholder="Expression CQL">
                                             <div class="input-group-append">
                                               <button class="btn btn-info" type="button" id="button-addon2" onclick="$('#filter_wizard').toggle();"><i class="bi bi-plus-lg"></i> <span i18n="modal.layer.filter.serverside.create">Créer un filtre</span></button>
                                             </div>
@@ -1760,6 +1768,18 @@
                                     </div>
                                 </div>
                             </div>  
+                            <div class="row advanced" style="display: none;">
+                                <div class="col-md-12">
+                                    <div class="form-group mb-3">
+                                        <label class="control-label" for="catalog-servertype" i18n="modal.layer.servertype">Type de serveur</label>
+                                        <select id="catalog-servertype" class="form-control">
+                                            <option value="geoserver" i18n="modal.layer.servertype.geoserver">GeoServer</option>
+                                            <option value="ogc" i18n="modal.layer.servertype.ogc">OGC (Filter Encoding)</option>
+                                            <option value="qgis" i18n="modal.layer.servertype.qgis">QGIS Server</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
                             <div class="row" style="padding: 1rem;" id="search-message" i18n="modal.layer.new.provider.noneselected">
                                 Sélectionner un catalogue de données
                             </div>
