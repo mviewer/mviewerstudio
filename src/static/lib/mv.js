@@ -846,19 +846,18 @@ var mv = (function () {
           .getWfsInfosFromWms(layer.url, layerid)
           .then(({ describeLayer }) => {
             ogc.getFieldsFromWMS(describeLayer, layerid, themeid);
-            return ogc.getFeatures(
-              describeLayer.wfs_url,
-              { TYPENAME: layerid, MAXFEATURES: 1 },
-              (data) => {
-                if (config.temp.layers[layerid]) {
-                  config.temp.layers[layerid].features = data?.features || [];
-                  mv.createDispatchEvent("wfsFeaturesReady", {
-                    features: config.temp.layers[layerid].features,
-                  });
-                }
-              }
-            );
+            return describeLayer;
           })
+          .then(({ wfs_url }) =>
+            ogc.getFeatures(wfs_url, { TYPENAME: layerid, MAXFEATURES: 1 }, (data) => {
+              if (config.temp.layers[layerid]) {
+                config.temp.layers[layerid].features = data?.features || [];
+                mv.createDispatchEvent("wfsFeaturesReady", {
+                  features: config.temp.layers[layerid].features,
+                });
+              }
+            })
+          )
           .then(() => ogc.getStylesFromWMS(layer.url, layerid));
       }
 
