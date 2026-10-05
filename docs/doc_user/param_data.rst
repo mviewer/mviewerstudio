@@ -106,6 +106,8 @@ Vous pouvez chercher un jeu de données dans un catalogue (ex. Région Bretagne)
               :alt: Chercher une donnée
               :align: center
 
+- :guilabel:`mode avancé` en choisissant le ``Type de serveur`` des données à ajouter (``GeoServer`` par défaut, ``OGC (Filter Encoding)`` ou ``QGIS Server``). Cette valeur s'applique à toutes les données sélectionnées. Elle peut ensuite être modifiée donnée par donnée dans l'onglet Général.
+
 Ajouter une donnée depuis des paramètres
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -164,6 +166,7 @@ L'onglet général recense les principales options de la donnée.
 * ``Afficher le panneau de la couche déplié au démarrage`` : le pannneau d'affichage de la donnée sera déplié au démarrage. Il contient filtre, opacité, métadonnée...
 * ``Styles disponibles`` : choix du·des style·s de la donnée dans notre application. Possibilité d'éditer le libellé du style.
 * ``Libellé de la liste des styles`` : titre de la liste de sélection des styles.
+* ``Type de serveur`` :guilabel:`mode avancé` : type du serveur cartographique qui diffuse la donnée WMS (``GeoServer`` par défaut, ``OGC (Filter Encoding)`` pour MapServer, ``QGIS Server``). Cette valeur détermine la syntaxe du filtre de l'onglet filtre (voir ci-dessous). Elle est enregistrée dans l'attribut ``servertype`` de la donnée.
 
 Onglet Interrogation
 ~~~~~~~~~~~~~~~~~~~~~
@@ -202,12 +205,23 @@ L'onglet filtre permet de filtrer les données à afficher sur la carte.
               :alt: Filtre
               :align: center
 
+* ``Filtre actif`` : expression de filtre appliquée à la donnée. Elle doit être écrite dans la syntaxe du serveur, choisie avec le ``Type de serveur`` de l'onglet Général (:guilabel:`mode avancé`).
+* ``Créer un filtre`` : assistant qui génère le filtre.
+
 * ``Filtre attributaire`` : Filtre selon un attribut. Utilisation d'un filtre cql_.
 * ``Filtre géographique`` : Filtre selon la géométrie. Utilisation d'un filtre cql_.
 
 .. _cql: https://docs.geoserver.org/stable/en/user/tutorials/cql/cql_tutorial.html#cql-tutorial
 
+Syntaxe du filtre selon le type de serveur :
 
+* ``GeoServer`` : filtre CQL. Exemple : ``code = '35'``.
+* ``QGIS Server`` : expression QGIS, avec les noms de champs entre guillemets doubles et un espace autour de chaque symbole. Le nom de la couche en préfixe (``couche:``) est facultatif, mviewer l'ajoute au besoin. Exemples : ``"code" = '35'`` ou ``"code" IN ( '22' , '29' , '35' , '56' )``.
+* ``OGC (Filter Encoding)`` : filtre XML OGC, sans préfixe. Exemple :
+
+.. code-block:: xml
+   <Filter xmlns="http://www.opengis.net/ogc"><PropertyIsEqualTo><PropertyName>NAME</PropertyName><Literal>Paris</Literal></PropertyIsEqualTo></Filter>
+.. note:: Le filtre est transmis tel quel au serveur : mviewer ne convertit pas le filtre saisi d'une syntaxe à l'autre. Certains serveurs peuvent refuser ou ignorer ce paramètre (par exemple derrière un pare-feu).
 
 Onglet liste de choix
 ~~~~~~~~~~~~~~~~~~~~~~~~
