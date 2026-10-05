@@ -208,8 +208,8 @@ L'onglet filtre permet de filtrer les données à afficher sur la carte.
 * ``Filtre actif`` : expression de filtre appliquée à la donnée. Elle doit être écrite dans la syntaxe du serveur, choisie avec le ``Type de serveur`` de l'onglet Général (:guilabel:`mode avancé`).
 * ``Créer un filtre`` : assistant qui génère le filtre.
 
-* ``Filtre attributaire`` : Filtre selon un attribut. Utilisation d'un filtre cql_.
-* ``Filtre géographique`` : Filtre selon la géométrie. Utilisation d'un filtre cql_.
+* ``Filtre attributaire`` : Filtre selon un attribut.
+* ``Filtre géographique`` : Filtre selon la géométrie.
 
 .. _cql: https://docs.geoserver.org/stable/en/user/tutorials/cql/cql_tutorial.html#cql-tutorial
 
