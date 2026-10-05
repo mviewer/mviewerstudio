@@ -432,28 +432,45 @@ var mv = (function () {
       $("#mod-featuresview").attr("data-bs-target", option);
     },
 
+    translateFilterDefinition: function (definition) {
+      var serverType = $("#frm-servertype").val();
+      if (serverType === "ogc") {
+        return serializeOgcFilterToXml(buildOgcFilter(definition)) || "";
+      }
+      return buildFilterExpression(definition, serverType === "qgis" ? "qgis" : "geoserver");
+    },
+
+    translateIntersectsFilter: function (geomName, geometry, wkt, srsName) {
+      var serverType = $("#frm-servertype").val();
+      if (serverType === "ogc") {
+        return serializeOgcFilterToXml(ol.format.filter.intersects(geomName, geometry, srsName)) || "";
+      }
+      if (serverType === "qgis") {
+        return "intersects($geometry, geom_from_wkt('" + escapeFilterLiteral(wkt) + "'))";
+      }
+      return "INTERSECTS(" + geomName + "," + wkt + ")";
+    },
+
     saveSourceAttributeFilter: function () {
-      var values = [];
       var layerid = $(".layers-list-item.active").attr("data-layerid");
       var fld = $("#attribute_filter_fields").val();
       var operator = $("#attribute_filter_operators").val();
       var selected = $("#source_fields_tags").tagsinput("items");
-      var type = config.temp.layers[layerid].fields[fld].type;
+      var type = config.temp.layers[layerid]?.fields?.[fld]?.type;
+      if (!fld || !selected.length) return;
 
-      $.each(selected, function (id, value) {
-        if (type === "string") {
-          values.push("'" + value + "'");
-        } else {
-          values.push(value);
-        }
+      var literals = selected.map(function (value) {
+        return type === "string" || isNaN(Number(value)) ? value : Number(value);
       });
-      var expression = "";
-      if (operator === "=") {
-        expression = values[0];
-      } else {
-        expression = "(" + values.join(",") + ")";
+      var equalities = literals.map(function (value) {
+        return { operator: "EqualTo", field: fld, value: value, matchCase: true };
+      });
+      var definition =
+        equalities.length === 1 ? equalities[0] : { operator: "or", filters: equalities };
+      if (operator === "NOT IN") {
+        definition = { operator: "not", filter: definition };
       }
-      filter = fld + " " + operator + " " + expression;
+      var filter = mv.translateFilterDefinition(definition);
       $("#frm-filter").val(filter);
       $("#filter_wizard").hide();
     },
@@ -829,18 +846,19 @@ var mv = (function () {
           .getWfsInfosFromWms(layer.url, layerid)
           .then(({ describeLayer }) => {
             ogc.getFieldsFromWMS(describeLayer, layerid, themeid);
-            return describeLayer;
-          })
-          .then(({ wfs_url }) =>
-            ogc.getFeatures(wfs_url, { TYPENAME: layerid, MAXFEATURES: 1 }, (data) => {
-              if (config.temp.layers[layerid]) {
-                config.temp.layers[layerid].features = data?.features || [];
-                mv.createDispatchEvent("wfsFeaturesReady", {
-                  features: config.temp.layers[layerid].features,
-                });
+            return ogc.getFeatures(
+              describeLayer.wfs_url,
+              { TYPENAME: layerid, MAXFEATURES: 1 },
+              (data) => {
+                if (config.temp.layers[layerid]) {
+                  config.temp.layers[layerid].features = data?.features || [];
+                  mv.createDispatchEvent("wfsFeaturesReady", {
+                    features: config.temp.layers[layerid].features,
+                  });
+                }
               }
-            })
-          )
+            );
+          })
           .then(() => ogc.getStylesFromWMS(layer.url, layerid));
       }
 
