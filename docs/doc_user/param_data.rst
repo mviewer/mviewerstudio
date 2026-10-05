@@ -221,7 +221,6 @@ Syntaxe du filtre selon le type de serveur :
 
 .. code-block:: xml
    <Filter xmlns="http://www.opengis.net/ogc"><PropertyIsEqualTo><PropertyName>NAME</PropertyName><Literal>Paris</Literal></PropertyIsEqualTo></Filter>
-.. note:: Le filtre est transmis tel quel au serveur : mviewer ne convertit pas le filtre saisi d'une syntaxe à l'autre. Certains serveurs peuvent refuser ou ignorer ce paramètre (par exemple derrière un pare-feu).
 
 Onglet liste de choix
 ~~~~~~~~~~~~~~~~~~~~~~~~
