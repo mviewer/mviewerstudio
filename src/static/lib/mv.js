@@ -1317,7 +1317,9 @@ var mv = (function () {
     updateFilterPlaceholder: function (servertype) {
       const types = { ogc: "ogc", qgis: "qgis", geoserver: "cql" };
       const key = `modal.layer.filter.${ types[servertype] || "cql" }.ph`;
-      $("#frm-filter").attr("placeholder", mviewer.tr(key));
+      const format = mviewer.tr(key);
+      $("#frm-filter").attr("placeholder", format);
+      $("#frm-filter-format").text(`${mviewer.tr("modal.layer.filter.format")} ${format}`);
     },
 
     showHideQueryParameters: function (value) {
