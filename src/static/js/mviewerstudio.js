@@ -1299,7 +1299,12 @@ var addgeoFilter = function () {
     var format = new ol.format.WKT();
     var wktRepresenation = format.writeGeometry(projGeom);
     $("#frm-filter").val(
-      mv.translateIntersectsFilter(layer.geometry, projGeom, wktRepresenation, layer.projection)
+      mv.translateIntersectsFilter(
+        layer.geometry,
+        projGeom,
+        wktRepresenation,
+        layer.projection
+      )
     );
     $("#filter_wizard").hide();
   });
