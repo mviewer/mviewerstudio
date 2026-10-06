@@ -437,13 +437,20 @@ var mv = (function () {
       if (serverType === "ogc") {
         return serializeOgcFilterToXml(buildOgcFilter(definition)) || "";
       }
-      return buildFilterExpression(definition, serverType === "qgis" ? "qgis" : "geoserver");
+      return buildFilterExpression(
+        definition,
+        serverType === "qgis" ? "qgis" : "geoserver"
+      );
     },
 
     translateIntersectsFilter: function (geomName, geometry, wkt, srsName) {
       var serverType = $("#frm-servertype").val();
       if (serverType === "ogc") {
-        return serializeOgcFilterToXml(ol.format.filter.intersects(geomName, geometry, srsName)) || "";
+        return (
+          serializeOgcFilterToXml(
+            ol.format.filter.intersects(geomName, geometry, srsName)
+          ) || ""
+        );
       }
       if (serverType === "qgis") {
         return "intersects($geometry, geom_from_wkt('" + escapeFilterLiteral(wkt) + "'))";
@@ -1315,10 +1322,12 @@ var mv = (function () {
 
     updateFilterPlaceholder: function (servertype) {
       const types = { ogc: "ogc", qgis: "qgis", geoserver: "cql" };
-      const key = `modal.layer.filter.${ types[servertype] || "cql" }.ph`;
+      const key = `modal.layer.filter.${types[servertype] || "cql"}.ph`;
       const format = mviewer.tr(key);
       $("#frm-filter").attr("placeholder", format);
-      $("#frm-filter-format").text(`${mviewer.tr("modal.layer.filter.format")} ${format}`);
+      $("#frm-filter-format").text(
+        `${mviewer.tr("modal.layer.filter.format")} ${format}`
+      );
     },
 
     showHideQueryParameters: function (value) {
