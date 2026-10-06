@@ -8,7 +8,7 @@
 Notes de migration
 ==================================
 
-Passer de v4.3.4 à v4.4.0
+Passer de v4.3.0 à v4.3.1
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Cette version ajoute un contrôle dans mviewerstudio pour vérifier les droits d'édition de la configuration à partir des informations de connexion de l'utilisateur (headers).
