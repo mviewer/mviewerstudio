@@ -1,0 +1,49 @@
+name: "Security Audit of JS and Python Libraries"
+
+on:
+  push:
+    branches:
+      - develop
+  schedule:
+    - cron: '0 0 * * 1'  # Hebdomadaire le lundi à minuit
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Checkout repository"
+        uses: actions/checkout@v4
+
+      - name: "Setup Node.js"
+        uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+
+      - name: "Setup Python"
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'
+
+      - name: "Install dependencies"
+        run: |
+          npm install --no-save --no-package-lock --ignore-scripts --no-audit --no-fund retire
+          python -m pip install --upgrade pip
+          python -m pip install -r install/dev-requirements.txt
+
+      - id: generate-report
+        name: "Run security scan"
+        run: |
+          export REPORT_DATE="$(date -u +%Y-%m-%d)"
+          export REPORT_BASENAME="security-report-${REPORT_DATE}.txt"
+          export REPORT_FILE="${GITHUB_WORKSPACE}/${REPORT_BASENAME}"
+          npm run scan
+          test -f "$REPORT_FILE"
+
+      - name: "Upload report as artifact"
+        uses: actions/upload-artifact@v4
+        with:
+          name: mviewerstudio-security-audit-report
+          path: ${{ steps.generate-report.outputs.report-file }}

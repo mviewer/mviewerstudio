@@ -8,6 +8,75 @@
 Notes de migration
 ==================================
 
+Passer de v4.3.0 à v4.3.1
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Cette version ajoute un contrôle dans mviewerstudio pour vérifier les droits d'édition de la configuration à partir des informations de connexion de l'utilisateur (headers).
+Les requêtes passent donc par le backend Python mviewerstudio, qui se charge d'appeler le fichier de configuraton XML. 
+
+Les points 1 et 2 sont donc liés à cette modification de sécurité et aux appels réalisés par python.
+
+1. **Gestion d'un certificat local**
+
+Si vous utilisez un certificat sur votre poste/serveur, il est possible que vous deviez faire la manipulation suivante, sinon l'édition des projets précédents ne sera pas possible.
+
+Une fois la .venv lancée, modification du fichier /.venv/lib/python3.9/site-packages/certifi/cacert.pem et copie de votre certificat (entre les balise BEGIN et END), exemple : 
+
+.. code-block:: sh
+
+       #subject=DC = fr, DC = cr-bretagne, CN = cr-bretagne Root CA
+       #issuer=DC = fr, DC = cr-bretagne, CN = cr-bretagne Root CA
+       -----BEGIN CERTIFICATE-----
+       XXXX
+       XXX
+       -----END CERTIFICATE-----
+
+2. **Proxy serveur**
+
+Si vous utilisez un proxy, il est nécessaire de le renseigner dans les variables d'environnement gunicorn (python). 
+Par exemple avec un déploiement sans docker, vous dvez modifier le fichier de service gunicorn dans /etc/systemd/system/.
+
+Rajoutez ensuite les variables selon vos besoins : 
+
+.. code-block:: sh
+
+       Environment="HTTP_PROXY=http://proxy.exemple.fr:3128"
+       Environment="HTTPS_PROXY=http://proxy.exemple.fr:3128"
+       Environment="NO_PROXY=localhost,127.0.0.1"
+
+
+3. **Docker : utilisateur et permissions des volumes**
+
+Dans ``docker/Dockerfile``, les arguments ``UID`` et ``GID`` valent par défaut ``999``.
+
+Ll'utilisateur du conteneur utilise donc les identifiants ``999:999``. Ils sont à présent personnalisables au build de l'image via ``--build-arg UID=...`` et ``--build-arg GID=...``.
+Docker Compose utilisera maintenant ``1000:1000`` par défaut, au build ou runtime (lancement du conteneur).
+
+Comment faire lors passage de v4.3.4 à v4.4.0 si vous souhaitez conserver les identifiants ``999:999`` ?
+
+Pour conserver les identifiants ``999:999`` ajoutez ces valeurs dans le fichier ``.env``, y compris avec une image téléchargée sans reconstruction :
+
+.. code-block:: sh
+
+       MVIEWERSTUDIO_UID=999
+       MVIEWERSTUDIO_GID=999
+
+Les permissions des volumes doivent être préparées manuellement avant le démarrage : le conteneur ne modifie pas leurs propriétaires ni leurs droits.
+
+Les commandes de préparation et le cas d'utilisation avec un SFTP sont documentés dans les guides Docker de la documentation :
+
+- `Français — configuration et permissions
+  <https://github.com/mviewer/mviewerstudio/blob/master/docker/README.fr.md#permissions-docker-à-préparer-manuellement>`_
+- `English — configuration and permissions
+  <https://github.com/mviewer/mviewerstudio/blob/master/docker/README.en.md#manual-docker-permissions>`_
+
+4. **Organisation des README**
+
+Les fichiers ``README.md`` à la racine du dépôt et dans ``docker/`` orientent
+désormais vers les versions ``README.fr.md`` et ``README.en.md``.
+Les instructions détaillées propres à Docker sont regroupées dans ``docker/``.
+
+
 Passer de v4.2.x à v4.3.0
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 

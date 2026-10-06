@@ -1,5 +1,6 @@
 from os import path, remove, listdir
 from os.path import isdir
+from shutil import rmtree
 from ..models.register import RegisterModel
 import logging, json
 from .config_utils import Config
@@ -23,7 +24,7 @@ def from_xml_path(app, xml_path):
     config = None
     with open(xml_path) as f:
         xml_read = f.read()
-        config = Config("", app, xml_read)
+        config = Config("", app, xml_read, xml_path)
     return config
 
 
@@ -98,20 +99,52 @@ class ConfigRegister:
         for app_path in xml_dirs:
             logger.info(f"REGISTER : PROCESS {app_path}")
             try:
-                for xml in glob.glob("%s/*.xml" % app_path):
-                    repo = init_or_get_repo(app_path)
-                    # to be sur each app is in master branch
-                    checkout(repo, "master", True)
-                    # will return config as class data
+                repo = init_or_get_repo(app_path)
+                # to be sur each app is in master branch
+                checkout(repo, "master", True)
+
+                xml = self._keep_one_xml_file(app_path)
+                if xml:
                     config = from_xml_path(self.app, xml)
                     if config:
+                        self._keep_one_xml_file(app_path, config.full_xml_path)
                         self.update(config.as_dict())
                         logger.debug(f"UPDATE TO REGISTER : SUCCESS")
-                    logger.info(f"REGISTER : APP PROCESS SUCCESS {app_path}")
+                logger.info(f"REGISTER : APP PROCESS SUCCESS {app_path}")
             except Exception as e:
                 logger.error(f"REGISTER : FAIL TO PROCESS {app_path}")
                 logger.error(e)
             logger.debug(f"REGISTER : APP PROCESS END")
+
+    def _keep_one_xml_file(self, app_path, xml_to_keep=None):
+        """
+        Keep one XML file in an app workspace and remove duplicate XML files.
+        """
+        xml_files = glob.glob("%s/*.xml" % app_path)
+        if not xml_files:
+            return None
+
+        if xml_to_keep and xml_to_keep in xml_files:
+            keep = xml_to_keep
+        elif len(xml_files) == 1:
+            return xml_files[0]
+        else:
+            xml_files.sort()
+            expected_xml = path.join(app_path, "%s.xml" % path.basename(app_path))
+            xml_with_dir = [xml for xml in xml_files if isdir(path.splitext(xml)[0])]
+            if expected_xml in xml_files:
+                keep = expected_xml
+            else:
+                keep = xml_with_dir[0] if xml_with_dir else xml_files[0]
+
+        for xml in xml_files:
+            if xml != keep:
+                remove(xml)
+                xml_dir = path.splitext(xml)[0]
+                if isdir(xml_dir):
+                    rmtree(xml_dir)
+                logger.warning(f"REGISTER : REMOVE DUPLICATE XML {xml}")
+        return keep
 
     def update_register(self, json_dict=None):
         """
@@ -161,7 +194,8 @@ class ConfigRegister:
             % path.join(self.store_directory, current_user.normalize_name, id)
         )
         if xml_path:
-            config = from_xml_path(self.app, xml_path[0])
+            app_path = path.join(self.store_directory, current_user.normalize_name, id)
+            config = from_xml_path(self.app, self._keep_one_xml_file(app_path))
             config_dict = config.as_dict()
             self.update(config_dict)
 

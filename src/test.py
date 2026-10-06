@@ -35,7 +35,7 @@ test_xml = """<?xml version="1.0" encoding="UTF-8"?>
 <proxy url='../proxy/?url='/>
 <searchparameters bbox="false" localities="false" features="false" static="false"/>
 <baselayers style="default">
-    <baselayer visible="true" id="positron" thumbgallery="img/basemap/positron.png" title="CartoDb" label="Positron" type="OSM" url="https://basemaps.cartocdn.com/light_all.png" attribution="Map tiles by  &lt;a href=&quot;https://cartodb.com/attributions&quot;&gt;CartoDb&lt;/a&gt;, under  &lt;a href=&quot;https://creativecommons.org/licenses/by/3.0/&quot;&gt;CC BY 3.0 &lt;/a&gt;"  ></baselayer>
+    <baselayer visible="true" id="osm_grey" thumbgallery="img/basemap/osm_grey.png" title="GéoBretagne - DataGrandEst" label="OpenStreetMap style noir et blanc" type="WMTS" url="GéoBretagne - DataGrandEst. Données : les contributeurs d'<a href=\"https://www.openstreetmap.org/\" target=\"_blank\">OpenStreetMap </a>,  <a href=\"https://www.openstreetmap.org/copyright\" target=\"_blank\">ODbL </a>"  ></baselayer>
     <baselayer visible="false" id="esriworldimagery" thumbgallery="img/basemap/esriworldwide.jpg" title="Esri" label="Esri world imagery" type="OSM" url="http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile" attribution="Esri world imagery"  ></baselayer>
 </baselayers>
 <themes mini="false">

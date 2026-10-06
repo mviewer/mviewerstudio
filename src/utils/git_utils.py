@@ -91,6 +91,21 @@ class Git_manager:
         """
         return init_or_get_repo(self.workspace)
 
+    def get_changes_diff(self):
+        """
+        Return diff for all tracked changes compared to HEAD.
+        Includes staged changes, unlike a bare `git diff`.
+        """
+        if not self.repo.head.is_valid():
+            return self.repo.git.diff()
+        return self.repo.git.diff("HEAD")
+
+    def has_changes(self):
+        """
+        Return true when the repository contains tracked changes compared to HEAD.
+        """
+        return bool(self.get_changes_diff())
+
     def create_version(self, msg=""):
         """
         Create a tag.
@@ -164,7 +179,7 @@ class Git_manager:
             self.repo.git.add("*")
             self.repo.git.commit("-m", message)
             self.create_version(message)
-        elif self.repo.git.diff("--name-only"):
+        elif self.has_changes():
             self.repo.git.add("*")
             self.repo.git.commit("-m", message)
 
