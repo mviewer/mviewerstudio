@@ -4,6 +4,7 @@
  * Usage:
  * `const upload = new mv.components.uploadFile({ accept: [".csv", ".xlsx"] });`
  * `target.appendChild(upload.render());`
+ * Pass `verificationEnabled: true` and `verifyFile` to enable verification.
  */
 let uploadFileInstanceId = 0;
 
@@ -15,6 +16,14 @@ const normalizeAccept = (accept) => {
   return accept || ".csv,.xls,.xlsx";
 };
 
+/**
+ * Create a file upload component with optional verification.
+ *
+ * @param {Object} options Component options.
+ * @param {boolean} [options.verificationEnabled=false] Whether to verify files.
+ * @param {Function} [options.verifyFile] Function returning the verification result.
+ * @param {Function} [options.onChange] Receives the file and result, or null without verification.
+ */
 const UploadFile = function (options = {}) {
   uploadFileInstanceId += 1;
 
@@ -25,6 +34,7 @@ const UploadFile = function (options = {}) {
     "Glissez-deposez un fichier CSV ou Excel,\nou selectionnez un fichier\nLe fichier doit contenir une information geographique (adresse, code administratif ou coordonnees X/Y).";
   this.buttonLabel = options.buttonLabel || "Choisir un fichier";
   this.verifyFile = options.verifyFile || null;
+  this.verificationEnabled = options.verificationEnabled === true;
   this.onChange = options.onChange || function () {};
   this.file = null;
   this.verification = null;
@@ -43,7 +53,7 @@ UploadFile.prototype.setFiles = function (files) {
   this.verification = null;
   this.update();
 
-  if (!this.file || typeof this.verifyFile !== "function") {
+  if (!this.file || !this.verificationEnabled || typeof this.verifyFile !== "function") {
     this.onChange(this.file, this.verification);
     return;
   }

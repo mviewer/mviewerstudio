@@ -12,7 +12,7 @@ import Table from "../../table/table.js";
 import Input from "../../input/input.js";
 import Select from "../../select/select.js";
 import OpenGristTableBtn from "../openGristTableBtn/openGristTableBtn.js";
-import verifyUploadedFile from "../../../utils/grist/verifyUploadedFile.js";
+import readUploadedFile from "../../../utils/grist/readUploadedFile.js";
 import { getTableRecords } from "../../../utils/grist/requests.js";
 import {
   disableGristWizardNextButton,
@@ -189,11 +189,45 @@ const importGristArea = function (activeType = "file", options = {}) {
   });
   this.uploadFile = new UploadFile({
     accept: [".csv", ".xls", ".xlsx"],
-    placeholder:
-      "Glissez-deposez un fichier CSV ou Excel,\nou selectionnez un fichier\nLe fichier doit contenir une information geographique (adresse, code administratif ou coordonnees X/Y).",
+    placeholder: "Glissez-deposez un fichier CSV ou Excel,\nou selectionnez un fichier",
     buttonLabel: "Choisir un fichier",
-    verifyFile: verifyUploadedFile,
-    onChange: (file, verification) => {
+    onChange: async (file) => {
+      this.file = file;
+      this.fileVerification = null;
+      this.sentTable = null;
+      this.fileTableName = getFileNameWithoutExtension(file && file.name);
+      this.tableNameInput.setValue(this.fileTableName);
+      this.onColumnsChange([]);
+      this.updateFilePreview();
+      this.updateGristWizardNextButtonForFile();
+      updateSelectLayersButtonForImportedFile();
+      this.onFileChange(file, null, this.fileTableName);
+
+      let verification = null;
+      if (file) {
+        try {
+          verification = await readUploadedFile(file);
+        } catch (error) {
+          verification = {
+            valid: false,
+            reason: "read_error",
+            message: "Impossible de lire le fichier.",
+          };
+          console.error("Error reading imported file:", error);
+        }
+      }
+
+      if (this.file !== file) {
+        return;
+      }
+
+      if (verification && !verification.valid) {
+        this.uploadFile.setVerification({
+          status: "invalid",
+          message: verification.message,
+        });
+      }
+
       const parsedData = verification && verification.parsedData;
       let columns = [];
 
@@ -203,15 +237,10 @@ const importGristArea = function (activeType = "file", options = {}) {
         columns = parsedData.meta.fields;
       }
 
-      this.file = file;
       this.fileVerification = verification;
-      this.sentTable = null;
-      this.fileTableName = getFileNameWithoutExtension(file && file.name);
       this.onColumnsChange(columns);
-      this.tableNameInput.setValue(this.fileTableName);
       this.updateFilePreview();
       this.updateGristWizardNextButtonForFile();
-      updateSelectLayersButtonForImportedFile(verification);
       this.onFileChange(file, verification, this.fileTableName);
     },
   });
@@ -557,7 +586,7 @@ importGristArea.prototype.updateFilePreview = function () {
 };
 
 /**
- * Download a file from an HTTP URL and pass it to the existing upload validation.
+ * Download a file from an HTTP URL and pass it to the file reader.
  * A newer local file selection takes precedence over the download.
  *
  * @param {string} fileUrl URL entered in the URL card.
@@ -577,7 +606,7 @@ importGristArea.prototype.importFileFromUrl = async function (fileUrl) {
     return;
   }
 
-  const verificationToken = this.uploadFile.verificationToken;
+  const selectedFile = this.uploadFile.file;
   status.textContent = mviewer.tr("grist.import.url.loading");
 
   try {
@@ -593,7 +622,7 @@ importGristArea.prototype.importFileFromUrl = async function (fileUrl) {
     }
     const file = new File([blob], fileName, { type: blob.type });
 
-    if (this.uploadFile.verificationToken === verificationToken) {
+    if (this.uploadFile.file === selectedFile) {
       this.uploadFile.setFiles([file]);
     }
     status.textContent = "";

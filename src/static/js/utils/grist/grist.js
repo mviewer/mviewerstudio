@@ -111,8 +111,7 @@ const confirmGristGeometryOverwrite = (nextButton) => {
   setGristWizardStep(4);
   resultContainer.replaceChildren(
     new ConfirmAction({
-      message:
-        'Voulez-vous écraser le contenu de la colonne existante "geometry" ?',
+      message: 'Voulez-vous écraser le contenu de la colonne existante "geometry" ?',
       color: "warning",
       onYes: () =>
         runGristRefGeoJoin({
@@ -203,7 +202,8 @@ const initGristLocationSwitches = () => {
       id: GRIST_LOCATION_SWITCH_IDS.address,
       label: "À partir d’une adresse",
       description: "Géocodez vos données (adresse, ville...)",
-      tooltip: "Calculer la localisation à partir des colonnes de la table (adresse, code postal...))",
+      tooltip:
+        "Calculer la localisation à partir des colonnes de la table (adresse, code postal...))",
       checked: true,
     },
     {
@@ -211,7 +211,8 @@ const initGristLocationSwitches = () => {
       id: GRIST_LOCATION_SWITCH_IDS.ref,
       label: "À partir d’un référentiel",
       description: "Associez vos données à un référentiel géographique",
-      tooltip: "Récupérer la géométrie à partir d'une donnée de références et d'un champ de la table",
+      tooltip:
+        "Récupérer la géométrie à partir d'une donnée de références et d'un champ de la table",
       checked: false,
     },
     {
@@ -219,7 +220,8 @@ const initGristLocationSwitches = () => {
       id: GRIST_LOCATION_SWITCH_IDS.xy,
       label: "À partir de coordonnées X/Y",
       description: "Utilisez des colonnes de coordonnées existantes",
-      tooltip: "Utiliser des colonnes contenant déjà des coordonnées X et Y pour localiser les points",
+      tooltip:
+        "Utiliser des colonnes contenant déjà des coordonnées X et Y pour localiser les points",
       checked: false,
     },
   ];
@@ -289,6 +291,18 @@ const initGristImportArea = (apiKey) => {
   const importGristArea = new ImportGristArea({
     apiKey,
     onColumnsChange: setGristLocationFields,
+    onFileChange: (file, readResult) => {
+      if (readResult) {
+        return;
+      }
+
+      const resultContainer = document.getElementById(GRIST_RESULT_CONTAINER_ID);
+      if (resultContainer) {
+        resultContainer.replaceChildren();
+      }
+      initGristLocationSwitches();
+      setGristWizardStep(2);
+    },
   });
   activeImportGristArea = importGristArea;
   gristDataContainer.appendChild(importGristArea.render());
@@ -452,7 +466,10 @@ const bindNewLayerModalGrist = (
             setGristWizardStep(3);
           })
           .catch((error) => {
-            alertCustom(error.message || "Impossible de préparer la table Grist.", "danger");
+            alertCustom(
+              error.message || "Impossible de préparer la table Grist.",
+              "danger"
+            );
             console.error("Error preparing Grist table:", error);
             nextButton.disabled = false;
           });
