@@ -1,5 +1,11 @@
 FROM python:3.11-slim
 
+LABEL org.opencontainers.image.title="mviewerstudio" \
+      org.opencontainers.image.description="mviewer generator" \
+      org.opencontainers.image.source="https://github.com/mviewer/mviewerstudio" \
+      org.opencontainers.image.url="https://github.com/mviewer/mviewerstudio" \
+      org.opencontainers.image.licenses="GPL-3.0"
+
 ARG UID=999
 ARG GID=999
 
