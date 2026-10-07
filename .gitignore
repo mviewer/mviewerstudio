@@ -44,3 +44,6 @@ node_modules/
 package-lock.json
 yarn.lock
 pnpm-lock.yaml
+
+# Private Grist integration test configuration (API key)
+src/tests/grist.local.json
