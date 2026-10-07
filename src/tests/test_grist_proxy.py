@@ -6,9 +6,9 @@ from unittest.mock import patch
 import requests
 from flask import Flask
 
-from .app_factory import load_blueprint
-from .settings import Config
-from .utils.grist_join import get_grist_api_url
+from ..app_factory import load_blueprint
+from ..settings import Config
+from ..utils.grist_join import get_grist_api_url
 
 
 class GristProxyTests(unittest.TestCase):
