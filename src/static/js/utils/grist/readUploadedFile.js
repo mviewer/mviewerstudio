@@ -1,3 +1,8 @@
+import {
+  GRIST_TEXT_FILE_EXTENSIONS,
+  GRIST_SPREADSHEET_FILE_EXTENSIONS,
+} from "./const.js";
+
 const getFileExtension = (file) => {
   let fileName = "";
 
@@ -40,8 +45,21 @@ const readCsvData = (content) =>
     });
   });
 
+const readExcelData = async (file) => {
+  if (!window.readXlsxFile) {
+    throw new Error("read-excel-file is not available");
+  }
+  if (!window.Papa) {
+    throw new Error("PapaParse is not available");
+  }
+
+  const sheets = await window.readXlsxFile(file, { sheets: [1], trim: false });
+  const content = window.Papa.unparse(sheets[0].data);
+  return readCsvData(content);
+};
+
 /**
- * Read CSV data for file preview and import.
+ * Read CSV, TXT or the first XLSX sheet for file preview and import.
  * @param {File} file File to read.
  * @returns {Promise<Object>} Read result with columns and parsed data.
  */
@@ -56,16 +74,25 @@ const readUploadedFile = async (file) => {
 
   const extension = getFileExtension(file);
 
-  if (!["csv", "txt"].includes(extension)) {
+  const isTextFile = GRIST_TEXT_FILE_EXTENSIONS.includes(extension);
+  const isSpreadsheetFile = GRIST_SPREADSHEET_FILE_EXTENSIONS.includes(extension);
+
+  if (!isTextFile && !isSpreadsheetFile) {
     return {
       valid: false,
       reason: "unsupported_format",
-      message: "Ce format ne peut pas encore être lu automatiquement.",
+      message: "Format non pris en charge. Utilisez un fichier CSV, TXT ou XLSX.",
     };
   }
 
-  const content = await readFileAsText(file);
-  const parsedData = await readCsvData(content);
+  let parsedData;
+
+  if (isTextFile) {
+    const content = await readFileAsText(file);
+    parsedData = await readCsvData(content);
+  } else {
+    parsedData = await readExcelData(file);
+  }
   let columns = [];
 
   if (parsedData.meta) {

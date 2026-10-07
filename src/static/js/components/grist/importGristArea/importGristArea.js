@@ -188,8 +188,8 @@ const importGristArea = function (activeType = "file", options = {}) {
     onClick: (url) => this.importFileFromUrl(url),
   });
   this.uploadFile = new UploadFile({
-    accept: [".csv", ".xls", ".xlsx"],
-    placeholder: "Glissez-deposez un fichier CSV ou Excel,\nou selectionnez un fichier",
+    accept: [".csv", ".txt", ".xlsx"],
+    placeholder: "Glissez-deposez un fichier CSV, TXT ou XLSX,\nou selectionnez un fichier",
     buttonLabel: "Choisir un fichier",
     onChange: async (file) => {
       this.file = file;
