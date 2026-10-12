@@ -21,7 +21,9 @@ import {
  */
 const readJson = async (response) => {
   if (!response.ok) {
-    throw new Error(mviewer.tr("grist.import.request_failed").replace("{status}", () => response.status));
+    throw new Error(
+      mviewer.tr("grist.import.request_failed").replace("{status}", () => response.status)
+    );
   }
 
   return response.json();
@@ -253,7 +255,9 @@ const getOrCreateDocument = async (gristApiKey, documentReference, createDocumen
   );
   if (duplicateDocument) {
     throw new Error(
-      mviewer.tr("grist.import.document_exists").replace("{name}", () => documentReference)
+      mviewer
+        .tr("grist.import.document_exists")
+        .replace("{name}", () => documentReference)
     );
   }
 
@@ -285,7 +289,9 @@ const ensureTableDoesNotExist = async (instanceUrl, docId, tableId, gristApiKey)
   );
 
   if (usedTableIds.has(`${tableId}`.toLowerCase())) {
-    throw new Error(mviewer.tr("grist.import.table_exists").replace("{name}", () => tableId));
+    throw new Error(
+      mviewer.tr("grist.import.table_exists").replace("{name}", () => tableId)
+    );
   }
 
   return tableId;
@@ -309,7 +315,9 @@ const getActualTable = async (instanceUrl, docId, tableId, gristApiKey) => {
   const actualTableId = getGristId(table);
 
   if (!actualTableId) {
-    throw new Error(mviewer.tr("grist.import.table_not_found").replace("{name}", () => tableId));
+    throw new Error(
+      mviewer.tr("grist.import.table_not_found").replace("{name}", () => tableId)
+    );
   }
 
   return { tableId: actualTableId, tableRef: getGristTableRef(table) };

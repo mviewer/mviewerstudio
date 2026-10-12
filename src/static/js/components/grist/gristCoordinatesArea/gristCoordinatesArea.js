@@ -25,11 +25,7 @@ const getMatchingCoordinateField = (columns, coordinate) => {
  * @returns {string} Projection selector label.
  */
 const getProjectionLabel = () => {
-  if (typeof mviewer !== "undefined" && mviewer.tr) {
-    return mviewer.tr("modal.layer.grist.mode.coordinates.projection");
-  }
-
-  return "Projection (SRS)";
+  return mviewer.tr("modal.layer.grist.mode.coordinates.projection");
 };
 
 /**
@@ -80,8 +76,8 @@ const GristCoordinatesArea = function (options = {}) {
 
   this.xSelect = new Select({
     id: `${idPrefix}-x`,
-    label: "X (longitude)",
-    placeholder: "Sélectionner la colonne X",
+    label: mviewer.tr("grist.coordinates.x_label"),
+    placeholder: mviewer.tr("grist.coordinates.x_placeholder"),
     value: this.xField,
     options: this.columnOptions,
     classes: "grist-coordinates-field",
@@ -91,8 +87,8 @@ const GristCoordinatesArea = function (options = {}) {
 
   this.ySelect = new Select({
     id: `${idPrefix}-y`,
-    label: "Y (latitude)",
-    placeholder: "Sélectionner la colonne Y",
+    label: mviewer.tr("grist.coordinates.y_label"),
+    placeholder: mviewer.tr("grist.coordinates.y_placeholder"),
     value: this.yField,
     options: this.columnOptions,
     classes: "grist-coordinates-field",

@@ -56,10 +56,10 @@ const getGristTableRef = (table) => {
 };
 const getTablesCountLabel = (count) => {
   if (count > 1) {
-    return `${count} tables disponibles`;
+    return mviewer.tr("grist.tables.count_plural", { count });
   }
 
-  return `${count} table disponible`;
+  return mviewer.tr("grist.tables.count_single", { count });
 };
 
 const ListGristTables = function (options = {}) {
@@ -67,7 +67,7 @@ const ListGristTables = function (options = {}) {
 
   this.id = `list-grist-tables-${listGristTablesInstanceId}`;
   this.apiKey = options.apiKey || "";
-  this.placeholder = options.placeholder || "Choisir une table Grist";
+  this.placeholder = options.placeholder || mviewer.tr("grist.import.table_choose");
   this.autoload = options.autoload !== false;
   this.onChange = options.onChange || function () {};
   this.onFieldsChange = options.onFieldsChange || function () {};
@@ -77,7 +77,7 @@ const ListGristTables = function (options = {}) {
   this.previewRequestId = 0;
   this.previewTable = new Table({
     maxRows: 5,
-    emptyMessage: "Aucune donnee a previsualiser.",
+    emptyMessage: mviewer.tr("grist.preview.empty"),
     classes: "mb-0",
   });
   this.select = new Select({
@@ -98,7 +98,7 @@ const ListGristTables = function (options = {}) {
   this.element = document.createElement("div");
   this.element.className = "list-grist-tables";
   this.spinner = new SpinnerGrow({
-    label: "Chargement des tables Grist...",
+    label: mviewer.tr("grist.tables.loading"),
     classes: "d-flex justify-content-center align-items-center",
     visible: false,
   });
@@ -169,7 +169,7 @@ ListGristTables.prototype.load = function () {
   }
 
   if (!this.apiKey) {
-    this.setStatus("Clé API Grist manquante.", "danger");
+    this.setStatus(mviewer.tr("grist.import.api_key_missing"), "danger");
     return Promise.resolve([]);
   }
 
@@ -184,7 +184,7 @@ ListGristTables.prototype.load = function () {
       this.updateOptions();
 
       if (!tables.length) {
-        this.setStatus("Aucune table trouvée dans le workspace configuré.");
+        this.setStatus(mviewer.tr("grist.tables.empty"));
         return tables;
       }
 
@@ -195,7 +195,7 @@ ListGristTables.prototype.load = function () {
     .catch((error) => {
       this.tables = [];
       this.updateOptions();
-      this.setStatus("Impossible de charger les tables Grist.", "danger");
+      this.setStatus(mviewer.tr("grist.tables.error"), "danger");
       console.error("Error loading Grist tables:", error);
       return [];
     })
@@ -237,7 +237,7 @@ ListGristTables.prototype.updatePreview = function (selectedTable) {
 
   const loading = document.createElement("p");
   loading.className = "text-muted mb-0";
-  loading.textContent = "Chargement de l'apercu...";
+  loading.textContent = mviewer.tr("grist.preview.loading");
   previewContainer.appendChild(loading);
 
   gristTableToPreview(selectedTable, this.apiKey)
@@ -246,8 +246,9 @@ ListGristTables.prototype.updatePreview = function (selectedTable) {
         return;
       }
 
-      this.previewTable.title = selectedTable.tableName || "Table Grist";
-      this.previewTable.subtitle = "Apercu des 5 premieres lignes";
+      this.previewTable.title =
+        selectedTable.tableName || mviewer.tr("grist.tables.label");
+      this.previewTable.subtitle = mviewer.tr("grist.preview.subtitle");
       this.onFieldsChange(previewData.meta.fields);
       previewContainer.replaceChildren(this.previewTable.setData(previewData));
     })
@@ -259,7 +260,7 @@ ListGristTables.prototype.updatePreview = function (selectedTable) {
       previewContainer.replaceChildren();
       const message = document.createElement("p");
       message.className = "text-danger mb-0";
-      message.textContent = "Impossible de previsualiser cette table Grist.";
+      message.textContent = mviewer.tr("grist.preview.error");
       previewContainer.appendChild(message);
       this.onFieldsChange([]);
       console.error("Error loading Grist table preview:", error);
@@ -308,8 +309,8 @@ ListGristTables.prototype.render = function () {
     <div class="list-grist-tables-card">
       <div class="list-grist-tables-header">
         <div>
-          <label class="list-grist-tables-label" for="${this.id}">Table Grist</label>
-          <p class="list-grist-tables-help">Choisissez la table source contenant les adresses à géocoder.</p>
+          <label class="list-grist-tables-label" for="${this.id}">${mviewer.tr("grist.tables.label")}</label>
+          <p class="list-grist-tables-help">${mviewer.tr("grist.tables.help")}</p>
         </div>
         <span class="list-grist-tables-status list-grist-tables-status-muted d-none" data-list-grist-tables-status></span>
       </div>
@@ -320,7 +321,7 @@ ListGristTables.prototype.render = function () {
         </div>
         <p class="list-grist-tables-format">
           <i class="ri-information-line" aria-hidden="true"></i>
-          Format : <code>document / table</code>
+          ${mviewer.tr("grist.tables.format")} <code>document / table</code>
         </p>
       </div>
     </div>

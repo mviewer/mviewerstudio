@@ -110,10 +110,7 @@ GristApiKey.prototype.loadApiKey = function () {
       this.onInvalidApiKey();
       input.readOnly = false;
       input.focus();
-      this.showAlert(
-        "warning",
-        "Clé API GRIST non récupérée automatiquement. Saisissez-la manuellement."
-      );
+      this.showAlert("warning", mviewer.tr("grist.api_key.auto_fetch_failed"));
       console.warn("Error fetching Grist API key:", error);
     });
 };
@@ -131,7 +128,7 @@ GristApiKey.prototype.showAlert = function (type, message, autoHide = false) {
 
   if (autoHide) {
     this.alertTimeout = window.setTimeout(() => {
-      this.showAlert("muted", "La clé n'est pas encore vérifiée.");
+      this.showAlert("muted", mviewer.tr("grist.api_key.unverified"));
     }, 10000);
   }
 };
@@ -154,14 +151,14 @@ GristApiKey.prototype.toggleApiKeyVisibility = function () {
   if (isHidden) {
     input.type = "text";
     button.setAttribute("aria-pressed", "true");
-    button.setAttribute("aria-label", "Masquer la clé API GRIST");
+    button.setAttribute("aria-label", mviewer.tr("grist.api_key.hide"));
     icon.className = "ri-eye-off-line";
     return;
   }
 
   input.type = "password";
   button.setAttribute("aria-pressed", "false");
-  button.setAttribute("aria-label", "Afficher la clé API GRIST");
+  button.setAttribute("aria-label", mviewer.tr("grist.api_key.show"));
   icon.className = "ri-eye-line";
 };
 
@@ -177,7 +174,7 @@ GristApiKey.prototype.validateApiKey = function () {
 
   if (!apiKey) {
     clearStoredGristApiKey();
-    this.showAlert("warning", "Veuillez saisir une cle API GRIST.");
+    this.showAlert("warning", mviewer.tr("grist.api_key.required"));
     this.onInvalidApiKey();
     if (input) {
       input.focus();
@@ -195,15 +192,15 @@ GristApiKey.prototype.validateApiKey = function () {
         throw new Error("Invalid Grist API key");
       }
 
-      this.showAlert("success", "Clé API GRIST valide.");
+      this.showAlert("success", mviewer.tr("grist.api_key.valid"));
       storeGristApiKey(apiKey);
       this.onValidApiKey(apiKey);
-      alertCustom("La clé API Grist a été validée avec succès.", "success");
+      alertCustom(mviewer.tr("grist.api_key.validated"), "success");
     })
     .catch((error) => {
       clearStoredGristApiKey();
       this.onInvalidApiKey();
-      this.showAlert("danger", "Cle API GRIST invalide ou impossible a verifier.");
+      this.showAlert("danger", mviewer.tr("grist.api_key.invalid"));
       console.error("Error validating Grist API key:", error);
     })
     .finally(() => {
@@ -231,10 +228,10 @@ GristApiKey.prototype.render = function () {
     <div class="grist-api-key-header">
       <div class="d-flex align-items-center gap-1" data-grist-api-key-title>
         <label class="grist-api-key-label" for="${this.idPrefix}-input">
-          Clé API Grist
+          ${mviewer.tr("grist.api_key.label")}
         </label>
       </div>
-      <a href="${this.gristApiKeyHelpUrl}" target="_blank" rel="noopener noreferrer" class="grist-api-key-help">Récupérer ma clé API Grist <i class="ri-external-link-line" aria-hidden="true"></i></a>
+      <a href="${this.gristApiKeyHelpUrl}" target="_blank" rel="noopener noreferrer" class="grist-api-key-help">${mviewer.tr("grist.api_key.help")} <i class="ri-external-link-line" aria-hidden="true"></i></a>
     </div>
     <div class="grist-api-key-row">
       <div class="grist-api-key-field">
@@ -243,7 +240,7 @@ GristApiKey.prototype.render = function () {
           id="${this.idPrefix}-input"
           type="password"
           class="form-control grist-api-key-input"
-          placeholder="Entrez votre clé API GRIST"
+          placeholder="${mviewer.tr("grist.api_key.placeholder")}"
           value=""
           autocomplete="off"
           spellcheck="false"
@@ -253,7 +250,7 @@ GristApiKey.prototype.render = function () {
           type="button"
           class="grist-api-key-toggle"
           data-grist-api-key-toggle
-          aria-label="Afficher la clé API GRIST"
+          aria-label="${mviewer.tr("grist.api_key.show")}"
           aria-pressed="false"
         >
           <i class="ri-eye-line" aria-hidden="true"></i>
@@ -264,7 +261,7 @@ GristApiKey.prototype.render = function () {
         id="${this.idPrefix}-validate"
         class="btn grist-api-key-validate-btn"
       >
-        Valider
+        ${mviewer.tr("grist.api_key.validate")}
       </button>
     </div>
     <p
@@ -272,7 +269,7 @@ GristApiKey.prototype.render = function () {
       class="grist-api-key-status grist-api-key-status-muted"
       role="status"
     >
-      La clé n'est pas encore vérifiée.
+      ${mviewer.tr("grist.api_key.unverified")}
     </p>
   `;
 
@@ -293,7 +290,7 @@ GristApiKey.prototype.render = function () {
   if (input) {
     input.addEventListener("input", () => {
       clearStoredGristApiKey();
-      this.showAlert("muted", "La clé n'est pas encore vérifiée.");
+      this.showAlert("muted", mviewer.tr("grist.api_key.unverified"));
       this.onInvalidApiKey();
     });
   }

@@ -49,19 +49,19 @@ ConfirmAction.prototype.render = function () {
   icon.className = "grist-geocoding-result-icon";
   icon.textContent = "!";
   title.className = "grist-geocoding-result-title";
-  title.textContent = "Confirmation requise";
+  title.textContent = mviewer.tr("grist.confirm.title");
   message.className = "grist-geocoding-result-message";
   message.textContent = this.message;
   actions.className = "grist-geocoding-result-actions";
 
   yesButton.type = "button";
   yesButton.className = "btn grist-geocoding-result-primary-button";
-  yesButton.textContent = "Oui";
+  yesButton.textContent = mviewer.tr("grist.confirm.yes");
   yesButton.addEventListener("click", this.onYes);
 
   noButton.type = "button";
   noButton.className = "btn grist-geocoding-result-secondary-button";
-  noButton.textContent = "Non";
+  noButton.textContent = mviewer.tr("grist.confirm.no");
   noButton.addEventListener("click", this.onNo);
 
   actions.append(yesButton, noButton);

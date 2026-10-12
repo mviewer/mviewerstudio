@@ -20,8 +20,8 @@ const GristRefGeoArea = function (options = {}) {
 
   this.matchingFieldSelect = new Select({
     id: `${idPrefix}-matching-field`,
-    label: "Sélectionnez le champ de correspondance",
-    placeholder: "Sélectionner un champ",
+    label: mviewer.tr("grist.refgeo.matching_field"),
+    placeholder: mviewer.tr("grist.refgeo.field_placeholder"),
     options: this.fieldOptions,
     value: options.matchingField || "",
     classes: "grist-refgeo-field",
@@ -78,13 +78,13 @@ GristRefGeoArea.prototype.render = function () {
         <div data-grist-refgeo-matching-field></div>
         <div class="form-group grist-refgeo-field">
           <label class="grist-refgeo-label" for="${this.referentialSelectId}">
-            Sélectionnez le référentiel
+            ${mviewer.tr("grist.refgeo.referential")}
           </label>
           <select id="${this.referentialSelectId}" class="form-control grist-refgeo-select"></select>
         </div>
         <div class="form-group grist-refgeo-field">
           <label class="grist-refgeo-label" for="${this.outputFormatSelectId}">
-            Format de sortie
+            ${mviewer.tr("grist.refgeo.output_format")}
           </label>
           <select id="${this.outputFormatSelectId}" class="form-control grist-refgeo-select">
             <option value="geojson">GeoJSON</option>
@@ -148,9 +148,7 @@ GristRefGeoArea.prototype.getOutputFormat = function () {
  * @returns {Array<{label: string, value: string}>} Select options.
  */
 GristRefGeoArea.prototype.getFieldOptions = function (fields = []) {
-  return fields
-    .filter((field) => field)
-    .map((field) => ({ label: field, value: field }));
+  return fields.filter((field) => field).map((field) => ({ label: field, value: field }));
 };
 
 /**

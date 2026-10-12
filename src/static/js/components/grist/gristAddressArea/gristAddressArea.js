@@ -13,8 +13,8 @@ const GristAddressArea = function (options = {}) {
   this.element.className = "grist-address-area";
   this.multiselect = new mv.components.multiselect({
     id: options.id || "grist-address-fields",
-    label: "Sélectionnez les champs à utiliser pour le géocodage",
-    placeholder: "Ajouter un champ",
+    label: mviewer.tr("grist.address.fields"),
+    placeholder: mviewer.tr("template.ph.add_field"),
     options: this.fields,
     values: options.values || [],
   });

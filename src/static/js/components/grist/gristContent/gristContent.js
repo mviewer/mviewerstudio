@@ -269,18 +269,33 @@ GristContent.prototype.render = function () {
       steps: this.hideData
         ? [
             {
-              label: getWorkflowLabel("modal.layer.grist.workflow.connection", "Connexion à Grist"),
-              description: getWorkflowLabel("modal.layer.grist.workflow.connection.description", "Informations de connexion"),
+              label: getWorkflowLabel(
+                "modal.layer.grist.workflow.connection",
+                "Connexion à Grist"
+              ),
+              description: getWorkflowLabel(
+                "modal.layer.grist.workflow.connection.description",
+                "Informations de connexion"
+              ),
               icon: "bi-file-earmark-spreadsheet",
             },
             {
-              label: getWorkflowLabel("modal.layer.grist.workflow.location", "Localisation"),
-              description: getWorkflowLabel("modal.layer.grist.workflow.location.description", "Paramètres géographiques"),
+              label: getWorkflowLabel(
+                "modal.layer.grist.workflow.location",
+                "Localisation"
+              ),
+              description: getWorkflowLabel(
+                "modal.layer.grist.workflow.location.description",
+                "Paramètres géographiques"
+              ),
               icon: "bi-geo-alt",
             },
             {
               label: getWorkflowLabel("modal.layer.grist.workflow.result", "Résultat"),
-              description: getWorkflowLabel("modal.layer.grist.workflow.result.description", "Contrôle du résultat"),
+              description: getWorkflowLabel(
+                "modal.layer.grist.workflow.result.description",
+                "Contrôle du résultat"
+              ),
               icon: "bi-layers",
             },
           ]

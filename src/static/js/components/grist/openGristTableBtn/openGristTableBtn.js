@@ -24,7 +24,7 @@ export function OpenGristTableBtn(options = {}) {
   this.orgId = options.orgId;
   this.docId = options.docId;
   this.tableId = options.tableId;
-  this.label = options.label || "Ouvrir dans Grist";
+  this.label = options.label || mviewer.tr("grist.result.open");
   this.classes = options.classes || [];
   this.element = document.createElement("button");
 
@@ -46,11 +46,11 @@ export function OpenGristTableBtn(options = {}) {
 OpenGristTableBtn.prototype.hasTableTarget = function () {
   return Boolean(
     this.apiUrl &&
-      this.apiKey &&
-      this.instanceUrl &&
-      this.orgId &&
-      this.docId &&
-      this.tableId
+    this.apiKey &&
+    this.instanceUrl &&
+    this.orgId &&
+    this.docId &&
+    this.tableId
   );
 };
 

@@ -7,25 +7,25 @@
  * `wizard.changeStep(2);`
  */
 
-const defaultSteps = [
+const getDefaultSteps = () => [
   {
-    label: "Connexion à Grist",
-    description: "Informations de connexion",
+    label: mviewer.tr("modal.layer.grist.workflow.connection"),
+    description: mviewer.tr("modal.layer.grist.workflow.connection.description"),
     icon: "bi-file-earmark-spreadsheet",
   },
   {
-    label: "Données",
-    description: "Sélection des données",
+    label: mviewer.tr("modal.layer.grist.data"),
+    description: mviewer.tr("grist.workflow.data_description"),
     icon: "bi-file-earmark-spreadsheet",
   },
   {
-    label: "Localisation",
-    description: "Paramètres géographiques",
+    label: mviewer.tr("modal.layer.grist.workflow.location"),
+    description: mviewer.tr("modal.layer.grist.workflow.location.description"),
     icon: "bi-geo-alt",
   },
   {
-    label: "Résultat",
-    description: "Contrôle du résultat",
+    label: mviewer.tr("modal.layer.grist.workflow.result"),
+    description: mviewer.tr("modal.layer.grist.workflow.result.description"),
     icon: "bi-layers",
   },
 ];
@@ -41,6 +41,7 @@ const normalizeStep = (step, fallbackStep) => {
 };
 
 const GristWizard = function (options = {}) {
+  const defaultSteps = getDefaultSteps();
   let steps = defaultSteps;
 
   if (options.steps && options.steps.length) {
@@ -59,7 +60,7 @@ const GristWizard = function (options = {}) {
 GristWizard.prototype.render = function () {
   this.element.replaceChildren();
   this.element.setAttribute("role", "list");
-  this.element.setAttribute("aria-label", "Étapes de l'import Grist");
+  this.element.setAttribute("aria-label", mviewer.tr("grist.workflow.steps"));
   this.element.style.setProperty("--grist-wizard-step-count", this.steps.length);
 
   this.steps.forEach((step, index) => {

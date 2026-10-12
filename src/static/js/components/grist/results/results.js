@@ -20,7 +20,7 @@ const GristResult = function (options = {}) {
   this.type = options.type || "failure";
   this.label = options.title || options.label || "";
   this.message = options.message || "";
-  this.tableTitle = options.tableTitle || "Lignes à vérifier";
+  this.tableTitle = options.tableTitle || mviewer.tr("grist.result.check_rows");
   this.localizedRows = options.localizedRows || 0;
   this.totalRows = options.totalRows || 0;
   this.ungeocodedRows = options.ungeocodedRows || [];
@@ -92,7 +92,7 @@ GristResult.prototype.renderUngeocodedRows = function () {
     },
     maxRows: 5,
     paginate: true,
-    emptyMessage: "Aucune ligne à vérifier.",
+    emptyMessage: mviewer.tr("grist.result.no_rows"),
   });
 
   return table.render();
@@ -109,7 +109,7 @@ GristResult.prototype.renderActions = function () {
   if (this.displayCorrectionBtn) {
     actions.push(
       createGristResultButton(
-        "Corriger dans Grist",
+        mviewer.tr("grist.result.edit"),
         "btn grist-geocoding-result-secondary-button",
         this.onCorrection
       )
@@ -119,7 +119,7 @@ GristResult.prototype.renderActions = function () {
   if (this.displayTriggerProcessBtn) {
     actions.push(
       createGristResultButton(
-        "Relancer",
+        mviewer.tr("grist.result.retry"),
         "btn grist-geocoding-result-primary-button",
         this.onTriggerProcess
       )
@@ -158,7 +158,7 @@ GristResult.prototype.render = function () {
   title.className = "grist-geocoding-result-title";
   title.textContent = this.label;
   counter.className = "grist-geocoding-result-counter";
-  counter.innerHTML = `<strong>${this.localizedRows}/${this.totalRows}</strong> lignes localisées`;
+  counter.innerHTML = `<strong>${this.localizedRows}/${this.totalRows}</strong> ${mviewer.tr("grist.result.localized_rows")}`;
   message.className = "grist-geocoding-result-message";
   message.textContent = this.message;
 

@@ -8,9 +8,8 @@
  */
 const RefreshGristDataBtn = function (options = {}) {
   this.onRefresh = options.onRefresh || (async () => {});
-  this.successMessage = options.successMessage || "Données actualisées.";
-  this.errorMessage =
-    options.errorMessage || "Impossible d’actualiser les données.";
+  this.successMessage = options.successMessage || mviewer.tr("grist.refresh.success");
+  this.errorMessage = options.errorMessage || mviewer.tr("grist.refresh.error");
   this.element = document.createElement("div");
 };
 
@@ -22,7 +21,7 @@ const RefreshGristDataBtn = function (options = {}) {
  */
 RefreshGristDataBtn.prototype.refresh = async function (button) {
   button.disabled = true;
-  button.replaceChildren("Actualiser les données", this.createSpinner());
+  button.replaceChildren(mviewer.tr("grist.refresh.label"), this.createSpinner());
 
   try {
     await this.onRefresh();
@@ -31,7 +30,7 @@ RefreshGristDataBtn.prototype.refresh = async function (button) {
     alertCustom(this.errorMessage, "danger");
   } finally {
     button.disabled = false;
-    button.textContent = "Actualiser les données";
+    button.textContent = mviewer.tr("grist.refresh.label");
   }
 };
 
@@ -60,7 +59,7 @@ RefreshGristDataBtn.prototype.render = function () {
 
   button.type = "button";
   button.className = "btn btn-outline-primary btn-sm mb-3";
-  button.textContent = "Actualiser les données";
+  button.textContent = mviewer.tr("grist.refresh.label");
   button.addEventListener("click", () => this.refresh(button));
 
   this.element.replaceChildren(button);

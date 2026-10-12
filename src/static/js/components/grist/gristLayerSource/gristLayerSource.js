@@ -65,7 +65,7 @@ GristLayerSource.prototype.getSourceData = async function () {
   const rows = records.map((record) => record.fields || {});
   const fields = rows.length
     ? Object.keys(rows[0])
-    : ((this.data && this.data.meta.fields) || []);
+    : (this.data && this.data.meta.fields) || [];
 
   return { docId: this.docId, tableId: this.tableId, fields, rows, records };
 };

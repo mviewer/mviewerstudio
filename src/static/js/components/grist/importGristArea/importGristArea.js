@@ -130,8 +130,8 @@ const importGristArea = function (activeType = "file", options = {}) {
   this.element.className = "import-type-buttons";
 
   this.documentNameSelect = new Select({
-    label: "Document Grist :",
-    placeholder: "Sélectionner ou créer un document",
+    label: mviewer.tr("grist.import.document_label"),
+    placeholder: mviewer.tr("grist.import.document_placeholder"),
     classes: "row align-items-center my-3",
     labelClasses: "col-3 col-form-label",
     selectClasses: "col-6",
@@ -149,11 +149,11 @@ const importGristArea = function (activeType = "file", options = {}) {
   });
 
   this.documentNameInput = new Input({
-    label: "Nom du document :",
+    label: mviewer.tr("grist.import.document_name_label"),
     classes: "row align-items-center my-3",
     labelClasses: "col-3 col-form-label",
     inputClasses: "col-6",
-    placeholder: "Nom du document...",
+    placeholder: mviewer.tr("grist.import.document_name_placeholder"),
     onChange: (value) => {
       this.fileDocumentName = value;
       this.sentTable = null;
@@ -162,24 +162,24 @@ const importGristArea = function (activeType = "file", options = {}) {
   });
 
   this.tableNameInput = new Input({
-    label: "Nom de la table :",
+    label: mviewer.tr("grist.import.table_name_label"),
     classes: "row align-items-center my-3",
     labelClasses: "col-3 col-form-label",
     inputClasses: "col-6",
-    placeholder: "Nom de la table...",
+    placeholder: mviewer.tr("grist.import.table_name_placeholder"),
     onChange: (value) => {
       this.fileTableName = value;
       this.sentTable = null;
       this.updateGristWizardNextButtonForFile();
       this.filePreviewTable.setTitle(
-        this.fileTableName || "Fichier importe",
-        "Apercu des 5 premieres lignes"
+        this.fileTableName || mviewer.tr("grist.import.file_title"),
+        mviewer.tr("grist.preview.subtitle")
       );
     },
   });
   this.filePreviewTable = new Table({
     maxRows: 5,
-    emptyMessage: "Aucune donnee a previsualiser.",
+    emptyMessage: mviewer.tr("grist.preview.empty"),
     classes: "mb-0",
   });
   this.fileUrlCard = new UrlCard({
@@ -189,8 +189,8 @@ const importGristArea = function (activeType = "file", options = {}) {
   });
   this.uploadFile = new UploadFile({
     accept: [".csv", ".txt", ".xlsx"],
-    placeholder: "Glissez-deposez un fichier CSV, TXT ou XLSX,\nou selectionnez un fichier",
-    buttonLabel: "Choisir un fichier",
+    placeholder: mviewer.tr("grist.import.file_placeholder"),
+    buttonLabel: mviewer.tr("grist.import.file_choose"),
     onChange: async (file) => {
       this.file = file;
       this.fileVerification = null;
@@ -211,7 +211,7 @@ const importGristArea = function (activeType = "file", options = {}) {
           verification = {
             valid: false,
             reason: "read_error",
-            message: "Impossible de lire le fichier.",
+            message: mviewer.tr("grist.import.file_read_error"),
           };
           console.error("Error reading imported file:", error);
         }
@@ -262,7 +262,7 @@ importGristArea.prototype.loadDocumentOptions = function (select) {
   if (!this.documentOptionsPromise) {
     this.documentOptionsPromise = listDocs(this.apiKey)
       .then((documents) => [
-        { label: "Créer un document", value: "create" },
+        { label: mviewer.tr("grist.import.document_create"), value: "create" },
         ...documents
           .map((document) => ({
             label: getGristEntityName(document),
@@ -272,7 +272,7 @@ importGristArea.prototype.loadDocumentOptions = function (select) {
       ])
       .catch((error) => {
         console.error("Error loading Grist documents:", error);
-        return [{ label: "Créer un document", value: "create" }];
+        return [{ label: mviewer.tr("grist.import.document_create"), value: "create" }];
       });
   }
 
@@ -490,7 +490,7 @@ importGristArea.prototype.sendFileToGrist = async function () {
   }
 
   if (!this.fileVerification || !this.fileVerification.valid || !parsedData) {
-    throw new Error("Le fichier n'a pas pu être lu correctement.");
+    throw new Error(mviewer.tr("grist.import.file_invalid"));
   }
 
   const result = await sendParsedFileToGrist(
@@ -532,7 +532,7 @@ importGristArea.prototype.prepareForLocationStep = async function () {
   const sourceData = await this.getSourceData();
 
   if (!sourceData.rows.length || !sourceData.fields.length) {
-    throw new Error("La table Grist ne contient aucune donnée exploitable.");
+    throw new Error(mviewer.tr("grist.import.table_empty"));
   }
 
   this.onColumnsChange(sourceData.fields);
@@ -576,8 +576,9 @@ importGristArea.prototype.updateFilePreview = function () {
   }
   previewContainer.appendChild(this.tableNameInput.render());
 
-  this.filePreviewTable.title = this.fileTableName || "Fichier importe";
-  this.filePreviewTable.subtitle = "Apercu des 5 premieres lignes";
+  this.filePreviewTable.title =
+    this.fileTableName || mviewer.tr("grist.import.file_title");
+  this.filePreviewTable.subtitle = mviewer.tr("grist.preview.subtitle");
   previewContainer.appendChild(this.filePreviewTable.setData(parsedData));
 
   const openTableContainer = document.createElement("div");
@@ -639,21 +640,21 @@ importGristArea.prototype.render = function () {
         class="import-type-buttons__button${this.activeType === "file" ? " active" : ""}"
         data-import-type="file"
       >
-        <span class="import-type-buttons__title">Importer un fichier</span>
-        <span class="import-type-buttons__description">Ajoutez facilement vos donnees depuis un fichier CSV ou Excel</span>
+        <span class="import-type-buttons__title">${mviewer.tr("grist.import.file_label")}</span>
+        <span class="import-type-buttons__description">${mviewer.tr("grist.import.file_description")}</span>
       </button>
       <button
         type="button"
         class="import-type-buttons__button${this.activeType === "grist" ? " active" : ""}"
         data-import-type="grist"
       >
-        <span class="import-type-buttons__title">Choisir une table Grist</span>
-        <span class="import-type-buttons__description">Selectionnez une table existante dans votre espace Grist</span>
+        <span class="import-type-buttons__title">${mviewer.tr("grist.import.table_choose")}</span>
+        <span class="import-type-buttons__description">${mviewer.tr("grist.import.table_description")}</span>
       </button>
     </div>
     <div class="import-type-buttons__content" data-import-content="file">
       <div data-upload-file-area></div>
-      <div class="my-2">...ou utiliser une URL :</div>
+      <div class="my-2">${mviewer.tr("grist.import.url.alternative")}</div>
       <div class="mt-3" data-upload-file-url-area>
         <p class="small mt-2 mb-0" role="status" data-upload-file-url-status></p>
       </div>

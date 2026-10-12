@@ -32,7 +32,8 @@ const Tooltip = function (options = {}) {
   this.color = options.color || "primary";
   this.classes = options.classes || "";
   this.element = document.createElement("button");
-  this.element.className = `btn btn-link border-0 p-0 tooltip-icon ${this.classes}`.trim();
+  this.element.className =
+    `btn btn-link border-0 p-0 tooltip-icon ${this.classes}`.trim();
   this.element.type = "button";
 };
 
