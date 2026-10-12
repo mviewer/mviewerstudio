@@ -619,10 +619,11 @@ var mv = (function () {
         // will fall back to the Grist instance URL if not
         var gristApiUrl = _conf.grist.proxy;
         if (!gristApiUrl) {
-          gristApiUrl = new URL(
-            _conf.grist.api_url || _conf.grist.instance_url,
-            window.location.href
-          ).href.replace(/\/+$/, "") + "/api";
+          gristApiUrl =
+            new URL(
+              _conf.grist.api_url || _conf.grist.instance_url,
+              window.location.href
+            ).href.replace(/\/+$/, "") + "/api";
         }
         gristApiUrl = gristApiUrl.replace(/\/+$/, "");
         var gristLayer = {
@@ -638,7 +639,9 @@ var mv = (function () {
             encodeURIComponent(gristTargetTable.docId) +
             "/download/csv?tableId=" +
             encodeURIComponent(gristTargetTable.tableId),
-          srs: "EPSG:4326",
+          srs:
+            document.getElementById("newlayer-grist-coordinate-projection").value ||
+            "EPSG:4326",
           sld: "demo/sld/default_point.sld",
           tooltipcontent: "{{adresse}}",
           attribution: "Dans cet exemple, le fichier csv provient de Grist",
@@ -822,12 +825,7 @@ var mv = (function () {
       }
     },
 
-    showLayerOptions: function (
-      el,
-      themeid,
-      layerid,
-      preserveActiveTab = false
-    ) {
+    showLayerOptions: function (el, themeid, layerid, preserveActiveTab = false) {
       // Init params display
       [...document.querySelectorAll("#mod-layerOptions .layerOption-wms")].forEach((e) =>
         e.classList.add("d-none")
@@ -1026,8 +1024,7 @@ var mv = (function () {
         }
 
         // Keep the modal responsive while the authenticated CSV request is running.
-        previewContainer.innerHTML =
-          `<div class="text-muted">${mviewer.tr("modal.layer.grist.preview.loading")}</div>`;
+        previewContainer.innerHTML = `<div class="text-muted">${mviewer.tr("modal.layer.grist.preview.loading")}</div>`;
         // The CSV endpoint is protected by the same API key used by the Grist import flow.
         fetch(layer.url, {
           headers: { Authorization: `Bearer ${apiKey}` },
@@ -1056,7 +1053,9 @@ var mv = (function () {
             previewContainer.replaceChildren(preview.render());
             // The layer URL contains the Grist document and table identifiers.
             const gristUrl = new URL(layer.url, window.location.origin);
-            const documentMatch = gristUrl.pathname.match(/\/api\/docs\/([^/]+)\/download\/csv$/);
+            const documentMatch = gristUrl.pathname.match(
+              /\/api\/docs\/([^/]+)\/download\/csv$/
+            );
             const tableId = gristUrl.searchParams.get("tableId");
             const gristConfig = _conf.grist || {};
             const instanceUrl = gristConfig.instance_url || gristConfig.api_url;
@@ -1112,8 +1111,7 @@ var mv = (function () {
             previewContainer.appendChild(geolocationCard.render());
           })
           .catch((error) => {
-            previewContainer.innerHTML =
-              `<div class="alert alert-danger">${mviewer.tr("modal.layer.grist.preview.error")}</div>`;
+            previewContainer.innerHTML = `<div class="alert alert-danger">${mviewer.tr("modal.layer.grist.preview.error")}</div>`;
             console.error("Error loading Grist layer preview:", error);
           });
       }
