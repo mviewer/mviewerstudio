@@ -81,7 +81,17 @@ mv.utils.grist.refGeo = gristRefGeo;
 
 const gristContentTarget = document.getElementById("newlayer-grist-content");
 if (gristContentTarget) {
-  new GristContent().appendTo(gristContentTarget);
+  const renderGristContent = () => {
+    new GristContent().appendTo(gristContentTarget);
+  };
+
+  if (mviewer.translationsReady) {
+    renderGristContent();
+  } else {
+    document.addEventListener("mviewerstudio:translations-ready", renderGristContent, {
+      once: true,
+    });
+  }
 }
 
 gristUtils.bindNewLayerModalGrist();
