@@ -10,7 +10,7 @@
  *  - user can check data before import from this table
  */
 
-const DEFAULT_MAX_ROWS = 5;
+import { DEFAULT_MAX_ROWS, MAX_VISIBLE_PAGES, PAGE_NEIGHBOR_COUNT } from "./constants.js";
 
 /**
  * Returns rows from either a raw array or a PapaParse result object.
@@ -209,6 +209,9 @@ Table.prototype.renderPagination = function (pageCount) {
     item.classList.toggle("disabled", disabled);
     item.classList.toggle("active", active);
     button.disabled = disabled;
+    if (active) {
+      button.setAttribute("aria-current", "page");
+    }
     button.addEventListener("click", () => {
       this.currentPage = page;
       this.render();
@@ -219,9 +222,35 @@ Table.prototype.renderPagination = function (pageCount) {
 
   addItem("‹ Précédent", this.currentPage - 1, this.currentPage === 1, false);
 
-  for (let page = 1; page <= pageCount; page += 1) {
-    addItem(String(page), page, false, page === this.currentPage);
+  const pages = [];
+  if (pageCount <= MAX_VISIBLE_PAGES) {
+    for (let page = 1; page <= pageCount; page += 1) {
+      pages.push(page);
+    }
+  } else {
+    pages.push(1);
+    const firstPage = Math.max(2, this.currentPage - PAGE_NEIGHBOR_COUNT);
+    const lastPage = Math.min(pageCount - 1, this.currentPage + PAGE_NEIGHBOR_COUNT);
+    for (let page = firstPage; page <= lastPage; page += 1) {
+      pages.push(page);
+    }
+    pages.push(pageCount);
   }
+
+  let previousPage = 0;
+  pages.forEach((page) => {
+    if (previousPage && page - previousPage > 1) {
+      const item = document.createElement("li");
+      const ellipsis = document.createElement("span");
+      item.className = "page-item disabled";
+      ellipsis.className = "page-link";
+      ellipsis.textContent = "…";
+      item.appendChild(ellipsis);
+      list.appendChild(item);
+    }
+    addItem(String(page), page, false, page === this.currentPage);
+    previousPage = page;
+  });
 
   addItem("Suivant ›", this.currentPage + 1, this.currentPage === pageCount, false);
   nav.appendChild(list);

@@ -1036,6 +1036,7 @@ STYLE FOR GRIST IMPORT
 
 .table-preview__pagination {
 	display: flex;
+	flex-wrap: wrap;
 	gap: 8px;
 	margin-top: 14px;
 }
