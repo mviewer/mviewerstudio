@@ -452,6 +452,10 @@ const bindNewLayerModalGrist = (
     }
 
     if (nextButton) {
+      if (nextButton.disabled) {
+        return;
+      }
+
       let currentStep = nextButton.dataset.step || 1;
 
       if (currentStep === "2") {

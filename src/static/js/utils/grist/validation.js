@@ -3,7 +3,12 @@
  * @module utils/grist/validation
  */
 import {
+  GRIST_COORDINATE_X_FIELD_ID,
+  GRIST_COORDINATE_Y_FIELD_ID,
+  GRIST_LOCATION_SWITCH_IDS,
   GRIST_MODAL_ID,
+  GRIST_REF_GEO_MATCHING_FIELD_ID,
+  GRIST_REF_GEO_REFERENTIAL_ID,
   GRIST_TAB_TARGET,
   GRIST_WIZARD_NEXT_BUTTON_ID,
   SELECT_LAYERS_BUTTON_ID,
@@ -21,6 +26,66 @@ const getSelectLayersButton = () => document.getElementById(SELECT_LAYERS_BUTTON
  */
 const getGristWizardNextButton = () =>
   document.getElementById(GRIST_WIZARD_NEXT_BUTTON_ID);
+
+/**
+ * Check that a rendered localization select has a non-empty value.
+ * @param {string} fieldId Select identifier.
+ * @returns {boolean} Whether a value is selected.
+ */
+const hasGristLocationFieldValue = (fieldId) => {
+  const field = document.getElementById(fieldId);
+  if (!field) {
+    return false;
+  }
+
+  return field.value.trim() !== "";
+};
+
+/**
+ * Validate the fields required by the selected localization mode.
+ * @returns {boolean} Whether the active localization configuration is complete.
+ */
+const isGristLocationReady = () => {
+  const activeSwitch = document.querySelector(
+    'input[name="newlayer-grist-location-mode"]:checked'
+  );
+  if (!activeSwitch) {
+    return false;
+  }
+
+  if (activeSwitch.id === GRIST_LOCATION_SWITCH_IDS.ref) {
+    return (
+      hasGristLocationFieldValue(GRIST_REF_GEO_MATCHING_FIELD_ID) &&
+      hasGristLocationFieldValue(GRIST_REF_GEO_REFERENTIAL_ID)
+    );
+  }
+
+  if (activeSwitch.id === GRIST_LOCATION_SWITCH_IDS.xy) {
+    return (
+      hasGristLocationFieldValue(GRIST_COORDINATE_X_FIELD_ID) &&
+      hasGristLocationFieldValue(GRIST_COORDINATE_Y_FIELD_ID)
+    );
+  }
+
+  const button = getGristWizardNextButton();
+  return button.dataset.locationReady === "true";
+};
+
+/**
+ * Validate the next button for the current API key, data or localization step.
+ * @returns {void} Updates the button's disabled state when present.
+ */
+const updateGristWizardNextButton = () => {
+  const button = getGristWizardNextButton();
+  if (!button) {
+    return;
+  }
+
+  button.disabled =
+    (button.dataset.step === "1" && button.dataset.apiKeyReady !== "true") ||
+    (button.dataset.step === "2" && button.dataset.ready !== "true") ||
+    (button.dataset.step === "3" && !isGristLocationReady());
+};
 
 /** @type {boolean} Whether the latest Grist result contains localized rows. */
 let hasLocalizedGristRows = false;
@@ -130,7 +195,7 @@ const updateSelectLayersButtonForLocalizedRows = (localizedRows, locationMode) =
 
 /**
  * Store data readiness on the next button and update its disabled state.
- * Disable the button only when step 2 is active and the data is not ready.
+ * Apply the validation rules for the current wizard step.
  * @param {boolean|string|null|undefined} ready Truthy when data is ready;
  * callers may also pass the document/table identifier expression directly.
  * @returns {void}
@@ -147,7 +212,7 @@ const setGristWizardNextButtonReady = (ready) => {
   if (ready) {
     button.dataset.ready = "true";
   }
-  button.disabled = button.dataset.step === "2" && !ready;
+  updateGristWizardNextButton();
 };
 
 /**
@@ -156,6 +221,40 @@ const setGristWizardNextButtonReady = (ready) => {
  */
 const disableGristWizardNextButton = () => {
   setGristWizardNextButtonReady(false);
+};
+
+/**
+ * Store localization readiness and update the next button during step 3.
+ * @param {boolean} ready Whether the localization configuration is ready.
+ * @returns {void}
+ */
+const setGristWizardLocationReady = (ready) => {
+  const button = getGristWizardNextButton();
+
+  if (!button) {
+    return;
+  }
+
+  button.dataset.locationReady = "false";
+  if (ready) {
+    button.dataset.locationReady = "true";
+  }
+
+  updateGristWizardNextButton();
+};
+
+/**
+ * Require at least one selected field for address geocoding.
+ * @param {string[]} fields Selected address fields.
+ * @param {string} [locationMode=GRIST_LOCATION_SWITCH_IDS.address] Active mode.
+ * @returns {void} Stores localization readiness and validates the next button.
+ */
+const updateGristWizardNextButtonForAddressFields = (
+  fields,
+  locationMode = GRIST_LOCATION_SWITCH_IDS.address
+) => {
+  const ready = locationMode !== GRIST_LOCATION_SWITCH_IDS.address || fields.length > 0;
+  setGristWizardLocationReady(ready);
 };
 
 /**
@@ -218,6 +317,18 @@ const bindNewLayerModalValidation = (modal = document.getElementById(GRIST_MODAL
 
   modal.dataset.gristValidationBound = "true";
 
+  modal.addEventListener("change", (event) => {
+    const locationFieldIds = [
+      GRIST_REF_GEO_MATCHING_FIELD_ID,
+      GRIST_REF_GEO_REFERENTIAL_ID,
+      GRIST_COORDINATE_X_FIELD_ID,
+      GRIST_COORDINATE_Y_FIELD_ID,
+    ];
+    if (locationFieldIds.includes(event.target.id)) {
+      updateGristWizardNextButton();
+    }
+  });
+
   modal.addEventListener("click", (event) => {
     const tab = event.target.closest('[data-bs-toggle="pill"]');
     const closeButton = event.target.closest(".close, [i18n='close']");
@@ -258,6 +369,8 @@ export {
   hasImportedFileTable,
   setGristWizardNextButtonReady,
   setSelectLayersButtonDisabled,
+  updateGristWizardNextButton,
+  updateGristWizardNextButtonForAddressFields,
   updateGristWizardNextButtonForSelectedTable,
   updateGristWizardNextButtonForSentTable,
   updateSelectLayersButtonForImportedFile,

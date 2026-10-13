@@ -16,6 +16,7 @@ import {
   GRIST_WIZARD_NEXT_BUTTON_ID,
   NEW_LAYER_BY_GRIST_ID,
 } from "./const.js";
+import { updateGristWizardNextButton } from "./validation.js";
 
 /**
  * @typedef {HTMLElement & {
@@ -75,9 +76,7 @@ const setGristWizardStep = (step) => {
 
   if (nextButton) {
     nextButton.classList.toggle("d-none", activeStep >= maxStep);
-    nextButton.disabled =
-      (activeStep === 1 && nextButton.dataset.apiKeyReady !== "true") ||
-      (activeStep === 2 && nextButton.dataset.ready !== "true");
+    updateGristWizardNextButton();
   }
 };
 

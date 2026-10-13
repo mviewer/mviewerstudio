@@ -5,6 +5,7 @@
  * @param {string[]} [options.fields=[]] Available table fields.
  * @param {string[]} [options.values=[]] Initially selected fields.
  * @param {string} [options.id] Multiselect identifier.
+ * @param {Function} [options.onChange] Callback called with selected fields.
  * @returns {void}
  */
 const GristAddressArea = function (options = {}) {
@@ -17,6 +18,7 @@ const GristAddressArea = function (options = {}) {
     placeholder: mviewer.tr("template.ph.add_field"),
     options: this.fields,
     values: options.values || [],
+    onChange: options.onChange,
   });
 };
 

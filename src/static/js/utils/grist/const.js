@@ -15,6 +15,8 @@ const NEW_LAYER_BY_GRIST_ID = "newlayer-grist-workflow";
 const GRIST_REF_GEO_MATCHING_FIELD_ID = "newlayer-grist-refgeo-matching-field";
 const GRIST_REF_GEO_REFERENTIAL_ID = "newlayer-grist-refgeo-referential";
 const GRIST_REF_GEO_OUTPUT_FORMAT_ID = "newlayer-grist-refgeo-output-format";
+const GRIST_COORDINATE_X_FIELD_ID = "newlayer-grist-coordinate-x";
+const GRIST_COORDINATE_Y_FIELD_ID = "newlayer-grist-coordinate-y";
 const GRIST_TEXT_FILE_EXTENSIONS = ["csv", "txt"];
 const GRIST_SPREADSHEET_FILE_EXTENSIONS = ["xlsx"];
 
@@ -58,6 +60,8 @@ export {
   GRIST_ADDRESS_PROJECTION,
   BAN_GEOCODING_FIELDS,
   GRIST_AUTH_CONTAINER_ID,
+  GRIST_COORDINATE_X_FIELD_ID,
+  GRIST_COORDINATE_Y_FIELD_ID,
   GRIST_DATA_CONTAINER_ID,
   GRIST_FOOTER_ID,
   GRIST_GEOMETRY_FIELD,

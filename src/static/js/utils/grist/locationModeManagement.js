@@ -4,6 +4,10 @@ import {
   GRIST_LOCATION_SWITCH_IDS,
   GRIST_LOCATION_TARGET_IDS,
 } from "./const.js";
+import {
+  updateGristWizardNextButton,
+  updateGristWizardNextButtonForAddressFields,
+} from "./validation.js";
 
 const gristLocationState = {
   activeArea: null,
@@ -111,6 +115,7 @@ const renderGristLocationArea = (selectedSwitchId) => {
     switchItem.setContent(null);
   });
   gristLocationState.activeArea = null;
+  updateGristWizardNextButtonForAddressFields([], selectedSwitchId);
 
   const selectedSwitch = gristLocationState.switches.find(
     (switchItem) => switchItem.id === selectedSwitchId
@@ -132,6 +137,7 @@ const renderGristLocationArea = (selectedSwitchId) => {
     const addressArea = new GristAddressArea({
       fields: gristLocationState.fields,
       id: "newlayer-grist-address-fields",
+      onChange: updateGristWizardNextButtonForAddressFields,
     });
     gristLocationState.activeArea = addressArea;
     selectedSwitch.setContent(addressArea.render());
@@ -159,6 +165,8 @@ const renderGristLocationArea = (selectedSwitchId) => {
     gristLocationState.activeArea = coordinatesArea;
     selectedSwitch.setContent(coordinatesArea.render());
   }
+
+  updateGristWizardNextButton();
 };
 
 /**
