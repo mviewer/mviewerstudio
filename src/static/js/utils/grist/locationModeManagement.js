@@ -1,6 +1,5 @@
 import {
   GRIST_ADDRESS_PROJECTION,
-  GRIST_LOCATION_PROJECTION_CARD_ID,
   GRIST_LOCATION_SWITCH_IDS,
   GRIST_LOCATION_TARGET_IDS,
 } from "./const.js";
@@ -25,35 +24,23 @@ const getGristComponent = (componentName) => {
 };
 
 /**
- * Initialize coordinate controls and place their projection selector in the
- * last card of the new-layer localization step.
+ * Initialize coordinate controls with their projection selector.
  *
  * @returns {void}
  */
 const initGristLocationProjection = () => {
   const coordinatesTarget = document.getElementById(GRIST_LOCATION_TARGET_IDS.xy);
   const GristCoordinatesArea = getGristComponent("gristCoordinatesArea");
-  if (!coordinatesTarget || !GristCoordinatesArea || !mv.components.listCard) {
+  if (!coordinatesTarget || !GristCoordinatesArea) {
     return;
-  }
-
-  const previousCard = document.getElementById(GRIST_LOCATION_PROJECTION_CARD_ID);
-  if (previousCard) {
-    previousCard.remove();
   }
 
   const coordinatesArea = new GristCoordinatesArea({
     columns: gristLocationState.fields,
     idPrefix: "newlayer-grist-coordinate",
-    displayProjection: false,
+    displayProjection: true,
   });
   gristLocationState.coordinatesArea = coordinatesArea;
-  const projectionCard = new mv.components.listCard({
-    title: mviewer.tr("modal.layer.grist.mode.coordinates.projection"),
-    items: [coordinatesArea.renderProjection()],
-  }).render();
-  projectionCard.id = GRIST_LOCATION_PROJECTION_CARD_ID;
-  coordinatesTarget.parentElement.appendChild(projectionCard);
 };
 
 /**
