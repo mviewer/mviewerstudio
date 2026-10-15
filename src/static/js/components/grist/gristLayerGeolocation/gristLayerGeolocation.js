@@ -49,14 +49,10 @@ export const openGristLayerGeolocation = ({
     xField: layer.xfield,
     yField: layer.yfield,
     projection: layer.srs,
-    displayProjection: false,
+    displayProjection: true,
     onProjectionChange: (projection) => {
       layer.srs = projection;
     },
-  });
-  const projectionListCard = new mvInstance.components.listCard({
-    title: translator.tr("modal.layer.grist.mode.coordinates.projection"),
-    items: [coordinatesArea.renderProjection()],
   });
   const updateGristLayerGeolocation = (geolocType) => {
     layer.geolocType = geolocType;
@@ -97,7 +93,6 @@ export const openGristLayerGeolocation = ({
       fields: gristFields,
       geolocType: layer.geolocType,
       locationListCard: true,
-      locationCards: [projectionListCard.render()],
       locationModes: [
         {
           value: "address",
@@ -122,6 +117,13 @@ export const openGristLayerGeolocation = ({
               idPrefix: "layer-grist-geolocation-ref",
               fields: gristFields,
               matchingField: layer.geojsonField,
+              onReferentialChange: (label) => {
+                const referentials = gristConfig.grist_referentials || [];
+                const referential = referentials.find((item) => item.label === label);
+                if (referential && referential.srs) {
+                  layer.srs = referential.srs;
+                }
+              },
             }).render(),
         },
         {

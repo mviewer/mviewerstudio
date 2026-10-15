@@ -9,7 +9,6 @@ const GRIST_FOOTER_ID = "newlayer-grist-footer";
 const GRIST_RESULT_CONTAINER_ID = "newlayer-grist-result";
 const GRIST_GEOMETRY_FIELD = "geometry";
 const GRIST_ADDRESS_PROJECTION = "EPSG:4326";
-const GRIST_LOCATION_PROJECTION_CARD_ID = "newlayer-grist-location-projection";
 const GRIST_WIZARD_CONTAINER_ID = "newlayer-grist-wizard";
 const NEW_LAYER_BY_GRIST_ID = "newlayer-grist-workflow";
 const GRIST_REF_GEO_MATCHING_FIELD_ID = "newlayer-grist-refgeo-matching-field";
@@ -65,7 +64,6 @@ export {
   GRIST_DATA_CONTAINER_ID,
   GRIST_FOOTER_ID,
   GRIST_GEOMETRY_FIELD,
-  GRIST_LOCATION_PROJECTION_CARD_ID,
   GRIST_LOCATION_SWITCH_IDS,
   GRIST_LOCATION_TARGET_IDS,
   GRIST_MODAL_ID,

@@ -8,9 +8,11 @@ const DEFAULT_REFERENTIALS = [{ label: "Communes" }];
  * @param {string[]} [options.fields=[]] Available table fields.
  * @param {string} [options.idPrefix] Prefix for select identifiers.
  * @param {string} [options.matchingField] Selected matching field.
+ * @param {Function} [options.onReferentialChange] Called with the selected referential label on render and change.
  */
 const GristRefGeoArea = function (options = {}) {
   this.fieldOptions = this.getFieldOptions(options.fields || []);
+  this.onReferentialChange = options.onReferentialChange || function () {};
   const idPrefix = options.idPrefix || "grist-refgeo";
 
   this.referentialSelectId = `${idPrefix}-referential`;
@@ -100,6 +102,11 @@ GristRefGeoArea.prototype.render = function () {
   );
   matchingFieldContainer.append(this.matchingFieldSelect.render());
   this.renderReferentialOptions();
+  const referentialSelect = this.element.querySelector(`#${this.referentialSelectId}`);
+  referentialSelect.addEventListener("change", () => {
+    this.onReferentialChange(this.getReferential());
+  });
+  this.onReferentialChange(this.getReferential());
 
   return this.element;
 };
