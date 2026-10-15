@@ -9,7 +9,7 @@ import {
   postColumnsToTable,
   postCsvToBanGeocoding,
 } from "./requests.js";
-import { getGristConfig } from "./utils.js";
+import { getGristConfig, getGristGeocodingConfig } from "./utils.js";
 import GristResult, {
   createGristResultButton,
 } from "../../components/grist/results/results.js";
@@ -436,7 +436,10 @@ const geocodeAddressFieldsWithBan = async (importGristArea, getAddressFields) =>
     throw new Error(mviewer.tr("grist.geocoding.upload_required"));
   }
 
-  const response = await postCsvToBanGeocoding(rowsToCsv(sourceData.rows, fields));
+  const response = await postCsvToBanGeocoding(
+    rowsToCsv(sourceData.rows, fields),
+    getGristGeocodingConfig()
+  );
 
   if (!response.ok) {
     throw new Error(

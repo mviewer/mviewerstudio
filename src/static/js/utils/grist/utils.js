@@ -4,6 +4,31 @@ import {
   getUserOrgs,
   getWorkspaceDocsList,
 } from "./requests.js";
+import { GRIST_GEOCODING_DEFAULT_CONFIG } from "./const.js";
+
+/**
+ * Read address geocoding settings from grist.geocoding.
+ *
+ * @returns {Object} Geocoding service, projection and quality settings.
+ */
+export const getGristGeocodingConfig = () => {
+  const gristConfig = window._conf.grist || {};
+  return {
+    ...GRIST_GEOCODING_DEFAULT_CONFIG,
+    // override default config from static/config.json
+    ...gristConfig.geocoding,
+  };
+};
+
+/**
+ * @typedef {Object} GristEntity
+ * @property {string|number} [id] Entity identifier.
+ * @property {string} [name] Entity name.
+ * @property {string} [title] Entity title.
+ * @property {string} [domain] Organization domain.
+    ...gristConfig.geocoding,
+  };
+};
 
 /**
  * @typedef {Object} GristEntity
@@ -42,9 +67,10 @@ export const getGristConfig = () => {
   const apiUrl = gristConfig.api_url || instanceUrl;
   const orgId = gristConfig.org_id || "Personal";
   const workspaceName = gristConfig.workspace_name;
-  const geocodingBanControlMode = gristConfig.geocoding_ban_control_type || "score";
-  const geocodingBanControlType = gristConfig.geocoding_ban_type_order || [];
-  const geocodingScoreThreshold = gristConfig.geocoding_score_threshold || 0.8;
+  const geocodingConfig = getGristGeocodingConfig();
+  const geocodingBanControlMode = geocodingConfig.geocoding_ban_control_type;
+  const geocodingBanControlType = geocodingConfig.ban_type_order;
+  const geocodingScoreThreshold = geocodingConfig.geocoding_score_threshold;
 
   if (!instanceUrl || !apiUrl || !orgId || !workspaceName) {
     throw new Error("Missing Grist configuration");

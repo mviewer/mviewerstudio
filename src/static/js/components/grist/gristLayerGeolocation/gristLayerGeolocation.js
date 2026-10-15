@@ -1,4 +1,7 @@
-import { getGristCsvTableInfo } from "../../../utils/grist/utils.js";
+import {
+  getGristCsvTableInfo,
+  getGristGeocodingConfig,
+} from "../../../utils/grist/utils.js";
 
 /**
  * Open the geolocation workflow for an existing Grist layer.
@@ -71,7 +74,7 @@ export const openGristLayerGeolocation = ({
       layer.srs = coordinatesArea.getProjection();
       return;
     }
-    layer.srs = "EPSG:4326";
+    layer.srs = getGristGeocodingConfig().srs;
   };
   let gristContent;
   const setWorkflowStep = (step) => gristContent.setStep(step === 4 ? 3 : step);
@@ -100,6 +103,7 @@ export const openGristLayerGeolocation = ({
           label: translator.tr("modal.layer.grist.mode.address.title"),
           description: translator.tr("modal.layer.grist.mode.address.description"),
           createContent: () => {
+            layer.srs = getGristGeocodingConfig().srs;
             addressArea = new mvInstance.components.grist.gristAddressArea({
               id: "layer-grist-geolocation-address-fields",
               fields: gristFields,

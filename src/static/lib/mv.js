@@ -639,9 +639,7 @@ var mv = (function () {
             encodeURIComponent(gristTargetTable.docId) +
             "/download/csv?tableId=" +
             encodeURIComponent(gristTargetTable.tableId),
-          srs:
-            document.getElementById("newlayer-grist-coordinate-projection").value ||
-            "EPSG:4326",
+          srs: $("#newlayer-grist-coordinate-projection").val() || "EPSG:4326",
           sld: "demo/sld/default_point.sld",
           tooltipcontent: "{{adresse}}",
           attribution: "Dans cet exemple, le fichier csv provient de Grist",
@@ -665,6 +663,8 @@ var mv = (function () {
           gristLayer.xfield = "longitude";
           gristLayer.yfield = "latitude";
           gristLayer.geolocType = "address";
+          var gristGeocodingConfig = _conf.grist.geocoding || {};
+          gristLayer.srs = gristGeocodingConfig.srs || "EPSG:4326";
         }
 
         config.themes[themeid].layers.push(gristLayer);

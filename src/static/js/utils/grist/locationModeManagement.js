@@ -1,12 +1,9 @@
-import {
-  GRIST_ADDRESS_PROJECTION,
-  GRIST_LOCATION_SWITCH_IDS,
-  GRIST_LOCATION_TARGET_IDS,
-} from "./const.js";
+import { GRIST_LOCATION_SWITCH_IDS, GRIST_LOCATION_TARGET_IDS } from "./const.js";
 import {
   updateGristWizardNextButton,
   updateGristWizardNextButtonForAddressFields,
 } from "./validation.js";
+import { getGristGeocodingConfig } from "./utils.js";
 
 const gristLocationState = {
   activeArea: null,
@@ -114,7 +111,7 @@ const renderGristLocationArea = (selectedSwitchId) => {
 
   if (selectedSwitchId === GRIST_LOCATION_SWITCH_IDS.address) {
     if (gristLocationState.coordinatesArea) {
-      gristLocationState.coordinatesArea.setProjection(GRIST_ADDRESS_PROJECTION);
+      gristLocationState.coordinatesArea.setProjection(getGristGeocodingConfig().srs);
     }
     const GristAddressArea = getGristComponent("gristAddressArea");
     if (!GristAddressArea) {

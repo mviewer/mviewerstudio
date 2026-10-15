@@ -346,9 +346,17 @@ export const getTableRecords = (instanceUrl, docId, tableId, apiKey, options = {
  * Send CSV data to the BAN geocoding API.
  *
  * @param {string} csvData CSV content to geocode.
+ * @param {Object} geocodingConfig Configured service URL and query parameters.
  * @returns {Promise<Response>} Fetch response from the BAN API.
  */
-export const postCsvToBanGeocoding = (csvData) => {
+export const postCsvToBanGeocoding = (csvData, geocodingConfig) => {
+  const url = new URL(geocodingConfig.url, window.location.href);
+  if (!/\/csv\/?$/.test(url.pathname)) {
+    url.pathname = `${url.pathname.replace(/\/+$/, "")}/csv/`;
+  }
+  Object.entries(geocodingConfig.params).forEach(([name, value]) => {
+    url.searchParams.set(name, value);
+  });
   const payload = new FormData();
   payload.append(
     "data",
@@ -356,7 +364,7 @@ export const postCsvToBanGeocoding = (csvData) => {
     "data.csv"
   );
 
-  return fetch("https://data.geopf.fr/geocodage/search/csv/", {
+  return fetch(url.href, {
     method: "POST",
     body: payload,
   });
