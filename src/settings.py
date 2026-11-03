@@ -10,10 +10,11 @@ class Config:
         "EXPORT_CONF_FOLDER", "/home/gaetan/projects/mviewer/mviewer/apps/store"
     )
     LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO")
+    PROXY_USER_AGENT = os.getenv("MVIEWERSTUDIO_PROXY_USER_AGENT", "mviewerstudio")
 
     PROXY_WHITE_LIST = os.getenv(
         "MVIEWERSTUDIO_PROXY_WHITE_LIST",
-        "geobretagne.fr,ows.region-bretagne.fr,kartenn.region-bretagne.fr",
+        "geobretagne.fr,ows.region-bretagne.fr,kartenn.region-bretagne.fr,qgisserver.hautsdefrance.fr"
     ).split(",")
     MVIEWERSTUDIO_PUBLISH_PATH = os.getenv(
         "MVIEWERSTUDIO_PUBLISH_PATH",
