@@ -9,6 +9,7 @@
  Environment="CONF_PATH_FROM_MVIEWER=apps/store"
  Environment="MVIEWERSTUDIO_PUBLISH_PATH=/var/www/mviewer/apps/prod"
  Environment="DEFAULT_ORG=public"
+ Environment="MVIEWERSTUDIO_AUTH_TYPE=georchestra"
  Environment="LOG_LEVEL=INFO"
  WorkingDirectory=/var/mviewerstudio
  ExecStart=/var/mviewerstudio/.venv/bin/gunicorn \

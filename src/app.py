@@ -1,5 +1,5 @@
 from .app_factory import create_app
-from .utils.register_utils import ConfigRegister
+from .services.register_service import ConfigRegister
 
 app = create_app()
 

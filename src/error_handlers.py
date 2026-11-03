@@ -12,7 +12,12 @@ def _jsonify_exception(error: HTTPException) -> Response:
     response.data = json.dumps({"name": error.name, "description": error.description})
     response.content_type = "application/json"
     logger.warning(
-        f"An error occured. Error code {response.status_code}, name: {error.name}"
+        "An error occured. Error code %s, name: %s, method: %s, path: %s, referrer: %s",
+        response.status_code,
+        error.name,
+        request.method,
+        request.path,
+        request.referrer,
     )
     return response
 

@@ -3,6 +3,14 @@ var API = {};
 
 var mviewer = {};
 
+function _isAuthlibMode(user) {
+  return user?.auth_mode === "authlib";
+}
+
+function _configureLogoutLink() {
+  $("#menu_user_logout a").attr("href", _conf.logout_url || "logout");
+}
+
 $(document).ready(function () {
   //Get URL Parameters
   if (window.location.search) {
@@ -33,10 +41,6 @@ $(document).ready(function () {
         `MviewerStudio | Licence GPL-3.0 | Version ${VERSION}`;
       let mvCompliantInfo = document.querySelector("#mviewerCompliantInfo");
       mvCompliantInfo.innerHTML = `${mvCompliantInfo.innerHTML} ${_conf.mviewer_version}`;
-
-      if (_conf.logout_url) {
-        $("#menu_user_logout a").attr("href", _conf.logout_url);
-      }
 
       // Update web page title and title in the brand navbar
       document.title = _conf.studio_title;
@@ -199,10 +203,30 @@ const getUser = () => {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
+      "X-Auth-Return-To": window.location.href,
     },
   })
-    .then((r) => (r.ok ? r.json() : Promise.reject(r)))
+    .then(async (r) => {
+      if (r.ok) {
+        return r.json();
+      }
+      if (r.status === 401) {
+        const payload = await r.json().catch(() => null);
+        if (payload && payload.login_url) {
+          window.location.assign(payload.login_url);
+          return null;
+        }
+        if (payload && payload.redirect_url) {
+          window.location.assign(payload.redirect_url);
+          return null;
+        }
+      }
+      return Promise.reject(r);
+    })
     .then((data) => {
+      if (!data) {
+        return;
+      }
       var userGroupFullName = "";
       var userGroupSlugName = "";
       var selectGroupPopup = false;
@@ -237,7 +261,10 @@ const getUser = () => {
           let connectText = `Connecté en tant que ${data.first_name} ${data.last_name} (${userGroupFullName})`;
           $("#user_connected").text(connectText);
           document.querySelector("#user_connected").classList.remove("d-none");
-          document.querySelector("#menu_user_logout").classList.remove("d-none");
+          if (_isAuthlibMode(data)) {
+            _configureLogoutLink();
+            document.querySelector("#menu_user_logout").classList.remove("d-none");
+          }
         }
       }
     })

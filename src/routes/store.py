@@ -1,15 +1,19 @@
 from flask import (
     Blueprint,
-    jsonify,
     Response,
+    jsonify,
     request,
     current_app,
     redirect,
     render_template_string,
     send_from_directory,
 )
-from .utils.login_utils import current_user
-from .utils.config_utils import (
+from pathlib import Path
+from urllib.parse import urlparse
+
+from ..services.auth import require_authenticated_user
+from ..utils.login_utils import current_user
+from ..utils.config_utils import (
     Config,
     write_file,
     edit_xml_string,
@@ -17,8 +21,8 @@ from .utils.config_utils import (
     replace_templates_url,
     read_xml_file_content,
 )
-from .utils.commons import clean_preview, init_preview, create_zip
-from .utils.route_utils import (
+from ..utils.commons import clean_preview, init_preview, create_zip
+from ..utils.route_utils import (
     validate_xml_creator,
     get_xml_identifier,
     get_existing_config_or_404,
@@ -26,21 +30,27 @@ from .utils.route_utils import (
     fetch_remote_xml,
 )
 import hashlib, uuid
-from .utils.register_utils import from_xml_path
+from ..utils.register_utils import from_xml_path
 from os import path, mkdir, remove
 from shutil import rmtree, copyfile, copytree
 from flask.blueprints import BlueprintSetupState
-from urllib.parse import urlparse
 import requests
-from .utils.git_utils import Git_manager
+from ..utils.git_utils import Git_manager
 from datetime import datetime
 
-from werkzeug.exceptions import BadRequest, MethodNotAllowed, Conflict
+from werkzeug.exceptions import (
+    BadRequest,
+    MethodNotAllowed,
+    Conflict,
+)
 
 import logging
 
 basic_store = Blueprint(
-    "basic-store", __name__, static_folder="static", static_url_path="/"
+    "basic-store",
+    __name__,
+    static_folder=str(Path(__file__).resolve().parents[1] / "static"),
+    static_url_path="/",
 )
 
 logger = logging.getLogger(__name__)
@@ -61,12 +71,25 @@ def basic_store_init(state: BlueprintSetupState):
         mkdir(styles_path)
 
 
+@basic_store.before_request
+def protect_authenticated_access() -> None:
+    return require_authenticated_user()
+
+
 @basic_store.route("/")
 def default_doc():
     """
     Return home page.
     """
     return redirect("index.html")
+
+
+@basic_store.route("/index.html", methods=["GET"])
+def index_doc() -> Response:
+    """
+    Serve the studio entry page only after auth checks have passed.
+    """
+    return send_from_directory(basic_store.static_folder, "index.html")
 
 
 @basic_store.route("/swagger", methods=["GET"])
@@ -103,16 +126,7 @@ def swagger_spec() -> Response:
     """
     Serve OpenAPI specification file.
     """
-    return send_from_directory(path.dirname(__file__), "swagger.yaml")
-
-
-@basic_store.route("/api/user", methods=["GET"])
-def user() -> Response:
-    """
-    Return current authentified user.
-    Actually works with sec-proxy only.
-    """
-    return jsonify(current_user.as_dict())
+    return send_from_directory(Path(__file__).resolve().parents[1], "swagger.yaml")
 
 
 @basic_store.route("/api/app/load", methods=["GET", "POST"])

@@ -2,6 +2,8 @@
 from .utils.login_utils import _get_current_user, User
 import pytest
 from .app_factory import create_app
+from .services.auth import authlib as authlib_service
+from .services.auth.authlib import allowed_authlib_groups, normalize_claims
 import hashlib
 import os
 from pathlib import Path
@@ -47,7 +49,7 @@ test_xml = """<?xml version="1.0" encoding="UTF-8"?>
 @pytest.fixture
 def cleandir():
     yield
-    shutil.rmtree(Path("./store"))
+    shutil.rmtree(Path("./store"), ignore_errors=True)
 
 
 @pytest.fixture
@@ -91,7 +93,7 @@ class TestAuthenticationUser:
             assert c.username == "anonymous"
             assert c.firstname == "anonymous"
             assert c.lastname == "anonymous"
-            assert c.organisation is None
+            assert c.organisation == "public"
             assert c.roles == [""]
 
     def test_headers(self):
@@ -112,6 +114,26 @@ class TestAuthenticationUser:
             assert c.firstname == "baz"
             # this should not happened IRL.
             assert c.lastname == "anonymous"
+
+    def test_keycloak_headers(self):
+        app = create_app()
+        app.testing = True
+        app.config["MVIEWERSTUDIO_AUTH_TYPE"] = "keycloak"
+        headers = {
+            "X-Forwarded-Preferred-Username": "foo",
+            "X-Forwarded-Given-Name": "baz",
+            "X-Forwarded-Family-Name": "baf",
+            "X-Forwarded-Org": "bar",
+            "X-Forwarded-Roles": "USER,ADMIN",
+        }
+        with app.test_request_context("/", headers=headers):
+            c = _get_current_user()
+            assert isinstance(c, User)
+            assert c.username == "foo"
+            assert c.organisation == "bar"
+            assert c.roles == ["USER", "ADMIN"]
+            assert c.firstname == "baz"
+            assert c.lastname == "baf"
 
 
 class TestUserInfos:
@@ -138,6 +160,381 @@ class TestUserInfos:
             "roles": ["USER", "SUPERUSER"],
             "user_name": "foo",
         }
+
+
+class TestKeycloakAccessProtection:
+    def test_keycloak_access_requires_authenticated_user(self):
+        app = create_app()
+        app.testing = True
+        app.config["MVIEWERSTUDIO_AUTH_TYPE"] = "keycloak"
+        with app.test_client() as client:
+            r = client.get("/api/user")
+            assert r.status_code == 401
+
+    def test_keycloak_access_allows_authenticated_user(self):
+        app = create_app()
+        app.testing = True
+        app.config["MVIEWERSTUDIO_AUTH_TYPE"] = "keycloak"
+        with app.test_client() as client:
+            r = client.get(
+                "/api/user",
+                headers={
+                    "X-Forwarded-Preferred-Username": "foo",
+                    "X-Forwarded-Roles": "VIEWER",
+                },
+            )
+            assert r.status_code == 200
+            assert r.json["user_name"] == "foo"
+
+    def test_oidc_alias_requires_authenticated_user(self):
+        app = create_app()
+        app.testing = True
+        app.config["MVIEWERSTUDIO_AUTH_TYPE"] = "oidc"
+        with app.test_client() as client:
+            r = client.get("/api/user")
+            assert r.status_code == 401
+
+
+class TestAuthenticationModes:
+    def test_public_mode_keeps_api_user_public(self):
+        app = create_app()
+        app.testing = True
+        app.config["MVIEWERSTUDIO_AUTH_MODE"] = "public"
+        with app.test_client() as client:
+            response = client.get("/api/user")
+            assert response.status_code == 200
+            assert response.json["user_name"] == "anonymous"
+
+    def test_proxy_mode_requires_forwarded_identity(self):
+        app = create_app()
+        app.testing = True
+        app.config["MVIEWERSTUDIO_AUTH_MODE"] = "proxy"
+        with app.test_client() as client:
+            response = client.get("/api/user")
+            assert response.status_code == 401
+
+    def test_authlib_mode_uses_session_claims(self):
+        app = create_app()
+        app.testing = True
+        app.config["MVIEWERSTUDIO_AUTH_MODE"] = "authlib"
+        with app.test_client() as client:
+            with client.session_transaction() as flask_session:
+                flask_session["mviewerstudio.auth.claims"] = {
+                    "preferred_username": "alice",
+                    "given_name": "Alice",
+                    "family_name": "Martin",
+                    "organization": "acme",
+                    "roles": ["EDITOR"],
+                }
+
+            response = client.get("/api/user")
+            assert response.status_code == 200
+            assert response.json["user_name"] == "alice"
+            assert response.json["roles"] == ["EDITOR"]
+            assert response.json["auth_mode"] == "authlib"
+
+    def test_authlib_mode_denies_authenticated_user_without_allowed_group(self):
+        app = create_app()
+        app.testing = True
+        app.config["MVIEWERSTUDIO_AUTH_MODE"] = "authlib"
+        app.config["MVIEWERSTUDIO_AUTHLIB_ALLOWED_GROUPS"] = "ADMIN,OPS"
+        with app.test_client() as client:
+            with client.session_transaction() as flask_session:
+                flask_session["mviewerstudio.auth.claims"] = {
+                    "preferred_username": "alice",
+                    "given_name": "Alice",
+                    "family_name": "Martin",
+                    "organization": "acme",
+                    "roles": ["EDITOR"],
+                }
+
+            response = client.get("/api/user")
+            assert response.status_code == 403
+            assert response.json["error"] == "authorization_required"
+            assert response.json["allowed_groups"] == ["ADMIN", "OPS"]
+            assert response.json["user_groups"] == ["EDITOR"]
+
+    def test_authlib_mode_allows_authenticated_user_with_allowed_group(self):
+        app = create_app()
+        app.testing = True
+        app.config["MVIEWERSTUDIO_AUTH_MODE"] = "authlib"
+        app.config["MVIEWERSTUDIO_AUTHLIB_ALLOWED_GROUPS"] = "ADMIN,EDITOR"
+        with app.test_client() as client:
+            with client.session_transaction() as flask_session:
+                flask_session["mviewerstudio.auth.claims"] = {
+                    "preferred_username": "alice",
+                    "given_name": "Alice",
+                    "family_name": "Martin",
+                    "organization": "acme",
+                    "roles": ["EDITOR"],
+                }
+
+            response = client.get("/api/user")
+            assert response.status_code == 200
+            assert response.json["user_name"] == "alice"
+
+    def test_authlib_mode_api_user_returns_login_url_when_anonymous(self):
+        app = create_app()
+        app.testing = True
+        app.config["MVIEWERSTUDIO_AUTH_MODE"] = "authlib"
+        with app.test_client() as client:
+            response = client.get(
+                "/api/user",
+                headers={"X-Auth-Return-To": "https://example.test/mviewerstudio/index.html"},
+            )
+            assert response.status_code == 401
+            assert response.json["error"] == "authentication_required"
+            assert response.json["redirect_url"] == "http://localhost/"
+            assert (
+                response.json["login_url"]
+                == "/auth/login?next=https://example.test/mviewerstudio/index.html"
+            )
+
+
+class TestAuthlibClaimNormalization:
+    def test_normalize_claims_accepts_django_aliases(self):
+        claims = normalize_claims(
+            {
+                "sub": "1049",
+                "username": "alice",
+                "first_name": "Alice",
+                "last_name": "Martin",
+                "organisation": "acme",
+                "groups": ["EDITOR", "CATALOG"],
+            }
+        )
+
+        assert claims == {
+            "preferred_username": "alice",
+            "email": None,
+            "name": None,
+            "given_name": "Alice",
+            "family_name": "Martin",
+            "organization": "acme",
+            "roles": ["EDITOR", "CATALOG"],
+            "sub": "1049",
+        }
+
+    def test_normalize_claims_accepts_string_group_lists(self):
+        claims = normalize_claims(
+            {
+                "preferred_username": "1049",
+                "username": "alice",
+                "first_name": "Alice",
+                "last_name": "Martin",
+                "group_list_all": "EDITOR,CATALOG",
+            }
+        )
+
+        assert claims["preferred_username"] == "alice"
+        assert claims["given_name"] == "Alice"
+        assert claims["family_name"] == "Martin"
+        assert claims["roles"] == ["EDITOR", "CATALOG"]
+
+    def test_normalize_claims_uses_configured_groups_claim(self):
+        app = create_app()
+        app.testing = True
+        app.config["MVIEWERSTUDIO_AUTH_MODE"] = "authlib"
+        app.config["MVIEWERSTUDIO_AUTHLIB_GROUPS_CLAIM"] = "member_of"
+        with app.app_context():
+            claims = normalize_claims(
+                {
+                    "preferred_username": "alice",
+                    "member_of": ["UMRLISA", "MVIEWER"],
+                }
+            )
+
+        assert claims["roles"] == ["UMRLISA", "MVIEWER"]
+
+    def test_allowed_authlib_groups_parses_csv_and_semicolon(self):
+        app = create_app()
+        app.testing = True
+        app.config["MVIEWERSTUDIO_AUTHLIB_ALLOWED_GROUPS"] = "UMRLISA, MVIEWER;ADMIN"
+        with app.app_context():
+            assert allowed_authlib_groups() == ["UMRLISA", "MVIEWER", "ADMIN"]
+
+    def test_authlib_logout_fetches_metadata_when_worker_has_none(self, monkeypatch):
+        app = create_app()
+        app.testing = True
+        app.config["MVIEWERSTUDIO_AUTHLIB_ISSUER"] = "https://idp.example.test/o"
+
+        class FakeAuthlibClient:
+            server_metadata = {}
+
+        class FakeDiscoveryResponse:
+            def __enter__(self):
+                return self
+
+            def __exit__(self, exc_type, exc, traceback):
+                return False
+
+            def read(self):
+                return b'{"end_session_endpoint": "https://idp.example.test/o/logout"}'
+
+        monkeypatch.setattr(
+            authlib_service.oauth,
+            "create_client",
+            lambda name: FakeAuthlibClient(),
+        )
+        monkeypatch.setattr(
+            authlib_service,
+            "urlopen",
+            lambda url, timeout: FakeDiscoveryResponse(),
+        )
+
+        with app.test_request_context("/logout", base_url="https://studio.example.test/"):
+            authlib_service.session[authlib_service.AUTHLIB_SESSION_TOKEN_KEY] = {
+                "id_token": "token-id"
+            }
+
+            logout_url = authlib_service.build_authlib_logout_redirect()
+
+        assert logout_url.startswith("https://idp.example.test/o/logout?")
+        assert "id_token_hint=token-id" in logout_url
+        assert "post_logout_redirect_uri=https%3A%2F%2Fstudio.example.test%2F" in logout_url
+
+    def test_authlib_logout_prefers_configured_end_session_endpoint(self, monkeypatch):
+        app = create_app()
+        app.testing = True
+        app.config["OIDC_END_SESSION_ENDPOINT"] = "https://idp.example.test/account/logout/"
+
+        class FakeAuthlibClient:
+            server_metadata = {}
+
+        monkeypatch.setattr(
+            authlib_service.oauth,
+            "create_client",
+            lambda name: FakeAuthlibClient(),
+        )
+
+        with app.test_request_context("/logout", base_url="https://studio.example.test/"):
+            logout_url = authlib_service.build_authlib_logout_redirect()
+
+        assert logout_url.startswith("https://idp.example.test/account/logout/?")
+        assert "post_logout_redirect_uri=https%3A%2F%2Fstudio.example.test%2F" in logout_url
+
+    def test_authlib_mode_prefixed_api_user_returns_login_url_when_anonymous(self):
+        app = create_app()
+        app.testing = True
+        app.config["MVIEWERSTUDIO_AUTH_MODE"] = "authlib"
+        app.config["MVIEWERSTUDIO_URL_PATH_PREFIX"] = "mviewerstudio"
+        with app.test_client() as client:
+            response = client.get(
+                "/mviewerstudio/api/user",
+                headers={"X-Auth-Return-To": "https://example.test/mviewerstudio/index.html"},
+            )
+            assert response.status_code == 401
+            assert response.json["error"] == "authentication_required"
+            assert response.json["redirect_url"] == "http://localhost/"
+            assert (
+                response.json["login_url"]
+                == "/mviewerstudio/auth/login?next=https://example.test/mviewerstudio/index.html"
+            )
+
+    def test_authlib_mode_root_redirects_anonymous_user_to_login(self):
+        app = create_app()
+        app.testing = True
+        app.config["MVIEWERSTUDIO_AUTH_MODE"] = "authlib"
+        app.config["MVIEWERSTUDIO_URL_PATH_PREFIX"] = "mviewerstudio"
+        with app.test_client() as client:
+            response = client.get("/mviewerstudio")
+            assert response.status_code == 302
+            assert (
+                response.headers["Location"]
+                == "/mviewerstudio/auth/login?next=http://localhost/mviewerstudio"
+            )
+
+    def test_authlib_mode_index_redirects_anonymous_user_to_login(self):
+        app = create_app()
+        app.testing = True
+        app.config["MVIEWERSTUDIO_AUTH_MODE"] = "authlib"
+        app.config["MVIEWERSTUDIO_URL_PATH_PREFIX"] = "mviewerstudio"
+        with app.test_client() as client:
+            response = client.get("/mviewerstudio/index.html")
+            assert response.status_code == 302
+            assert (
+                response.headers["Location"]
+                == "/mviewerstudio/auth/login?next=http://localhost/mviewerstudio/index.html"
+            )
+
+    def test_authlib_mode_global_guard_redirects_anonymous_index_to_login(self):
+        app = create_app()
+        app.testing = True
+        app.config["MVIEWERSTUDIO_AUTH_MODE"] = "authlib"
+        app.config["MVIEWERSTUDIO_URL_PATH_PREFIX"] = "mviewerstudio"
+        with app.test_client() as client:
+            response = client.get(
+                "/mviewerstudio/index.html",
+                follow_redirects=False,
+            )
+            assert response.status_code == 302
+            assert (
+                response.headers["Location"]
+                == "/mviewerstudio/auth/login?next=http://localhost/mviewerstudio/index.html"
+            )
+
+    def test_authlib_mode_index_serves_html_for_authenticated_user(self):
+        app = create_app()
+        app.testing = True
+        app.config["MVIEWERSTUDIO_AUTH_MODE"] = "authlib"
+        app.config["MVIEWERSTUDIO_URL_PATH_PREFIX"] = "mviewerstudio"
+        with app.test_client() as client:
+            with client.session_transaction() as flask_session:
+                flask_session["mviewerstudio.auth.claims"] = {
+                    "preferred_username": "alice",
+                    "given_name": "Alice",
+                    "family_name": "Martin",
+                    "organization": "acme",
+                    "roles": ["EDITOR"],
+                }
+
+            response = client.get("/mviewerstudio/index.html")
+            assert response.status_code == 200
+            assert "text/html" in response.content_type
+
+    def test_authlib_mode_root_serves_403_error_page_for_disallowed_user(self):
+        app = create_app()
+        app.testing = True
+        app.config["MVIEWERSTUDIO_AUTH_MODE"] = "authlib"
+        app.config["MVIEWERSTUDIO_URL_PATH_PREFIX"] = "mviewerstudio"
+        app.config["MVIEWERSTUDIO_AUTHLIB_ALLOWED_GROUPS"] = "UMRLISA"
+        with app.test_client() as client:
+            with client.session_transaction() as flask_session:
+                flask_session["mviewerstudio.auth.claims"] = {
+                    "preferred_username": "alice",
+                    "given_name": "Alice",
+                    "family_name": "Martin",
+                    "organization": "acme",
+                    "roles": ["Partenaire"],
+                }
+
+            response = client.get("/mviewerstudio/")
+            assert response.status_code == 403
+            assert "text/html" in response.content_type
+            response_text = response.get_data(as_text=True)
+            assert "Accès refusé" in response_text
+            assert "Votre compte est authentifié" in response_text
+
+    def test_authlib_mode_error_css_is_served_for_disallowed_user(self):
+        app = create_app()
+        app.testing = True
+        app.config["MVIEWERSTUDIO_AUTH_MODE"] = "authlib"
+        app.config["MVIEWERSTUDIO_URL_PATH_PREFIX"] = "mviewerstudio"
+        app.config["MVIEWERSTUDIO_AUTHLIB_ALLOWED_GROUPS"] = "UMRLISA"
+        with app.test_client() as client:
+            with client.session_transaction() as flask_session:
+                flask_session["mviewerstudio.auth.claims"] = {
+                    "preferred_username": "alice",
+                    "given_name": "Alice",
+                    "family_name": "Martin",
+                    "organization": "acme",
+                    "roles": ["Partenaire"],
+                }
+
+            response = client.get("/mviewerstudio/css/errors.css")
+            assert response.status_code == 200
+            assert "text/css" in response.content_type
+            assert b"--error-bg" in response.data
 
 
 @pytest.mark.usefixtures("cleandir")

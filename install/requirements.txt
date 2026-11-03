@@ -4,3 +4,5 @@ lxml>=4.9.2
 GitPython>=3.1.59
 requests
 Unidecode
+Authlib==1.5.2
+Flask-Session==0.8.0

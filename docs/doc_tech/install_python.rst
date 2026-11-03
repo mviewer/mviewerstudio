@@ -67,7 +67,7 @@ Exemple pour installer mviewerstudio dans le répertoire ``/git`` en utilisant l
 
     bash ./install/install.sh /home/monuser/git develop mviewerstudio_develop
 
-Suite à cette commande exemple, le mviewerstudio sera donc accessible sous le chemin suivant et sera directement aligné avec la branche ``develop``: 
+Suite à cette commande exemple, le mviewerstudio sera donc accessible sous le chemin suivant et sera directement aligné avec la branche ``develop``:
 
 ``/home/monuser/git/mviewerstudio_develop``
 
@@ -77,8 +77,7 @@ Configuration
 Configuration du front
 ----------------------
 
-Récupérez le fichier ``src/static/config.json`` et adaptez son contenu selon votre environnement.
-Adaptez ensuite les paramètres selon votre environnement (aidez-vous de la page :ref:`config_front`).
+Récupérez le fichier ``src/static/config.json`` et adaptez son contenu selon votre environnement. Adaptez ensuite les paramètres selon votre environnement (aidez-vous de la page :ref:`config_front`).
 
 .. warning::
     Le paramètre ``mviewer_instance`` doit finir par ``/``
@@ -102,12 +101,12 @@ Ces variables doivent être définies dans l'environnement soit via la console (
 - ``MVIEWERSTUDIO_PUBLISH_PATH``: Répertoire de publication lors du passage du mode brouillon au mode publié.
 - ``DEFAULT_ORG``: Nom de l'organisation par défaut à utiliser pour un usage non sécurisé (e.g en dehors d'un georchestra, ANONYMOUS).
 
+La configuration de la connexion, des groupes et de la déconnexion est décrite dans la page :ref:`authentification`.
+
 Autres Variables
 ----------------
 
-Pour utiliser les services types OGC (catalogue ou serveurs cartographiques), vous aurez besoin d'utiliser le proxy.
-Le Proxy interne proposé par mviewer ("/mviewerstudio/proxy/?url=") utilise un paramètre ``PROXY_WHITE_LIST`` qui doit être complété par tous les domaines (FQDN) des services que vous utiliserez.
-Ce paramètre est accessible dans :
+Pour utiliser les services types OGC (catalogue ou serveurs cartographiques), vous aurez besoin d'utiliser le proxy. Le Proxy interne proposé par mviewer ("/mviewerstudio/proxy/?url=") utilise un paramètre ``PROXY_WHITE_LIST`` qui doit être complété par tous les domaines (FQDN) des services que vous utiliserez. Ce paramètre est accessible dans :
 
 - ``src/settings.py``
 
@@ -127,14 +126,14 @@ Lancement de l'application avec Flask (mode developpement)
     export MVIEWERSTUDIO_PUBLISH_PATH=/var/www/mviewer/apps/prod
     export CONF_PUBLISH_PATH_FROM_MVIEWER=apps/prod
     export DEFAULT_ORG=monorg
+    export MVIEWERSTUDIO_AUTH_TYPE=georchestra
     flask run -p 5007
 
 
 Mise en production
 ******************
 
-
-**Cette partie décrit l'installation en production de mviewerstudio sur un serveur Linux (Ubuntu / Debian) avec le backend python.**
+ **Cette partie décrit l'installation en production de mviewerstudio sur un serveur Linux (Ubuntu / Debian) avec le backend python.**
 
 Prérequis
 =========
@@ -183,8 +182,7 @@ Enfin, adaptez son contenu (notamment le user, le port, les chemins et l'emplace
 
        sudo nano /etc/systemd/system/mviewerstudio.service
 
-
-N'oubliez pas d'adapter le niveau des logs et les droits des répertoires (à créer si nécessaire) selon l'utilisateur défini dans le fichier mviewerstudio.service (dans la configuration par défaut, l'utilisateur `monuser` devra pouvoir écrire dans `/var/log/mviewerstudio`).
+ N'oubliez pas d'adapter le niveau des logs et les droits des répertoires (à créer si nécessaire) selon l'utilisateur défini dans le fichier mviewerstudio.service (dans la configuration par défaut, l'utilisateur `monuser` devra pouvoir écrire dans `/var/log/mviewerstudio`).
 
 Le porte par défaut est sera le `5007` (à adapter dans mviewerstudio.service).
 

@@ -94,6 +94,7 @@ Next steps:
    export MVIEWERSTUDIO_PUBLISH_PATH=${project_dir}/apps/public
    export CONF_PUBLISH_PATH_FROM_MVIEWER=apps/public
    export DEFAULT_ORG=public
+   export MVIEWERSTUDIO_AUTH_TYPE=georchestra
    export LOG_LEVEL=INFO
 
 3. Start the application:

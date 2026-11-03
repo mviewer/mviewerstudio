@@ -1,4 +1,4 @@
-FROM python:3.11-slim
+FROM python:3.12-slim-bookworm
 
 LABEL org.opencontainers.image.title="mviewerstudio" \
       org.opencontainers.image.description="mviewer generator" \
@@ -45,6 +45,7 @@ ENV EXPORT_CONF_FOLDER=/home/mvuser/apps/store \
     MVIEWERSTUDIO_PUBLISH_PATH=/home/mvuser/apps/public \
     CONF_PUBLISH_PATH_FROM_MVIEWER=apps/public \
     DEFAULT_ORG=public \
-    MVIEWERSTUDIO_URL_PATH_PREFIX=mviewerstudio
+    MVIEWERSTUDIO_URL_PATH_PREFIX=mviewerstudio \
+    MVIEWERSTUDIO_AUTH_TYPE=georchestra
 
 CMD ["gunicorn", "--no-control-socket", "-w 1", "-b 0.0.0.0:8000", "src.app:app"]

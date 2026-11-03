@@ -3,11 +3,21 @@
 ## Image
 Only python Dockerfile will be maintained (PHP backend is fully deprecated).
 
+## Documentation
+
+The following guides are available in French:
+
+- [Docker installation and deployment](../docs/doc_tech/install_docker.rst)
+- [Authentication and related variables](../docs/doc_tech/authentification.rst)
+- [Keycloak configuration and Compose example](../docs/doc_tech/how_to_keycloak.rst)
+- [GeoNode configuration](../docs/doc_tech/how_to_geonode.rst)
+- [geOrchestra Gateway configuration](../docs/doc_tech/how_to_georchestra.rst)
+
+These guides cover login, group access control, and logout configuration.
+
 ## Manual Docker permissions
 
-Run the commands below from the repository root. The container does not change
-ownership or permissions automatically. Compose uses `MVIEWERSTUDIO_UID` and
-`MVIEWERSTUDIO_GID` for both build arguments and runtime `user:` (default: `1000:1000`).
+Run the commands below from the repository root. The container does not change ownership or permissions automatically. Compose uses `MVIEWERSTUDIO_UID` and `MVIEWERSTUDIO_GID` for both build arguments and runtime `user:` (default: `1000:1000`).
 
 For an existing installation using `999:999`, add these lines to `.env`:
 
@@ -24,10 +34,7 @@ sudo chown -R 999:999 apps/store apps/public
 sudo chmod -R u+rwX apps/store apps/public
 ```
 
-Adapt the host paths to the mounts for `EXPORT_CONF_FOLDER` and
-`MVIEWERSTUDIO_PUBLISH_PATH`. Parent directories must allow traversal by this user.
-Recursive commands affect existing files: preserve their owners if access already
-works. Named volumes also need permissions matching the selected IDs.
+Adapt the host paths to the mounts for `EXPORT_CONF_FOLDER` and `MVIEWERSTUDIO_PUBLISH_PATH`. Parent directories must allow traversal by this user. Recursive commands affect existing files: preserve their owners if access already works. Named volumes also need permissions matching the selected IDs.
 
 For SFTP, check the account's actual IDs on the host:
 
@@ -36,9 +43,7 @@ id sftp_account
 ls -ldn apps/store apps/public
 ```
 
-The GID may differ from the UID. For chrooted SFTP, keep the chroot root directory
-owned by root and not writable by the SFTP account. Apply data permissions only
-to its data subdirectories.
+The GID may differ from the UID. For chrooted SFTP, keep the chroot root directory owned by root and not writable by the SFTP account. Apply data permissions only to its data subdirectories.
 
 ### Build-time and runtime IDs
 
@@ -54,9 +59,7 @@ Override these IDs at runtime without rebuilding:
 docker run --rm --user 1001:1002 -v "$PWD/apps:/home/mvuser/apps" mviewerstudio:local
 ```
 
-Runtime `--user` or Compose `user:` takes precedence over the image default.
-The `UID` and `GID` environment variables alone do not select the runtime user.
-Prepare data permissions for the IDs actually used at runtime.
+Runtime `--user` or Compose `user:` takes precedence over the image default. The `UID` and `GID` environment variables alone do not select the runtime user. Prepare data permissions for the IDs actually used at runtime.
 
 To download a published image and start it without building, set `.env` and run:
 
@@ -65,16 +68,22 @@ docker compose pull mviewerstudio
 docker compose up -d --no-build --pull never --force-recreate mviewerstudio
 ```
 
-The published image must include support for reading the application with a
-custom UID. Once it does, changing IDs only requires recreating the container.
+The published image must include support for reading the application with a custom UID. Once it does, changing IDs only requires recreating the container.
 
 ## Environment variables
 
-- EXPORT_CONF_FOLDER is the "staging" folder where studio will store draft configs and work in progress
-- CONF_PATH_FROM_MVIEWER is the url path given to mviewer to access the same map files
-- MVIEWERSTUDIO_PUBLISH_PATH is the "production" folder where studio will copy the map files when you ask to *Publish*
-- CONF_PUBLISH_PATH_FROM_MVIEWER is the url path given to mviewer to access the same map files
-- MVIEWERSTUDIO_URL_PATH_PREFIX allows to serve studio on a non-root path, see [#271](https://github.com/mviewer/mviewerstudio/pull/271)
+| Variable | Description | Example |
+| --- | --- | --- |
+| `DEFAULT_ORG` | Organization used when claims do not provide one. | `ARNIA` |
+| `LOG_LEVEL` | Logging level (default: `INFO`). | `INFO` |
+| `MVIEWERSTUDIO_PROXY_WHITE_LIST` | Comma-separated domains allowed by the internal OGC proxy. | `geobretagne.fr,ows.region-bretagne.fr` |
+| `EXPORT_CONF_FOLDER` | Staging folder where Studio stores draft configs and work in progress. | `/home/mvuser/apps/store` |
+| `CONF_PATH_FROM_MVIEWER` | URL path used by mviewer to access draft map files. | `apps/store` |
+| `MVIEWERSTUDIO_PUBLISH_PATH` | Production folder where Studio copies map files when a config is published. | `/home/mvuser/apps/public` |
+| `CONF_PUBLISH_PATH_FROM_MVIEWER` | URL path used by mviewer to access published map files. | `apps/public` |
+| `MVIEWERSTUDIO_URL_PATH_PREFIX` | Serves Studio under a non-root path, see [#271](https://github.com/mviewer/mviewerstudio/pull/271). | `mviewerstudio` |
+
+Session and authentication variables, including claims mapping, are documented in the [Authentication guide](../docs/doc_tech/authentification.rst).
 
 ## Default configuration
 
@@ -83,8 +92,7 @@ The default configuration (env vars defined in the dockerfile and json config fi
 - `apps/store` and `apps/public` have been prepared manually for the configured UID and GID
 - it is using `src/static/config.json`, which you will probably want to adapt to your own environment.
 
-
-It is also configured to serve the frontend (static files) with gunicorn, which is usually not recommended. Later versions might use an nginx container to serve the frontend.
+ It is also configured to serve the frontend (static files) with gunicorn, which is usually not recommended. Later versions might use an nginx container to serve the frontend.
 
 ## Configuration : use docker network system
 
@@ -130,8 +138,7 @@ To use this internal Docker route, update config_docker_network.json with the Do
 
 This configuration is appropriate for container-to-container communication.
 
-If the same config file is also used by the browser UI, public links may point to http://mviewer:8080/..., which is not reachable from a user workstation.
-In that case, keep a separate config for Docker-internal use and another one for public/browser-facing URLs.
+If the same config file is also used by the browser UI, public links may point to http://mviewer:8080/..., which is not reachable from a user workstation. In that case, keep a separate config for Docker-internal use and another one for public/browser-facing URLs.
 
 ## Build mviewerstudio image
 

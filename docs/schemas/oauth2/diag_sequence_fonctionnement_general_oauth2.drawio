@@ -1,0 +1,113 @@
+<mxfile host="app.diagrams.net" agent="ChatGPT">
+  <diagram id="sequence-oauth2" name="Diagramme de séquence OAuth2">
+    <mxGraphModel dx="1474" dy="815" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title" parent="1" style="text;html=1;align=center;verticalAlign=middle;fontSize=20;fontStyle=1;" value="Diagramme de séquence — Authentification OAuth 2.0 / OpenID Connect" vertex="1">
+          <mxGeometry height="40" width="800" x="180" y="20" as="geometry" />
+        </mxCell>
+        <mxCell id="actorUser" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;" value="Utilisateur" vertex="1">
+          <mxGeometry height="100" width="60" x="90" y="90" as="geometry" />
+        </mxCell>
+        <mxCell id="browser" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;" value="Navigateur" vertex="1">
+          <mxGeometry height="50" width="150" x="280" y="90" as="geometry" />
+        </mxCell>
+        <mxCell id="app" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;" value="mviewerstudio&#xa;Client OAuth 2.0" vertex="1">
+          <mxGeometry height="50" width="170" x="540" y="90" as="geometry" />
+        </mxCell>
+        <mxCell id="idp" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontStyle=1;" value="Fournisseur d’identité&#xa;Serveur d’autorisation" vertex="1">
+          <mxGeometry height="50" width="200" x="850" y="90" as="geometry" />
+        </mxCell>
+        <mxCell id="lifeUser" parent="1" style="shape=line;html=1;strokeColor=#999999;dashed=1;" vertex="1">
+          <mxGeometry height="540" width="1" x="119" y="190" as="geometry" />
+        </mxCell>
+        <mxCell id="lifeBrowser" parent="1" style="shape=line;html=1;strokeColor=#999999;dashed=1;" vertex="1">
+          <mxGeometry height="590" width="1" x="354" y="140" as="geometry" />
+        </mxCell>
+        <mxCell id="lifeApp" parent="1" style="shape=line;html=1;strokeColor=#999999;dashed=1;" vertex="1">
+          <mxGeometry height="590" width="1" x="624" y="140" as="geometry" />
+        </mxCell>
+        <mxCell id="lifeIdp" parent="1" style="shape=line;html=1;strokeColor=#999999;dashed=1;" vertex="1">
+          <mxGeometry height="590" width="1" x="949" y="140" as="geometry" />
+        </mxCell>
+        <mxCell id="m1" edge="1" parent="1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;" value="1. Ouvre mviewerstudio">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="120" y="220" as="sourcePoint" />
+            <mxPoint x="355" y="220" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m2" edge="1" parent="1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;" value="2. Requête HTTP vers l’application">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="355" y="280" as="sourcePoint" />
+            <mxPoint x="625" y="280" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m3" edge="1" parent="1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;dashed=1;" value="3. Redirection vers /authorize&#xa;client_id, redirect_uri, scope, state, code_challenge">
+          <mxGeometry relative="1" y="20" as="geometry">
+            <mxPoint as="offset" />
+            <mxPoint x="625" y="340" as="sourcePoint" />
+            <mxPoint x="355" y="340" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m4" edge="1" parent="1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;" value="4. Appel de la page d’autorisation">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="355" y="400" as="sourcePoint" />
+            <mxPoint x="950" y="400" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m5" edge="1" parent="1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;" value="5. Saisie des identifiants / consentement">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="120" y="460" as="sourcePoint" />
+            <mxPoint x="950" y="460" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m6" edge="1" parent="1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;dashed=1;" value="6. Redirection vers redirect_uri&#xa;code d’autorisation + state">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="950" y="520" as="sourcePoint" />
+            <mxPoint x="355" y="520" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m7" edge="1" parent="1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;" value="7. Transmission du code à mviewerstudio">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="355" y="580" as="sourcePoint" />
+            <mxPoint x="625" y="580" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m8" edge="1" parent="1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;" value="8. POST /token&#xa;code + code_verifier + client_id">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="625" y="640" as="sourcePoint" />
+            <mxPoint x="950" y="640" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m9" edge="1" parent="1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;dashed=1;" value="9. access_token + id_token&#xa;(+ refresh_token éventuel)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="950" y="700" as="sourcePoint" />
+            <mxPoint x="625" y="700" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="h6K3gtDVf7Mvgk4qW-8j-2" edge="1" parent="1" style="endArrow=none;dashed=1;html=1;rounded=0;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="350" y="770" as="sourcePoint" />
+            <mxPoint x="350" y="160" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="h6K3gtDVf7Mvgk4qW-8j-3" edge="1" parent="1" style="endArrow=none;dashed=1;html=1;rounded=0;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="625" y="765" as="sourcePoint" />
+            <mxPoint x="625" y="155" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="h6K3gtDVf7Mvgk4qW-8j-4" edge="1" parent="1" style="endArrow=none;dashed=1;html=1;rounded=0;" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="950" y="765" as="sourcePoint" />
+            <mxPoint x="950" y="155" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="session" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" value="10. Validation des jetons, récupération des attributs utilisateur et création de la session applicative" vertex="1">
+          <mxGeometry height="60" width="300" x="475" y="760" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

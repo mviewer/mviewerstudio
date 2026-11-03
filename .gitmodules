@@ -1,0 +1,3 @@
+[submodule "mviewer-galaxy"]
+	path = mviewer-galaxy
+	url = https://github.com/jdev-org/mviewer-galaxy.git
