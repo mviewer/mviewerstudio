@@ -1,5 +1,7 @@
 from flask import current_app
 from urllib.parse import urlparse
+import codecs
+import re
 import requests
 import xml.etree.ElementTree as ET
 
@@ -118,5 +120,23 @@ def fetch_remote_xml(url: str, timeout: int = 10) -> str:
     except requests.RequestException as exc:
         current_app.logger.exception("Could not retrieve XML from %s", url)
         raise BadRequest(f"Could not retrieve XML: {exc}")
+
+    # Requests defaults text/xml to ISO-8859-1 when no HTTP charset is given.
+    # XML instead uses its declaration (or BOM), and defaults to UTF-8.
+    content_type = response.headers.get("Content-Type", "")
+    if not re.search(r"\bcharset\s*=", content_type, re.IGNORECASE):
+        content = response.content
+        if content.startswith((codecs.BOM_UTF32_LE, codecs.BOM_UTF32_BE)):
+            response.encoding = "utf-32"
+        elif content.startswith((codecs.BOM_UTF16_LE, codecs.BOM_UTF16_BE)):
+            response.encoding = "utf-16"
+        else:
+            declaration = re.match(
+                rb"\s*<\?xml\s+[^?]*\bencoding\s*=\s*['\"]([^'\"]+)['\"]",
+                content.removeprefix(codecs.BOM_UTF8),
+            )
+            response.encoding = (
+                declaration.group(1).decode("ascii") if declaration else "utf-8-sig"
+            )
 
     return response.text
