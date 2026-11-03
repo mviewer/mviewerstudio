@@ -750,17 +750,23 @@ def proxy() -> Response:
         origin = parsed_url.netloc
         white_list = current_app.config["PROXY_WHITE_LIST"]
         if origin in white_list:
-            headers = request.headers
+            headers = {
+                "User-Agent": current_app.config.get("PROXY_USER_AGENT", "mviewerstudio")
+            }
             if request.method == "GET":
-                response = requests.get(url).content
+                response = requests.get(url, headers=headers)
             elif request.method == "POST":
                 xml = request.stream.read()
-                headers = {"Content-Type": "application/xml; charset=UTF-8"}
-                response = requests.post(url, data=xml, headers=headers).content
+                headers["Content-Type"] = "application/xml; charset=UTF-8"
+                response = requests.post(url, data=xml, headers=headers)
             else:
                 raise MethodNotAllowed("Not allowed !")
         else:
             raise MethodNotAllowed("Not allowed !")
     else:
         raise BadRequest("Missing param : url")
-    return response
+    return Response(
+        response.content,
+        status=response.status_code,
+        content_type=response.headers.get("Content-Type", "application/octet-stream"),
+    )

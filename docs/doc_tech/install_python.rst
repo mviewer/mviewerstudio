@@ -111,6 +111,18 @@ Ce paramètre est accessible dans :
 
 - ``src/settings.py``
 
+Le paramètre ``PROXY_USER_AGENT`` définit l'en-tête HTTP ``User-Agent`` envoyé par le proxy interne aux services distants, pour les requêtes GET et POST. Sa valeur par défaut est ``mviewerstudio``. Il peut être personnalisé via la variable d'environnement ``MVIEWERSTUDIO_PROXY_USER_AGENT``, lue dans ``src/settings.py``.
+
+Cette personnalisation permet d'identifier votre instance dans les journaux des services distants ou de répondre à leurs règles de filtrage. Certains serveurs refusent le User-Agent par défaut de Python ``requests``.
+
+Par exemple, définissez la variable dans l'environnement du processus Flask ou Gunicorn :
+
+.. code-block:: sh
+
+    export MVIEWERSTUDIO_PROXY_USER_AGENT="mon-studio/1.0"
+
+Redémarrez le service après modification pour appliquer cette valeur. Ce paramètre concerne les appels sortants du proxy ; la liste des domaines autorisés reste définie par ``PROXY_WHITE_LIST``.
+
 
 
 Lancement de l'application avec Flask (mode developpement)
