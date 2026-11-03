@@ -14,7 +14,7 @@ class Config:
 
     PROXY_WHITE_LIST = os.getenv(
         "MVIEWERSTUDIO_PROXY_WHITE_LIST",
-        "geobretagne.fr,ows.region-bretagne.fr,kartenn.region-bretagne.fr,qgisserver.hautsdefrance.fr"
+        "geobretagne.fr,ows.region-bretagne.fr,kartenn.region-bretagne.fr,qgisserver.hautsdefrance.fr",
     ).split(",")
     MVIEWERSTUDIO_PUBLISH_PATH = os.getenv(
         "MVIEWERSTUDIO_PUBLISH_PATH",

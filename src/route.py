@@ -751,7 +751,9 @@ def proxy() -> Response:
         white_list = current_app.config["PROXY_WHITE_LIST"]
         if origin in white_list:
             headers = {
-                "User-Agent": current_app.config.get("PROXY_USER_AGENT", "mviewerstudio")
+                "User-Agent": current_app.config.get(
+                    "PROXY_USER_AGENT", "mviewerstudio"
+                )
             }
             if request.method == "GET":
                 response = requests.get(url, headers=headers)
