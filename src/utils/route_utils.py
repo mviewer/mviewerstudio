@@ -1,5 +1,6 @@
 from flask import current_app
 from urllib.parse import urlparse
+import re
 import requests
 import xml.etree.ElementTree as ET
 
@@ -118,5 +119,10 @@ def fetch_remote_xml(url: str, timeout: int = 10) -> str:
     except requests.RequestException as exc:
         current_app.logger.exception("Could not retrieve XML from %s", url)
         raise BadRequest(f"Could not retrieve XML: {exc}")
+
+    # Avoid Requests' ISO-8859-1 default for XML without an HTTP charset.
+    content_type = response.headers.get("Content-Type", "")
+    if not re.search(r"\bcharset\s*=", content_type, re.IGNORECASE):
+        response.encoding = "utf-8-sig"
 
     return response.text
