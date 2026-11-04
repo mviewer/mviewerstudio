@@ -1298,7 +1298,14 @@ var addgeoFilter = function () {
       .transform("EPSG:3857", layer.projection);
     var format = new ol.format.WKT();
     var wktRepresenation = format.writeGeometry(projGeom);
-    $("#frm-filter").val("INTERSECTS(" + layer.geometry + "," + wktRepresenation + ")");
+    $("#frm-filter").val(
+      mv.translateIntersectsFilter(
+        layer.geometry,
+        projGeom,
+        wktRepresenation,
+        layer.projection
+      )
+    );
     $("#filter_wizard").hide();
   });
   map2.addInteraction(draw);

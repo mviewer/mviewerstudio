@@ -37,6 +37,7 @@ var mv = (function () {
       "metadata-csw": $(layerInfos).attr("metadata-csw"),
       attribution: $(layerInfos).attr("attribution"),
       filter: $(layerInfos).attr("filter"),
+      servertype: $(layerInfos).attr("servertype") || "geoserver",
       visible: $(layerInfos).attr("visible") === "true",
       opacity: $(layerInfos).attr("opacity"),
       template: $(layerInfos).find("template").text(),
@@ -431,28 +432,52 @@ var mv = (function () {
       $("#mod-featuresview").attr("data-bs-target", option);
     },
 
+    translateFilterDefinition: function (definition) {
+      var serverType = $("#frm-servertype").val();
+      if (serverType === "ogc") {
+        return serializeOgcFilterToXml(buildOgcFilter(definition)) || "";
+      }
+      return buildFilterExpression(
+        definition,
+        serverType === "qgis" ? "qgis" : "geoserver"
+      );
+    },
+
+    translateIntersectsFilter: function (geomName, geometry, wkt, srsName) {
+      var serverType = $("#frm-servertype").val();
+      if (serverType === "ogc") {
+        return (
+          serializeOgcFilterToXml(
+            ol.format.filter.intersects(geomName, geometry, srsName)
+          ) || ""
+        );
+      }
+      if (serverType === "qgis") {
+        return "intersects($geometry, geom_from_wkt('" + escapeFilterLiteral(wkt) + "'))";
+      }
+      return "INTERSECTS(" + geomName + "," + wkt + ")";
+    },
+
     saveSourceAttributeFilter: function () {
-      var values = [];
       var layerid = $(".layers-list-item.active").attr("data-layerid");
       var fld = $("#attribute_filter_fields").val();
       var operator = $("#attribute_filter_operators").val();
       var selected = $("#source_fields_tags").tagsinput("items");
-      var type = config.temp.layers[layerid].fields[fld].type;
+      var type = config.temp.layers[layerid]?.fields?.[fld]?.type;
+      if (!fld || !selected.length) return;
 
-      $.each(selected, function (id, value) {
-        if (type === "string") {
-          values.push("'" + value + "'");
-        } else {
-          values.push(value);
-        }
+      var literals = selected.map(function (value) {
+        return type === "string" || isNaN(Number(value)) ? value : Number(value);
       });
-      var expression = "";
-      if (operator === "=") {
-        expression = values[0];
-      } else {
-        expression = "(" + values.join(",") + ")";
+      var equalities = literals.map(function (value) {
+        return { operator: "EqualTo", field: fld, value: value, matchCase: true };
+      });
+      var definition =
+        equalities.length === 1 ? equalities[0] : { operator: "or", filters: equalities };
+      if (operator === "NOT IN") {
+        definition = { operator: "not", filter: definition };
       }
-      filter = fld + " " + operator + " " + expression;
+      var filter = mv.translateFilterDefinition(definition);
       $("#frm-filter").val(filter);
       $("#filter_wizard").hide();
     },
@@ -661,6 +686,7 @@ var mv = (function () {
             "metadata-csw": conf.metadataCsw,
             visible: true,
             showintoc: true,
+            servertype: document.getElementById("catalog-servertype").value,
           };
           config.themes[themeid].layers.push(layer);
           addLayer(layer.title, layer.id, themeid);
@@ -691,6 +717,7 @@ var mv = (function () {
     resetConfLayer: function () {
       // Reset input
       document.getElementById("newlayer-type").value = "";
+      document.getElementById("catalog-servertype").value = "geoserver";
       [...document.querySelectorAll(".param-type")].forEach((e) =>
         e.classList.add("d-none")
       );
@@ -812,6 +839,8 @@ var mv = (function () {
         $("#frm-scalemin").val(layer.scalemin);
         $("#frm-scalemax").val(layer.scalemax);
         $("#frm-filter").val(layer.filter);
+        $("#frm-servertype").val(layer.servertype || "geoserver");
+        mv.updateFilterPlaceholder($("#frm-servertype").val());
         $("#frm-layer-styletitle").val(layer.styletitle || "");
         $("#frm-layer-dynamiclegend").prop("checked", layer.dynamiclegend);
         if (layer.attributefilter) {
@@ -993,6 +1022,7 @@ var mv = (function () {
           delete layer.scalemax;
         }
         layer.filter = $("#frm-filter").val();
+        layer.servertype = $("#frm-servertype").val();
         //Controle FilterAttributes
         var fld = $("#opt-attributefield").val();
         var values = $("#control_fields_tags").val();
@@ -1078,7 +1108,7 @@ var mv = (function () {
       var require_parameters = ["id", "name", "type", "url"];
       require_parameters.forEach(function (p, i) {
         var value = l[p];
-        if (p == "url") {
+        if (["url", "name"].includes(p)) {
           value = mv.escapeXml(value);
         }
         layer_parameters[p] = [p, '="', value, '"'].join("");
@@ -1105,6 +1135,7 @@ var mv = (function () {
         "secure",
         "useproxy",
         "filter",
+        "servertype",
         "sld",
         "legendurl",
         "scalemin",
@@ -1124,9 +1155,10 @@ var mv = (function () {
       ];
       optional_parameters.forEach((param) => {
         if (l[param] == undefined) return;
+        if (param === "servertype" && l[param] === "geoserver") return;
         let value = l[param];
 
-        if (["metadata", "metadata-csw", "legendurl"].includes(param)) {
+        if (["metadata", "metadata-csw", "legendurl", "filter"].includes(param)) {
           value = mv.escapeXml(value);
         }
         layer_parameters[param] = `${param}="${value}"`;
@@ -1286,6 +1318,16 @@ var mv = (function () {
             .val("link")
             .trigger("change");
         });
+    },
+
+    updateFilterPlaceholder: function (servertype) {
+      const types = { ogc: "ogc", qgis: "qgis", geoserver: "cql" };
+      const key = `modal.layer.filter.${types[servertype] || "cql"}.ph`;
+      const format = mviewer.tr(key);
+      $("#frm-filter").attr("placeholder", format);
+      $("#frm-filter-format").text(
+        `${mviewer.tr("modal.layer.filter.format")} ${format}`
+      );
     },
 
     showHideQueryParameters: function (value) {

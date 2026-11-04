@@ -26,6 +26,7 @@
     <link rel="stylesheet" href="lib/icon-picker/icon-picker.css" type="text/css">
     <script src="lib/proj4/proj4.js"></script>
     <script type="text/javascript" src="lib/openlayers/7.1/ol.js"></script>
+    <script src="lib/ogcFiltersUtils.js"></script>
     <script src="lib/ogc.js"></script>
     <script src="lib/mv.js"></script>
     <script src="lib/slug.js"></script>
@@ -1184,6 +1185,14 @@
                                         <label for="frm-layer-styletitle" ><span i18n="modal.layer.style.title">Libellé de la liste déroulante des styles</span><span class="tooltip-info" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="tooltip.analyse"><i class="ri-information-line"></i></label>
                                         <input type="text" class="form-control" id="frm-layer-styletitle" placeholder="Libellé de la liste des styles" i18n="modal.layer.style.placeholder">
                                     </div>  
+                                    <div class="form-group mt-4 layerOption-wms advanced d-none" style="display: none;">
+                                        <label class="control-label" for="frm-servertype" i18n="modal.layer.servertype">Type de serveur</label>
+                                        <select id="frm-servertype" class="form-control" onchange="mv.updateFilterPlaceholder(this.value);">
+                                            <option value="geoserver" i18n="modal.layer.servertype.geoserver">GeoServer</option>
+                                            <option value="ogc" i18n="modal.layer.servertype.ogc">OGC (Filter Encoding)</option>
+                                            <option value="qgis" i18n="modal.layer.servertype.qgis">QGIS Server</option>
+                                        </select>
+                                    </div>
                                     <div class="mt-4 layerOption-tms d-none">                                        
                                         <h6>Style de la donnée</h6>  
                                         <div class="form-group">
@@ -1507,24 +1516,18 @@
                                     Cette fonctionnalité permet de définir des conditions d'affichage des objets de la donnée, selon des valeurs attributaires
                                     ou une emprise géographique. Ce filtre statique ne peut pas être désactivé par vos utilisateurs au sein de l'application.
                                 </p>
-                                <div class="alert alert-info text-info my-2" role="alert">
-                                    <i class="ri-information-line" style="font-size: 20px;vertical-align: middle;"></i>
-                                    <span i18n="modal.layer.filter.geoserver-only-warning.txt">
-                                        Cette fonctionnalité est basée sur un filtre CQL. Les filtres CQL ne peuvent activés qu'avec des données issues de Geoserver. 
-                                        Il ne s'agit pas d'une fonction standard de WMS.
-                                    </span>                                    
-                                </div>
                             </div>                           
                             <form>
                                 <div class="row mt-3">
                                     <div class="col-md-12">
                                         <label for="frm-filter" i18n="modal.layer.filter.serverside.active">Filtre actif</label>
+                                        <small id="frm-filter-format" class="text-muted d-block"></small>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-12">
                                         <div class="input-group mb-3">
-                                            <input type="text" type="textarea" class="form-control" id="frm-filter" placeholder="Expression CQL"  i18n="modal.layer.filter.cql.ph">
+                                            <input type="text" type="textarea" class="form-control" id="frm-filter" placeholder="Expression CQL">
                                             <div class="input-group-append">
                                               <button class="btn btn-info" type="button" id="button-addon2" onclick="$('#filter_wizard').toggle();"><i class="bi bi-plus-lg"></i> <span i18n="modal.layer.filter.serverside.create">Créer un filtre</span></button>
                                             </div>
@@ -1591,13 +1594,6 @@
                                     Cette fonctionnalité permet de pré-définir des conditions d'affichage attributaires des objets de la donnée. L'utilisateur pourra
                                     filtrer les entités selon les conditions définies ci-dessous à l'aide d'une liste déroulante disponible dans le bloc légende.
                                 </p>
-                                <div class="alert alert-info text-info my-2" role="alert">
-                                    <i class="ri-information-line" style="font-size: 20px;vertical-align: middle;"></i>
-                                    <span i18n="modal.layer.filter.geoserver-only-warning.txt">
-                                        Cette fonctionnalité est basée sur un filtre CQL. Les filtres CQL ne peuvent activés qu'avec des données issues de Geoserver. 
-                                        Il ne s'agit pas d'une fonction standard de WMS.
-                                    </span>                                    
-                                </div>
                             </div>
                             <form>
                                 <div class="form-group mt-3">
@@ -1774,6 +1770,18 @@
                                     </div>
                                 </div>
                             </div>  
+                            <div class="row advanced" style="display: none;">
+                                <div class="col-md-12">
+                                    <div class="form-group mb-3">
+                                        <label class="control-label" for="catalog-servertype" i18n="modal.layer.servertype">Type de serveur</label>
+                                        <select id="catalog-servertype" class="form-control">
+                                            <option value="geoserver" i18n="modal.layer.servertype.geoserver">GeoServer</option>
+                                            <option value="ogc" i18n="modal.layer.servertype.ogc">OGC (Filter Encoding)</option>
+                                            <option value="qgis" i18n="modal.layer.servertype.qgis">QGIS Server</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
                             <div class="row" style="padding: 1rem;" id="search-message" i18n="modal.layer.new.provider.noneselected">
                                 Sélectionner un catalogue de données
                             </div>
