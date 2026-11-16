@@ -522,13 +522,18 @@ var ogc = (function () {
 
   var _describeLayerParse = function (xml, layerid) {
     return {
-      wfs_url: $(xml).find("LayerDescription").attr("wfs").split("?")[0],
-      typeName: $(xml).find("LayerDescription Query").attr("typeName"),
+      wfs_url:
+        $(xml).find("LayerDescription").attr("wfs")?.split("?")[0] ||
+        $(xml).find("se\\:OnlineResource, OnlineResource").attr("xlink:href"),
+      typeName:
+        $(xml).find("LayerDescription Query").attr("typeName") ||
+        $(xml).find("se\\:FeatureTypeName, FeatureTypeName").text(),
     };
   };
-  var _getWFSUrl = function (wmsUrl, layerid) {
+  var _getWFSUrl = async function (wmsUrl, layerid, serverType) {
     var descLayerParams =
       "SERVICE=WMS&VERSION=1.1.1&REQUEST=DescribeLayer&LAYERS=" + layerid;
+    if (serverType === "qgis") descLayerParams += "&SLD_VERSION=1.1.0";
     var descLayerUrl = wmsUrl.replace(/[?&]$/, "");
     descLayerUrl =
       descLayerUrl.indexOf("?") === -1
@@ -582,11 +587,11 @@ var ogc = (function () {
       _getStyles(url, layerid);
     },
 
-    getWfsInfosFromWms(url, layerid) {
-      return _getWFSUrl(url, layerid);
+    getWfsInfosFromWms(url, layerid, serverType) {
+      return _getWFSUrl(url, layerid, serverType);
     },
-    getWfsFeaturesFromWms(url, layerid) {
-      _getWFSUrl(url, layerid)
+    getWfsFeaturesFromWms(url, layerid, serverType) {
+      _getWFSUrl(url, layerid, serverType)
         .then(({ describeLayer }) => describeLayer.wfs_url)
         .then((wfs_url) => {
           let onSuccess = (data) => {
@@ -635,6 +640,10 @@ var ogc = (function () {
           onSuccess(data);
         })
         .catch((error) => {
+          if (!props?.OUTPUTFORMAT) {
+            const geojson = "application/json; subtype=geojson";
+            return ogc.getFeatures(url, { ...props, OUTPUTFORMAT: geojson }, onSuccess);
+          }
           console.error("WFS GetFeature request failed", {
             url: stringUrl,
             error: error,
