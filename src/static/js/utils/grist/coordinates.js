@@ -91,6 +91,14 @@ const renderGristCoordinatesResult = (
     };
   }
 
+  if (options.error) {
+    status = {
+      type: "failure",
+      label: mviewer.tr("grist.result.failure"),
+      message: options.error.message,
+    };
+  }
+
   if (options.updateLayerSelection !== false) {
     updateSelectLayersButtonForLocalizedRows(localizedRows, GRIST_LOCATION_SWITCH_IDS.xy);
   }
@@ -197,7 +205,7 @@ const runGristCoordinatesCheck = async ({
           resultContainerId,
           updateLayerSelection,
         }),
-      { resultContainerId, updateLayerSelection }
+      { resultContainerId, updateLayerSelection, error }
     );
   }
 };

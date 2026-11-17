@@ -19,14 +19,21 @@ const getFileExtension = (file) => {
   return extension.toLowerCase();
 };
 
-const readFileAsText = (file) =>
-  new Promise((resolve, reject) => {
-    const reader = new FileReader();
-
-    reader.addEventListener("load", () => resolve(reader.result || ""));
-    reader.addEventListener("error", () => reject(reader.error));
-    reader.readAsText(file, "UTF-8");
-  });
+/**
+ * Decode a text file as strict UTF-8, falling back to Windows-1252.
+ * The UTF-8 decoder also removes its optional byte order mark.
+ * @param {File} file CSV or TXT file to read.
+ * @returns {Promise<string>} Decoded file content.
+ * @throws {Error} When reading the file bytes fails.
+ */
+const readFileAsText = async (file) => {
+  const buffer = await file.arrayBuffer();
+  try {
+    return new TextDecoder("utf-8", { fatal: true }).decode(buffer);
+  } catch {
+    return new TextDecoder("windows-1252").decode(buffer);
+  }
+};
 
 const readCsvData = (content) =>
   new Promise((resolve, reject) => {
@@ -45,17 +52,41 @@ const readCsvData = (content) =>
     });
   });
 
+/**
+ * Map the first XLSX sheet directly to named rows without converting cell values.
+ * Use unique headers so duplicate or empty names do not overwrite cells.
+ * @param {File} file Workbook to read.
+ * @returns {Promise<Object>} Named rows and column metadata for preview and import.
+ */
 const readExcelData = async (file) => {
   if (!window.readXlsxFile) {
     throw new Error("read-excel-file is not available");
   }
-  if (!window.Papa) {
-    throw new Error("PapaParse is not available");
-  }
-
   const sheets = await window.readXlsxFile(file, { sheets: [1], trim: false });
-  const content = window.Papa.unparse(sheets[0].data);
-  return readCsvData(content);
+  const [headerRow = [], ...rows] = sheets[0].data;
+  const usedHeaders = new Set();
+  const fields = headerRow.map((header, index) => {
+    let name = `column_${index + 1}`;
+    if (header !== null && header !== undefined && header !== "") {
+      name = `${header}`;
+    }
+    let uniqueName = name;
+    let suffix = 1;
+    while (usedHeaders.has(uniqueName)) {
+      uniqueName = `${name}_${suffix}`;
+      suffix += 1;
+    }
+    usedHeaders.add(uniqueName);
+    return uniqueName;
+  });
+
+  const data = rows
+    .filter((row) =>
+      row.some((value) => value !== null && value !== undefined && value !== "")
+    )
+    .map((row) => Object.fromEntries(fields.map((field, index) => [field, row[index]])));
+
+  return { data, meta: { fields } };
 };
 
 /**

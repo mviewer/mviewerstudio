@@ -1,15 +1,14 @@
+import { createGristApiError } from "../../../utils/grist/apiError.js";
 /**
  * Button used to refresh data from a Grist table.
  *
  * @param {Object} [options] Component options.
  * @param {Function} [options.onRefresh] Asynchronous data refresh callback.
  * @param {string} [options.successMessage] Message displayed after refreshing.
- * @param {string} [options.errorMessage] Message displayed when refreshing fails.
  */
 const RefreshGristDataBtn = function (options = {}) {
   this.onRefresh = options.onRefresh || (async () => {});
   this.successMessage = options.successMessage || mviewer.tr("grist.refresh.success");
-  this.errorMessage = options.errorMessage || mviewer.tr("grist.refresh.error");
   this.element = document.createElement("div");
 };
 
@@ -27,7 +26,8 @@ RefreshGristDataBtn.prototype.refresh = async function (button) {
     await this.onRefresh();
     alertCustom(this.successMessage, "success");
   } catch (error) {
-    alertCustom(this.errorMessage, "danger");
+    const apiError = await createGristApiError(error);
+    alertCustom(apiError.message, "danger");
   } finally {
     button.disabled = false;
     button.textContent = mviewer.tr("grist.refresh.label");

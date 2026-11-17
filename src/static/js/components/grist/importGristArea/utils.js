@@ -1,3 +1,4 @@
+import { readGristResponse } from "../../../utils/grist/apiError.js";
 import {
   createWorkspaceDoc,
   getDocTables,
@@ -11,6 +12,10 @@ import {
   getGristTableUrl,
   getOrCreateWorkspace,
 } from "../../../utils/grist/utils.js";
+import {
+  getGristColumnType,
+  getGristCellValue,
+} from "../../../utils/grist/importTypes.js";
 
 /**
  * Parse a successful Grist API response as JSON.
@@ -20,13 +25,7 @@ import {
  * @throws {Error} When the Grist API response is not successful.
  */
 const readJson = async (response) => {
-  if (!response.ok) {
-    throw new Error(
-      mviewer.tr("grist.import.request_failed").replace("{status}", () => response.status)
-    );
-  }
-
-  return response.json();
+  return readGristResponse(response);
 };
 
 /**
@@ -131,15 +130,16 @@ const getHeaders = (rows, data) => {
  * @returns {*} Cell value.
  */
 const getCellValue = (row, header, index) => {
+  let value = row;
   if (Array.isArray(row)) {
-    return row[index] || "";
+    value = row[index];
+  } else if (row && typeof row === "object") {
+    value = row[header];
   }
-
-  if (row && typeof row === "object") {
-    return row[header] || "";
+  if (value === null || value === undefined) {
+    return "";
   }
-
-  return row || "";
+  return value;
 };
 
 /**
@@ -376,6 +376,9 @@ export const sendParsedFileToGrist = async (
     gristApiKey
   );
   const columnIds = getUniqueGristIds(headers, "column");
+  const columnTypes = headers.map((header, index) =>
+    getGristColumnType(rows.map((row) => getCellValue(row, header, index)))
+  );
 
   await postTablesToDoc(
     gristConfig.apiUrl,
@@ -386,7 +389,7 @@ export const sendParsedFileToGrist = async (
           id: tableId,
           columns: columnIds.map((columnId, index) => ({
             id: columnId,
-            fields: { label: headers[index] },
+            fields: { label: headers[index], type: columnTypes[index] },
           })),
         },
       ],
@@ -426,7 +429,10 @@ export const sendParsedFileToGrist = async (
     {
       records: rows.map((row) => ({
         fields: actualColumnIds.reduce((record, columnId, index) => {
-          record[columnId] = getCellValue(row, headers[index], index);
+          record[columnId] = getGristCellValue(
+            getCellValue(row, headers[index], index),
+            columnTypes[index]
+          );
           return record;
         }, {}),
       })),

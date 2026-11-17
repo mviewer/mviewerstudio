@@ -1,3 +1,4 @@
+import { createGristApiError } from "../../../utils/grist/apiError.js";
 /**
  * Common Grist result display.
  *
@@ -46,7 +47,14 @@ const createGristResultButton = (label, className, onClick) => {
   button.type = "button";
   button.className = className;
   button.textContent = label;
-  button.addEventListener("click", onClick);
+  button.addEventListener("click", async (event) => {
+    try {
+      await onClick(event);
+    } catch (error) {
+      const apiError = await createGristApiError(error);
+      alertCustom(apiError.message, "danger");
+    }
+  });
 
   return button;
 };

@@ -12,6 +12,7 @@ const DEFAULT_REFERENTIALS = [{ label: "Communes" }];
  */
 const GristRefGeoArea = function (options = {}) {
   this.fieldOptions = this.getFieldOptions(options.fields || []);
+  this.referential = options.referential;
   this.onReferentialChange = options.onReferentialChange || function () {};
   const idPrefix = options.idPrefix || "grist-refgeo";
 
@@ -64,7 +65,11 @@ GristRefGeoArea.prototype.renderReferentialOptions = function () {
   }
 
   this.getReferentials().forEach((referential) => {
-    select.appendChild(new Option(referential.label, referential.label));
+    const option = new Option(referential.label, referential.label);
+    option.selected = [referential.label, referential.layer_name].includes(
+      this.referential
+    );
+    select.appendChild(option);
   });
 };
 

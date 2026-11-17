@@ -1,3 +1,4 @@
+import { createGristApiError, readGristResponse } from "./apiError.js";
 import {
   createOrgWorkspace,
   getOrgWorkspaces,
@@ -138,11 +139,7 @@ export const getGristCsvTableInfo = (url) => {
  * @throws {Error} When the Grist API response is not successful.
  */
 const readJson = async (response) => {
-  if (!response.ok) {
-    throw new Error(`Grist request failed with status ${response.status}`);
-  }
-
-  return response.json();
+  return readGristResponse(response);
 };
 
 /**
@@ -260,7 +257,9 @@ export const getOrCreateWorkspace = async (gristApiKey) => {
   );
 
   if (!org) {
-    throw new Error(`Grist organization "${gristConfig.orgId}" not found`);
+    throw await createGristApiError(
+      new Error(`Grist organization "${gristConfig.orgId}" not found`)
+    );
   }
 
   const workspacesPayload = await getOrgWorkspaces(
@@ -276,7 +275,9 @@ export const getOrCreateWorkspace = async (gristApiKey) => {
     const workspaceId = getWorkspaceId(workspace);
 
     if (!hasGristId(workspaceId)) {
-      throw new Error(`Grist workspace "${gristConfig.workspaceName}" has no id`);
+      throw await createGristApiError(
+        new Error(`Grist workspace "${gristConfig.workspaceName}" has no id`)
+      );
     }
 
     return workspaceId;
@@ -292,7 +293,9 @@ export const getOrCreateWorkspace = async (gristApiKey) => {
   const createdWorkspaceId = getWorkspaceId(createdWorkspace);
 
   if (!hasGristId(createdWorkspaceId)) {
-    throw new Error(`Created Grist workspace "${gristConfig.workspaceName}" has no id`);
+    throw await createGristApiError(
+      new Error(`Created Grist workspace "${gristConfig.workspaceName}" has no id`)
+    );
   }
 
   return createdWorkspaceId;
@@ -310,7 +313,9 @@ export const listDocs = async (gristApiKey) => {
   const workspaceId = await getOrCreateWorkspace(gristApiKey);
 
   if (!hasGristId(workspaceId)) {
-    throw new Error("Unable to list Grist documents without a workspace id");
+    throw await createGristApiError(
+      new Error("Unable to list Grist documents without a workspace id")
+    );
   }
 
   return getWorkspaceDocsList(gristConfig.apiUrl, workspaceId, gristApiKey);

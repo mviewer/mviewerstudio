@@ -1,3 +1,4 @@
+import { createGristApiError, readGristResponse } from "../../../utils/grist/apiError.js";
 import { getDocTables } from "../../../utils/grist/requests.js";
 import { getGristTableUrl } from "../../../utils/grist/utils.js";
 
@@ -65,20 +66,16 @@ OpenGristTableBtn.prototype.getTableUrl = function () {
   }
 
   return getDocTables(this.apiUrl, this.docId, this.apiKey)
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error(`Grist request failed with status ${response.status}`);
-      }
-
-      return response.json();
+    .then(async (response) => {
+      return readGristResponse(response);
     })
-    .then((payload) => {
+    .then(async (payload) => {
       // Grist URLs target the internal table reference, not only its public id.
       const tables = payload.tables || [];
       const table = tables.find((item) => item.id === this.tableId);
 
       if (!table) {
-        throw new Error("Grist table not found");
+        throw await createGristApiError(new Error("Grist table not found"));
       }
 
       return getGristTableUrl(
@@ -101,7 +98,11 @@ OpenGristTableBtn.prototype.openTable = function () {
 
   this.getTableUrl()
     .then((url) => this.open(url))
-    .catch((error) => console.error("Error opening Grist table:", error))
+    .catch(async (error) => {
+      const apiError = await createGristApiError(error);
+      alertCustom(apiError.message, "danger");
+      console.error("Error opening Grist table:", apiError);
+    })
     .finally(() => {
       this.element.disabled = false;
     });

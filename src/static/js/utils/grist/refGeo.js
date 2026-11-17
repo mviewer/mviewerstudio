@@ -1,3 +1,4 @@
+import { fetchWithApiError, readGristResponse } from "./apiError.js";
 import {
   GRIST_REF_GEO_MATCHING_FIELD_ID,
   GRIST_REF_GEO_REFERENTIAL_ID,
@@ -355,7 +356,7 @@ const joinSourceDataWithReferential = async (targetTable, apiKey, controls = {})
     throw new Error(mviewer.tr("grist.import.api_key_missing"));
   }
 
-  const response = await fetch("api/grist/refgeo/join", {
+  const response = await fetchWithApiError("api/grist/refgeo/join", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -370,13 +371,7 @@ const joinSourceDataWithReferential = async (targetTable, apiKey, controls = {})
     }),
   });
 
-  if (!response.ok) {
-    throw new Error(
-      mviewer.tr("grist.refgeo.request_failed").replace("{status}", () => response.status)
-    );
-  }
-
-  return response.json();
+  return readGristResponse(response);
 };
 
 /**
@@ -417,6 +412,7 @@ const runGristRefGeoJoin = async ({
     updateLayerSelection,
   };
   renderGristRefGeoSpinner(resultContainerId);
+  importGristArea.referential = null;
 
   try {
     const targetTable = importGristArea.getTargetTable();
@@ -425,6 +421,15 @@ const runGristRefGeoJoin = async ({
       importGristArea.apiKey,
       options
     );
+    const referential = getGristReferentials().find(
+      (item) => item.label === options.referentialLabel
+    );
+    importGristArea.referential = referential;
+    importGristArea.matchingField = getSelectedMatchingField(options);
+    importGristArea.geometryField = result.geometry_field;
+    importGristArea.centroidField = result.centroid_field;
+    importGristArea.xField = result.x_field;
+    importGristArea.yField = result.y_field;
     renderGristRefGeoResult(result, importGristArea, setWizardStep, options);
   } catch (error) {
     console.error("Error joining with referential:", error);

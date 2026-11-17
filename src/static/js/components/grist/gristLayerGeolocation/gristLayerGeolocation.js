@@ -61,9 +61,6 @@ export const openGristLayerGeolocation = ({
     layer.geolocType = geolocType;
 
     if (geolocType === "referential") {
-      layer.geojsonField = "geometry";
-      delete layer.xfield;
-      delete layer.yfield;
       return;
     }
 
@@ -120,7 +117,8 @@ export const openGristLayerGeolocation = ({
             new mvInstance.components.grist.gristRefGeoArea({
               idPrefix: "layer-grist-geolocation-ref",
               fields: gristFields,
-              matchingField: layer.geojsonField,
+              matchingField: layer.joinMatchingField,
+              referential: layer.joinReferential,
               onReferentialChange: (label) => {
                 const referentials = gristConfig.grist_referentials || [];
                 const referential = referentials.find((item) => item.label === label);
@@ -182,16 +180,30 @@ export const openGristLayerGeolocation = ({
       }
 
       if (content.state.geolocType === "referential") {
-        mvInstance.utils.grist.refGeo.runGristRefGeoJoin({
-          importGristArea: gristSource,
-          setWizardStep: setWorkflowStep,
-          triggerButton: nextButton,
-          resultContainerId,
-          matchingFieldId: "layer-grist-geolocation-ref-matching-field",
-          referentialId: "layer-grist-geolocation-ref-referential",
-          outputFormatId: "layer-grist-geolocation-ref-output-format",
-          updateLayerSelection: false,
-        });
+        mvInstance.utils.grist.refGeo
+          .runGristRefGeoJoin({
+            importGristArea: gristSource,
+            setWizardStep: setWorkflowStep,
+            triggerButton: nextButton,
+            resultContainerId,
+            matchingFieldId: "layer-grist-geolocation-ref-matching-field",
+            referentialId: "layer-grist-geolocation-ref-referential",
+            outputFormatId: "layer-grist-geolocation-ref-output-format",
+            updateLayerSelection: false,
+          })
+          .then(() => {
+            // Le flux affiche lui-même les erreurs : une promesse résolue ne garantit pas la réussite.
+            if (!gristSource.referential) return;
+            layer.joinReferential = gristSource.referential.layer_name;
+            layer.joinMatchingField = gristSource.matchingField;
+            // Grist peut avoir renommé les colonnes ; conserver leurs identifiants réels pour l'export XML.
+            layer.joinGeometryField = gristSource.geometryField;
+            layer.joinCentroidField = gristSource.centroidField;
+            layer.geojsonField = gristSource.geometryField;
+            layer.xfield = gristSource.xField;
+            layer.yfield = gristSource.yField;
+            layer.srs = gristSource.referential.srs;
+          });
       }
     },
   });

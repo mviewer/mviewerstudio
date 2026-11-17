@@ -1,3 +1,4 @@
+import { readGristResponse } from "../../../utils/grist/apiError.js";
 /**
  * Import type selector for the Grist import step.
  *
@@ -9,9 +10,11 @@ import UploadFile from "../../uploadFile/uploadFile.js";
 import UrlCard from "../../common/url-card/url-card.js";
 import ListGristTables from "../listGristTables/listGristTables.js";
 import Table from "../../table/table.js";
+import SpinnerGrow from "../../spinnergrow/spinnergrow.js";
 import Input from "../../input/input.js";
 import Select from "../../select/select.js";
 import OpenGristTableBtn from "../openGristTableBtn/openGristTableBtn.js";
+import RefreshGristListsButton from "../refreshGristListsButton/refreshGristListsButton.js";
 import readUploadedFile from "../../../utils/grist/readUploadedFile.js";
 import { getTableRecords } from "../../../utils/grist/requests.js";
 import {
@@ -71,6 +74,11 @@ const getGristEntityName = (entity) => {
   return entity.name || entity.title || getGristEntityId(entity);
 };
 
+/**
+ * Extract rows from parsed file data or a raw row array.
+ * @param {Object|Array|null|undefined} data Parsed data containing a data array, or rows.
+ * @returns {Array} Source rows, or an empty array when none are available.
+ */
 const getRows = (data) => {
   if (Array.isArray(data)) {
     return data;
@@ -83,6 +91,12 @@ const getRows = (data) => {
   return [];
 };
 
+/**
+ * Resolve column names from metadata, object keys, or positional array columns.
+ * @param {Array} rows Source rows used when metadata has no column names.
+ * @param {Object|Array|null|undefined} data Parsed data with optional meta.fields.
+ * @returns {string[]} Column names in source order.
+ */
 const getHeaders = (rows, data) => {
   if (data && data.meta && Array.isArray(data.meta.fields) && data.meta.fields.length) {
     return data.meta.fields;
@@ -101,14 +115,31 @@ const getHeaders = (rows, data) => {
   return Object.keys(firstRow);
 };
 
+/**
+ * Read JSON from a successful Grist API response.
+ * @param {Response} response Grist API response.
+ * @returns {Promise<*>} Parsed JSON body.
+ * @throws {Error} When the API request fails or its body is invalid JSON.
+ */
 const readJson = async (response) => {
-  if (!response.ok) {
-    throw new Error(`Grist request failed with status ${response.status}`);
-  }
-
-  return response.json();
+  return readGristResponse(response);
 };
 
+/**
+ * Create the file import and existing Grist table selection component.
+ * Initialize preview controls and callbacks that update wizard navigation.
+ * Options may also be passed as the first argument.
+ *
+ * @constructor
+ * @param {string|Object} [activeType="file"] Initial source mode (file or grist), or options.
+ * @param {Object} [options={}] Component configuration.
+ * @param {string} [options.activeType="file"] Source mode when options is the first argument.
+ * @param {string} [options.apiKey=""] Grist API key used for requests.
+ * @param {function(File|null, Object|null, string): void} [options.onFileChange] Receives the file,
+ * its verification result (null while reading), and the destination table name.
+ * @param {function(string[]): void} [options.onColumnsChange] Receives available column names,
+ * or an empty array when the file or table selection changes.
+ */
 const importGristArea = function (activeType = "file", options = {}) {
   if (typeof activeType === "object") {
     options = activeType;
@@ -122,12 +153,37 @@ const importGristArea = function (activeType = "file", options = {}) {
   this.fileTableName = "";
   this.fileDocumentName = "";
   this.sentTable = null;
+  this.fileSending = false;
+  this.fileSendingSpinner = new SpinnerGrow({
+    label: mviewer.tr("grist.import.sending"),
+    classes: "d-flex justify-content-center align-items-center py-4",
+    small: false,
+    visible: false,
+  });
   this.documentOptionsPromise = null;
   this.apiKey = options.apiKey || "";
   this.onFileChange = options.onFileChange || function () {};
   this.onColumnsChange = options.onColumnsChange || function () {};
   this.element = document.createElement("div");
   this.element.className = "import-type-buttons";
+  const filePreviewTemplate = document.createElement("template");
+  filePreviewTemplate.innerHTML = `
+    <div data-upload-file-content>
+      <p class="text-danger d-none" data-grist-document-status></p>
+      <div data-file-document-select></div>
+      <div data-file-document-name></div>
+      <div data-file-table-name></div>
+      <div data-file-preview-table></div>
+      <div data-open-created-grist-table></div>
+    </div>
+  `;
+  this.filePreviewContent = filePreviewTemplate.content.firstElementChild;
+  this.documentStatus = this.filePreviewContent.querySelector(
+    "[data-grist-document-status]"
+  );
+  this.refreshButton = new RefreshGristListsButton({
+    onRefresh: () => this.refreshGristLists(),
+  });
 
   this.documentNameSelect = new Select({
     label: mviewer.tr("grist.import.document_label"),
@@ -254,12 +310,15 @@ const importGristArea = function (activeType = "file", options = {}) {
 
 /**
  * Load the Grist documents once and populate the document select.
+ * Cache the request, display API errors, and update the wizard readiness state.
  *
  * @param {Select} select Document select component.
  * @returns {Promise<Array<{label: string, value: string|number}>>} Available document options.
  */
 importGristArea.prototype.loadDocumentOptions = function (select) {
   if (!this.documentOptionsPromise) {
+    this.documentStatus.textContent = "";
+    this.documentStatus.classList.add("d-none");
     this.documentOptionsPromise = listDocs(this.apiKey)
       .then((documents) => [
         { label: mviewer.tr("grist.import.document_create"), value: "create" },
@@ -271,6 +330,8 @@ importGristArea.prototype.loadDocumentOptions = function (select) {
           .filter((option) => option.label && option.value),
       ])
       .catch((error) => {
+        this.documentStatus.textContent = error.message;
+        this.documentStatus.classList.remove("d-none");
         console.error("Error loading Grist documents:", error);
         return [{ label: mviewer.tr("grist.import.document_create"), value: "create" }];
       });
@@ -280,12 +341,42 @@ importGristArea.prototype.loadDocumentOptions = function (select) {
     select.setOptions(options);
     select.setDisabled(false);
     this.fileDocumentName = select.getValue();
+    if (this.fileDocumentName === "create") {
+      this.fileDocumentName = this.documentNameInput.getValue();
+    }
     this.updateGristWizardNextButtonForFile();
 
     return options;
   });
 };
 
+/**
+ * Reload available Grist documents and tables, bypassing cached document options.
+ * Disable the refresh action until both lists have finished loading.
+ *
+ * @returns {Promise<void>} Resolves once both lists have been refreshed.
+ */
+importGristArea.prototype.refreshGristLists = async function () {
+  this.refreshButton.setDisabled(true);
+  this.documentNameSelect.setDisabled(true);
+  this.documentOptionsPromise = null;
+
+  try {
+    await Promise.all([
+      this.loadDocumentOptions(this.documentNameSelect),
+      this.listGristTables.load(),
+    ]);
+  } finally {
+    this.refreshButton.setDisabled(false);
+  }
+};
+
+/**
+ * Switch the source mode and update visible panels and wizard navigation.
+ * Start loading existing tables when switching to the Grist mode.
+ * @param {string} type Source mode: file or grist.
+ * @returns {void}
+ */
 importGristArea.prototype.setActiveType = function (type) {
   this.activeType = type;
   this.update();
@@ -301,6 +392,10 @@ importGristArea.prototype.setActiveType = function (type) {
   updateSelectLayersButtonForImportedFile(this.fileVerification);
 };
 
+/**
+ * Synchronize source buttons, panel visibility, and the file preview with the active mode.
+ * @returns {void}
+ */
 importGristArea.prototype.update = function () {
   const fileButton = this.element.querySelector('[data-import-type="file"]');
   const gristButton = this.element.querySelector('[data-import-type="grist"]');
@@ -328,6 +423,10 @@ importGristArea.prototype.update = function () {
   this.updateFilePreview();
 };
 
+/**
+ * Read the destination table name from the file import form.
+ * @returns {string} Current table name, without trimming whitespace.
+ */
 importGristArea.prototype.getFileTableName = function () {
   return this.tableNameInput.getValue();
 };
@@ -370,6 +469,12 @@ importGristArea.prototype.updateGristWizardNextButtonForFile = function () {
   setGristWizardNextButtonReady(ready);
 };
 
+/**
+ * Resolve the selected existing table or the table created from the imported file.
+ * @returns {{docId: string|number, tableId: string|number, name: string,
+ * tableRef: string|number|undefined, url: string|undefined}|null} Target table,
+ * or null before an existing table is selected or a file has been sent.
+ */
 importGristArea.prototype.getTargetTable = function () {
   if (this.activeType === "grist") {
     const selectedTable = this.listGristTables.getSelectedTable();
@@ -431,6 +536,12 @@ importGristArea.prototype.getTargetTableUrl = async function () {
   );
 };
 
+/**
+ * Fetch rows from the target Grist table, or use the local file before it is sent.
+ * @returns {Promise<{fields: string[], rows: Array, records?: Array,
+ * docId?: string|number, tableId?: string|number}>} Source rows and column names.
+ * @throws {Error} When the Grist request fails or its response is invalid JSON.
+ */
 importGristArea.prototype.getSourceData = async function () {
   const targetTable = this.getTargetTable();
   if (targetTable) {
@@ -479,8 +590,10 @@ importGristArea.prototype.getSourceData = async function () {
 
 /**
  * Send the currently previewed file data to Grist.
+ * Store the created table, update wizard navigation, and show its Grist link.
  *
  * @returns {Promise<Object>} Created Grist table information.
+ * @throws {Error} When the file is invalid or the Grist import fails.
  */
 importGristArea.prototype.sendFileToGrist = async function () {
   let parsedData = null;
@@ -520,28 +633,53 @@ importGristArea.prototype.sendFileToGrist = async function () {
 /**
  * Send the imported file when needed, then verify that the target Grist table
  * can be read and contains usable data.
+ * Show the spinner during file preparation and always restore preview controls.
+ * Notify the column callback once the source data has been validated.
  *
  * @returns {Promise<Object>} Validated Grist source data.
  * @throws {Error} When the source cannot be imported or read.
  */
 importGristArea.prototype.prepareForLocationStep = async function () {
-  if (this.activeType === "file" && !this.sentTable) {
-    await this.sendFileToGrist();
+  const isFile = this.activeType === "file";
+  if (isFile) {
+    this.setFileSending(true);
   }
 
-  const sourceData = await this.getSourceData();
+  try {
+    if (isFile && !this.sentTable) {
+      await this.sendFileToGrist();
+    }
 
-  if (!sourceData.rows.length || !sourceData.fields.length) {
-    throw new Error(mviewer.tr("grist.import.table_empty"));
+    const sourceData = await this.getSourceData();
+
+    if (!sourceData.rows.length || !sourceData.fields.length) {
+      throw new Error(mviewer.tr("grist.import.table_empty"));
+    }
+
+    this.onColumnsChange(sourceData.fields);
+    return sourceData;
+  } finally {
+    if (isFile) {
+      this.setFileSending(false);
+    }
   }
+};
 
-  this.onColumnsChange(sourceData.fields);
-
-  return sourceData;
+/**
+ * Show the upload spinner and hide preview controls while preparing a file.
+ * @param {boolean} sending Whether a file request is in progress.
+ * @returns {void}
+ */
+importGristArea.prototype.setFileSending = function (sending) {
+  this.fileSending = sending;
+  this.fileSendingSpinner.setVisible(sending);
+  this.filePreviewContent.classList.toggle("d-none", sending);
 };
 
 /**
  * Render the file preview and the actions available for the selected file.
+ * Hide invalid file previews and preserve the current upload spinner state.
+ * Rendering the document select also starts or reuses its options request.
  *
  * @returns {void}
  */
@@ -570,20 +708,33 @@ importGristArea.prototype.updateFilePreview = function () {
     return;
   }
 
-  previewContainer.appendChild(this.documentNameSelect.render());
+  previewContainer.appendChild(this.fileSendingSpinner.render());
+  previewContainer.appendChild(this.filePreviewContent);
+  this.setFileSending(this.fileSending);
+
+  this.filePreviewContent
+    .querySelector("[data-file-document-select]")
+    .replaceChildren(this.documentNameSelect.render());
+  const documentNameContainer = this.filePreviewContent.querySelector(
+    "[data-file-document-name]"
+  );
+  documentNameContainer.replaceChildren();
   if (this.documentNameSelect.getValue() === "create") {
-    previewContainer.appendChild(this.documentNameInput.render());
+    documentNameContainer.appendChild(this.documentNameInput.render());
   }
-  previewContainer.appendChild(this.tableNameInput.render());
+  this.filePreviewContent
+    .querySelector("[data-file-table-name]")
+    .replaceChildren(this.tableNameInput.render());
 
   this.filePreviewTable.title =
     this.fileTableName || mviewer.tr("grist.import.file_title");
   this.filePreviewTable.subtitle = mviewer.tr("grist.preview.subtitle");
-  previewContainer.appendChild(this.filePreviewTable.setData(parsedData));
-
-  const openTableContainer = document.createElement("div");
-  openTableContainer.dataset.openCreatedGristTable = "";
-  previewContainer.appendChild(openTableContainer);
+  this.filePreviewContent
+    .querySelector("[data-file-preview-table]")
+    .replaceChildren(this.filePreviewTable.setData(parsedData));
+  this.filePreviewContent
+    .querySelector("[data-open-created-grist-table]")
+    .replaceChildren();
 };
 
 /**
@@ -632,6 +783,11 @@ importGristArea.prototype.importFileFromUrl = async function (fileUrl) {
   }
 };
 
+/**
+ * Render the source panels, mount their components, and bind source selection events.
+ * Refresh the preview and load available tables when Grist mode is active.
+ * @returns {HTMLDivElement} Component root to insert into the document.
+ */
 importGristArea.prototype.render = function () {
   this.element.innerHTML = `
     <div class="import-type-buttons__actions">

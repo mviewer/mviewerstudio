@@ -622,6 +622,7 @@ STYLE FOR GRIST IMPORT
 	margin-bottom: 0;
 	color: var(--grist-color-text);
 	font-weight: 500;
+	margin-right: 5px;
 }
 
 .grist-api-key-help {
@@ -1070,4 +1071,14 @@ STYLE FOR GRIST IMPORT
 	color: var(--grist-color-text-muted);
 	pointer-events: none;
 	opacity: 0.6;
+}
+
+#newlayer-grist-footer {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+}
+
+#newlayer-grist-footer [data-refresh-grist-lists] {
+	margin-left: auto;
 }

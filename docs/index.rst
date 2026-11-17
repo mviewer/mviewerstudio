@@ -28,6 +28,7 @@ Cette partie est dédiée aux utilisateurs qui souhaitent prendre en main l'inte
    doc_user/accueil
    doc_user/param_appli
    doc_user/param_data
+   doc_user/grist
    doc_user/publication
    doc_user/gestion_appli
 

@@ -69,6 +69,10 @@ var mv = (function () {
       yfield: $(layerInfos).attr("yfield"),
       srs: $(layerInfos).attr("srs"),
       geojsonField: $(layerInfos).attr("geojsonField"),
+      joinReferential: $(layerInfos).attr("joinReferential"),
+      joinMatchingField: $(layerInfos).attr("joinMatchingField"),
+      joinGeometryField: $(layerInfos).attr("joinGeometryField"),
+      joinCentroidField: $(layerInfos).attr("joinCentroidField"),
       tooltipcontent: $(layerInfos).attr("tooltipcontent"),
     };
     return layerObject;
@@ -653,11 +657,18 @@ var mv = (function () {
         // Persist the processing output expected by mviewer, and separately
         // preserve the chosen mode so it can be edited again in Studio.
         if (gristLocationMode === "refSwitch") {
-          gristLayer.geojsonField = "geometry";
+          gristLayer.joinReferential = gristTargetTable.joinReferential;
+          gristLayer.joinMatchingField = gristTargetTable.joinMatchingField;
+          gristLayer.joinGeometryField = gristTargetTable.joinGeometryField;
+          gristLayer.joinCentroidField = gristTargetTable.joinCentroidField;
+          gristLayer.geojsonField = gristTargetTable.joinGeometryField;
+          gristLayer.xfield = gristTargetTable.xfield;
+          gristLayer.yfield = gristTargetTable.yfield;
+          if (gristTargetTable.srs) gristLayer.srs = gristTargetTable.srs;
           gristLayer.geolocType = "referential";
         } else if (gristLocationMode === "xySwitch") {
-          gristLayer.xfield = "longitude";
-          gristLayer.yfield = "latitude";
+          gristLayer.xfield = $("#newlayer-grist-coordinate-x").val();
+          gristLayer.yfield = $("#newlayer-grist-coordinate-y").val();
           gristLayer.geolocType = "coordinates";
         } else {
           gristLayer.xfield = "longitude";
@@ -869,6 +880,7 @@ var mv = (function () {
       if (layer.isGrist || layer.url.includes("/download/csv")) {
         layer.type = "csv";
       }
+      if (layer.type === "csv") mv.utils.grist.csv.clearGristCsv(layer.url);
       document.getElementById("layerTypeLabel").append(layer.type);
 
       $("#frm-type").val(layer.type).trigger("change");
@@ -978,7 +990,8 @@ var mv = (function () {
         layer.isGrist = true;
         // Legacy Grist layers did not persist their localization mode in Studio.
         if (!layer.geolocType) {
-          layer.geolocType = layer.geojsonField ? "referential" : "coordinates";
+          layer.geolocType =
+            layer.joinReferential || layer.geojsonField ? "referential" : "coordinates";
         }
       }
 
@@ -1026,19 +1039,9 @@ var mv = (function () {
         // Keep the modal responsive while the authenticated CSV request is running.
         previewContainer.innerHTML = `<div class="text-muted">${mviewer.tr("modal.layer.grist.preview.loading")}</div>`;
         // The CSV endpoint is protected by the same API key used by the Grist import flow.
-        fetch(layer.url, {
-          headers: { Authorization: `Bearer ${apiKey}` },
-        })
-          .then((response) => {
-            if (!response.ok) {
-              throw new Error(`Grist request failed with status ${response.status}`);
-            }
-
-            return response.text();
-          })
-          .then((csv) => {
-            // PapaParse preserves the table headers used by the preview component.
-            const data = Papa.parse(csv, { header: true, skipEmptyLines: true });
+        mv.utils.grist.csv
+          .loadGristCsv(layer.url, apiKey)
+          .then((data) => {
             previewContainer._gristLayerData = data;
             const Table = mv.components.table;
             const preview = new Table({
@@ -1414,6 +1417,10 @@ var mv = (function () {
         "yfield",
         "srs",
         "geojsonField",
+        "joinReferential",
+        "joinMatchingField",
+        "joinGeometryField",
+        "joinCentroidField",
         "tooltipcontent",
       ];
       optional_parameters.forEach((param) => {
@@ -1421,7 +1428,18 @@ var mv = (function () {
         if (param === "servertype" && l[param] === "geoserver") return;
         let value = l[param];
 
-        if (["metadata", "metadata-csw", "legendurl", "filter"].includes(param)) {
+        if (
+          [
+            "metadata",
+            "metadata-csw",
+            "legendurl",
+            "filter",
+            "joinReferential",
+            "joinMatchingField",
+            "joinGeometryField",
+            "joinCentroidField",
+          ].includes(param)
+        ) {
           value = mv.escapeXml(value);
         }
         layer_parameters[param] = `${param}="${value}"`;

@@ -53,14 +53,13 @@ const BAN_GEOCODING_FIELDS = [
   "result_status",
 ];
 
-
 const GRIST_GEOCODING_DEFAULT_CONFIG = {
-    url: "https://data.geopf.fr/geocodage/search/",
-    params: {},
-    srs: GRIST_ADDRESS_PROJECTION,
-    geocoding_ban_control_type: "score",
-    geocoding_score_threshold: 0.8,
-    ban_type_order: [],
+  url: "https://data.geopf.fr/geocodage/search/",
+  params: {},
+  srs: GRIST_ADDRESS_PROJECTION,
+  geocoding_ban_control_type: "score",
+  geocoding_score_threshold: 0.8,
+  ban_type_order: [],
 };
 
 export {
@@ -87,5 +86,5 @@ export {
   GRIST_WIZARD_NEXT_BUTTON_ID,
   NEW_LAYER_BY_GRIST_ID,
   SELECT_LAYERS_BUTTON_ID,
-  GRIST_GEOCODING_DEFAULT_CONFIG
+  GRIST_GEOCODING_DEFAULT_CONFIG,
 };

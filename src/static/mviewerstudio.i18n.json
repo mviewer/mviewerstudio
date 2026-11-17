@@ -412,10 +412,10 @@
     "modal.layer.grist.geolocation.tooltip": "Modifier les paramètres de localisation des données",
     "modal.layer.grist.geolocation.edit": "Modifier",
     "modal.layer.grist.mode.address.title": "À partir d’une adresse",
-    "modal.layer.grist.mode.address.tooltip": "Utiliser des champs de la table contenant les adresses pour géolocaliser les entités via un service de géocodage",
+    "modal.layer.grist.mode.address.tooltip": "L’adresse doit être située en France (métropole ou territoires d’outre-mer). La précision des résultats s’améliore à mesure que l’adresse est détaillée (numéro, voie, code postal, commune).",
     "modal.layer.grist.mode.address.description": "Géocodez vos données (adresse, ville...)",
     "modal.layer.grist.mode.referential.title": "À partir d’un référentiel",
-    "modal.layer.grist.mode.referential.tooltip": "Les entités du référentiel sélectionné seront utilisées pour géolocaliser celles de la table",
+    "modal.layer.grist.mode.referential.tooltip": "Associez vos données à des découpages existants (communes, départements, zone iris, etc.) via un code commun (ex: CODE INSEE).",
     "modal.layer.grist.mode.referential.description": "Associez vos données à un référentiel géographique",
     "modal.layer.grist.mode.coordinates.title": "À partir de coordonnées X/Y",
     "modal.layer.grist.mode.coordinates.tooltip": "Utiliser des champs de la table contenant les coordonnées X, Y pour géolocaliser les entités",
@@ -639,7 +639,14 @@
     "tooltip.showintoc": "Cette option permet d'activer l'affichage de la donnée seulement sur la carte et non dans le menu thématique et la légende. Il n'est donc pas possible pour l'utilisateur de modifier les réglages de la donnée (showintoc). Exemple : Donnée permettant de créer un masque pour un territoire.",
     "tooltip.external.sld": "Lien vers un fichier au format .SLD définissant le style de la couche",
     "xmleditor.btn.tooltip": "Ouvrir l'éditeur XML pour modifier la configuration",
-    "xmleditor.btn.text": "Éditeur XML"
+    "xmleditor.btn.text": "Éditeur XML",
+    "grist.confirm.geometry_overwrite": "Voulez-vous écraser le contenu de la colonne existante \"geometry\" ?",
+    "grist.import.refresh": "Actualiser",
+    "grist.import.table_required": "Aucune table Grist sélectionnée.",
+    "grist.import.prepare_failed": "Impossible de préparer la table Grist.",
+    "grist.import.success": "La table Grist a été importée avec succès.",
+    "grist.import.sending": "Envoi du fichier vers Grist…",
+    "api.error.message": "La requête Grist a échoué - veuillez contacter un administrateur (message de l’API : {message})"
   },
   "en": {
     "grist.api_key.validate": "Validate",
@@ -1296,6 +1303,13 @@
     "tooltip.tiled": "If you activate this option, the display of this data will be progressive. Best for performance.",
     "tooltip.exclusivelayer": "If you activate this option, the display of this data will automatically hide all the other data on the map with this parameter activated.",
     "tooltip.showintoc": "This option enables the data to be displayed only on the map and not in the thematic menu and legend. It is therefore not possible for the user to modify the data settings (showintoc). Example: Data used to create a mask for an area.",
-    "tooltip.external.sld": "Link to a file in .SLD format defining the style of the layer"
+    "tooltip.external.sld": "Link to a file in .SLD format defining the style of the layer",
+    "grist.confirm.geometry_overwrite": "Do you want to overwrite the contents of the existing \"geometry\" column?",
+    "grist.import.refresh": "Refresh",
+    "grist.import.table_required": "No Grist table selected.",
+    "grist.import.prepare_failed": "Unable to prepare the Grist table.",
+    "grist.import.success": "The Grist table was imported successfully.",
+    "grist.import.sending": "Sending file to Grist…",
+    "api.error.message": "The Grist request failed - please contact an administrator (API message: {message})"
   }
 }

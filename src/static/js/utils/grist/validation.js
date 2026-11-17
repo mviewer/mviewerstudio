@@ -111,15 +111,20 @@ const getParsedRows = (verification) => {
 };
 
 /**
- * Set the shared layer creation button's disabled state when present.
- * @param {boolean} disabled Whether to disable the button.
+ * Apply Grist validation only while the Grist import tab is active.
+ * @param {boolean} disabled Whether Grist validation disables the button.
  * @returns {void}
  */
 const setSelectLayersButtonDisabled = (disabled) => {
   const button = getSelectLayersButton();
 
   if (button) {
-    button.disabled = disabled;
+    const modal = document.getElementById(GRIST_MODAL_ID);
+    let activeTab = null;
+    if (modal) {
+      activeTab = modal.querySelector('[data-bs-toggle="pill"].active');
+    }
+    button.disabled = disabled && isGristTab(activeTab);
   }
 };
 
@@ -330,21 +335,15 @@ const bindNewLayerModalValidation = (modal = document.getElementById(GRIST_MODAL
   });
 
   modal.addEventListener("click", (event) => {
-    const tab = event.target.closest('[data-bs-toggle="pill"]');
     const closeButton = event.target.closest(".close, [i18n='close']");
-
-    if (tab) {
-      if (isGristTab(tab)) {
-        setSelectLayersButtonDisabled(!hasLocalizedGristRows);
-        return;
-      }
-
-      enableSelectLayersButton();
-    }
 
     if (closeButton) {
       enableSelectLayersButton();
     }
+  });
+
+  modal.addEventListener("shown.bs.tab", () => {
+    setSelectLayersButtonDisabled(!hasLocalizedGristRows);
   });
 
   modal.addEventListener("show.bs.modal", () => {

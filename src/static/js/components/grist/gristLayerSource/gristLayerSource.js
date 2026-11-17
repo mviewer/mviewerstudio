@@ -1,3 +1,4 @@
+import { createGristApiError, readGristResponse } from "../../../utils/grist/apiError.js";
 import { getDocTables, getTableRecords } from "../../../utils/grist/requests.js";
 import { getGristTableUrl } from "../../../utils/grist/utils.js";
 
@@ -19,17 +20,6 @@ import { getGristTableUrl } from "../../../utils/grist/utils.js";
 const GristLayerSource = function (options) {
   Object.assign(this, options);
 };
-
-/**
- * Return a translated adapter error while allowing the source to be reused in
- * contexts where the application translation service has not loaded yet.
- *
- * @param {string} key Translation key.
- * @param {string} fallback Default error message.
- * @returns {string} Localized error message.
- */
-const getSourceError = (key, fallback) =>
-  typeof mviewer !== "undefined" && mviewer.tr ? mviewer.tr(key) : fallback;
 
 /**
  * Return the Grist table identity expected by shared localisation utilities.
@@ -54,13 +44,7 @@ GristLayerSource.prototype.getSourceData = async function () {
     this.apiKey
   );
 
-  if (!response.ok) {
-    throw new Error(
-      `${getSourceError("modal.layer.grist.workflow.table_load_error", "Impossible de lire la table Grist")} (${response.status}).`
-    );
-  }
-
-  const payload = await response.json();
+  const payload = await readGristResponse(response);
   const records = payload.records || [];
   const rows = records.map((record) => record.fields || {});
   const fields = rows.length
@@ -78,16 +62,13 @@ GristLayerSource.prototype.getSourceData = async function () {
 GristLayerSource.prototype.getTargetTableUrl = async function () {
   const response = await getDocTables(this.apiUrl, this.docId, this.apiKey);
 
-  if (!response.ok) {
-    return "";
-  }
-
-  const payload = await response.json();
+  const payload = await readGristResponse(response);
   const table = (payload.tables || []).find((item) => item.id === this.tableId);
-  const tableRef = table && (table.fields.tableRef || table.tableRef || table.id);
+  const tableRef =
+    table && ((table.fields && table.fields.tableRef) || table.tableRef || table.id);
 
   if (!tableRef) {
-    return "";
+    throw await createGristApiError(new Error("Grist table reference not found"));
   }
 
   return getGristTableUrl(

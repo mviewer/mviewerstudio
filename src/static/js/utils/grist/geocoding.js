@@ -1,3 +1,4 @@
+import { readGristResponse } from "./apiError.js";
 import {
   BAN_GEOCODING_FIELDS,
   GRIST_LOCATION_SWITCH_IDS,
@@ -141,20 +142,26 @@ const isUngeocodedRow = (row, gristConfig) => {
   return !score || score < gristConfig.geocodingScoreThreshold;
 };
 
-const filterUngeocodedRows = (rows) => {
-  const gristConfig = getGristConfig();
-
-  return rows.filter((row) => isUngeocodedRow(row, gristConfig));
-};
-
 /**
  * Build the display status from BAN geocoding results.
  *
  * @param {Object[]} rows Parsed BAN CSV rows.
+ * @param {Object[]} [sourceRows=[]] Source rows to identify records needing correction.
  * @returns {{type: string, label: string, message: string, localizedRows: number, totalRows: number, ungeocodedRows: Object[]}} Result status.
  */
-const getBanGeocodingStatus = (rows) => {
-  const ungeocodedRows = filterUngeocodedRows(rows);
+const getBanGeocodingStatus = (rows, sourceRows = []) => {
+  const gristConfig = getGristConfig();
+  const ungeocodedRows = [];
+
+  rows.forEach((row, index) => {
+    if (isUngeocodedRow(row, gristConfig)) {
+      ungeocodedRows.push({
+        ...sourceRows[index],
+        result_type: row.result_type || "",
+      });
+    }
+  });
+
   const localizedRows = rows.length - ungeocodedRows.length;
 
   if (localizedRows === 0) {
@@ -197,13 +204,7 @@ const getBanGeocodingStatus = (rows) => {
  * @throws {Error} When the Grist API response is not successful.
  */
 const readGristJson = async (response) => {
-  if (!response.ok) {
-    throw new Error(
-      mviewer.tr("grist.import.request_failed").replace("{status}", () => response.status)
-    );
-  }
-
-  return response.json();
+  return readGristResponse(response);
 };
 
 /**
@@ -224,7 +225,7 @@ const ensureGristGeocodingColumns = async (gristConfig, sourceData, apiKey) => {
   }
 
   for (const column of missingColumns) {
-    const response = await postColumnsToTable(
+    await postColumnsToTable(
       gristConfig.apiUrl,
       sourceData.docId,
       sourceData.tableId,
@@ -238,15 +239,6 @@ const ensureGristGeocodingColumns = async (gristConfig, sourceData, apiKey) => {
       },
       apiKey
     );
-
-    if (!response.ok && response.status !== 400) {
-      throw new Error(
-        mviewer
-          .tr("grist.geocoding.column_failed")
-          .replace("{column}", () => column)
-          .replace("{status}", () => response.status)
-      );
-    }
   }
 };
 
@@ -448,7 +440,7 @@ const geocodeAddressFieldsWithBan = async (importGristArea, getAddressFields) =>
   }
 
   const geocodedRows = parseCsvRows(await response.text());
-  const status = getBanGeocodingStatus(geocodedRows);
+  const status = getBanGeocodingStatus(geocodedRows, sourceData.rows);
 
   await updateGristTableWithGeocoding(sourceData, geocodedRows, importGristArea.apiKey);
 

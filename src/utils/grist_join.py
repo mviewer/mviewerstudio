@@ -15,9 +15,6 @@ from .commons import geojson_to_wkt
 
 WFS_VALUE_CHUNK_SIZE = 300
 GRIST_UPDATE_BATCH_SIZE = 200
-GRIST_GEOMETRY_FIELD = "geometry"
-GRIST_X_FIELD = "x"
-GRIST_Y_FIELD = "y"
 SUPPORTED_OUTPUT_FORMATS = ("geojson", "wkt")
 
 
@@ -346,7 +343,7 @@ def build_wfs_payload(referential, values):
     :return: Form payload for a WFS GetFeature request.
     :rtype: dict
     """
-    return {
+    payload = {
         "service": "WFS",
         "version": "2.0.0",
         "request": "GetFeature",
@@ -354,6 +351,9 @@ def build_wfs_payload(referential, values):
         "outputFormat": "application/json",
         "CQL_FILTER": build_cql_filter(referential["join_field"], values),
     }
+    if referential.get("srs"):
+        payload["srsName"] = referential["srs"]
+    return payload
 
 
 def chunk_values(values):
@@ -425,9 +425,10 @@ def fetch_referential_features(referential, values):
     wfs_url = get_wfs_url(referential)
 
     for chunk in chunk_values(values):
+        wfs_payload=build_wfs_payload(referential, chunk)
         response = requests.post(
             wfs_url,
-            data=build_wfs_payload(referential, chunk),
+            data=wfs_payload,
             headers={"Content-Type": "application/x-www-form-urlencoded"},
             timeout=30,
         )
@@ -521,24 +522,19 @@ def get_rows_from_records(records):
     return rows
 
 
-def get_unmatched_row(row, output_format):
+def get_unmatched_row(row, geometry_field=None):
     """
     Return an unmatched row with common result fields.
 
     :param dict row: Source row.
+    :param str geometry_field: Configured geometry column, absent for X/Y output.
     :return: Enriched unmatched row.
     :rtype: dict
     """
-    return {
-        **row,
-        GRIST_GEOMETRY_FIELD: "",
-        "refgeo_found": False,
-    }
-
-
-def get_geometry_field(output_format):
-    """Return the Grist column id corresponding to an output format."""
-    return GRIST_GEOMETRY_FIELD
+    result = {**row, "refgeo_found": False}
+    if geometry_field:
+        result[geometry_field] = ""
+    return result
 
 
 def get_geometry_output(geometry, output_format):
@@ -587,6 +583,29 @@ def join_rows_with_referential(payload, authorization_header):
     doc_id, table_id, matching_field, output_format, referential = (
         validate_join_payload(payload)
     )
+    requested_support = payload.get("geometry_support")
+    if requested_support not in (None, "Polygon", "Point"):
+        raise ValueError("Support géographique invalide.")
+    polygon_field = payload.get("geometry_field", referential.get("geometry_field_name"))
+    centroid_field = payload.get("centroid_field", referential.get("centroid_field_name"))
+    x_field = referential.get("x_field_name")
+    y_field = referential.get("y_field_name")
+    use_coordinates = requested_support != "Point" and bool(x_field or y_field)
+    if use_coordinates:
+        if any(not isinstance(field, str) or not field for field in (x_field, y_field)):
+            raise ValueError("Configurer x_field_name et y_field_name pour le référentiel.")
+        if x_field == y_field:
+            raise ValueError("Les colonnes X et Y doivent être distinctes.")
+    else:
+        geometry_field = polygon_field
+        if requested_support == "Point":
+            geometry_field = centroid_field
+        if not isinstance(geometry_field, str) or not geometry_field:
+            raise ValueError("Configurer le nom de la colonne géométrique du référentiel.")
+    if requested_support == "Point":
+        if output_format != "geojson" or not referential.get("centroide_layer_name"):
+            raise ValueError("Aucun support centroïde GeoJSON disponible.")
+        referential = {**referential, "layer_name": referential["centroide_layer_name"]}
     records = get_grist_records(api_url, doc_id, table_id, api_key)
     rows = get_rows_from_records(records)
     matching_values = get_matching_values(rows, matching_field)
@@ -616,32 +635,36 @@ def join_rows_with_referential(payload, authorization_header):
         feature = features_by_join_field.get(normalize_join_value(matching_value))
 
         if not feature:
-            enriched_row = get_unmatched_row(row, output_format)
+            enriched_row = get_unmatched_row(row, None if use_coordinates else geometry_field)
             joined_rows.append(enriched_row)
             unmatched.append(row)
             continue
 
         geometry = feature.get("geometry")
         if not geometry:
-            enriched_row = get_unmatched_row(row, output_format)
+            enriched_row = get_unmatched_row(row, None if use_coordinates else geometry_field)
             joined_rows.append(enriched_row)
             unmatched.append(row)
             continue
 
-        if is_point_geometry(geometry):
+        if use_coordinates:
+            if not is_point_geometry(geometry):
+                raise ValueError("La sortie X/Y nécessite une géométrie Point.")
             x, y = get_point_coordinates(geometry)
             joined_rows.append(
-                {**row, GRIST_X_FIELD: x, GRIST_Y_FIELD: y, "refgeo_found": True}
+                {**row, x_field: x, y_field: y, "refgeo_found": True}
             )
             records_to_patch.append(
                 {
                     "id": records[index]["id"],
-                    "fields": {GRIST_X_FIELD: x, GRIST_Y_FIELD: y},
+                    "fields": {x_field: x, y_field: y},
                 }
             )
             continue
 
-        geometry_field = get_geometry_field(output_format)
+        geometry_field = polygon_field
+        if requested_support == "Point":
+            geometry_field = centroid_field
         geometry_output = get_geometry_output(geometry, output_format)
         joined_rows.append(
             {**row, geometry_field: geometry_output, "refgeo_found": True}
@@ -657,6 +680,7 @@ def join_rows_with_referential(payload, authorization_header):
             }
         )
 
+    resolved_column_ids = {}
     if records_to_patch:
         column_ids = []
         for record in records_to_patch:
@@ -684,4 +708,10 @@ def join_rows_with_referential(payload, authorization_header):
         "output_format": output_format,
         "rows": joined_rows,
         "unmatched": unmatched,
+        "geometry_field": resolved_column_ids.get(
+            polygon_field, polygon_field if requested_support == "Point" else None
+        ),
+        "centroid_field": resolved_column_ids.get(centroid_field),
+        "x_field": resolved_column_ids.get(x_field),
+        "y_field": resolved_column_ids.get(y_field),
     }

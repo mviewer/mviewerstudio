@@ -1,3 +1,4 @@
+import { readGristResponse } from "../../../utils/grist/apiError.js";
 /**
  * Grist tables select field.
  *
@@ -19,12 +20,8 @@ import OpenGristTableBtn from "../openGristTableBtn/openGristTableBtn.js";
 
 let listGristTablesInstanceId = 0;
 
-const readJson = (response) => {
-  if (!response.ok) {
-    throw new Error(`Grist request failed with status ${response.status}`);
-  }
-
-  return response.json();
+const readJson = async (response) => {
+  return readGristResponse(response);
 };
 
 const getGristId = (item) => {
@@ -195,7 +192,7 @@ ListGristTables.prototype.load = function () {
     .catch((error) => {
       this.tables = [];
       this.updateOptions();
-      this.setStatus(mviewer.tr("grist.tables.error"), "danger");
+      this.setStatus(error.message || mviewer.tr("grist.tables.error"), "danger");
       console.error("Error loading Grist tables:", error);
       return [];
     })
@@ -260,7 +257,7 @@ ListGristTables.prototype.updatePreview = function (selectedTable) {
       previewContainer.replaceChildren();
       const message = document.createElement("p");
       message.className = "text-danger mb-0";
-      message.textContent = mviewer.tr("grist.preview.error");
+      message.textContent = error.message || mviewer.tr("grist.preview.error");
       previewContainer.appendChild(message);
       this.onFieldsChange([]);
       console.error("Error loading Grist table preview:", error);

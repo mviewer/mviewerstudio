@@ -1,3 +1,8 @@
+import {
+  createGristApiError,
+  fetchWithApiError,
+  readGristResponse,
+} from "../../../utils/grist/apiError.js";
 /**
  * Simple Grist API key form block.
  *
@@ -67,17 +72,14 @@ const GristApiKey = function (
  * Only if user is logged in and has a valid session (via ProConnect)
  */
 GristApiKey.prototype.fetchKeyFromGristAPI = function () {
-  return fetch(this.gristApiKeyUrl, {
+  return fetchWithApiError(this.gristApiKeyUrl, {
     method: "GET",
     credentials: "include",
     headers: {
       Accept: "text/plain",
     },
-  }).then((response) => {
-    if (!response.ok) {
-      throw new Error("Network response was not ok");
-    }
-    return response.text();
+  }).then(async (response) => {
+    return readGristResponse(response, "text");
   });
 };
 
@@ -97,10 +99,10 @@ GristApiKey.prototype.loadApiKey = function () {
   }
 
   this.fetchKeyFromGristAPI()
-    .then((data) => {
+    .then(async (data) => {
       const apiKey = data.trim();
       if (!apiKey) {
-        throw new Error("Empty Grist API key");
+        throw await createGristApiError(new Error("Empty Grist API key"));
       }
       input.value = apiKey;
       input.readOnly = true;
@@ -110,7 +112,10 @@ GristApiKey.prototype.loadApiKey = function () {
       this.onInvalidApiKey();
       input.readOnly = false;
       input.focus();
-      this.showAlert("warning", mviewer.tr("grist.api_key.auto_fetch_failed"));
+      this.showAlert(
+        "warning",
+        error.message || mviewer.tr("grist.api_key.auto_fetch_failed")
+      );
       console.warn("Error fetching Grist API key:", error);
     });
 };
@@ -187,11 +192,7 @@ GristApiKey.prototype.validateApiKey = function () {
   }
 
   getUserOrgs(this.gristInstanceUrl, apiKey)
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error("Invalid Grist API key");
-      }
-
+    .then(() => {
       this.showAlert("success", mviewer.tr("grist.api_key.valid"));
       storeGristApiKey(apiKey);
       this.onValidApiKey(apiKey);
@@ -200,7 +201,7 @@ GristApiKey.prototype.validateApiKey = function () {
     .catch((error) => {
       clearStoredGristApiKey();
       this.onInvalidApiKey();
-      this.showAlert("danger", mviewer.tr("grist.api_key.invalid"));
+      this.showAlert("danger", error.message || mviewer.tr("grist.api_key.invalid"));
       console.error("Error validating Grist API key:", error);
     })
     .finally(() => {
@@ -226,7 +227,7 @@ const getGristApiKey = () => {
 GristApiKey.prototype.render = function () {
   this.element.innerHTML = `
     <div class="grist-api-key-header">
-      <div class="d-flex align-items-center gap-1" data-grist-api-key-title>
+      <div class="d-flex align-items-center gap-2" data-grist-api-key-title>
         <label class="grist-api-key-label" for="${this.idPrefix}-input">
           ${mviewer.tr("grist.api_key.label")}
         </label>
