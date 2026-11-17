@@ -1,0 +1,371 @@
+import { createGristApiError, fetchWithApiError, readGristResponse } from "./apiError.js";
+// Preserve the gateway session when calling the same-origin Grist proxy.
+/**
+ * Build the authorization headers used by Grist API requests.
+ *
+ * @param {string} apiKey Grist API key.
+ * @returns {Object} Headers containing the bearer token.
+ */
+const getAuthHeaders = (apiKey) => {
+  return {
+    Authorization: `Bearer ${apiKey}`,
+  };
+};
+
+/**
+ * Build the headers used by Grist API requests with a JSON body.
+ *
+ * @param {string} apiKey Grist API key.
+ * @returns {Object} Headers containing content type and bearer token.
+ */
+const getJsonHeaders = (apiKey) => {
+  return {
+    "Content-Type": "application/json",
+    Authorization: `Bearer ${apiKey}`,
+  };
+};
+
+/**
+ * Build the URL used to access tables from a Grist document.
+ *
+ * @param {string} instanceUrl Base URL of the Grist instance or nginx proxy.
+ * @param {string|number} docId Grist document id.
+ * @returns {string} Grist tables API URL.
+ */
+const getTablesUrl = (instanceUrl, docId) => {
+  return `${instanceUrl}/api/docs/${docId}/tables`;
+};
+
+/**
+ * Build the URL used to access records from a Grist table.
+ *
+ * @param {string} instanceUrl Base URL of the Grist instance or nginx proxy.
+ * @param {string|number} docId Grist document id.
+ * @param {string|number} tableId Grist table id.
+ * @param {number} [limit] Maximum number of records to fetch.
+ * @returns {string} Grist table records API URL.
+ */
+const getTableRecordsUrl = (instanceUrl, docId, tableId, limit) => {
+  const url = `${instanceUrl}/api/docs/${docId}/tables/${encodeURIComponent(tableId)}/records`;
+
+  if (!limit) {
+    return url;
+  }
+
+  return `${url}?limit=${encodeURIComponent(limit)}`;
+};
+
+const hasGristId = (id) => {
+  if (!id) {
+    return false;
+  }
+
+  return true;
+};
+
+/**
+ * List organizations available to the current Grist API key.
+ *
+ * @param {string} instanceUrl Base URL of the Grist instance or nginx proxy.
+ * @param {string} apiKey Grist API key.
+ * @returns {Promise<Response>} Fetch response from the Grist API.
+ */
+export const getUserOrgs = (instanceUrl, apiKey) => {
+  return fetchWithApiError(`${instanceUrl}/api/orgs`, {
+    method: "GET",
+    credentials: "same-origin",
+    headers: getAuthHeaders(apiKey),
+  });
+};
+
+/**
+ * Get a Grist workspace description.
+ *
+ * The response contains the workspace documents in `docs`.
+ *
+ * @param {string} instanceUrl Base URL of the Grist instance or nginx proxy.
+ * @param {string|number} workspaceId Grist workspace id.
+ * @param {string} apiKey Grist API key.
+ * @returns {Promise<Response>} Fetch response from the Grist API.
+ */
+export const getDescribeWorkspace = async (instanceUrl, workspaceId, apiKey) => {
+  if (!hasGristId(workspaceId)) {
+    throw await createGristApiError(
+      new Error("Unable to describe Grist workspace without a workspace id")
+    );
+  }
+
+  return fetchWithApiError(`${instanceUrl}/api/workspaces/${workspaceId}`, {
+    method: "GET",
+    credentials: "same-origin",
+    headers: getAuthHeaders(apiKey),
+  });
+};
+
+/**
+ * List documents from a Grist workspace.
+ *
+ * This helper uses `getDescribeWorkspace` because the Grist workspace
+ * description contains the documents in its `docs` property.
+ *
+ * @param {string} instanceUrl Base URL of the Grist instance or nginx proxy.
+ * @param {string|number} workspaceId Grist workspace id.
+ * @param {string} apiKey Grist API key.
+ * @returns {Promise<Object[]>} Documents from the Grist API `docs` field.
+ * @throws {Error} When the Grist API response is not successful.
+ */
+export const getWorkspaceDocsList = (instanceUrl, workspaceId, apiKey) => {
+  return getDescribeWorkspace(instanceUrl, workspaceId, apiKey)
+    .then(async (response) => {
+      return readGristResponse(response);
+    })
+    .then((workspaceDescription) => workspaceDescription.docs || []);
+};
+
+/**
+ * List workspaces from a Grist organization.
+ *
+ * @param {string} instanceUrl Base URL of the Grist instance or nginx proxy.
+ * @param {string|number} orgId Grist organization id or domain.
+ * @param {string} apiKey Grist API key.
+ * @returns {Promise<Response>} Fetch response from the Grist API.
+ */
+export const getOrgWorkspaces = (instanceUrl, orgId, apiKey) => {
+  return fetchWithApiError(`${instanceUrl}/api/orgs/${orgId}/workspaces`, {
+    method: "GET",
+    credentials: "same-origin",
+    headers: getAuthHeaders(apiKey),
+  });
+};
+
+/**
+ * Create a workspace in a Grist organization.
+ *
+ * @param {string} instanceUrl Base URL of the Grist instance or nginx proxy.
+ * @param {string|number} orgId Grist organization id or domain.
+ * @param {string} workspaceName Name of the workspace to create.
+ * @param {string} apiKey Grist API key.
+ * @returns {Promise<Response>} Fetch response from the Grist API.
+ */
+export const createOrgWorkspace = (instanceUrl, orgId, workspaceName, apiKey) => {
+  const body = {
+    name: workspaceName,
+  };
+
+  return fetchWithApiError(`${instanceUrl}/api/orgs/${orgId}/workspaces`, {
+    method: "POST",
+    credentials: "same-origin",
+    headers: getJsonHeaders(apiKey),
+    body: JSON.stringify(body),
+  });
+};
+
+/**
+ * Create a document in a Grist workspace.
+ *
+ * @param {string} instanceUrl Base URL of the Grist instance or nginx proxy.
+ * @param {string|number} workspaceId Grist workspace id.
+ * @param {string} documentName Name of the document to create.
+ * @param {string} apiKey Grist API key.
+ * @returns {Promise<Response>} Fetch response from the Grist API.
+ */
+export const createWorkspaceDoc = (instanceUrl, workspaceId, documentName, apiKey) => {
+  const body = {
+    name: documentName,
+    isPinned: false,
+  };
+
+  return fetchWithApiError(`${instanceUrl}/api/workspaces/${workspaceId}/docs`, {
+    method: "POST",
+    credentials: "same-origin",
+    headers: getJsonHeaders(apiKey),
+    body: JSON.stringify(body),
+  });
+};
+
+/**
+ * Get the Grist API key of the connected user.
+ *
+ * @param {string} instanceUrl Base URL of the Grist instance or nginx proxy.
+ * @returns {Promise<Response>} Fetch response from the Grist API.
+ */
+export const getApiKey = (instanceUrl) => {
+  return fetchWithApiError(`${instanceUrl}/api/profile/apikey`);
+};
+
+/**
+ * Get profile information for the connected Grist user.
+ *
+ * @param {string} instanceUrl Base URL of the Grist instance or nginx proxy.
+ * @returns {Promise<Response>} Fetch response from the Grist API.
+ */
+export const getUserInfo = (instanceUrl) => {
+  return fetchWithApiError(`${instanceUrl}/api/profile/user`);
+};
+
+/**
+ * Create tables in a Grist document.
+ *
+ * @param {string} instanceUrl Base URL of the Grist instance or nginx proxy.
+ * @param {string|number} docId Grist document id.
+ * @param {Object} tablesData Tables payload expected by the Grist API.
+ * @param {string} apiKey Grist API key.
+ * @returns {Promise<Response>} Fetch response from the Grist API.
+ */
+export const postTablesToDoc = (instanceUrl, docId, tablesData, apiKey) => {
+  return fetchWithApiError(getTablesUrl(instanceUrl, docId), {
+    method: "POST",
+    credentials: "same-origin",
+    headers: getJsonHeaders(apiKey),
+    body: JSON.stringify(tablesData),
+  });
+};
+
+/**
+ * Add records to a Grist table.
+ *
+ * @param {string} instanceUrl Base URL of the Grist instance or nginx proxy.
+ * @param {string|number} docId Grist document id.
+ * @param {string|number} tableId Grist table id.
+ * @param {Object} recordsData Records payload expected by the Grist API.
+ * @param {string} apiKey Grist API key.
+ * @returns {Promise<Response>} Fetch response from the Grist API.
+ */
+export const postRecordsToTable = (instanceUrl, docId, tableId, recordsData, apiKey) => {
+  return fetchWithApiError(
+    `${instanceUrl}/api/docs/${docId}/tables/${encodeURIComponent(tableId)}/records`,
+    {
+      method: "POST",
+      credentials: "same-origin",
+      headers: getJsonHeaders(apiKey),
+      body: JSON.stringify(recordsData),
+    }
+  );
+};
+
+/**
+ * Fetch the actual column identifiers and metadata stored by Grist.
+ * The response includes column labels used to match imported file headers.
+ *
+ * @param {string} instanceUrl Grist API base URL.
+ * @param {string|number} docId Document identifier.
+ * @param {string|number} tableId Table identifier.
+ * @param {string} apiKey Grist API key.
+ * @returns {Promise<Response>} Unparsed API response containing a columns array.
+ */
+export const getTableColumns = (instanceUrl, docId, tableId, apiKey) => {
+  return fetchWithApiError(
+    `${instanceUrl}/api/docs/${docId}/tables/${encodeURIComponent(tableId)}/columns`,
+    { credentials: "same-origin", headers: getJsonHeaders(apiKey) }
+  );
+};
+
+/**
+ * Add columns to a Grist table.
+ *
+ * @param {string} instanceUrl Base URL of the Grist instance or nginx proxy.
+ * @param {string|number} docId Grist document id.
+ * @param {string|number} tableId Grist table id.
+ * @param {Object} columnsData Columns payload expected by the Grist API.
+ * @param {string} apiKey Grist API key.
+ * @returns {Promise<Response>} Fetch response from the Grist API.
+ */
+export const postColumnsToTable = (instanceUrl, docId, tableId, columnsData, apiKey) => {
+  return fetchWithApiError(
+    `${instanceUrl}/api/docs/${docId}/tables/${encodeURIComponent(tableId)}/columns`,
+    {
+      method: "POST",
+      credentials: "same-origin",
+      headers: getJsonHeaders(apiKey),
+      body: JSON.stringify(columnsData),
+    }
+  );
+};
+
+/**
+ * Update existing records in a Grist table.
+ *
+ * @param {string} instanceUrl Base URL of the Grist instance or nginx proxy.
+ * @param {string|number} docId Grist document id.
+ * @param {string|number} tableId Grist table id.
+ * @param {Object} recordsData Records payload expected by the Grist API.
+ * @param {string} apiKey Grist API key.
+ * @returns {Promise<Response>} Fetch response from the Grist API.
+ */
+export const patchRecordsToTable = (instanceUrl, docId, tableId, recordsData, apiKey) => {
+  return fetchWithApiError(
+    `${instanceUrl}/api/docs/${docId}/tables/${encodeURIComponent(tableId)}/records`,
+    {
+      method: "PATCH",
+      credentials: "same-origin",
+      headers: getJsonHeaders(apiKey),
+      body: JSON.stringify(recordsData),
+    }
+  );
+};
+
+/**
+ * List tables from a Grist document.
+ *
+ * @param {string} instanceUrl Base URL of the Grist instance or nginx proxy.
+ * @param {string|number} docId Grist document id.
+ * @param {string} apiKey Grist API key.
+ * @returns {Promise<Response>} Fetch response from the Grist API.
+ */
+export const getDocTables = (instanceUrl, docId, apiKey) => {
+  return fetchWithApiError(getTablesUrl(instanceUrl, docId), {
+    method: "GET",
+    credentials: "same-origin",
+    headers: getAuthHeaders(apiKey),
+  });
+};
+
+/**
+ * Get records from a Grist table.
+ *
+ * @param {string} instanceUrl Base URL of the Grist instance or nginx proxy.
+ * @param {string|number} docId Grist document id.
+ * @param {string|number} tableId Grist table id.
+ * @param {string} apiKey Grist API key.
+ * @param {Object} [options] Request options.
+ * @param {number} [options.limit] Maximum number of records to fetch.
+ * @returns {Promise<Response>} Fetch response from the Grist API.
+ */
+export const getTableRecords = (instanceUrl, docId, tableId, apiKey, options = {}) => {
+  return fetchWithApiError(
+    getTableRecordsUrl(instanceUrl, docId, tableId, options.limit),
+    {
+      method: "GET",
+      credentials: "same-origin",
+      headers: getAuthHeaders(apiKey),
+    }
+  );
+};
+
+/**
+ * Send CSV data to the BAN geocoding API.
+ *
+ * @param {string} csvData CSV content to geocode.
+ * @param {Object} geocodingConfig Configured service URL and query parameters.
+ * @returns {Promise<Response>} Fetch response from the BAN API.
+ */
+export const postCsvToBanGeocoding = (csvData, geocodingConfig) => {
+  const url = new URL(geocodingConfig.url, window.location.href);
+  if (!/\/csv\/?$/.test(url.pathname)) {
+    url.pathname = `${url.pathname.replace(/\/+$/, "")}/csv/`;
+  }
+  Object.entries(geocodingConfig.params).forEach(([name, value]) => {
+    url.searchParams.set(name, value);
+  });
+  const payload = new FormData();
+  payload.append(
+    "data",
+    new Blob([csvData], { type: "text/csv;charset=utf-8" }),
+    "data.csv"
+  );
+
+  return fetch(url.href, {
+    method: "POST",
+    body: payload,
+  });
+};

@@ -1,4 +1,20 @@
 var ogc = (function () {
+  var _escapeHtml = function (value) {
+    return String(value).replace(/[&<>"']/g, function (character) {
+      return {
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#039;",
+      }[character];
+    });
+  };
+
+  var _showRequestAlert = function (message, url) {
+    alertCustom(`${message}<br><small class="text-break">${_escapeHtml(url)}</small>`, "danger");
+  };
+
   $.findNS = function (o, nodeName) {
     return o.children().filter(function () {
       if (this.nodeName) return this.nodeName.toUpperCase() == nodeName.toUpperCase();
@@ -271,7 +287,7 @@ var ogc = (function () {
           body: body,
           error: error,
         });
-        alert("Echec de la requête CSW :\n" + url);
+        _showRequestAlert("Echec de la requête CSW :", url);
       });
   };
 
@@ -435,7 +451,7 @@ var ogc = (function () {
           url: getCapabilitiesUrl,
           error: error,
         });
-        alert("Echec de la requête WMS GetCapabilities :\n" + getCapabilitiesUrl);
+        _showRequestAlert("Echec de la requête WMS GetCapabilities :", getCapabilitiesUrl);
       });
   };
 
@@ -516,7 +532,7 @@ var ogc = (function () {
           url: getCapabilitiesUrl,
           error: error,
         });
-        alert("Echec de la requête WMS GetCapabilities :\n" + getCapabilitiesUrl);
+        _showRequestAlert("Echec de la requête WMS GetCapabilities :", getCapabilitiesUrl);
       });
   };
 
@@ -648,7 +664,7 @@ var ogc = (function () {
             url: stringUrl,
             error: error,
           });
-          alert("Echec de la requête WFS GetFeature :\n" + stringUrl);
+          _showRequestAlert("Echec de la requête WFS GetFeature :", stringUrl);
         });
     },
   };

@@ -28,6 +28,7 @@ Cette partie est dédiée aux utilisateurs qui souhaitent prendre en main l'inte
    doc_user/accueil
    doc_user/param_appli
    doc_user/param_data
+   doc_user/grist
    doc_user/publication
    doc_user/gestion_appli
 
@@ -46,6 +47,7 @@ Cette partie est dédiée aux personnes qui ont vocation à déployer et configu
    doc_tech/install_python
    doc_tech/install_docker
    doc_tech/config_front
+   doc_tech/proxy
    doc_tech/migration_notes
    doc_tech/move_to_python
    doc_tech/dev_corner

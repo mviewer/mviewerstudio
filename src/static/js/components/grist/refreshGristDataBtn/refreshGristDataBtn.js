@@ -1,0 +1,70 @@
+import { createGristApiError } from "../../../utils/grist/apiError.js";
+/**
+ * Button used to refresh data from a Grist table.
+ *
+ * @param {Object} [options] Component options.
+ * @param {Function} [options.onRefresh] Asynchronous data refresh callback.
+ * @param {string} [options.successMessage] Message displayed after refreshing.
+ */
+const RefreshGristDataBtn = function (options = {}) {
+  this.onRefresh = options.onRefresh || (async () => {});
+  this.successMessage = options.successMessage || mviewer.tr("grist.refresh.success");
+  this.element = document.createElement("div");
+};
+
+/**
+ * Refresh Grist data and report the outcome through mviewerstudio alerts.
+ *
+ * @param {HTMLButtonElement} button Refresh button.
+ * @returns {Promise<void>}
+ */
+RefreshGristDataBtn.prototype.refresh = async function (button) {
+  button.disabled = true;
+  button.replaceChildren(mviewer.tr("grist.refresh.label"), this.createSpinner());
+
+  try {
+    await this.onRefresh();
+    alertCustom(this.successMessage, "success");
+  } catch (error) {
+    const apiError = await createGristApiError(error);
+    alertCustom(apiError.message, "danger");
+  } finally {
+    button.disabled = false;
+    button.textContent = mviewer.tr("grist.refresh.label");
+  }
+};
+
+/**
+ * Create the loading indicator shown in the refresh button.
+ *
+ * @returns {HTMLSpanElement} Spinner element.
+ */
+RefreshGristDataBtn.prototype.createSpinner = function () {
+  const spinner = document.createElement("span");
+
+  spinner.className = "spinner-border spinner-border-sm";
+  spinner.style.marginLeft = "2px";
+  spinner.setAttribute("aria-hidden", "true");
+
+  return spinner;
+};
+
+/**
+ * Render the refresh button.
+ *
+ * @returns {HTMLElement} Rendered refresh action.
+ */
+RefreshGristDataBtn.prototype.render = function () {
+  const button = document.createElement("button");
+
+  button.type = "button";
+  button.className = "btn btn-outline-primary btn-sm mb-3";
+  button.textContent = mviewer.tr("grist.refresh.label");
+  button.addEventListener("click", () => this.refresh(button));
+
+  this.element.replaceChildren(button);
+
+  return this.element;
+};
+
+export default RefreshGristDataBtn;

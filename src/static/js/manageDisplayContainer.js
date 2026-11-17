@@ -104,7 +104,7 @@ function alertCustom(message = "", type = "info", timeout = 5000) {
   const alertPlaceholder = document.getElementById("liveAlertPlaceholder");
   // Définition de l'icône selon le type d'alerte
   let iconalert = "";
-  if (type == "sucess" || type == "info") {
+  if (type == "success" || type == "sucess" || type == "info") {
     iconalert = '<i class="ri-checkbox-circle-line"></i>';
   } else if (type == "danger" || type == "warning") {
     iconalert = '<i class="ri-alert-line"></i>';

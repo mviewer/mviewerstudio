@@ -430,11 +430,9 @@ var editLayer = function (item, themeid, layerid) {
   if (!layerid) {
     layerid = element.attr("data-layerid");
   }
-  var groupid = mv.getCurrentGroupId();
-
   if (layerid != "undefined") {
     $("#mod-layerOptions").modal("show");
-    mv.showLayerOptions(element, themeid, layerid, groupid);
+    mv.showLayerOptions(element, themeid, layerid);
   } else {
     $("#input-ogc-filter").val("");
     $("#csw-results .csw-result").remove();
@@ -708,6 +706,10 @@ $("#mod-layerNew").on("click", "#selectLayersButton", function () {
   const th = $(`div[data-themeid="${themeId}"]`);
   var nb_layers = $(`#${themeId} .theme-layer-list`).children(".list-group-item").length;
   th.find(".theme-infos-layer").text(nb_layers);
+  const gristUtils = mv.utils?.grist?.grist;
+  if (gristUtils) {
+    gristUtils.setGristWizardStep(gristUtils.getGristWizardContentSteps().length);
+  }
 });
 
 // New save function to override old one to edit and save all the themes at the same time now.
@@ -1519,6 +1521,8 @@ var _configureTranslate = function (dic) {
     mviewer.tr = mviewer.lang[lang];
     _elementTranslate("body");
     mviewer.lang.lang = lang;
+    mviewer.translationsReady = true;
+    document.dispatchEvent(new Event("mviewerstudio:translations-ready"));
     _initTooltip(true);
   } else {
     console.log("langue non disponible " + lang);

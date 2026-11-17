@@ -3,6 +3,7 @@ from os import path, mkdir
 import logging
 from .error_handlers import ERROR_HANDLERS
 from .route import basic_store
+from .proxy_grist import grist_proxy_blueprint
 from .settings import Config
 
 logger = logging.getLogger(__name__)
@@ -32,6 +33,7 @@ def load_blueprint(app: Flask) -> None:
         # Handle possible missing or excess / chars: needs to start with one but not end with one
         app_prefix = "/" + app_prefix.strip("/")
     app.register_blueprint(basic_store, url_prefix=app_prefix)
+    app.register_blueprint(grist_proxy_blueprint, url_prefix=app_prefix)
 
 
 def init_publish_directory(app: Flask) -> None:

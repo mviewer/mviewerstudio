@@ -12,6 +12,20 @@ class Config:
     LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO")
     PROXY_USER_AGENT = os.getenv("MVIEWERSTUDIO_PROXY_USER_AGENT", "mviewerstudio")
 
+    # Requests reads these environment variables directly (including NO_PROXY).
+    # These values expose the environment configuration; changing only Flask's
+    # config does not change the proxy used by Requests.
+    HTTP_PROXY = os.getenv("http_proxy", os.getenv("HTTP_PROXY"))
+    HTTPS_PROXY = os.getenv("https_proxy", os.getenv("HTTPS_PROXY"))
+    NO_PROXY = os.getenv("no_proxy", os.getenv("NO_PROXY"))
+    GRIST_API_URL = os.getenv("GRIST_API_URL", "https://grist.numerique.gouv.fr")
+    GRIST_PROXY_TIMEOUT = float(os.getenv("GRIST_PROXY_TIMEOUT", "20"))
+    GRIST_CORS_ORIGINS = [
+        origin.strip()
+        for origin in os.getenv("GRIST_CORS_ORIGINS", "").split(",")
+        if origin.strip()
+    ]
+
     PROXY_WHITE_LIST = os.getenv(
         "MVIEWERSTUDIO_PROXY_WHITE_LIST",
         "geobretagne.fr,ows.region-bretagne.fr,kartenn.region-bretagne.fr,qgisserver.hautsdefrance.fr",

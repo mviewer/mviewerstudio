@@ -33,9 +33,10 @@ from flask.blueprints import BlueprintSetupState
 from urllib.parse import urlparse
 import requests
 from .utils.git_utils import Git_manager
+from .utils.grist_join import join_rows_with_referential
 from datetime import datetime
 
-from werkzeug.exceptions import BadRequest, MethodNotAllowed, Conflict
+from werkzeug.exceptions import BadRequest, MethodNotAllowed, Conflict, Unauthorized
 
 import logging
 
@@ -113,6 +114,29 @@ def user() -> Response:
     Actually works with sec-proxy only.
     """
     return jsonify(current_user.as_dict())
+
+
+@basic_store.route("/api/grist/refgeo/join", methods=["POST"])
+def grist_refgeo_join() -> Response:
+    """
+    Join rows with a configured geographic referential.
+    """
+    authorization_header = request.headers.get("Authorization")
+    if not authorization_header or not authorization_header.startswith("Bearer "):
+        raise Unauthorized("Clé API Grist manquante.")
+
+    try:
+        result = join_rows_with_referential(
+            request.get_json(),
+            authorization_header,
+        )
+    except ValueError as error:
+        raise BadRequest(str(error))
+    except requests.RequestException as error:
+        current_app.logger.warning("Grist referential join request failed")
+        raise BadRequest("Erreur pendant la jointure référentiel.")
+
+    return jsonify(result)
 
 
 @basic_store.route("/api/app/load", methods=["GET", "POST"])

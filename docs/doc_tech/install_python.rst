@@ -99,17 +99,19 @@ Ces variables doivent être définies dans l'environnement soit via la console (
 - ``CONF_PUBLISH_PATH_FROM_MVIEWER``: répertoire de publication à partir de l'instance mviewer.
 - ``EXPORT_CONF_FOLDER``: répertoire d'accès à partir de l'instance mviewer.
 - ``LOG_LEVEL``: Niveau logs (voir https://docs.python.org/3/library/logging.html)
+- ``HTTP_PROXY``: URL du proxy sortant pour les requêtes HTTP (exemple : ``http://proxy.example.org:3128``).
+- ``HTTPS_PROXY``: URL du proxy sortant pour les requêtes HTTPS (exemple : ``http://proxy.example.org:3128``).
+- ``NO_PROXY``: Hôtes ou domaines à contacter sans proxy, séparés par des virgules (exemple : ``localhost,127.0.0.1,.example.org``).
 - ``MVIEWERSTUDIO_PUBLISH_PATH``: Répertoire de publication lors du passage du mode brouillon au mode publié.
 - ``DEFAULT_ORG``: Nom de l'organisation par défaut à utiliser pour un usage non sécurisé (e.g en dehors d'un georchestra, ANONYMOUS).
 
-Autres Variables
-----------------
+Les appels ``requests`` du backend, notamment dans ``src/route.py``, utilisent automatiquement ces variables.
+Définissez-les dans l'environnement du processus Python, puis redémarrez le service.
+Les variantes minuscules (``http_proxy``, ``https_proxy``, ``no_proxy``) sont également reconnues et prioritaires.
+Les valeurs exposées dans ``src/settings.py`` reflètent cet environnement : modifier uniquement la configuration Flask ne modifie pas le proxy utilisé.
 
-Pour utiliser les services types OGC (catalogue ou serveurs cartographiques), vous aurez besoin d'utiliser le proxy.
-Le Proxy interne proposé par mviewer ("/mviewerstudio/proxy/?url=") utilise un paramètre ``PROXY_WHITE_LIST`` qui doit être complété par tous les domaines (FQDN) des services que vous utiliserez.
-Ce paramètre est accessible dans :
-
-- ``src/settings.py``
+Configuration des proxys
+~~~~~~~~~~~~~~~~~~~~~~~~
 
 Le paramètre ``PROXY_USER_AGENT`` définit l'en-tête HTTP ``User-Agent`` envoyé par le proxy interne aux services distants, pour les requêtes GET et POST. Sa valeur par défaut est ``mviewerstudio``. Il peut être personnalisé via la variable d'environnement ``MVIEWERSTUDIO_PROXY_USER_AGENT``, lue dans ``src/settings.py``.
 

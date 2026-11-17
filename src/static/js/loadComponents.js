@@ -1,0 +1,102 @@
+/**
+ * Point d'entrée centralisé de chargement des composants frontend.
+ * Ajouter ici chaque composant partagé exposé dans `js/components/`.
+ */
+// Common components
+import StepBadge from "./components/stepBadge/stepBadge.js";
+import UploadFile from "./components/uploadFile/uploadFile.js";
+import Table from "./components/table/table.js";
+import Input from "./components/input/input.js";
+import Select from "./components/select/select.js";
+import Switch from "./components/switch/switch.js";
+import Multiselect from "./components/multiselect/multiselect.js";
+import Tooltip from "./components/tooltip/tooltip.js";
+import ButtonCard from "./components/buttonCard/buttonCard.js";
+import UrlCard from "./components/common/url-card/url-card.js";
+import ListCard from "./components/listCard/listCard.js";
+
+// Grist components
+import GristApiKey from "./components/grist/gristApiKey/gristApiKey.js";
+import GristWizard from "./components/grist/gristWizard/gristWizard.js";
+import GristAddressArea from "./components/grist/gristAddressArea/gristAddressArea.js";
+import GristCoordinatesArea from "./components/grist/gristCoordinatesArea/gristCoordinatesArea.js";
+import GristRefGeoArea from "./components/grist/gristRefGeoArea/gristRefGeoArea.js";
+import GristResult from "./components/grist/results/results.js";
+import ConfirmAction from "./components/grist/confirmAction/configmAction.js";
+import RefreshGristDataBtn from "./components/grist/refreshGristDataBtn/refreshGristDataBtn.js";
+import RefreshGristListsButton from "./components/grist/refreshGristListsButton/refreshGristListsButton.js";
+import importGristArea from "./components/grist/importGristArea/importGristArea.js";
+import ListGristTables from "./components/grist/listGristTables/listGristTables.js";
+import OpenGristTableBtn from "./components/grist/openGristTableBtn/openGristTableBtn.js";
+import GristContent from "./components/grist/gristContent/gristContent.js";
+import GristLayerSource from "./components/grist/gristLayerSource/gristLayerSource.js";
+import { openGristLayerGeolocation } from "./components/grist/gristLayerGeolocation/gristLayerGeolocation.js";
+
+// Grist utilities
+import * as gristUtils from "./utils/grist/grist.js";
+import * as gristValidation from "./utils/grist/validation.js";
+import * as gristGeocoding from "./utils/grist/geocoding.js";
+import * as gristCoordinates from "./utils/grist/coordinates.js";
+import * as gristRefGeo from "./utils/grist/refGeo.js";
+import * as gristCsv from "./utils/grist/csvSource.js";
+
+mv.components = mv.components || {};
+mv.components.grist = mv.components.grist || {};
+mv.utils = mv.utils || {};
+mv.utils.grist = mv.utils.grist || {};
+
+// Common components
+mv.components.stepBadge = StepBadge;
+mv.components.uploadFile = UploadFile;
+mv.components.table = Table;
+mv.components.input = Input;
+mv.components.select = Select;
+mv.components.switch = Switch;
+mv.components.multiselect = Multiselect;
+mv.components.tooltip = Tooltip;
+mv.components.buttonCard = ButtonCard;
+mv.components.urlCard = UrlCard;
+mv.components.listCard = ListCard;
+
+// Grist components
+mv.components.grist.gristApiKey = GristApiKey;
+mv.components.grist.gristWizard = GristWizard;
+mv.components.grist.gristAddressArea = GristAddressArea;
+mv.components.grist.gristCoordinatesArea = GristCoordinatesArea;
+mv.components.grist.gristRefGeoArea = GristRefGeoArea;
+mv.components.grist.results = GristResult;
+mv.components.grist.confirmAction = ConfirmAction;
+mv.components.grist.refreshGristDataBtn = RefreshGristDataBtn;
+mv.components.grist.refreshGristListsButton = RefreshGristListsButton;
+mv.components.grist.importGristArea = importGristArea;
+mv.components.grist.listGristTables = ListGristTables;
+mv.components.grist.openGristTableBtn = OpenGristTableBtn;
+mv.components.grist.gristContent = GristContent;
+mv.components.grist.gristLayerSource = GristLayerSource;
+mv.components.grist.openGristLayerGeolocation = openGristLayerGeolocation;
+
+// Grist utilities
+mv.utils.grist.grist = gristUtils;
+mv.utils.grist.validation = gristValidation;
+mv.utils.grist.geocoding = gristGeocoding;
+mv.utils.grist.coordinates = gristCoordinates;
+mv.utils.grist.refGeo = gristRefGeo;
+mv.utils.grist.csv = gristCsv;
+
+const gristContentTarget = document.getElementById("newlayer-grist-content");
+if (gristContentTarget) {
+  const renderGristContent = () => {
+    new GristContent().appendTo(gristContentTarget);
+  };
+
+  if (mviewer.translationsReady) {
+    renderGristContent();
+  } else {
+    document.addEventListener("mviewerstudio:translations-ready", renderGristContent, {
+      once: true,
+    });
+  }
+}
+
+gristUtils.bindNewLayerModalGrist();
+gristValidation.bindNewLayerModalValidation();

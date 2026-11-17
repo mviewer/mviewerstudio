@@ -2,6 +2,58 @@ from os import walk, remove, path, mkdir, sep, makedirs
 from shutil import make_archive, copyfile, copytree, rmtree, move
 import re, unicodedata
 
+
+def geojson_to_wkt(geometry):
+    """
+    Convert a GeoJSON geometry dictionary to its WKT representation.
+
+    :param dict geometry: GeoJSON geometry.
+    :return: WKT geometry.
+    :rtype: str
+    :raises ValueError: If the geometry type is unsupported or invalid.
+    """
+    if not geometry:
+        raise ValueError("Géométrie GeoJSON manquante.")
+
+    geometry_type = geometry.get("type")
+    coordinates = geometry.get("coordinates")
+
+    if geometry_type == "GeometryCollection":
+        geometries = geometry.get("geometries", [])
+        return "GEOMETRYCOLLECTION ({})".format(
+            ", ".join(geojson_to_wkt(item) for item in geometries)
+        )
+
+    wkt_types = {
+        "Point": "POINT",
+        "LineString": "LINESTRING",
+        "Polygon": "POLYGON",
+        "MultiPoint": "MULTIPOINT",
+        "MultiLineString": "MULTILINESTRING",
+        "MultiPolygon": "MULTIPOLYGON",
+    }
+    if geometry_type not in wkt_types or coordinates is None:
+        raise ValueError("Géométrie GeoJSON invalide.")
+
+    wkt_coordinates = _geojson_coordinates_to_wkt(coordinates)
+    if geometry_type == "Point":
+        wkt_coordinates = "({})".format(wkt_coordinates)
+
+    return "{} {}".format(wkt_types[geometry_type], wkt_coordinates)
+
+
+def _geojson_coordinates_to_wkt(coordinates):
+    """Return recursively parenthesized GeoJSON coordinates for WKT."""
+    if not isinstance(coordinates, (list, tuple)):
+        raise ValueError("Coordonnées GeoJSON invalides.")
+
+    if coordinates and isinstance(coordinates[0], (int, float)):
+        return " ".join(str(value) for value in coordinates)
+
+    return "(" + ", ".join(
+        _geojson_coordinates_to_wkt(item) for item in coordinates
+    ) + ")"
+
 """
 Clean preview workspace to avoid spaces with many old files
 """

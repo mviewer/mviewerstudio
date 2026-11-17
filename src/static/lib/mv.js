@@ -65,6 +65,15 @@ var mv = (function () {
       styletitle: $(layerInfos).attr("styletitle"),
       index: $(layerInfos).attr("index"),
       jsonfields: $(layerInfos).attr("jsonfields"),
+      xfield: $(layerInfos).attr("xfield"),
+      yfield: $(layerInfos).attr("yfield"),
+      srs: $(layerInfos).attr("srs"),
+      geojsonField: $(layerInfos).attr("geojsonField"),
+      joinReferential: $(layerInfos).attr("joinReferential"),
+      joinMatchingField: $(layerInfos).attr("joinMatchingField"),
+      joinGeometryField: $(layerInfos).attr("joinGeometryField"),
+      joinCentroidField: $(layerInfos).attr("joinCentroidField"),
+      tooltipcontent: $(layerInfos).attr("tooltipcontent"),
     };
     return layerObject;
   };
@@ -590,8 +599,91 @@ var mv = (function () {
       }
     },
 
+    /**
+     * Create and register a layer from the currently selected add-data source.
+     *
+     * A completed Grist workflow takes precedence over the generic form and
+     * catalogue paths below. Its table is exposed as an authenticated CSV
+     * layer, while `isGrist` and `geolocType` remain Studio-only metadata:
+     * they restore the Grist data tab and selected geolocation mode but are
+     * intentionally omitted from the generated mviewer XML.
+     *
+     * @param {HTMLButtonElement} button Button that confirms layer selection.
+     * @returns {void}
+     */
     getConfLayers: function (button) {
       var themeid = button.getAttribute("data-themeid");
+      var gristTargetTable = mv.utils.grist.grist.getActiveGristTargetTable();
+      var gristLocationMode = button.dataset.gristLocationMode;
+
+      if (gristTargetTable && gristLocationMode) {
+        var gristLayerId = gristTargetTable.tableId + "-" + mv.uuid();
+        var gristLayerName = gristTargetTable.name || gristTargetTable.tableId;
+        // calculate the Grist API URL, using the Studio proxy if configured
+        // will fall back to the Grist instance URL if not
+        var gristApiUrl = _conf.grist.proxy;
+        if (!gristApiUrl) {
+          gristApiUrl =
+            new URL(
+              _conf.grist.api_url || _conf.grist.instance_url,
+              window.location.href
+            ).href.replace(/\/+$/, "") + "/api";
+        }
+        gristApiUrl = gristApiUrl.replace(/\/+$/, "");
+        var gristLayer = {
+          id: gristLayerId,
+          title: gristLayerName,
+          name: gristLayerName,
+          type: "csv",
+          // Internal Studio marker. It deliberately is not exported to the XML layer.
+          isGrist: true,
+          url:
+            gristApiUrl +
+            "/docs/" +
+            encodeURIComponent(gristTargetTable.docId) +
+            "/download/csv?tableId=" +
+            encodeURIComponent(gristTargetTable.tableId),
+          srs: $("#newlayer-grist-coordinate-projection").val() || "EPSG:4326",
+          sld: "demo/sld/default_point.sld",
+          tooltipcontent: "{{adresse}}",
+          attribution: "Dans cet exemple, le fichier csv provient de Grist",
+          visible: true,
+          queryable: true,
+          secure: "apikey",
+          useproxy: $("#frm-useproxy").prop("checked") === true,
+          showintoc: true,
+        };
+
+        // Persist the processing output expected by mviewer, and separately
+        // preserve the chosen mode so it can be edited again in Studio.
+        if (gristLocationMode === "refSwitch") {
+          gristLayer.joinReferential = gristTargetTable.joinReferential;
+          gristLayer.joinMatchingField = gristTargetTable.joinMatchingField;
+          gristLayer.joinGeometryField = gristTargetTable.joinGeometryField;
+          gristLayer.joinCentroidField = gristTargetTable.joinCentroidField;
+          gristLayer.geojsonField = gristTargetTable.joinGeometryField;
+          gristLayer.xfield = gristTargetTable.xfield;
+          gristLayer.yfield = gristTargetTable.yfield;
+          if (gristTargetTable.srs) gristLayer.srs = gristTargetTable.srs;
+          gristLayer.geolocType = "referential";
+        } else if (gristLocationMode === "xySwitch") {
+          gristLayer.xfield = $("#newlayer-grist-coordinate-x").val();
+          gristLayer.yfield = $("#newlayer-grist-coordinate-y").val();
+          gristLayer.geolocType = "coordinates";
+        } else {
+          gristLayer.xfield = "longitude";
+          gristLayer.yfield = "latitude";
+          gristLayer.geolocType = "address";
+          var gristGeocodingConfig = _conf.grist.geocoding || {};
+          gristLayer.srs = gristGeocodingConfig.srs || "EPSG:4326";
+        }
+
+        config.themes[themeid].layers.push(gristLayer);
+        addLayer(gristLayer.title, gristLayer.id, themeid);
+        $("#mod-layerNew").modal("hide");
+        return;
+      }
+
       // CAS 2 : Ajout d'une couche via ces paramètres
       if (document.getElementById("newlayer-type").value != "") {
         // Récupère les valeurs des paramètres communs saisis
@@ -744,12 +836,15 @@ var mv = (function () {
       }
     },
 
-    showLayerOptions: function (el, themeid, layerid) {
+    showLayerOptions: function (el, themeid, layerid, preserveActiveTab = false) {
       // Init params display
       [...document.querySelectorAll("#mod-layerOptions .layerOption-wms")].forEach((e) =>
         e.classList.add("d-none")
       );
       [...document.querySelectorAll("#mod-layerOptions .layerOption-tms")].forEach((e) =>
+        e.classList.add("d-none")
+      );
+      [...document.querySelectorAll("#mod-layerOptions .layerOption-csv")].forEach((e) =>
         e.classList.add("d-none")
       );
       document.getElementById("layerTypeLabel").innerHTML = "";
@@ -762,9 +857,14 @@ var mv = (function () {
       $("#layer_conf4 form").trigger("reset");
       $("#layer_conf5 form").trigger("reset");
       $("#layer_conf6 form").trigger("reset");
+      $("#layer-grist-data-preview").empty();
+      $("#layer_conf7").removeClass("d-none");
+      $("#layer-grist-geolocation-content").empty().addClass("d-none");
       $("input[data-role='tagsinput']").tagsinput("removeAll");
-      $("#layer_sections>.tab-pane").removeClass("active").first().addClass("active");
-      $("#layer_sections_menu li").removeClass("active").first().addClass("active");
+      if (!preserveActiveTab) {
+        $("#layer_sections>.tab-pane").removeClass("active").first().addClass("active");
+        $("#layer_sections_menu li").removeClass("active").first().addClass("active");
+      }
 
       function getLayerbyId(l) {
         return l.id === layerid;
@@ -777,6 +877,10 @@ var mv = (function () {
               .find((group) => group.id === groupid)
               .layers.find(getLayerbyId);
 
+      if (layer.isGrist || layer.url.includes("/download/csv")) {
+        layer.type = "csv";
+      }
+      if (layer.type === "csv") mv.utils.grist.csv.clearGristCsv(layer.url);
       document.getElementById("layerTypeLabel").append(layer.type);
 
       $("#frm-type").val(layer.type).trigger("change");
@@ -876,6 +980,159 @@ var mv = (function () {
         $("#frm-layertms-stylename").val(layer.style);
         $("#frm-layertms-filterstyle").val(layer.filterstyle);
       }
+
+      const isGristCsvLayer =
+        layer.isGrist === true ||
+        (layer.type === "csv" && /\/api\/docs\/[^/]+\/download\/csv/.test(layer.url));
+
+      // Migrate Grist layers created before the Studio-only isGrist marker.
+      if (isGristCsvLayer) {
+        layer.isGrist = true;
+        // Legacy Grist layers did not persist their localization mode in Studio.
+        if (!layer.geolocType) {
+          layer.geolocType =
+            layer.joinReferential || layer.geojsonField ? "referential" : "coordinates";
+        }
+      }
+
+      if (isGristCsvLayer) {
+        // Grist layers are stored as authenticated CSV endpoints.
+        [...document.querySelectorAll("#mod-layerOptions .layerOption-csv")].forEach(
+          (e) => e.classList.remove("d-none")
+        );
+        const previewContainer = document.getElementById("layer-grist-data-preview");
+        const apiKey = window.sessionStorage.getItem("mviewerstudio.grist.apiKey");
+
+        if (!apiKey) {
+          const GristContent = mv.components.grist.gristContent;
+          const GristApiKey = mv.components.grist.gristApiKey;
+          const gristConfig = _conf.grist || {};
+          const authContent = document.createElement("div");
+          const gristContent = new GristContent({
+            idPrefix: "layer-grist-data-api",
+            hideData: true,
+            managedNavigation: true,
+            state: { step: 1, apiKeyReady: false },
+          });
+          const gristApiKey = new GristApiKey(
+            gristConfig.api_url || gristConfig.instance_url,
+            "https://grist.numerique.gouv.fr/account/developer",
+            {
+              idPrefix: "layer-grist-data-api-key",
+              // Once the key is checked and stored in the session, restart
+              // only its content to load the authenticated table preview.
+              onValidApiKey: () => {
+                mv.showLayerOptions(el, themeid, layerid, true);
+              },
+            }
+          );
+
+          authContent.innerHTML = `<div class="alert alert-warning">${mviewer.tr(
+            "modal.layer.grist.api_key_missing"
+          )}</div>`;
+          authContent.appendChild(gristApiKey.render());
+          gristContent.state.auth = authContent;
+          previewContainer.replaceChildren(gristContent.render());
+          return;
+        }
+
+        // Keep the modal responsive while the authenticated CSV request is running.
+        previewContainer.innerHTML = `<div class="text-muted">${mviewer.tr("modal.layer.grist.preview.loading")}</div>`;
+        // The CSV endpoint is protected by the same API key used by the Grist import flow.
+        mv.utils.grist.csv
+          .loadGristCsv(layer.url, apiKey)
+          .then((data) => {
+            previewContainer._gristLayerData = data;
+            const Table = mv.components.table;
+            const preview = new Table({
+              data,
+              title: layer?.name
+                ? `${mviewer.tr("modal.layer.grist.preview.title")} ${layer.name}`
+                : mviewer.tr("modal.layer.grist.data"),
+              subtitle: mviewer.tr("modal.layer.grist.preview.subtitle"),
+              emptyMessage: mviewer.tr("modal.layer.grist.preview.empty"),
+            });
+
+            previewContainer.replaceChildren(preview.render());
+            // The layer URL contains the Grist document and table identifiers.
+            const gristUrl = new URL(layer.url, window.location.origin);
+            const documentMatch = gristUrl.pathname.match(
+              /\/api\/docs\/([^/]+)\/download\/csv$/
+            );
+            const tableId = gristUrl.searchParams.get("tableId");
+            const gristConfig = _conf.grist || {};
+            const instanceUrl = gristConfig.instance_url || gristConfig.api_url;
+
+            if (!documentMatch || !tableId || !instanceUrl) {
+              return;
+            }
+
+            const OpenGristTableBtn = mv.components.grist.openGristTableBtn;
+            // The shared component resolves tableRef before opening Grist.
+            const openTableButton = new OpenGristTableBtn({
+              apiUrl: gristConfig.api_url || instanceUrl,
+              apiKey,
+              instanceUrl,
+              orgId: gristConfig.org_id || "Personal",
+              docId: documentMatch[1],
+              tableId,
+              label: mviewer.tr("modal.layer.grist.edit.open"),
+              classes: ["grist-geocoding-result-primary-button"],
+            });
+            const ButtonCard = mv.components.buttonCard;
+            const editCard = new ButtonCard({
+              title: mviewer.tr("modal.layer.grist.edit.title"),
+              description: mviewer.tr("modal.layer.grist.edit.description"),
+              tooltip: mviewer.tr("modal.layer.grist.edit.tooltip"),
+              button: openTableButton.render(),
+              classes: "mt-3",
+            });
+
+            previewContainer.appendChild(editCard.render());
+            // The geolocation editor will be connected in a later iteration.
+            const geolocationButton = document.createElement("button");
+
+            geolocationButton.type = "button";
+            geolocationButton.className = "btn grist-geocoding-result-primary-button";
+            geolocationButton.textContent = mviewer.tr(
+              "modal.layer.grist.geolocation.edit"
+            );
+            geolocationButton.addEventListener("click", () =>
+              mv.openGristLayerGeolocation(layer)
+            );
+
+            const geolocationCard = new ButtonCard({
+              title: mviewer.tr("modal.layer.grist.geolocation.title"),
+              description: mviewer.tr(
+                `modal.layer.grist.geolocation.description.${layer.geolocType}`
+              ),
+              tooltip: mviewer.tr("modal.layer.grist.geolocation.tooltip"),
+              button: geolocationButton,
+              classes: "mt-3",
+            });
+
+            previewContainer.appendChild(geolocationCard.render());
+          })
+          .catch((error) => {
+            previewContainer.innerHTML = `<div class="alert alert-danger">${mviewer.tr("modal.layer.grist.preview.error")}</div>`;
+            console.error("Error loading Grist layer preview:", error);
+          });
+      }
+    },
+
+    /**
+     * Open the reusable geolocation workflow for a Grist layer.
+     *
+     * @param {Object} layer Grist layer being edited.
+     * @returns {void}
+     */
+    openGristLayerGeolocation: function (layer) {
+      mv.components.grist.openGristLayerGeolocation({
+        layer,
+        mvInstance: mv,
+        appConfig: _conf,
+        translator: mviewer,
+      });
     },
 
     /**
@@ -969,7 +1226,11 @@ var mv = (function () {
               .layers.find(getLayerbyId);
 
       // Commons params
-      layer.type = $("#frm-type").val();
+      if (layer.isGrist || layer.url.includes("/download/csv")) {
+        layer.type = "csv";
+      } else {
+        layer.type = $("#frm-type").val() || layer.type;
+      }
       layer.title = $("#frm-layer-title").val();
       layer.name = $("#frm-layer-title").val();
       layer.id = $("#frm-layerid").val();
@@ -1113,7 +1374,7 @@ var mv = (function () {
         }
         layer_parameters[p] = [p, '="', value, '"'].join("");
       });
-      //optional parameters
+      // Optional XML parameters. isGrist and geolocType remain Studio-only properties.
       var optional_parameters = [
         "tiled",
         "visible",
@@ -1152,13 +1413,33 @@ var mv = (function () {
         "showintoc",
         "index",
         "jsonfields",
+        "xfield",
+        "yfield",
+        "srs",
+        "geojsonField",
+        "joinReferential",
+        "joinMatchingField",
+        "joinGeometryField",
+        "joinCentroidField",
+        "tooltipcontent",
       ];
       optional_parameters.forEach((param) => {
         if (l[param] == undefined) return;
         if (param === "servertype" && l[param] === "geoserver") return;
         let value = l[param];
 
-        if (["metadata", "metadata-csw", "legendurl", "filter"].includes(param)) {
+        if (
+          [
+            "metadata",
+            "metadata-csw",
+            "legendurl",
+            "filter",
+            "joinReferential",
+            "joinMatchingField",
+            "joinGeometryField",
+            "joinCentroidField",
+          ].includes(param)
+        ) {
           value = mv.escapeXml(value);
         }
         layer_parameters[param] = `${param}="${value}"`;

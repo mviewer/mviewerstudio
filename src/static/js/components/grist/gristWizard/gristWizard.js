@@ -1,0 +1,123 @@
+/**
+ * Horizontal Grist import wizard.
+ *
+ * Usage:
+ * `const wizard = new mv.components.grist.gristWizard({ step: 1 });`
+ * `target.appendChild(wizard.render());`
+ * `wizard.changeStep(2);`
+ */
+
+const getDefaultSteps = () => [
+  {
+    label: mviewer.tr("modal.layer.grist.workflow.connection"),
+    description: mviewer.tr("modal.layer.grist.workflow.connection.description"),
+    icon: "bi-file-earmark-spreadsheet",
+  },
+  {
+    label: mviewer.tr("modal.layer.grist.data"),
+    description: mviewer.tr("grist.workflow.data_description"),
+    icon: "bi-file-earmark-spreadsheet",
+  },
+  {
+    label: mviewer.tr("modal.layer.grist.workflow.location"),
+    description: mviewer.tr("modal.layer.grist.workflow.location.description"),
+    icon: "bi-geo-alt",
+  },
+  {
+    label: mviewer.tr("modal.layer.grist.workflow.result"),
+    description: mviewer.tr("modal.layer.grist.workflow.result.description"),
+    icon: "bi-layers",
+  },
+];
+
+const normalizeStep = (step, fallbackStep) => {
+  const source = step || {};
+
+  return {
+    label: source.label || fallbackStep.label,
+    description: source.description || fallbackStep.description,
+    icon: source.icon || fallbackStep.icon,
+  };
+};
+
+const GristWizard = function (options = {}) {
+  const defaultSteps = getDefaultSteps();
+  let steps = defaultSteps;
+
+  if (options.steps && options.steps.length) {
+    steps = options.steps;
+  }
+
+  this.steps = steps.map((step, index) =>
+    normalizeStep(step, defaultSteps[index] || defaultSteps[0])
+  );
+  this.step = options.step || 1;
+  this.onStepClick = options.onStepClick || null;
+  this.element = document.createElement("div");
+  this.element.className = `grist-wizard ${options.classes || ""}`.trim();
+};
+
+GristWizard.prototype.render = function () {
+  this.element.replaceChildren();
+  this.element.setAttribute("role", "list");
+  this.element.setAttribute("aria-label", mviewer.tr("grist.workflow.steps"));
+  this.element.style.setProperty("--grist-wizard-step-count", this.steps.length);
+
+  this.steps.forEach((step, index) => {
+    const stepNumber = index + 1;
+    const item = document.createElement("div");
+    const marker = document.createElement("span");
+    const icon = document.createElement("i");
+    const text = document.createElement("span");
+    const label = document.createElement("span");
+    const description = document.createElement("span");
+
+    item.className = "grist-wizard-step";
+    item.setAttribute("role", "listitem");
+    item.dataset.step = stepNumber;
+    item.classList.toggle("grist-wizard-step-active", stepNumber === this.step);
+    item.classList.toggle("grist-wizard-step-done", stepNumber < this.step);
+
+    marker.className = "grist-wizard-marker";
+    icon.className = `bi ${step.icon}`;
+    icon.setAttribute("aria-hidden", "true");
+    marker.appendChild(icon);
+
+    label.className = "grist-wizard-label";
+    label.textContent = step.label;
+
+    description.className = "grist-wizard-description";
+    description.textContent = step.description;
+
+    text.className = "grist-wizard-text";
+    text.append(label, description);
+    item.append(marker, text);
+    if (this.onStepClick && stepNumber < this.step) {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "grist-wizard-step-button";
+      button.append(marker, text);
+      button.addEventListener("click", () => this.onStepClick(stepNumber));
+      item.appendChild(button);
+    }
+    this.element.appendChild(item);
+  });
+
+  return this.element;
+};
+
+GristWizard.prototype.changeStep = function (step) {
+  this.step = Math.min(Math.max(step, 1), this.steps.length);
+
+  return this.render();
+};
+
+GristWizard.prototype.appendTo = function (target) {
+  if (target) {
+    target.appendChild(this.element);
+  }
+
+  return this.render();
+};
+
+export default GristWizard;

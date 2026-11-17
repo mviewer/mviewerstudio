@@ -5,9 +5,14 @@
         "mviewerstudio_version":  "4.3.1",
         "api": "api/app",
         "store_style_service": "api/style",
-        "mviewer_instance": "/mviewer/",
-        "publish_url": "/mviewer/?config=apps/public/{{config}}.xml",
+        "mviewer_instance": "http://localhost:5051/",
+        "publish_url": "http://localhost:5051/?config=apps/public/{{config}}.xml",
         "conf_path_from_mviewer": "apps/store/",
+        "qgis": {
+            "used": false,
+            "qgisserver_version": "3.28",
+            "url": "http://localhost:90/ogc/"
+        },
         "mviewer_short_url": {
             "used": false,
             "apps_folder": "store",
@@ -18,7 +23,65 @@
             "url": "https://geobretagne.fr/minicatalog/csv"
         },
         "user_info": "api/user",
-        "proxy": "proxy/?url=",
+        "proxy": "",
+        "grist": {
+            "proxy": "http://localhost:5000/grist/api/",
+            "api_url": "grist",
+            "instance_url": "https://grist.numerique.gouv.fr/",
+            "workspace_name": "mviewerstudio",
+            "srs": ["EPSG:2154", "EPSG:3857", "EPSG:4326"],
+            "geocoding": {
+                "url": "https://api-adresse.data.gouv.fr/search/",
+                "params": {
+                    "limit": 10,
+                    "autocomplete": 1
+                },
+                "srs": "EPSG:4326",
+                "geocoding_ban_control_type": "type",
+                "geocoding_score_threshold": 0.8,
+                "ban_type_order": ["housenumber", "street"]
+            },
+            "grist_referentials": [{
+                "layer_url": "https://santegraphie.fr/geoserver/GCS",
+                "label": "Communes",
+                "layer_name": "GCS:CONTOURS_COMMUNE_IDF",
+                "geometry_field_name": "GEOMETRY",
+                "join_field": "CODE_INSEE",
+                "centroide_layer_name": "GCS:CENTROIDES_COMMUNE_IDF",
+                "centroid_field_name": "geometry_centroid",
+                "srs": "EPSG:2154"
+            }, {
+                "layer_url": "https://santegraphie.fr/geoserver/GCS",
+                "label": "Départements",
+                "layer_name": "GCS:CONTOURS_DEPARTEMENT_IDF",
+                "geometry_field_name": "GEOMETRY",
+                "join_field": "CODE_INSEE",
+                "centroide_layer_name": "GCS:CENTROIDES_DEPARTEMENT_IDF",
+                "centroid_field_name": "geometry_centroid",
+                "srs": "EPSG:2154"
+            }, {
+                "layer_url": "https://santegraphie.fr/geoserver/GCS",
+                "label": "FINESS",
+                "layer_name": "GCS:REPSIF_STRUCTURES",
+                "geometry_field_name": "GEOMETRY",
+                "join_field": "CODE_FINESS",
+                "srs": "EPSG:2154"
+            }, {
+                "layer_url": "https://santegraphie.fr/geoserver/",
+                "label": "PMSI",
+                "layer_name": "PMSI:PMSI",
+                "geometry_field_name": "GEOM",
+                "join_field": "CODE_PMSI",
+                "srs": "EPSG:2154"
+            }, {
+                "layer_url": "https://santegraphie.fr/geoserver/",
+                "label": "Territoire de vie santé",
+                "layer_name": "ARS:contours_tvs_idf",
+                "geometry_field_name": null,
+                "join_field": "NUM_TVS",
+                "srs": "EPSG:2154"
+            }]
+        },
         "user_info_visible": true,
         "app_form_placeholders": {
             "app_title": "Kartenn",
@@ -150,7 +213,12 @@
             }
         },
         "data_providers": {
-            "csw": [{
+            "csw": [
+                {
+                    "title": "Géoplateforme - Découverte des métadonnées (CSW)",
+                    "url": "https://data.geopf.fr/csw?SERVICE=CSW",
+                    "baseref": "https://cartes.gouv.fr/rechercher-une-donnee/dataset/"
+                },{
                     "title": "Catalogue GéoBretagne",
                     "url": "https://geobretagne.fr/geonetwork/srv/fre/csw",
                     "baseref": "https://geobretagne.fr/geonetwork/srv/eng/catalog.search?node=srv#/metadata/"
@@ -161,7 +229,13 @@
                     "baseref": "https://datagrandest.fr/geonetwork/srv/eng/catalog.search?node=srv#/metadata/"
                 }
             ],
-            "wms": [{
+            "wms": [ {
+                "title": "Géoplateforme - Diffusion d'images WMS-Raster",
+                "url": "https://data.geopf.fr/wms-r"
+            }, {
+                "title": "Géoplateforme - Diffusion d'images WMS-Vecteur",
+                "url": "https://data.geopf.fr/wms-v"
+            },{
                 "title": "Serveur WMS de la Région",
                 "url": "https://ows.region-bretagne.fr/geoserver/rb/wms"
             }]

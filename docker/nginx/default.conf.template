@@ -14,6 +14,20 @@ server {
         alias /usr/share/nginx/html/apps/;
     }
 
+    location = /grist {
+        return 302 /grist/$is_args$args;
+    }
+
+    location /grist/ {
+        proxy_pass https://grist.numerique.gouv.fr/;
+        proxy_ssl_server_name on;
+        proxy_set_header Host grist.numerique.gouv.fr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Host $host;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header X-Real-IP $remote_addr;
+    }
+
     location /${MVIEWERSTUDIO_URL_PATH_PREFIX}/ {
         proxy_pass http://mviewerstudio:8000/${MVIEWERSTUDIO_URL_PATH_PREFIX}/;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;

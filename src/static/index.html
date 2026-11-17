@@ -10,6 +10,7 @@
     <!-- Custom stylesheet bootstrap and mstudio for this app-->
     <link rel="stylesheet" href="css/bootstrap.css">
     <link rel="stylesheet" href="css/mviewerstudio.css" type="text/css">
+    <link rel="stylesheet" href="css/grist.css" type="text/css">
     <link rel="stylesheet" href="css/xmleditor.css" type="text/css">
     <!-- Icons -->
     <link rel="stylesheet" href="lib/bootstrap-icons/bootstrap-icons.css">
@@ -19,6 +20,7 @@
     <script src="lib/jquery/jquery.min.js"></script>
     <script src="lib/Sortable.min.js"></script>
     <script src="lib/papaparse/papaparse.min.js"></script>
+    <script src="lib/read-excel-file/read-excel-file.min.js"></script>
     <script src="lib/bootstrap/5.2/bootstrap.bundle.min.js"></script>
     <script src="lib/bootstrap-tagsinput/bootstrap-tagsinput.min.js"></script>
     <link rel="stylesheet"
@@ -1142,6 +1144,11 @@
                             Recherche
                           </a>
                         </li>
+                        <li class="nav-item layerOption-csv d-none" role="presentation">
+                          <a class="nav-link" data-bs-toggle="pill" data-bs-target="#layer_conf7" type="button" role="tab" aria-controls="layer_conf7" aria-selected="false">
+                            <span i18n="modal.layer.grist.data">Données</span>
+                          </a>
+                        </li>
                     </ul>
                     <div class="tab-content mt-3" id="layer_sections">
                         <div role="tabpanel" class="tab-pane fade show active" id="layer_conf1">
@@ -1430,6 +1437,7 @@
                                                             onchange="mv.changeLayerType(this.value);">
                                                         <option value="wms" i18n="modal.layer.type.wms">WMS</option>
                                                         <option value="vector-tms">Vector-TMS</option>
+                                                        <option value="csv" i18n="modal.layer.type.csv">CSV</option>
                                                         <option value="geojson" i18n="modal.layer.type.geojson" disabled>GeoJSON</option>
                                                         <option value="kml" i18n="modal.layer.type.kml" disabled>KML</option>
                                                         <option value="customlayer" i18n="modal.layer.type.custom" disabled>Customlayer</option>
@@ -1494,6 +1502,7 @@
                                                     <option value="public" i18n="modal.layer.ac.public">Accès public</option>
                                                     <option value="global" i18n="modal.layer.ac.auth.global">Accès soumis à authentification globale (CAS georchestra)</option>
                                                     <option value="layer" i18n="modal.layer.ac.auth.service">Accès soumis à authentification au niveau du service (Basic Authent)</option>
+                                                    <option value="apikey" i18n="modal.layer.ac.auth.apikey">Accès soumis à une clé pour utiliser le service (Bearer)</option>
                                                 </select>
                                             </div>
                                             <div class="form-group">
@@ -1654,6 +1663,10 @@
                                 </div>
                             </form>
                         </div>
+                        <div role="tabpanel" class="tab-pane fade" id="layer_conf7">
+                            <div id="layer-grist-data-preview"></div>
+                        </div>
+                        <div id="layer-grist-geolocation-content" class="d-none"></div>
                     </div>
                 </div>
                 <div class="modal-footer">                    
@@ -1751,6 +1764,11 @@
                         <li class="nav-item" role="presentation">
                               <a class="nav-link" data-bs-toggle="pill" data-bs-target="#newlayer-param" type="button" role="tab" aria-controls="pills-newlayer-param" aria-selected="false" onclick="mv.resetSearch();">
                                 <span i18n="modal.layer.new.param">Via des paramètres</span> 
+                              </a>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                              <a class="nav-link" data-bs-toggle="pill" data-bs-target="#newlayer-grist" type="button" role="tab" aria-controls="pills-newlayer-grist" aria-selected="false">
+                                <span i18n="modal.layer.new.grist">Depuis Grist</span> 
                               </a>
                         </li>
                     </ul>
@@ -1862,6 +1880,12 @@
                                         </div>
                                     </div>
                                 </div>     
+                        </div>
+                        <div class="tab-pane fade" id="newlayer-grist" role="tabpanel" tabindex="0">
+                            <div id="grist-title-import" class="d-flex align-items-center justify-content-between gap-3">
+                                <!-- <h6 class="mb-0" i18n="modal.layer.new.grist.title"></h6> -->
+                            </div>
+                            <div id="newlayer-grist-content"></div>
                         </div>
                     </div>                         
                 </div>
@@ -2054,6 +2078,7 @@
 <script src="js/wizard.js"></script>
 <script src="js/manageDisplayContainer.js"></script>
 <script src="lib/icon-picker/iconPickerComponent.js"></script>
+<script type="module" src="js/loadComponents.js"></script>
 <script src="js/mviewerstudio.js"></script>
 <script type="module" src="lib/icon-picker/icon-picker.js"></script>
 <script src="lib/bootstrap-table/bootstrap-table.min.js"></script>
